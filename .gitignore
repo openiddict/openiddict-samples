@@ -157,6 +157,8 @@ ModelManifest.xml
 Thumbs.db
 ehthumbs.db
 
+
+
 # Folder config file
 Desktop.ini
 
@@ -165,3 +167,7 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+
+#ignore js
+wwwroot/app/*.js
+wwwroot/app/*.js.map
