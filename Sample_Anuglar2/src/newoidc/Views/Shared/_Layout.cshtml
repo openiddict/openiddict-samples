@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - newoidc</title>
+ 
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    <base href="/" />
+</head>
+<body>
+  
+      <div class="container body-content">
+          @RenderBody()
+     
+          <hr />
+          <footer>
+              <p>&copy; 2016 - newoidc</p>
+          </footer>
+      </div>
+
+
+      <script src="libs/es6-shim/es6-shim.js"></script>
+      <script src="libs/zone.js/dist/zone.js"></script>
+      <script src="libs/reflect-metadata/Reflect.js"></script>
+      <script src="libs/systemjs/dist/system.src.js"></script>
+
+      <script src="~/lib/jquery/dist/jquery.js"></script>
+      <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+
+
+
+      <!--configures SystemJS-->
+    <script src="system.config.js"></script>
+    <script>
+        System.import('app').catch(function (err) { console.error(err); });
+    </script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

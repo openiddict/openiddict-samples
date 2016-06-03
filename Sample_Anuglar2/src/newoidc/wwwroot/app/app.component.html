@@ -1,0 +1,26 @@
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a asp-controller="Home" asp-action="Index" class="navbar-brand">Easy Angular2 Authentication</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a asp-controller="Home" asp-action="Index">User Information</a></li>
+            </ul>
+           <authorize></authorize>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <h1 class="text-center">Click Below to check Logged In User Status</h1>
+        <p class="text-center"><button class="btn btn-primary btn-lg" (click)="authcheck()">Check Status</button></p>
+        <router-outlet></router-outlet>'
+    </div>
+</div>
