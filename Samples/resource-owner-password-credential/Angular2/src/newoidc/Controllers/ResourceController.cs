@@ -10,7 +10,7 @@ namespace newoidc.Controllers
     [Authorize]
     public class TestController : Controller
     {
-        private ApplicationDbContext _context;
+       private ApplicationDbContext _context;
        private UserManager<ApplicationUser> _userManager;
 
         public TestController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
