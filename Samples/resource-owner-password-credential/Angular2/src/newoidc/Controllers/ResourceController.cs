@@ -15,9 +15,6 @@ namespace newoidc.Controllers
 
         public TestController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            /*my cat did this
-            ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            */
             _context = context;
             _userManager = userManager;
         }
