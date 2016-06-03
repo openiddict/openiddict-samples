@@ -169,5 +169,5 @@ $RECYCLE.BIN/
 .DS_Store
 
 #ignore js
-wwwroot/app/*.js
-wwwroot/app/*.js.map
+sample_angular2/srcwwwroot/app/*.js
+sample_angular2/srcwwwroot/app/*.js.map
