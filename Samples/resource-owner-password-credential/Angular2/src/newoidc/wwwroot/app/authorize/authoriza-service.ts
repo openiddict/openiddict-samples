@@ -20,16 +20,14 @@ export class authervice {
                           "&responseType=token" + // get token 
                           "&scope=offline_access profile email roles"; // offline_access for refresh_token read more on docs / blog
 
-    private refreshParams = "grant_type=refresh_token" + // refresh tokens when access_tokens are expired simply renew em!
-                            "&resource=" + this.app.Server + "/" + 
-                            "&refresh_token=" + localStorage.getItem("refresh_key"); // get refresh token stored when logged in 
+    private refreshParams;
                            
 
     getUserInfo() {
         if (localStorage.getItem("auth_key")) {
             this.authheaders = new Headers({ "Authorization": "Bearer " + localStorage.getItem("auth_key") });
               this.Authoptions = new RequestOptions({ headers: this.authheaders });
-            return this.http.get(this._authUrl + "/api/test", this.Authoptions)
+              return this.http.get(this._authUrl + "/api/Resource", this.Authoptions)
                 .map(res => res.json())
                 .catch(this.handleError);
         }
@@ -52,6 +50,9 @@ export class authervice {
     }
 
     refreshLogin(): Observable<token> {
+        this.refreshParams == "grant_type=refresh_token" + // refresh tokens when access_tokens are expired simply renew em!
+            "&resource=" + this.app.Server + "/" +
+            "&refresh_token=" + localStorage.getItem("refresh_key"); // get refresh token stored when logged in 
         return this.http.post(this._authUrl + "/connect/token", this.refreshParams, this.options)
             .map(res => <token>res.json())
             .catch(this.handleError)

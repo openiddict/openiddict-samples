@@ -7,8 +7,11 @@
       "type": "platform"
     },
     "OpenIddict": "1.0.0-*",
+    "OpenIddict.Assets": "1.0.0-*",
+    "OpenIddict.Mvc": "1.0.0-*",
+    "OpenIddict.Security": "1.0.0-*",
     "AspNet.Security.OAuth.GitHub": "1.0.0-alpha4-final",
-    
+
     "Microsoft.AspNetCore.Authentication.JwtBearer": "1.0.0-rc2-final",
     "Microsoft.AspNetCore.Authentication.Google": "1.0.0-rc2-final",
     "Microsoft.AspNetCore.Authentication.Twitter": "1.0.0-rc2-final",
@@ -23,7 +26,7 @@
     "Microsoft.Extensions.Configuration.Json": "1.0.0-rc2-final",
     "Microsoft.Extensions.Logging.Console": "1.0.0-rc2-final",
     "Microsoft.Extensions.Logging.Debug": "1.0.0-rc2-final",
-   
+
     "Microsoft.AspNetCore.Hosting": "1.0.0-rc2-final",
     "Microsoft.AspNetCore.Razor.Tools": {
       "version": "1.0.0-preview1-final",
@@ -100,12 +103,13 @@
       "wwwroot",
       "Views",
       "appsettings.json",
+      "appsettings.*.json",
       "web.config"
     ]
   },
 
   "scripts": {
-    "prepublish": [ "npm install", "bower install", "gulp clean", "gulp min" ],
+    "prepublish": [ "npm install", "bower install", "gulp clean", "gulp copyNpmTo_wwwrootLibs" ],
     "postpublish": [ "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%" ]
   }
 }

@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using newoidc.Models;
 using OpenIddict;
 using System.Security.Claims;
-using OpenIddict.Models;
 using AspNet.Security.OpenIdConnect.Extensions;
 
 namespace newoidc.Data

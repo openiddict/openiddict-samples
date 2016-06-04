@@ -41,15 +41,12 @@ System.register(['@angular/core', '@angular/http', '../app.constants', 'rxjs/Rx'
                         "&resource=" + this.app.Server + "/" +
                         "&responseType=token" +
                         "&scope=offline_access profile email roles";
-                    this.refreshParams = "grant_type=refresh_token" +
-                        "&resource=" + this.app.Server + "/" +
-                        "&refresh_token=" + localStorage.getItem("refresh_key");
                 }
                 authervice.prototype.getUserInfo = function () {
                     if (localStorage.getItem("auth_key")) {
                         this.authheaders = new http_1.Headers({ "Authorization": "Bearer " + localStorage.getItem("auth_key") });
                         this.Authoptions = new http_1.RequestOptions({ headers: this.authheaders });
-                        return this.http.get(this._authUrl + "/api/test", this.Authoptions)
+                        return this.http.get(this._authUrl + "/api/Resource", this.Authoptions)
                             .map(function (res) { return res.json(); })
                             .catch(this.handleError);
                     }
@@ -69,6 +66,9 @@ System.register(['@angular/core', '@angular/http', '../app.constants', 'rxjs/Rx'
                         .catch(this.handleError);
                 };
                 authervice.prototype.refreshLogin = function () {
+                    this.refreshParams == "grant_type=refresh_token" +
+                        "&resource=" + this.app.Server + "/" +
+                        "&refresh_token=" + localStorage.getItem("refresh_key");
                     return this.http.post(this._authUrl + "/connect/token", this.refreshParams, this.options)
                         .map(function (res) { return res.json(); })
                         .catch(this.handleError);

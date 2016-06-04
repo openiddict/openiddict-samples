@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 namespace newoidc.Controllers
 {
     [Authorize]
-    public class TestController : Controller
+    public class ResourceController : Controller
     {
-       private ApplicationDbContext _context;
-       private UserManager<ApplicationUser> _userManager;
+        private ApplicationDbContext _context;
+        private UserManager<ApplicationUser> _userManager;
 
-        public TestController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ResourceController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
-        [Route("api/test"), HttpGet]
+        [Route("api/Resource"), HttpGet]
         public async Task<IActionResult> Get()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -27,7 +27,7 @@ namespace newoidc.Controllers
             return Ok(user);
         }
 
-     
-        
+
+
     }
 }

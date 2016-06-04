@@ -103,7 +103,7 @@ System.register(['@angular/core', '@angular/http', 'angular2-jwt', '@angular/rou
                         _this.mclose();
                         _this._parentRouter.navigate(['/Dashboard']);
                     }, function (Error) {
-                        _this.logMsg = Error.error_description;
+                        _this.logMsg = Error.json().error_description;
                     });
                 };
                 authorizeComponent.prototype.refreshLogin = function () {
@@ -119,28 +119,28 @@ System.register(['@angular/core', '@angular/http', 'angular2-jwt', '@angular/rou
                         _this.mclose();
                         _this._parentRouter.navigate(['/Dashboard']);
                     }, function (Error) {
-                        _this.logMsg = Error.error_description;
+                        _this.logMsg = Error.json().error_description;
                     });
                 };
                 authorizeComponent.prototype.getUserFromServer = function () {
-                    var _this = this;
+                    var instance = this;
                     this.authentication.getUserInfo().subscribe(function (data) {
-                        _this.token = data;
+                        instance.token = data;
                     }, function (error) {
-                        _this.token = error;
+                        instance.token = error;
                     });
                 };
                 authorizeComponent.prototype.extLogin = function (provider) {
                     var instance = this;
                     var popup_window = window.open('http://localhost:58056/api/account/externalaccess?provider=' + provider, '_blank', 'width=500, height=400');
-                    setInterval(function () {
+                    var intervalId = setInterval(function () {
                         if (localStorage.getItem('auth_key')) {
-                            this.clearInterval();
                             popup_window.close();
                             instance.mclose();
                             instance.getUserFromServer();
-                            this.isLoggedin = true;
+                            instance.isLoggedin = true;
                             instance._parentRouter.navigate(['/Dashboard']);
+                            clearInterval(intervalId);
                         }
                     }, 3000);
                 };

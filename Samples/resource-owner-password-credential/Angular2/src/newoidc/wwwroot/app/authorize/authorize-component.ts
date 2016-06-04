@@ -111,7 +111,7 @@ export class authorizeComponent{
                 this._parentRouter.navigate(['/Dashboard']);
             },
             Error => {
-                this.logMsg = Error.error_description
+                this.logMsg = Error.json().error_description
             })
         
     }
@@ -130,30 +130,31 @@ export class authorizeComponent{
                 this._parentRouter.navigate(['/Dashboard']);
             },
             Error => {
-                this.logMsg = Error.error_description
+                this.logMsg = Error.json().error_description
             })
 
     }
     public getUserFromServer() {
+        var instance = this;
         this.authentication.getUserInfo().subscribe(data => {
-            this.token = data;
+            instance.token = data;
         },
             error => {
-                this.token = error;
+                instance.token = error;
             });
     }
     //open a popup for external login and set a interval function [API in Account Controller]
     public extLogin(provider: string) {
         var instance = this;
         var popup_window = window.open('http://localhost:58056/api/account/externalaccess?provider='+provider, '_blank', 'width=500, height=400');
-        setInterval(function () {
+        var intervalId=  setInterval(function () {
             if (localStorage.getItem('auth_key')) {
-                this.clearInterval();
                 popup_window.close();//close external login popup
                 instance.mclose();
                 instance.getUserFromServer();
-                this.isLoggedin = true;// close login box
-                instance._parentRouter.navigate(['/Dashboard']);// navigate to dashboard, we can use returnurls too
+                instance.isLoggedin = true;// close login box
+                instance._parentRouter.navigate(['/Dashboard']);
+                clearInterval(intervalId);// navigate to dashboard, we can use returnurls too
             } }, 3000); //Check if the user has finished external login process after each 3 seconds.
     }
 

@@ -24,7 +24,7 @@ System.register(['@angular/core'], function(exports_1, context_1) {
                 welcome = __decorate([
                     core_1.Component({
                         selector: 'lol',
-                        template: '<h4>Dont be afraid , Fear has some pros too </h4>'
+                        template: '<h4>Have to put something here because blank page wont look good so here i go ........ knock knock </h4>'
                     }), 
                     __metadata('design:paramtypes', [])
                 ], welcome);
