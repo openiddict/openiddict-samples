@@ -27,7 +27,12 @@
     "gulp": "^3.9.0",
     "del": "^2.2.0",
     "angular2-jwt": "0.1.16",
-    "ng2-bs3-modal": "0.6.1"
+    "ng2-bs3-modal": "0.6.1",
+    "materialize-css": "^0.97.6",
+    "angular2-materialize": "^3.0.0",
+    "dropzone": "^4.3.0",
+    "material-icons": "0.1.0"
+ 
   },
   "devDependencies": {
     "typescript": "1.8.10",

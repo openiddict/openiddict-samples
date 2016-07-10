@@ -12,7 +12,7 @@ using newoidc.Models;
 using newoidc.Models.AccountViewModels;
 using newoidc.Services;
 using newoidc.Data;
-using Microsoft.AspNetCore.Http.Authentication;
+using Newtonsoft.Json;
 
 
 namespace newoidc.Controllers
@@ -21,20 +21,25 @@ namespace newoidc.Controllers
 
     public class AccountController : Controller
     {
+        private communicator _note = new communicator() ;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
+        private result_model _result = new result_model();
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
+        private result_error_model err = new result_error_model();
         private readonly ApplicationDbContext _applicationDbContext;
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ISmsSender smsSender,
+            ISmsSender smsSender, 
             ILoggerFactory loggerFactory,
-             ApplicationDbContext applicationDbContext)
+             ApplicationDbContext applicationDbContext
+          )
         {
+           
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
@@ -100,15 +105,26 @@ namespace newoidc.Controllers
             return View();
         }
 
-        // custom logout
+        [Route("api/account/forgotPassword")]
         [HttpGet]
-        [Route("api/account/logout")]
-        public async Task<string> LogOut()
+        [AllowAnonymous]
+        public async Task<String> ForgotPass(ForgotPasswordViewModel model)
         {
-            await _signInManager.SignOutAsync();
-            _logger.LogInformation(4, "User logged out.");
-            return "{done:success}";
+                var user = await _userManager.FindByNameAsync(model.Email);
+                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                {
+                // Don't reveal that the user does not exist or is not confirmed
+                _result.Succeeded = false;
+                return JsonConvert.SerializeObject(_result);
+                }
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                var result = await _note.SendEmailAsync(model.Email, "Reset Password",
+                   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+                return result;
+          
         }
+
         // custom register
         [Route("api/account/register")]
         [HttpPost]
@@ -117,6 +133,13 @@ namespace newoidc.Controllers
         {
             var user = new ApplicationUser { UserName = dto.Email, Email = dto.Email };
             var result = await _userManager.CreateAsync(user, dto.Password);
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+            await _note.SendEmailAsync(dto.Email, "Confirm your account",
+                $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
+            await _signInManager.SignInAsync(user, isPersistent: false);
+            _logger.LogInformation(3, "User created a new account with password.");
+        
             return result;
         }
 
@@ -147,10 +170,10 @@ namespace newoidc.Controllers
                 {
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                     // Send an email with this link
-                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                    //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
-                    //    $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                    await _note.SendEmailAsync(model.Email, "Confirm your account",
+                        $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation(3, "User created a new account with password.");
                     return RedirectToLocal(returnUrl);
@@ -187,8 +210,6 @@ namespace newoidc.Controllers
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
-            //context.HttpContext.GetOwinContext().Authentication.Challenge(properties, provider);
-          
             return Challenge(properties, provider);
         }
         
@@ -297,10 +318,11 @@ namespace newoidc.Controllers
 
         //
         // POST: /Account/ForgotPassword
+   
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        public async Task<string> ForgotPassword(ForgotPasswordViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -308,20 +330,28 @@ namespace newoidc.Controllers
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
-                    return View("ForgotPasswordConfirmation");
+                    _result.Succeeded = false;
+                    err.error = "Error 500";
+                    err.error_description = "Try again after some time";
+                    _result.errors.Add(err);
+                    return JsonConvert.SerializeObject( _result);
                 }
 
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
                 // Send an email with this link
-                //var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                //var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                //await _emailSender.SendEmailAsync(model.Email, "Reset Password",
-                //   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
-                //return View("ForgotPasswordConfirmation");
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                var result= await _note.SendEmailAsync(model.Email, "Reset Password",
+                   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+                return result;
             }
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            _result.Succeeded = false;
+            err.error = "Error 500";
+            err.error_description = "Try again after some time";
+            _result.errors.Add(err);
+            return JsonConvert.SerializeObject(_result);
         }
 
         //

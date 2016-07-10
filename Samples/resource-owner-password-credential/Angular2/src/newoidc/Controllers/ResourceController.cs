@@ -1,9 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using newoidc.Data;
 using newoidc.Models;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace newoidc.Controllers
 {
@@ -30,4 +35,6 @@ namespace newoidc.Controllers
 
 
     }
+
+   
 }

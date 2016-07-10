@@ -1,6 +1,6 @@
 ﻿import {Injectable}     from '@angular/core';
 import {Http, Response, Headers, RequestOptions} from '@angular/http';
-import {logModel, registerModel, extprovider,token,Regresult} from './authorize-component'
+import {logModel, registerModel, extprovider,token,Regresult,forgotPassword} from './authorize-component'
 import {Configuration} from '../app.constants'
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
@@ -37,7 +37,7 @@ export class authervice {
         if (localStorage.getItem("auth_key")) {
             this.authheaders = new Headers({ "Authorization": "Bearer " + localStorage.getItem("auth_key") });
               this.Authoptions = new RequestOptions({ headers: this.authheaders });
-            return this.http.get(this._authUrl + "/api/account/logout", this.Authoptions)
+            return this.http.get(this._authUrl + "/connect/logout", this.Authoptions)
                 .map(res => res)
                 .catch(this.handleError);
         }
@@ -50,10 +50,10 @@ export class authervice {
     }
 
     refreshLogin(): Observable<token> {
-        this.refreshParams == "grant_type=refresh_token" + // refresh tokens when access_tokens are expired simply renew em!
+       let body = "grant_type=refresh_token" + // refresh tokens when access_tokens are expired simply renew em!
             "&resource=" + this.app.Server + "/" +
             "&refresh_token=" + localStorage.getItem("refresh_key"); // get refresh token stored when logged in 
-        return this.http.post(this._authUrl + "/connect/token", this.refreshParams, this.options)
+       return this.http.post(this._authUrl + "/connect/token", body, this.options)
             .map(res => <token>res.json())
             .catch(this.handleError)
     }
@@ -64,7 +64,13 @@ export class authervice {
             .map(res => <Regresult>res.json())
             .catch(this.handleError)
     }
-   
+
+    forgotPass(inputType: forgotPassword) {
+        return this.http.get(this._authUrl + "/api/account/forgotPassword?email="+inputType.Email, this.joptions)
+            .map(res => res.json())
+            .catch(this.handleError)
+    }
+
     private handleError(error: Response) {
         return Observable.throw(error || 'Server error');
     }

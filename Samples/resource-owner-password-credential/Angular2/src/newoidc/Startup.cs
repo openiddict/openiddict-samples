@@ -56,16 +56,21 @@ namespace newoidc
                 .UseJsonWebTokens()
                 .AddMvc()
                 .AddAssets()
-                .AddNWebsec(options => options.DefaultSources(directive =>
-                directive.Self().CustomSources("*"))
+                .AddNWebsec(options =>
+                options.DefaultSources(directive => directive.Self()
+                    .CustomSources("*"))
+
                 .ImageSources(directive => directive.Self()
                     .CustomSources("*", "data:"))
+
                 .ScriptSources(directive => directive.Self()
-                .UnsafeEval()
+                    .UnsafeEval()
                     .UnsafeInline()
                     .CustomSources("*"))
+
                 .StyleSources(directive => directive.Self()
-                   .CustomSources("*").UnsafeInline()))
+                    .CustomSources("*")
+                    .UnsafeInline()))
             // During development, you can disable the HTTPS requirement.
                 .DisableHttpsRequirement();
             // Add application services.

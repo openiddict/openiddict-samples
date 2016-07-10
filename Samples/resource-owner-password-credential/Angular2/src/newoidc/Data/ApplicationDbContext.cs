@@ -25,7 +25,16 @@ namespace newoidc.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
-       
+        public DbSet<Category> Category { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<ProductPicture> ProductPicture { get; set; }
+        public DbSet<ProductCategory> ProductCategory { get; set; }
+        public DbSet<offer> offer { get; set; }
+        public DbSet<OfferDetail> OfferDetail { get; set; }
+        public DbSet<Notification> Notification { get; set; }
+        public DbSet<Message> Message { get; set; }
+        public DbSet<kartErrors> kartErrors { get; set; }
+        public DbSet<tempCart> tempCarts { get; set; }
     }
 
    

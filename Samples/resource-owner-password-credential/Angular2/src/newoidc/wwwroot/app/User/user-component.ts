@@ -1,27 +1,44 @@
-﻿import {Component} from '@angular/core'
+﻿import {Component, Input, Output, EventEmitter, ViewChild} from '@angular/core'
 import {JwtHelper, AuthHttp, AuthConfig, AUTH_PROVIDERS} from 'angular2-jwt'
 import {Http, Headers} from '@angular/http';
 import {Router, RouterOutlet, ComponentInstruction} from '@angular/router-deprecated';
 import {authervice} from '../authorize/authoriza-service'
+import {authorizeComponent} from '../authorize/authorize-component'
+import {AuthLoginService} from '../sharedservice'
 
 declare var System;
 @Component({
-    selector: 'authorize',
-    template: `<h1>You are logged in</h1> <h3>{{payload}}</h3><hr/>
-
+    selector: 'router-outlet',
+    template: `<blockquote><h5>You are logged in</h5> <h6>{{payload}}</h6>
+</blockquote>
 `,
 
     providers: []
 })
 export class userComponent {
-    private payload: string="loading ...";
-    constructor(public jwtHelper: JwtHelper,  private _parentRouter: Router, private Authentication: authervice) {
+   
+    public payload;
+    constructor(public jwtHelper: JwtHelper, private _parentRouter: Router, private _AuthLoginService: AuthLoginService, private Authentication: authervice) {
      
     }
     ngOnInit() {
-
-        this.getapi();
+            var instance = this;
+            // check if auth key is present
+            if (localStorage.getItem('auth_key')) {
+                if (!this.jwtHelper.isTokenExpired(localStorage.getItem('auth_key'))) // check if its not expired
+                {
+                    this.payload = "Loading your profile data..."
+                    instance.getapi();
+                }
+            }
+            else {
+                this.payload = "You are not logged In Please login"
+                this._AuthLoginService.emitNotLoggedIn();
+            }
+     
     }
+
+
     public getapi() {
         this.Authentication.getUserInfo().subscribe(data => { this.payload = JSON.stringify(data); }, error => { this.payload=error });  
     }

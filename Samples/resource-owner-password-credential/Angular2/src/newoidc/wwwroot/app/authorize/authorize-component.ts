@@ -3,30 +3,32 @@ import {Http, Headers} from '@angular/http';
 import {JwtHelper, AuthHttp, AuthConfig, AUTH_PROVIDERS} from 'angular2-jwt'
 import {Router} from '@angular/router-deprecated';
 import {authervice} from './authoriza-service';
-import { MODAL_DIRECTIVES, ModalComponent  } from 'ng2-bs3-modal/ng2-bs3-modal';
-declare var System;
+import {MaterializeDirective} from "angular2-materialize";
+import {AuthLoginService,SharedUserDetailsModel} from '../sharedservice'
+//import { MODAL_DIRECTIVES, ModalComponent  } from 'ng2-bs3-modal/ng2-bs3-modal';
+declare var System,$;
 @Component({
     selector: 'authorize',
     templateUrl: './app/authorize/authorize-component.html',
-    directives: [MODAL_DIRECTIVES],
+    directives: [MaterializeDirective],
     providers: []
 })
 
 export class authorizeComponent{
-    constructor(public jwtHelper: JwtHelper, private _http: Http, private _parentRouter: Router,private authentication:authervice) {
+    constructor(public jwtHelper: JwtHelper, private _http: Http, private _parentRouter: Router, private authentication: authervice, private _AuthLoginService: AuthLoginService) {
        
     }
 
-    //@Input('log') log: boolean;
-    @ViewChild('myModal')
-    modal: ModalComponent;
+   // @ViewChild('myModal')
+  //  modal: MaterializeDirective;
 
     public mclose() {
-        this.modal.close();
+        $('#login-modal').closeModal();
     }
 
-   public mopen() {
-        this.modal.open();
+    public mopen() {
+        
+        $('#login-modal').openModal();
     }
 
    public logstatus() {
@@ -38,6 +40,7 @@ export class authorizeComponent{
     public logMsg: string;
     public model: logModel;
     public rmodel: registerModel;
+    public fmodel: forgotPassword;
     public pros: extprovider;
     public login: boolean;
     public register: boolean;
@@ -46,8 +49,17 @@ export class authorizeComponent{
     public externals: string;
     public authdata: any;
     public hodeModel: boolean = false;
+    public _SharedUserDetailsModel = new SharedUserDetailsModel();
+  
+    brodacstUserStatus() {
+     
+        this._AuthLoginService.broadcastTextChange(this._SharedUserDetailsModel);
+    }
     ngOnInit() {
-       
+        this.isLoggedin = false;
+        this._SharedUserDetailsModel.isLoggedIn = false;
+        this._SharedUserDetailsModel.username = null;
+        this.brodacstUserStatus();
         var instance = this;
          // check if auth key is present
         if (localStorage.getItem('auth_key')) {
@@ -57,7 +69,11 @@ export class authorizeComponent{
             {
                 instance.getUserFromServer();
                 this._parentRouter.navigate(['/Dashboard']);
-                this.isLoggedin = true; // redirect from login page
+                this.isLoggedin = true;
+                this._SharedUserDetailsModel.isLoggedIn = true;
+                this._SharedUserDetailsModel.username = this.token.UserName;
+                this.brodacstUserStatus();
+                 // redirect from login page
             }
             else
             {
@@ -70,6 +86,7 @@ export class authorizeComponent{
        // this.isLoggedin = false;
         this.model = new logModel();
         this.rmodel = new registerModel();
+        this.fmodel = new forgotPassword();
         this.pros = new extprovider();
         // below logic is for my login form snippet  to view login/register/loss password etc
         this.logMsg = "Type your credentials.";
@@ -116,6 +133,28 @@ export class authorizeComponent{
         
     }
 
+
+    public ForgotPass(creds: forgotPassword) {
+        var instance = this;
+        this.authentication.forgotPass(creds)
+            .subscribe(
+            Ttoken => {
+                alert(JSON.stringify( Ttoken));
+                if (Ttoken.Succeeded) {
+                    instance.logMsg = "Instructions to reset your password with Verification code has been sent to your Email Address";
+                }
+                else {
+                    instance.logMsg = Ttoken.Errors[0].Description
+                }
+                
+            },
+            Error => {
+                instance.logMsg = Error.json().error_description
+            })
+
+    }
+
+
     public refreshLogin() {
     var instance = this;
         this.authentication.refreshLogin()
@@ -138,6 +177,9 @@ export class authorizeComponent{
         var instance = this;
         this.authentication.getUserInfo().subscribe(data => {
             instance.token = data;
+            this._SharedUserDetailsModel.isLoggedIn = true;
+            this._SharedUserDetailsModel.username = instance.token.UserName;
+            this.brodacstUserStatus();
         },
             error => {
                 instance.token = error;
@@ -165,6 +207,9 @@ export class authorizeComponent{
             localStorage.removeItem("refresh_key");
             this._parentRouter.navigate(['/Default']);
             this.isLoggedin = false;
+            this._SharedUserDetailsModel.isLoggedIn = false;
+            this._SharedUserDetailsModel.username = null;
+            this.brodacstUserStatus();
         }, error => { this.logMsg = error });
     }
 
@@ -214,4 +259,7 @@ export class Regresult {
     public Succeeded: string;
     public Errors: any[];
    
+}
+export class forgotPassword {
+    public Email: string;
 }

@@ -1,26 +1,59 @@
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a asp-controller="Home" asp-action="Index" class="navbar-brand">Easy Angular2 Authentication</a>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li><a asp-controller="Home" asp-action="Index">User Information</a></li>
+<header>
+    <nav role="navigation">
+        <div class="nav-wrapper">
+            <ul class="left">
+                <li><a href="#" materialize="sideNav" data-activates="nav-mobile" class="button-collapse show-on-large"><i class="material-icons">menu</i></a></li>
+                <li><a href="#" class="">Logo</a></li>
             </ul>
-           <authorize></authorize>
+                <ul class="right hide-on-med-and-down">
+                    <li><a [routerLink]="['Product']">Procuts</a></li>
+                    <li><a [routerLink]="['SearchProduct']">Components</a></li>
+                    <my-location></my-location>
+                    <authorize-nav></authorize-nav>
+                </ul>
+                <ul id="nav-mobile" class="side-nav">
+                    <li><a href="#" class="">Logo</a></li>
+                    <li><a [routerLink]="['Product']">Procuts</a></li>
+                    <li><a [routerLink]="['SearchProduct']">Components</a></li>
+                    <authorize-nav></authorize-nav>
+                </ul>
+         </div>
+    </nav>
+</header>
+<main>
+
+    <div class="row">
+        <blockquote>
+            <h5 class="text-center">Click Below to check Logged In User Status</h5>
+            <p class="text-center"><button class="btn btn-primary btn-lg" (click)="authcheck()">Check Status</button></p>
+        </blockquote>
+        <router-outlet   (myEvent)="authorizeComponent.mopen()"></router-outlet>'
+        <component-proxy  (myEvent)="authorizeComponent.mopen()"></component-proxy>
+    </div>
+</main>
+<footer class="page-footer blue-grey darken-4">
+    <div class="container">
+        <div class="row">
+            <div class="col l6 s12">
+                <h5 class="white-text">Footer Content</h5>
+                <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+            </div>
+            <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">Links</h5>
+                <ul>
+                    <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
+                    <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
+                    <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
+                    <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+                </ul>
+            </div>
         </div>
     </div>
-</div>
-<div class="container">
-    <div class="row">
-        <h1 class="text-center">Click Below to check Logged In User Status</h1>
-        <p class="text-center"><button class="btn btn-primary btn-lg" (click)="authcheck()">Check Status</button></p>
-        <router-outlet></router-outlet>'
+    <div class="footer-copyright blue-grey darken-2">
+        <div class="container">
+            © 2014 Copyright Text
+            <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+        </div>
     </div>
-</div>
+    <authorize></authorize>
+</footer> 

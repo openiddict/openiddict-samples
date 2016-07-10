@@ -55,7 +55,7 @@ System.register(['@angular/core', '@angular/http', '../app.constants', 'rxjs/Rx'
                     if (localStorage.getItem("auth_key")) {
                         this.authheaders = new http_1.Headers({ "Authorization": "Bearer " + localStorage.getItem("auth_key") });
                         this.Authoptions = new http_1.RequestOptions({ headers: this.authheaders });
-                        return this.http.get(this._authUrl + "/api/account/logout", this.Authoptions)
+                        return this.http.get(this._authUrl + "/connect/logout", this.Authoptions)
                             .map(function (res) { return res; })
                             .catch(this.handleError);
                     }
@@ -66,16 +66,21 @@ System.register(['@angular/core', '@angular/http', '../app.constants', 'rxjs/Rx'
                         .catch(this.handleError);
                 };
                 authervice.prototype.refreshLogin = function () {
-                    this.refreshParams == "grant_type=refresh_token" +
+                    var body = "grant_type=refresh_token" +
                         "&resource=" + this.app.Server + "/" +
                         "&refresh_token=" + localStorage.getItem("refresh_key");
-                    return this.http.post(this._authUrl + "/connect/token", this.refreshParams, this.options)
+                    return this.http.post(this._authUrl + "/connect/token", body, this.options)
                         .map(function (res) { return res.json(); })
                         .catch(this.handleError);
                 };
                 authervice.prototype.Register = function (inputType) {
                     var body = JSON.stringify(inputType);
                     return this.http.post(this._authUrl + "/api/account/register", body, this.joptions)
+                        .map(function (res) { return res.json(); })
+                        .catch(this.handleError);
+                };
+                authervice.prototype.forgotPass = function (inputType) {
+                    return this.http.get(this._authUrl + "/api/account/forgotPassword?email=" + inputType.Email, this.joptions)
                         .map(function (res) { return res.json(); })
                         .catch(this.handleError);
                 };

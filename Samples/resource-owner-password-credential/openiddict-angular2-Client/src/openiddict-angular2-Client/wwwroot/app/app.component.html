@@ -1,0 +1,21 @@
+<header class="navbar navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <div class="navbar-brand">
+                Easy Angular2 Authentication
+            </div>
+        </div>
+        <div class="navbar-collapse collapse">
+           <authorize></authorize>
+        </div>
+    </div>
+</header>
+<main>
+    <div class="container">
+        <div class="row">
+            <h1 class="text-center">Click Below to check Logged In User Status</h1>
+            <p class="text-center"><button class="btn btn-primary btn-lg" (click)="authcheck()">Check Status</button></p>
+            <router-outlet></router-outlet>'
+        </div>
+    </div>
+</main>

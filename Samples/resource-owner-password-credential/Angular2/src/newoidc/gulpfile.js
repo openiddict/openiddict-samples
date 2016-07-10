@@ -18,7 +18,11 @@ var packagesToMove = [
    paths.npmSrc + '/jquery/dist/jquery.min.js',
    paths.npmSrc + '/angular2localization/bundles/*.js',
     paths.npmSrc + '/angular2-jwt/angular2-jwt.js',
-        paths.npmSrc + '/ng2-bs3-modal/**/*.js'
+        paths.npmSrc + '/ng2-bs3-modal/**/*.js',
+          paths.npmSrc + '/angular2-materialize/**/*.js',
+   paths.npmSrc + '/materialize-css/dist/**/*.*',
+    paths.npmSrc + '/dropzone/dist/**/*.*',
+
 ];
 
 gulp.task('clean', function () {
@@ -37,6 +41,10 @@ gulp.task('copyNpmTo_wwwrootLibs', ['clean'], function () {
     gulp.src(packagesToMove[8]).pipe(gulp.dest(paths.libTarget + 'angular2localization/bundles'));
     gulp.src(packagesToMove[9]).pipe(gulp.dest(paths.libTarget + 'angular2-jwt'));
     gulp.src(packagesToMove[10]).pipe(gulp.dest(paths.libTarget + 'ng2-bs3-modal'));
+    gulp.src(packagesToMove[11]).pipe(gulp.dest(paths.libTarget + 'angular2-materialize'));
+    gulp.src(packagesToMove[12]).pipe(gulp.dest(paths.libTarget + 'materialize-css/dist'));
+    gulp.src(packagesToMove[13]).pipe(gulp.dest(paths.libTarget + 'dropzone/dist'));
+   
 });
 
 +gulp.task('default', ['copyNpmTo_wwwrootLibs']);
