@@ -63,8 +63,6 @@ namespace openiddict_angular2
 
                 .AllowRefreshTokenFlow()
                 .AllowPasswordFlow()
-                
-
                     // During development, you can disable the HTTPS requirement.
                     .DisableHttpsRequirement();
 
@@ -77,9 +75,7 @@ namespace openiddict_angular2
                                          .AllowCredentials()
                                         .AllowAnyHeader());
                 });
-
-                // Add application services.
-
+            
             }
 
             // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -141,8 +137,8 @@ namespace openiddict_angular2
                         {
                             ClientId = "localApp",
                             DisplayName = "MVC Core client application",
-                            RedirectUri = "http://localhost:52992/signin-oidc",
-                            LogoutRedirectUri = "http://localhost:52992/",
+                            RedirectUri = "http://localhost:3000/signin-oidc",
+                            LogoutRedirectUri = "http://localhost:3000/",
                             ClientSecret = Crypto.HashPassword("secret_secret_secret"),
                             Type = OpenIddictConstants.ClientTypes.Public
                         });
