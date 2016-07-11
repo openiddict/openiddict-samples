@@ -5,7 +5,6 @@ import {authorizeComponent} from './authorize/authorize-component'
 import {userComponent} from './User/user-component'
 import {welcome} from './welcome-component'
 import { MODAL_DIRECTIVES, ModalComponent  } from 'ng2-bs3-modal/ng2-bs3-modal';
-import {extauthorizeComponent} from './authorize/externalauth'
 import { ROUTER_DIRECTIVES, Router } from '@angular/router';
 import {authervice} from './authorize/authoriza-service'
 @Component({

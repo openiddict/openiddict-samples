@@ -41,7 +41,6 @@ export class authorizeComponent{
     public logMsg: string;
     public model: logModel;
     public rmodel: registerModel;
-    public pros: extprovider;
     public login: boolean;
     public register: boolean;
     public user: string;
@@ -73,7 +72,6 @@ export class authorizeComponent{
        // this.isLoggedin = false;
         this.model = new logModel();
         this.rmodel = new registerModel();
-        this.pros = new extprovider();
         // below logic is for my login form snippet  to view login/register/loss password etc
         this.logMsg = "Type your credentials.";
         this.login = true;

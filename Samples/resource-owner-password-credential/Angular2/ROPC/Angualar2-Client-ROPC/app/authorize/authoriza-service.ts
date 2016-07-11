@@ -1,6 +1,6 @@
 ﻿import {Injectable}     from '@angular/core';
 import {Http, Response, Headers, RequestOptions} from '@angular/http';
-import {logModel, registerModel, extprovider,token,Regresult} from './authorize-component'
+import {logModel, registerModel, token,Regresult} from './authorize-component'
 import {Configuration} from '../app.constants'
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
@@ -9,7 +9,6 @@ export class authervice {
     constructor(private http: Http, private app: Configuration) { }
   
     private _authUrl = this.app.Server;  // URL to web api
-    public revokeToken:revoketokenmodel;
     private headers = new Headers({ 'Content-Type': 'application/X-www-form-urlencoded' });
     private jheaders = new Headers({ 'Content-Type': 'application/json' });
     private authheaders;
