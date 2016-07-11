@@ -61,9 +61,6 @@ namespace openiddict_angular2
                 .EnableTokenEndpoint("/connect/token")
                 .EnableUserinfoEndpoint("/connect/userinfo")
 
-                // Note: the Mvc.Client sample only uses the authorization code flow but you can enable
-                // the other flows if you need to support implicit, password or client credentials.
-                .AllowAuthorizationCodeFlow()
                 .AllowRefreshTokenFlow()
                 .AllowPasswordFlow()
                 
@@ -111,14 +108,6 @@ namespace openiddict_angular2
                 app.UseXXssProtection(options => options.EnabledWithBlockMode());
              
                 app.UseIdentity();
-
-                app.UseGoogleAuthentication(new GoogleOptions
-                {
-                    ClientId = "862227465575-q1spfclcfvflg4tpesfkle4e0jc3q987.apps.googleusercontent.com",
-                    ClientSecret = "ozzg2VvH2TYbSbBYWE_HIYG5"
-
-                });
-               
 
                 app.UseJwtBearerAuthentication(new JwtBearerOptions
                 {
