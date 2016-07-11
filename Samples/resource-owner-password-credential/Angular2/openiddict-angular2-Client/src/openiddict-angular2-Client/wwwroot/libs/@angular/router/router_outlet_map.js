@@ -1,0 +1,10 @@
+"use strict";
+var RouterOutletMap = (function () {
+    function RouterOutletMap() {
+        this._outlets = {};
+    }
+    RouterOutletMap.prototype.registerOutlet = function (name, outlet) { this._outlets[name] = outlet; };
+    return RouterOutletMap;
+}());
+exports.RouterOutletMap = RouterOutletMap;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicm91dGVyX291dGxldF9tYXAuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi9zcmMvcm91dGVyX291dGxldF9tYXAudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtBQUtBO0lBQUE7UUFFRSxhQUFRLEdBQW1DLEVBQUUsQ0FBQztJQUVoRCxDQUFDO0lBREMsd0NBQWMsR0FBZCxVQUFlLElBQVksRUFBRSxNQUFvQixJQUFVLElBQUksQ0FBQyxRQUFRLENBQUMsSUFBSSxDQUFDLEdBQUcsTUFBTSxDQUFDLENBQUMsQ0FBQztJQUM1RixzQkFBQztBQUFELENBQUMsQUFKRCxJQUlDO0FBSlksdUJBQWUsa0JBSTNCLENBQUEiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQge1JvdXRlck91dGxldH0gZnJvbSAnLi9kaXJlY3RpdmVzL3JvdXRlcl9vdXRsZXQnO1xuXG4vKipcbiAqIEBpbnRlcm5hbFxuICovXG5leHBvcnQgY2xhc3MgUm91dGVyT3V0bGV0TWFwIHtcbiAgLyoqIEBpbnRlcm5hbCAqL1xuICBfb3V0bGV0czoge1tuYW1lOiBzdHJpbmddOiBSb3V0ZXJPdXRsZXR9ID0ge307XG4gIHJlZ2lzdGVyT3V0bGV0KG5hbWU6IHN0cmluZywgb3V0bGV0OiBSb3V0ZXJPdXRsZXQpOiB2b2lkIHsgdGhpcy5fb3V0bGV0c1tuYW1lXSA9IG91dGxldDsgfVxufVxuIl19
