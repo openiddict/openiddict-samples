@@ -1,8 +1,0 @@
-{
-  "resolution": "main",
-  "tree": {
-    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/d9c630f39b52d3cf80b1b7850bf354eecb589153/dropzone/dropzone.d.ts",
-    "raw": "registry:dt/dropzone#4.3.0+20160412155034",
-    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/d9c630f39b52d3cf80b1b7850bf354eecb589153/dropzone/dropzone.d.ts"
-  }
-}

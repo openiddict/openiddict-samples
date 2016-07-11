@@ -172,3 +172,5 @@ $RECYCLE.BIN/
 Samples/resource-owner-password-credential/openiddict-angular2-Client/src/openiddict-angular2-Client/wwwroot/app/*.js
 Samples/resource-owner-password-credential/openiddict-angular2-Client/src/openiddict-angular2-Client/wwwroot/app/*.js.map
 Samples/resource-owner-password-credential/openiddict-angular2-Client/src/openiddict-angular2-Client/wwwroot/libs/**.*
+Samples/resource-owner-password-credential/openiddict-angular2-server/src/openiddict-angular2-server/obj/**.*
+Samples/resource-owner-password-credential/openiddict-angular2-server/src/openiddict-angular2-server/bin/**.*
