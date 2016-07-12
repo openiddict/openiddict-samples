@@ -77,76 +77,76 @@ namespace openiddict_angular2
             // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
             public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
             {
-                app.UseCors("AllowAllOrigin");
+                    app.UseCors("AllowAllOrigin");
 
-                app.UseStaticFiles();
+                    app.UseStaticFiles();
 
-                loggerFactory.AddDebug();
+                    loggerFactory.AddDebug();
 
-                app.UseCsp(options => options.DefaultSources(directive => directive.Self().CustomSources("*"))
-                               .ImageSources(directive => directive.Self()
-                                    .CustomSources("*", "data:"))
+                    app.UseCsp(options => options.DefaultSources(directive => directive.Self().CustomSources("*"))
+                                   .ImageSources(directive => directive.Self()
+                                        .CustomSources("*", "data:"))
 
-                               .ScriptSources(directive => directive.Self()
-                                    .UnsafeEval()
-                                    .UnsafeInline()
-                                    .CustomSources("*"))
+                                   .ScriptSources(directive => directive.Self()
+                                        .UnsafeEval()
+                                        .UnsafeInline()
+                                        .CustomSources("*"))
 
-                               .StyleSources(directive => directive.Self()
-                                 .CustomSources("*")
-                                    .UnsafeInline())
-                          );
+                                   .StyleSources(directive => directive.Self()
+                                     .CustomSources("*")
+                                        .UnsafeInline())
+                              );
 
-                app.UseXContentTypeOptions();
+                    app.UseXContentTypeOptions();
 
-                app.UseXfo(options => options.Deny());
+                    app.UseXfo(options => options.Deny());
 
-                app.UseXXssProtection(options => options.EnabledWithBlockMode());
+                    app.UseXXssProtection(options => options.EnabledWithBlockMode());
              
-                app.UseIdentity(); // Use identitry before openiddict
+                    app.UseIdentity(); // Use identitry before openiddict
 
-                //Add JWT middleware
-                app.UseJwtBearerAuthentication(new JwtBearerOptions
-                {
-                    AutomaticAuthenticate = true,
-                    AutomaticChallenge = true,
-                    RequireHttpsMetadata = false,
-                    Audience = "http://localhost:3000",
-                    Authority = "http://localhost:52606"
-                });
-
-                app.UseOpenIddict();
-
-                app.UseMvc(routes =>
-                {
-                    routes.MapRoute(
-                        name: "default",
-                        template: "{controller=Home}/{action=Index}/{id?}");
-                      
-                });
-
-            /// Add Client application to your database
-            using (var context = new ApplicationDbContext(
-                      app.ApplicationServices.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
-                {
-                    context.Database.EnsureCreated();
-
-                    if (!context.Applications.Any())
+                    //Add JWT middleware
+                    app.UseJwtBearerAuthentication(new JwtBearerOptions
                     {
-                        context.Applications.Add(new OpenIddictApplication
-                        {
-                            ClientId = "localApp",
-                            DisplayName = "Angular 2 client application",
-                            RedirectUri = "http://localhost:3000/signin-oidc",
-                            LogoutRedirectUri = "http://localhost:3000/",
-                            ClientSecret = Crypto.HashPassword("secret_secret_secret"),
-                            Type = OpenIddictConstants.ClientTypes.Public // note that its a public Client for confidential you will need to send different parameters from client.
-                        });
+                        AutomaticAuthenticate = true,
+                        AutomaticChallenge = true,
+                        RequireHttpsMetadata = false,
+                        Audience = "http://localhost:3000",
+                        Authority = "http://localhost:52606"
+                    });
 
-                        context.SaveChanges();
+                    app.UseOpenIddict();
+
+                    app.UseMvc(routes =>
+                    {
+                        routes.MapRoute(
+                            name: "default",
+                            template: "{controller=Home}/{action=Index}/{id?}");
+                      
+                    });
+
+                    /// Add Client application to your database
+                    using (var context = new ApplicationDbContext(
+                              app.ApplicationServices.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
+                        {
+                            context.Database.EnsureCreated();
+
+                            if (!context.Applications.Any())
+                            {
+                                context.Applications.Add(new OpenIddictApplication
+                                {
+                                    ClientId = "localApp",
+                                    DisplayName = "Angular 2 client application",
+                                    RedirectUri = "http://localhost:3000/signin-oidc",
+                                    LogoutRedirectUri = "http://localhost:3000/",
+                                    ClientSecret = Crypto.HashPassword("secret_secret_secret"),
+                                    Type = OpenIddictConstants.ClientTypes.Public // note that its a public Client for confidential you will need to send different parameters from client.
+                                });
+
+                                context.SaveChanges();
+                            }
+                        }
                     }
-                }
-            }
         }
     }
 
