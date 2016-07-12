@@ -103,54 +103,7 @@ namespace openiddict_angular2.Controllers
             return Forbid(OpenIdConnectServerDefaults.AuthenticationScheme);
         }
 
-        [HttpGet("~/connect/logout")]
-        public IActionResult Logout()
-        {
-            // Extract the authorization request from the ASP.NET environment.
-            var request = HttpContext.GetOpenIdConnectRequest();
-            
-            //uncomment below code and remove last line If you want users to show confirmation box
-            /*
-            return View(new LogoutViewModel
-            {
-                Parameters = request.Parameters
-            });*/
-            return Logout();
-         
-        }
-
-        [HttpPost("~/connect/logout"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout(CancellationToken cancellationToken)
-        {
-            // Ask ASP.NET Core Identity to delete the local and external cookies created
-            // when the user agent is redirected from the external identity provider
-            // after a successful authentication flow (e.g Google or Facebook).
-            await _signInManager.SignOutAsync();
-
-            // Returning a SignOutResult will ask OpenIddict to redirect the user agent
-            // to the post_logout_redirect_uri specified by the client application.
-            return SignOut(OpenIdConnectServerDefaults.AuthenticationScheme);
-        }
     }
 
-    public class ErrorController : Controller
-    {
-        [HttpGet, HttpPost, Route("~/error")]
-        public IActionResult Error()
-        {
-            // If the error was not caused by an invalid
-            // OIDC request, display a generic error page.
-            var response = HttpContext.GetOpenIdConnectResponse();
-            if (response == null)
-            {
-                return View();
-            }
-
-            return View(new ErrorViewModel
-            {
-                Error = response.Error,
-                ErrorDescription = response.ErrorDescription
-            });
-        }
-    }
+   
 }

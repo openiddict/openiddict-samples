@@ -2,16 +2,13 @@
     <li><button class="btn btn-link" (click)="mopen()">Login</button></li>
 </ul>
 <ul [hidden]="!isLoggedin" class="nav navbar-nav navbar-right">
-    <li><button class="btn btn-link">Welcome {{token.userName}}</button></li>
+    <li><button class="btn btn-link">Welcome {{userDetails.userName}}</button></li>
     <li><button class="btn btn-link" (click)="Logout()">Logout</button></li>
 </ul>
 <modal #myModal  id="login-modal" [hidden]="hodeModal" tabindex="-1" role="dialog"  style="display: none;">
-    
-    <modal-header>
+    <modal-header style="text-align:center">
         <img class="img-circle" width="100" id="img_logo" src="http://bootsnipp.com/img/logo.jpg">
     </modal-header>
-      
-
     <modal-body>
         <form id="login-form" [hidden]="!login">
             <div class="modal-body">
@@ -35,8 +32,6 @@
              </div>
             </div>
         </form>
-
-
         <form id="register-form"[hidden]="!register">
             <div class="modal-body">
                 <div id="div-register-msg">
@@ -50,11 +45,9 @@
                 <div>
                     <button type="submit" (click)="userRegister(rmodel)" class="btn btn-primary btn-lg btn-block">Register</button>
                 </div>
-             
             </div>
         </form>
     </modal-body>
-
     <modal-footer>
             <button id="register_login_btn" (click)="callLogin()" type="button" class="btn btn-link">Log In</button>
         <button id="login_register_btn" (click)="callRegister()" type="button" class="btn btn-link">Register</button>

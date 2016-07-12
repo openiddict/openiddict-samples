@@ -7,11 +7,9 @@ import { Configuration } from './app.constants';
 import {JwtHelper, AuthHttp, AuthConfig, AUTH_PROVIDERS} from 'angular2-jwt'
 import {authervice} from './authorize/authoriza-service';
 
-
-
-bootstrap(AppComponent, [
-        
-JwtHelper,
-    HTTP_PROVIDERS, authervice, APP_ROUTER_PROVIDERS,
-    Configuration
-]);
+bootstrap(AppComponent, [JwtHelper,
+                        HTTP_PROVIDERS, 
+                        authervice, 
+                        APP_ROUTER_PROVIDERS,
+                        Configuration]
+        );

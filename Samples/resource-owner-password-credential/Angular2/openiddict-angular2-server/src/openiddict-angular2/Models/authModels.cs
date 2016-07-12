@@ -16,12 +16,6 @@ namespace openiddict_angular2.Models
         public string Scope { get; set; }
     }
 
-    public class LogoutViewModel
-    {
-        [BindNever]
-        public IDictionary<string, string> Parameters { get; set; }
-    }
-
     public class ErrorViewModel
     {
         [Display(Name = "Error")]

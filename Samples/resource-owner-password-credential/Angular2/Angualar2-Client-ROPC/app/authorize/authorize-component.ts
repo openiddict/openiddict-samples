@@ -9,16 +9,14 @@ declare var System;
     selector: 'authorize',
     templateUrl: '/app/authorize/authorize-component.html',
     directives: [MODAL_DIRECTIVES],
-    providers: []
 })
 
 export class authorizeComponent{
+
     constructor(public jwtHelper: JwtHelper,
         private _http: Http,
         private _parentRouter: Router,
-        private authentication: authervice) {
-       
-    }
+        private authentication: authervice) {}
 
     //@Input('log') log: boolean;
     @ViewChild('myModal')
@@ -35,8 +33,8 @@ export class authorizeComponent{
    public logstatus() {
        this.isLoggedin = true; 
    }
-    public token: any = "";
-    public detoken: any = "";
+
+    public userDetails: any = "";
     public isLoggedin: boolean;
     public logMsg: string;
     public model: logModel;
@@ -44,16 +42,15 @@ export class authorizeComponent{
     public login: boolean;
     public register: boolean;
     public user: string;
-    public loss: boolean;
-    public externals: string;
     public authdata: any;
     public hodeModel: boolean = false;
+
     ngOnInit() {
        
         var instance = this;
          // check if auth key is present
         if (localStorage.getItem('auth_key')) {
-            this.token = this.jwtHelper.decodeToken(localStorage.getItem("auth_key"));
+            this.userDetails = this.jwtHelper.decodeToken(localStorage.getItem("auth_key"));
            // this.authdata = localStorage.getItem('auth_key');
             if (!this.jwtHelper.isTokenExpired(localStorage.getItem('auth_key'))) // check if its not expired
             {
@@ -68,35 +65,28 @@ export class authorizeComponent{
                 }
             }
 
-        } // logic to redirect user if already logged in
-       // this.isLoggedin = false;
+        } 
+     
         this.model = new logModel();
         this.rmodel = new registerModel();
-        // below logic is for my login form snippet  to view login/register/loss password etc
+        // below logic is for my login form snippet  to view login/register 
         this.logMsg = "Type your credentials.";
         this.login = true;
-        this.loss = false;
         this.register = false;
         //end of logic
     }
-    // below logic is for my login form snippet to view login/register/loss password etc
-    public callLogin() {
+    // below logic is for my login form snippet to view login/register 
+    public callLogin() { // method to open login form
         this.login = true;
         this.register = false;
-        this.loss = false;
+     
     }
-    public callLoss() {
-        this.login = false;
-        this.register = false;
-        this.loss = true;
-    }
-    public callRegister() {
+    public callRegister() {//method to open register form
         this.login = false;
         this.register = true;
-        this.loss = false;
+    
     }
     // end
-
 
     public Login(creds: logModel) {
         var instance = this;
@@ -145,16 +135,16 @@ export class authorizeComponent{
             })
 
     }
+
     public getUserFromServer() {
         var instance = this;
         this.authentication.getUserInfo().subscribe(data => {
-            instance.token = data;
-        },
+            instance.userDetails = data;
+            },
             error => {
-                instance.token = error;
+                instance.userDetails = error;
             });
     }
-    //open a popup for external login and set a interval function [API in Account Controller]
 
     public Logout() {
         this.authentication.logout().subscribe(data => {
@@ -196,18 +186,19 @@ export class logModel {
     public password: string;
 }
 
-
 export class registerModel {
     public Email: string;
     public Password: string;
     public ConfirmPassword: string;
 }
+
 export class token {
     public access_token: string;
     public expires_in: string;
     public refresh_token: string;
     public token_type: string;
 }
+
 export class Regresult {
     public succeeded: string;
     public errors: any[];

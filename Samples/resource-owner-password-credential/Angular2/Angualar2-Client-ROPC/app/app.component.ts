@@ -11,25 +11,18 @@ import {authervice} from './authorize/authoriza-service'
     selector: 'body',
     templateUrl:'app/app.component.html',
     directives: [ROUTER_DIRECTIVES, authorizeComponent],
-   
-    providers: [
-        
-  
-          ]
 })
-
-
 
 export class AppComponent {
     private log: boolean;
     private authodata;
-    constructor(public jwtHelper: JwtHelper, private _http: Http, private _parentRouter: Router, private Authentication: authervice) {  
-        
-    }
+    constructor(public jwtHelper: JwtHelper,    
+                private _http: Http, 
+                private _parentRouter: Router, 
+                private Authentication: authervice) { }
 
     @ViewChild(authorizeComponent)
     private authorizeComponentRefer: authorizeComponent;
-
 
     public authcheck() {
         if (localStorage.getItem('auth_key') && !this.jwtHelper.isTokenExpired(localStorage.getItem('auth_key'))) { //validation for secure routes there are other ways too but i think its simplest
