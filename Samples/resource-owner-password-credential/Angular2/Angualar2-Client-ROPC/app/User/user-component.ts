@@ -1,6 +1,4 @@
 ﻿import {Component} from '@angular/core'
-import {JwtHelper, AuthHttp, AuthConfig, AUTH_PROVIDERS} from 'angular2-jwt'
-import {Http, Headers} from '@angular/http';
 import {Router} from '@angular/router';
 import {authervice} from '../authorize/authoriza-service'
 declare var System;
@@ -14,8 +12,7 @@ declare var System;
 export class userComponent {
     private payload: string="loading ...";
 
-    constructor(public jwtHelper: JwtHelper,  
-                private _parentRouter: Router, 
+    constructor( private _parentRouter: Router, 
                 private Authentication: authervice) {}
 
     ngOnInit() {

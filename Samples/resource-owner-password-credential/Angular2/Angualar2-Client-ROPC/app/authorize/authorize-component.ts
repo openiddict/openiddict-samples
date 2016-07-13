@@ -1,6 +1,5 @@
-﻿import {Component, ViewChild,Input } from '@angular/core'
-import {Http, Headers} from '@angular/http';
-import {JwtHelper, AuthHttp, AuthConfig, AUTH_PROVIDERS} from 'angular2-jwt'
+﻿import {Component, ViewChild } from '@angular/core'
+import {JwtHelper} from 'angular2-jwt'
 import {Router} from '@angular/router';
 import {authervice} from './authoriza-service';
 import { MODAL_DIRECTIVES, ModalComponent  } from 'ng2-bs3-modal/ng2-bs3-modal';
@@ -14,11 +13,9 @@ declare var System;
 export class authorizeComponent{
 
     constructor(public jwtHelper: JwtHelper,
-        private _http: Http,
         private _parentRouter: Router,
         private authentication: authervice) {}
 
-    //@Input('log') log: boolean;
     @ViewChild('myModal')
     modal: ModalComponent;
 
@@ -30,11 +27,7 @@ export class authorizeComponent{
         this.modal.open();
     }
 
-   public logstatus() {
-       this.isLoggedin = true; 
-   }
-
-    public userDetails: any = "";
+    public userDetails: any;
     public isLoggedin: boolean;
     public logMsg: string;
     public model: logModel;
@@ -51,7 +44,6 @@ export class authorizeComponent{
          // check if auth key is present
         if (localStorage.getItem('auth_key')) {
             this.userDetails = this.jwtHelper.decodeToken(localStorage.getItem("auth_key"));
-           // this.authdata = localStorage.getItem('auth_key');
             if (!this.jwtHelper.isTokenExpired(localStorage.getItem('auth_key'))) // check if its not expired
             {
                 instance.getUserFromServer();

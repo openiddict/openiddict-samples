@@ -1,9 +1,6 @@
-﻿import {Component, provide, Input, Output,EventEmitter,ViewChild} from '@angular/core';
-import {Http, Headers} from '@angular/http';
-import {JwtHelper, AuthHttp, AuthConfig, AUTH_PROVIDERS} from 'angular2-jwt'
+﻿import {Component,ViewChild} from '@angular/core';
+import {JwtHelper} from 'angular2-jwt'
 import {authorizeComponent} from './authorize/authorize-component'
-import {userComponent} from './User/user-component'
-import {welcome} from './welcome-component'
 import { MODAL_DIRECTIVES, ModalComponent  } from 'ng2-bs3-modal/ng2-bs3-modal';
 import { ROUTER_DIRECTIVES, Router } from '@angular/router';
 import {authervice} from './authorize/authoriza-service'
@@ -17,7 +14,6 @@ export class AppComponent {
     private log: boolean;
     private authodata;
     constructor(public jwtHelper: JwtHelper,    
-                private _http: Http, 
                 private _parentRouter: Router, 
                 private Authentication: authervice) { }
 
