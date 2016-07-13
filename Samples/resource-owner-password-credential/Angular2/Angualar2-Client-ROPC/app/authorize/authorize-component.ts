@@ -27,7 +27,11 @@ export class authorizeComponent{
         this.modal.open();
     }
 
-    public userDetails: any;
+   public logstatus() {
+       this.isLoggedin = true; 
+   }
+
+    public userDetails: any ;
     public isLoggedin: boolean;
     public logMsg: string;
     public model: logModel;
