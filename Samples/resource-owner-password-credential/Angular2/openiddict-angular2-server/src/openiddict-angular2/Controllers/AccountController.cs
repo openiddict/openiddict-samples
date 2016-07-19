@@ -47,7 +47,7 @@ namespace openiddict_angular2.Controllers
                 _logger.LogInformation(3, "User created a new account with password.");
                 return Ok(result);
             }
-            return BadRequest(result);  
+            return Ok(result);  
         }
 
 

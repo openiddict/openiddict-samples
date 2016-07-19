@@ -1,7 +1,7 @@
 ﻿<ul [hidden]="isLoggedin" class="nav navbar-nav navbar-right">
     <li><button class="btn btn-link" (click)="mopen()">Login</button></li>
 </ul>
-<ul [hidden]="!isLoggedin" class="nav navbar-nav navbar-right">
+<ul *ngIf="isLoggedin" class="nav navbar-nav navbar-right">
     <li><button class="btn btn-link">Welcome {{userDetails.userName}}</button></li>
     <li><button class="btn btn-link" (click)="Logout()">Logout</button></li>
 </ul>
