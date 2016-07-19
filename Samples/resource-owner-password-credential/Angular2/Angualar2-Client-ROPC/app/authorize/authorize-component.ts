@@ -1,7 +1,8 @@
 ﻿import {Component, ViewChild } from '@angular/core'
 import {JwtHelper} from 'angular2-jwt'
 import {Router} from '@angular/router';
-import {authervice} from './authoriza-service';
+import {authservice} from './authorize-service';
+import {ResourceService} from '../resource/resource-service';
 import { MODAL_DIRECTIVES, ModalComponent  } from 'ng2-bs3-modal/ng2-bs3-modal';
 declare var System;
 @Component({
@@ -9,28 +10,12 @@ declare var System;
     templateUrl: '/app/authorize/authorize-component.html',
     directives: [MODAL_DIRECTIVES],
 })
-
 export class authorizeComponent{
 
     constructor(public jwtHelper: JwtHelper,
-        private _parentRouter: Router,
-        private authentication: authervice) {}
-
-    @ViewChild('myModal')
-    modal: ModalComponent;
-
-    public mclose() {
-        this.modal.close();
-    }
-
-   public mopen() {
-        this.modal.open();
-    }
-
-   public logstatus() {
-       this.isLoggedin = true; 
-   }
-
+                private _parentRouter: Router,
+                private AuthService: authservice,
+                private resourceService:ResourceService) {}
     public userDetails: any ;
     public isLoggedin: boolean;
     public logMsg: string;
@@ -41,9 +26,7 @@ export class authorizeComponent{
     public user: string;
     public authdata: any;
     public hodeModel: boolean = false;
-
     ngOnInit() {
-       
         var instance = this;
          // check if auth key is present
         if (localStorage.getItem('auth_key')) {
@@ -60,9 +43,7 @@ export class authorizeComponent{
                     this.refreshLogin(); // renew auth key and redirect
                 }
             }
-
-        } 
-     
+           } 
         this.model = new logModel();
         this.rmodel = new registerModel();
         // below logic is for my login form snippet  to view login/register 
@@ -72,21 +53,35 @@ export class authorizeComponent{
         //end of logic
     }
     // below logic is for my login form snippet to view login/register 
+    @ViewChild('myModal')
+    modal: ModalComponent;
+
+    public mclose() {
+        this.modal.close();
+    }
+
+   public mopen() {
+        this.modal.open();
+    }
+
+   public logstatus() {
+       this.isLoggedin = true; 
+   }
+
     public callLogin() { // method to open login form
         this.login = true;
         this.register = false;
-     
     }
+
     public callRegister() {//method to open register form
         this.login = false;
         this.register = true;
-    
     }
     // end
 
     public Login(creds: logModel) {
         var instance = this;
-        this.authentication.Login(creds)
+        this.AuthService.Login(creds)
             .subscribe(
             Ttoken => {
                 this.logMsg = "You are logged In Now , Please Wait ....";
@@ -100,17 +95,17 @@ export class authorizeComponent{
             Error => {
                 var error, key;
                 key = Error.json();
-                for (error in key) {
+                for (error in key) 
+                {
                     this.logMsg = "";
                     this.logMsg = this.logMsg + key[error] + "\n";
                 }
             })
-        
     }
 
     public refreshLogin() {
     var instance = this;
-        this.authentication.refreshLogin()
+        this.AuthService.refreshLogin()
             .subscribe(
             Ttoken => {
                 this.logMsg = "You are logged In Now , Please Wait ....";
@@ -124,35 +119,39 @@ export class authorizeComponent{
             Error => {
                 var error, key;
                 key = Error.json();
-                for (error in key) {
+                for (error in key) 
+                {
                     this.logMsg = "";
                     this.logMsg = this.logMsg + key[error] + "\n";
                 }
             })
-
     }
 
     public getUserFromServer() {
         var instance = this;
-        this.authentication.getUserInfo().subscribe(data => {
+        this.resourceService.getUserInfo().subscribe(data => {
             instance.userDetails = data;
             },
-            error => {
+            error => 
+            {
                 instance.userDetails = error;
             });
     }
 
     public Logout() {
-        this.authentication.logout().subscribe(data => {
+        this.AuthService.logout().subscribe(data => {
             localStorage.removeItem("auth_key");
             localStorage.removeItem("refresh_key");
             this._parentRouter.navigate(['/']);
             this.isLoggedin = false;
-        }, error => { this.logMsg = error });
+        }, error => 
+            {
+             this.logMsg = error 
+            });
     }
 
     public userRegister(creds:registerModel) {
-        this.authentication.Register(creds)
+        this.AuthService.Register(creds)
             .subscribe(
             Ttoken => {
                 if (Ttoken.succeeded) {
@@ -168,13 +167,15 @@ export class authorizeComponent{
             Error => {
                 var error, key;
                 key = Error.json();
-                for (error in key) {
+                for (error in key)
+                {
                     this.logMsg = "";
                     this.logMsg = this.logMsg + key[error] + "\n";
                 }
             });
-    }
-    }
+     }
+     //End of class
+}
 
 
 export class logModel {

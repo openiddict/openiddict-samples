@@ -169,6 +169,9 @@ $RECYCLE.BIN/
 .DS_Store
 
 #ignore js
+Samples/resource-owner-password-credential/Angular2/Angualar2-Client-ROPC/app/**/*.js
+Samples/resource-owner-password-credential/Angular2/Angualar2-Client-ROPC/app/**/*.js.map
+Samples/resource-owner-password-credential/Angular2/Angualar2-Client-ROPC/typings
 Samples/resource-owner-password-credential/openiddict-angular2-Client/src/openiddict-angular2-Client/wwwroot/app/*.js
 Samples/resource-owner-password-credential/openiddict-angular2-Client/src/openiddict-angular2-Client/wwwroot/app/*.js.map
 Samples/resource-owner-password-credential/openiddict-angular2-Client/src/openiddict-angular2-Client/wwwroot/libs/**.*

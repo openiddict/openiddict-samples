@@ -4,8 +4,6 @@ using openiddict_angular2.Models;
 using openiddict_angular2.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-
-
 namespace openiddict_angular2.Controllers
 {
     [Authorize]
@@ -13,7 +11,6 @@ namespace openiddict_angular2.Controllers
     {
         private ApplicationDbContext _context;
         private UserManager<ApplicationUser> _userManager;
-
         public ResourceController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
@@ -24,7 +21,7 @@ namespace openiddict_angular2.Controllers
         public async Task<IActionResult> Get()
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null) return Ok("No user - not logged in");// if Authorize is not applied
+            /*if (user == null) return BadRequest("No user - not logged in");// if Authorize is not applied*/
             return Ok(user);
         }
     }

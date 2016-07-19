@@ -2,7 +2,7 @@
 
 @Component({
     selector: 'default',
-    template: '<h4>Its an example of OpenIdDict Authentication using angular2</h4>'
+    template: '<h4>Its an example of OpenIddict Authentication using angular2</h4>'
 })
 export class welcome {
 }

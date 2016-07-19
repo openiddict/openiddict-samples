@@ -48,7 +48,7 @@ namespace openiddict_angular2.Controllers
                     ErrorDescription = "Details concerning the calling client application cannot be found in the database"
                 });
             }
-            //Uncomment below code and remove the code afterwords If you want your users to show concern form 
+            //Uncomment below code and remove     return await Accept(); If you want your users to show concern form 
             // with accept and deny button and you will have to create a view authorize refer the main MVC sample for it
             //
             /* return View(new AuthorizeViewModel
@@ -95,6 +95,7 @@ namespace openiddict_angular2.Controllers
             return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
         }
 
+        /*Uncomment this for concern form with accept , deny buttons
         [Authorize, HttpPost("~/connect/authorize/deny"), ValidateAntiForgeryToken]
         public IActionResult Deny()
         {
@@ -102,7 +103,7 @@ namespace openiddict_angular2.Controllers
             // to redirect the user agent to the client application using the appropriate response_mode.
             return Forbid(OpenIdConnectServerDefaults.AuthenticationScheme);
         }
-
+        */
     }
 
    

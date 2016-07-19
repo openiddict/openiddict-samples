@@ -4,11 +4,12 @@ import { APP_ROUTER_PROVIDERS } from './app.route';
 import { AppComponent } from './app.component';
 import { Configuration } from './app.constants';
 import {JwtHelper} from 'angular2-jwt'
-import {authervice} from './authorize/authoriza-service';
-
+import {authservice} from './authorize/authorize-service';
+import {ResourceService} from './resource/resource-service';
 bootstrap(AppComponent, [JwtHelper,
                         HTTP_PROVIDERS, 
-                        authervice, 
+                        authservice,
+                        ResourceService, 
                         APP_ROUTER_PROVIDERS,
                         Configuration]
         );

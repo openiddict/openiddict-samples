@@ -11,31 +11,22 @@ using Microsoft.Extensions.Logging;
 using openiddict_angular2.Models;
 using openiddict_angular2.Data;
 using openiddict_angular2.Models.AccountViewModels;
-
-
 namespace openiddict_angular2.Controllers
 {
     [Authorize]
-
     public class AccountController : Controller
     {
-       
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger _logger;
-
-        public AccountController(
-                                    UserManager<ApplicationUser> userManager,
-                                    SignInManager<ApplicationUser> signInManager,
-                                    ILoggerFactory loggerFactory,
-                                    ApplicationDbContext applicationDbContext
-                                 )
-            {
-                _userManager = userManager;
-                _signInManager = signInManager;
-                _logger = loggerFactory.CreateLogger<AccountController>();
-            }
-
+        public AccountController(UserManager<ApplicationUser> userManager,
+                                 SignInManager<ApplicationUser> signInManager,
+                                 ILoggerFactory loggerFactory,
+                                 ApplicationDbContext applicationDbContext)
+        { _userManager = userManager;
+          _signInManager = signInManager;
+          _logger = loggerFactory.CreateLogger<AccountController>();
+        }
 
         // Custom Register
         [Route("api/account/register")]
@@ -50,15 +41,17 @@ namespace openiddict_angular2.Controllers
             //currently Email and Username are same 
             var user = new ApplicationUser { UserName = dto.Email, Email = dto.Email };
             var result = await _userManager.CreateAsync(user, dto.Password);
-            await _signInManager.SignInAsync(user, isPersistent: false);
-            _logger.LogInformation(3, "User created a new account with password.");
-            return Ok(result);
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                _logger.LogInformation(3, "User created a new account with password.");
+                return Ok(result);
+            }
+            return BadRequest(result);  
         }
 
 
-
         #region Helpers
-
         private void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)

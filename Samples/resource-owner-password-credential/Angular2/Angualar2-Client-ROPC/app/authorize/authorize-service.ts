@@ -5,7 +5,7 @@ import {Configuration} from '../app.constants'
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 @Injectable()
-export class authervice {
+export class authservice {
     constructor(private http: Http, private app: Configuration) { }
   
     private _authUrl = this.app.Server;  // URL to web api
@@ -20,16 +20,6 @@ export class authervice {
                           "&resource="+ this.app.FileServer + // audience url . read more on docs /blog
                           "&responseType=token" + // get token 
                           "&scope=offline_access profile email roles"; // offline_access for refresh_token read more on docs / blog
-
-    getUserInfo() {
-        if (localStorage.getItem("auth_key")) {
-            this.authheaders = new Headers({ "Authorization": "Bearer " + localStorage.getItem("auth_key") });
-            this.Authoptions = new RequestOptions({ headers: this.authheaders });
-            return this.http.get(this._authUrl + "/api/Resource", this.Authoptions)
-            .map(res => res.json())
-            .catch(this.handleError);
-        }
-    }
 
     logout() {
         if (localStorage.getItem("auth_key")) {

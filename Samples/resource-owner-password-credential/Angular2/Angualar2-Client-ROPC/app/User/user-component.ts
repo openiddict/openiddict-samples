@@ -1,6 +1,6 @@
 ﻿import {Component} from '@angular/core'
 import {Router} from '@angular/router';
-import {authervice} from '../authorize/authoriza-service'
+import {ResourceService} from '../resource/resource-service';
 declare var System;
 
 @Component({
@@ -13,15 +13,15 @@ export class userComponent {
     private payload: string="loading ...";
 
     constructor( private _parentRouter: Router, 
-                private Authentication: authervice) {}
+                 private resourceService:ResourceService) {}
 
     ngOnInit() {
-        this.getapi();
+        this.callResourceServer();
     }
 
-    public getapi() {
+    public callResourceServer() {
         if( localStorage.getItem("auth_key")){
-        this.Authentication.getUserInfo().subscribe(
+        this.resourceService.getUserInfo().subscribe(
             data =>
             { 
              this.payload = JSON.stringify(data); 
@@ -32,10 +32,4 @@ export class userComponent {
         }else{ this._parentRouter.navigate(['/']);}
     }
 
-    public Logout() {
-        this.Authentication.logout().subscribe(data => {
-            localStorage.removeItem("auth_key");
-            localStorage.removeItem("refresh_key");
-            this._parentRouter.navigate(['/']); }, error => { this.payload = error });  
-    }
 }
