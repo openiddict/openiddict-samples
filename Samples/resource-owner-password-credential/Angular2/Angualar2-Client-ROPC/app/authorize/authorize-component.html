@@ -13,7 +13,11 @@
         <form id="login-form" [hidden]="!login">
             <div class="modal-body">
                 <div id="div-login-msg">
-                    <div id="text-login-msg">{{logMsg}}</div>
+                    <div id="text-login-msg">
+                        <span class="red-text text-darken-2">
+                         <img style="vertical-align:middle" src="../../images/Preloader.gif" width="30" [hidden]="!isLoading" /> {{logMsg}}
+                        </span>
+                    </div>
                 </div>
                 <input id="login_username" [(ngModel)]="model.username" class="form-control" type="text" placeholder="Username (type ERROR for error effect)" required>
                 <input id="login_password" [(ngModel)]="model.password" class="form-control" type="password" placeholder="Password" required>
@@ -35,7 +39,12 @@
         <form id="register-form"[hidden]="!register">
             <div class="modal-body">
                 <div id="div-register-msg">
-                    <div id="text-register-msg">{{logMsg}}.</div>
+                    <div id="text-register-msg"> <div id="text-login-msg">
+                        <span class="red-text text-darken-2">
+                         <img style="vertical-align:middle" src="../../images/Preloader.gif" width="30" [hidden]="!isLoading" /> {{logMsg}}
+                        </span>
+                    </div>
+                    </div>
                 </div>
                 <input id="register_username" [(ngModel)]="rmodel.Email" class="form-control" type="text" placeholder="Email (type ERROR for error effect)" required>
                 <input id="register_email" [(ngModel)]="rmodel.Password" class="form-control" type="password" placeholder="Password" required>

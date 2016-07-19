@@ -18,6 +18,7 @@ export class authorizeComponent{
                 private resourceService:ResourceService) {}
     public userDetails: any ;
     public isLoggedin: boolean;
+    public isLoading : boolean; // to show the loading progress
     public logMsg: string;
     public model: logModel;
     public rmodel: registerModel;
@@ -80,6 +81,7 @@ export class authorizeComponent{
     // end
 
     public Login(creds: logModel) {
+        this.isLoading=true;
         var instance = this;
         this.AuthService.Login(creds)
             .subscribe(
@@ -87,12 +89,13 @@ export class authorizeComponent{
                 this.logMsg = "You are logged In Now , Please Wait ....";
                 localStorage.setItem("auth_key", Ttoken.access_token);
                 localStorage.setItem("refresh_key", Ttoken.refresh_token);
-                this.isLoggedin = true;
                 instance.getUserFromServer();
                 this.mclose();
                 this._parentRouter.navigate(['/dashboard']);
+                this.isLoading=false;
             },
             Error => {
+                this.isLoading=false;
                 var error, key;
                 key = Error.json();
                 for (error in key) 
@@ -104,19 +107,21 @@ export class authorizeComponent{
     }
 
     public refreshLogin() {
+    this.isLoading=true;
     var instance = this;
         this.AuthService.refreshLogin()
             .subscribe(
             Ttoken => {
+                this.isLoading=false;
                 this.logMsg = "You are logged In Now , Please Wait ....";
                 localStorage.setItem("auth_key", Ttoken.access_token);
                 localStorage.setItem("refresh_key", Ttoken.refresh_token);
-                this.isLoggedin = true;
                 instance.getUserFromServer();
                 this.mclose();
                 this._parentRouter.navigate(['/dashboard']);
             },
             Error => {
+                this.isLoading=false;
                 var error, key;
                 key = Error.json();
                 for (error in key) 
@@ -128,32 +133,41 @@ export class authorizeComponent{
     }
 
     public getUserFromServer() {
+        this.isLoading=true;
         var instance = this;
         this.resourceService.getUserInfo().subscribe(data => {
+            this.isLoading=false;
             instance.userDetails = data;
+            this.isLoggedin = true;
             },
             error => 
             {
+                this.isLoading=false;
                 instance.userDetails = error;
             });
     }
 
     public Logout() {
+        this.isLoading=true;
         this.AuthService.logout().subscribe(data => {
+            this.isLoading=false;
             localStorage.removeItem("auth_key");
             localStorage.removeItem("refresh_key");
             this._parentRouter.navigate(['/']);
             this.isLoggedin = false;
         }, error => 
             {
+             this.isLoading=false;
              this.logMsg = error 
             });
     }
 
     public userRegister(creds:registerModel) {
+        this.isLoading=true;
         this.AuthService.Register(creds)
             .subscribe(
             Ttoken => {
+                this.isLoading=false;
                 if (Ttoken.succeeded) {
                     this.model.username = creds.Email;
                     this.model.password = creds.Password;
@@ -165,6 +179,7 @@ export class authorizeComponent{
                 }
             },
             Error => {
+                this.isLoading=false;
                 var error, key;
                 key = Error.json();
                 for (error in key)
