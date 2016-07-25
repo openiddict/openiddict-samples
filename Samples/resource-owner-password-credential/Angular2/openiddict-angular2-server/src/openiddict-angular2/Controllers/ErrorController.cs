@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Builder;
 using openiddict_angular2.Models;
-
 namespace openiddict_angular2.Controllers
 {
     public class ErrorController : Controller
@@ -16,7 +15,6 @@ namespace openiddict_angular2.Controllers
             {
                 return View();
             }
-
             return View(new ErrorViewModel
             {
                 Error = response.Error,

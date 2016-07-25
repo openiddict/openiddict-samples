@@ -1,14 +1,14 @@
 ﻿import {Injectable} from '@angular/core';
 import {Http, Response, Headers, RequestOptions} from '@angular/http';
-import {logModel, registerModel, token,Regresult} from './authorize-component'
+import {LogModel, RegisterModel, TokenResult,Regresult} from './authorize-component'
 import {Configuration} from '../app.constants'
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 @Injectable()
-export class authservice {
+export class Authservice {
     constructor(private http: Http, private app: Configuration) { }
   
-    private _authUrl = this.app.Server;  // URL to web api
+    private authUrl = this.app.Server;  // URL to web api
     private headers = new Headers({ 'Content-Type': 'application/X-www-form-urlencoded' });
     private jheaders = new Headers({ 'Content-Type': 'application/json' });
     private authheaders;
@@ -25,33 +25,33 @@ export class authservice {
         if (localStorage.getItem("auth_key")) {
             this.authheaders = new Headers({'Content-Type': 'application/x-www-form-urlencoded' });
             this.Authoptions = new RequestOptions({ headers: this.authheaders });
-            return this.http.post(this._authUrl + "/connect/revoke",
+            return this.http.post(this.authUrl + "/connect/revoke",
             "token="+ localStorage.getItem("refresh_key") +"&token_type=refresh_token",  this.Authoptions)
             .map(res => res)
             .catch(this.handleError);
         }
     }
 
-    Login(inputType: logModel): Observable<token> {
-        return this.http.post(this._authUrl + "/connect/token" ,
+    login(inputType: LogModel): Observable<TokenResult> {
+        return this.http.post(this.authUrl + "/connect/token" ,
              this.tokenParams + "&username=" + inputType.username + "&password=" + inputType.password, this.options)
-            .map(res => <token>res.json())
+            .map(res => <TokenResult>res.json())
             .catch(this.handleError)
     }
 
-    refreshLogin(): Observable<token> {
+    refreshLogin(): Observable<TokenResult> {
         let refreshParams = "grant_type=refresh_token" +
             "&client_id=localApp" +
             "&resource=" + this.app.FileServer  +
             "&refresh_token=" + localStorage.getItem("refresh_key"); // get refresh token stored when logged in 
-        return this.http.post(this._authUrl + "/connect/token", refreshParams, this.options)
-            .map(res => <token>res.json())
+        return this.http.post(this.authUrl + "/connect/token", refreshParams, this.options)
+            .map(res => <TokenResult>res.json())
             .catch(this.handleError)
     }
 
-    Register(inputType: registerModel): Observable<Regresult> {
+    register(inputType: RegisterModel): Observable<Regresult> {
         let body = JSON.stringify(inputType);
-        return this.http.post(this._authUrl + "/api/account/register", body, this.joptions)
+        return this.http.post(this.authUrl + "/api/account/register", body, this.joptions)
             .map(res => <Regresult>res.json())
             .catch(this.handleError)
     }

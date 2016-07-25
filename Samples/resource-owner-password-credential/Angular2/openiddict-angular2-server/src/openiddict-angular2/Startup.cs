@@ -63,13 +63,15 @@ namespace openiddict_angular2
                                .DisableHttpsRequirement();
 
                      //IMPORTANT !!! Change CORS policy on production server
-                      services.AddCors(options =>
+                      services.AddCors(
+                          options =>
                                 {
                                     options.AddPolicy("AllowAllOrigin",
-                                                        builder => builder.AllowAnyOrigin()
-                                                                         .AllowAnyMethod()
-                                                                         .AllowCredentials()
-                                                                        .AllowAnyHeader());
+                                    builder => builder.AllowAnyOrigin()
+                                                      .AllowAnyMethod()
+                                                      .AllowCredentials()
+                                                      .AllowAnyHeader()
+                                                     );
                                  });
             
               }

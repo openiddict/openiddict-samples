@@ -9,7 +9,7 @@ declare var System;
                `,
 })
 
-export class userComponent {
+export class UserComponent {
     private payload: string="";
    public isLoading : boolean; // to show the loading progress
     constructor( private _parentRouter: Router, 
