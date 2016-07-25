@@ -44,7 +44,12 @@ namespace Mvc.Server {
                 .AllowRefreshTokenFlow()
 
                 // During development, you can disable the HTTPS requirement.
-                .DisableHttpsRequirement();
+                .DisableHttpsRequirement()
+
+                // Register a new ephemeral key, that is discarded when the application
+                // shuts down. Tokens signed using this key are automatically invalidated.
+                // This method should only be used during development.
+                .AddEphemeralSigningKey();
 
             // Note: if you don't explicitly register a signing key, one is automatically generated and
             // persisted on the disk. If the key cannot be persisted, an exception is thrown.
