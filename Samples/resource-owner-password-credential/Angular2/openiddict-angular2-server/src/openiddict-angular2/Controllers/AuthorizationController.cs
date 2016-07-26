@@ -58,7 +58,7 @@ namespace NgOidc.Controllers
                  Scope = request.Scope
              });*/
             return await Accept();
-           
+
         }
 
         [Authorize, HttpPost("~/connect/authorize/accept"), ValidateAntiForgeryToken]
@@ -106,5 +106,5 @@ namespace NgOidc.Controllers
         */
     }
 
-   
+
 }

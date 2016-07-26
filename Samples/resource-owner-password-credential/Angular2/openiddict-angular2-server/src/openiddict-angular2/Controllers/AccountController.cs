@@ -22,14 +22,14 @@ namespace NgOidc.Controllers
             ILoggerFactory loggerFactory,
             ApplicationDbContext applicationDbContext)
         {
-          _userManager = userManager;
-          _signInManager = signInManager;
-          _logger = loggerFactory.CreateLogger<AccountController>();
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _logger = loggerFactory.CreateLogger<AccountController>();
         }
         // Custom Register
         [Route("api/account/register")]
         [HttpPost]
-      //  [ValidateAntiForgeryToken]
+        //  [ValidateAntiForgeryToken]
         [AllowAnonymous]
         public async Task<IActionResult> RegisterHttp([FromBody]RegisterViewModel dto)
         {
@@ -46,7 +46,7 @@ namespace NgOidc.Controllers
                 return Ok(result);
             }
 
-            return BadRequest(result);  
+            return BadRequest(result);
         }
 
         #region Helpers
