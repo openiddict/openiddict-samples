@@ -1,4 +1,4 @@
-﻿<ul [hidden]="isLoggedin" class="nav navbar-nav navbar-right">
+﻿<ul *ngIf="!isLoggedin"class="nav navbar-nav navbar-right">
     <li><button class="btn btn-link" (click)="mopen()">Login</button></li>
 </ul>
 <ul *ngIf="isLoggedin" class="nav navbar-nav navbar-right">

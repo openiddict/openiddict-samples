@@ -3,10 +3,11 @@ import {Http, Response, Headers, RequestOptions} from '@angular/http';
 import {LogModel, RegisterModel, TokenResult,Regresult} from './authorize-component'
 import {Configuration} from '../app.constants'
 import {Observable} from 'rxjs/Rx';
+import {JwtHelper,tokenNotExpired} from 'angular2-jwt'
 import 'rxjs/add/operator/map';
 @Injectable()
 export class Authservice {
-    constructor(private http: Http, private app: Configuration) { }
+    constructor(public jwtHelper: JwtHelper,private http: Http, private app: Configuration) { }
   
     private authUrl = this.app.Server;  // URL to web api
     private headers = new Headers({ 'Content-Type': 'application/X-www-form-urlencoded' });
@@ -20,6 +21,10 @@ export class Authservice {
                           "&resource="+ this.app.FileServer + // audience url . read more on docs /blog
                           "&responseType=token" + // get token 
                           "&scope=offline_access profile email roles"; // offline_access for refresh_token read more on docs / blog
+    
+    authenticated() {
+       return tokenNotExpired("auth_key");
+    }
 
     logout() {
         if (localStorage.getItem("auth_key")) {

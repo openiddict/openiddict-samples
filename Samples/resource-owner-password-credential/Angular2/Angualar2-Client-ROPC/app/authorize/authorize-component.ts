@@ -1,27 +1,23 @@
 ﻿import {Component, ViewChild } from '@angular/core'
-import {JwtHelper} from 'angular2-jwt'
+import {JwtHelper,tokenNotExpired} from 'angular2-jwt'
 import {Router} from '@angular/router';
 import {Authservice} from './authorize-service';
 import {ResourceService} from '../resource/resource-service';
 import { MODAL_DIRECTIVES, ModalComponent  } from 'ng2-bs3-modal/ng2-bs3-modal';
-import{AuthStatemanager,SharedUserDetailsModel}from '../statemanager/auth-state-manager'
 declare var System;
 @Component({
     selector: 'authorize',
     templateUrl: '/app/authorize/authorize-component.html',
-    directives: [MODAL_DIRECTIVES],
-    providers:[AuthStatemanager]
+    directives: [MODAL_DIRECTIVES]
 })
 export class AuthorizeComponent{
 
     constructor(public jwtHelper: JwtHelper,
                 private parentRouter: Router,
-                private authStatemanager:AuthStatemanager,
                 private authService: Authservice,
                 private resourceService:ResourceService) {}
 
     public userDetails: any ;
-    public sharedUserDetailsModel:SharedUserDetailsModel;
     public isLoggedin: boolean;
     public isLoading : boolean; // to show the loading progress
     public logMsg: string;
@@ -31,26 +27,21 @@ export class AuthorizeComponent{
     public registerBool: boolean;
     public user: string;
     public authdata: any;
+    public authState:any;
 
     ngOnInit() {
         var instance = this; 
-        this.sharedUserDetailsModel= new SharedUserDetailsModel();
          // check if auth key is present.
-        if (localStorage.getItem('auth_key')) {
-            this.userDetails = this.jwtHelper.decodeToken(localStorage.getItem("auth_key"));
-            if (!this.jwtHelper.isTokenExpired(localStorage.getItem('auth_key'))) // check if its not expired
-            {
+         if(this.authService.authenticated()){
                 instance.getUserFromServer();
                 this.parentRouter.navigate(['/dashboard']);
-                this.isLoggedin = true; // redirect from login page
-            }
-            else
-            {
+         }
+         else{
                 if (localStorage.getItem('refresh_key')) { // check if refresh key is present it wont be present for external logged in users
                     this.refreshLogin(); // renew auth key and redirect
                 }
-            }
-           } 
+         }
+       
         this.model = new LogModel();
         this.rmodel = new RegisterModel();
         // below logic is for my login form snippet  to view login/register 
@@ -91,10 +82,10 @@ export class AuthorizeComponent{
         var instance = this;
         this.authService.login(creds)
             .subscribe(
-            Ttoken => {
+            TokenResult => {
                 this.logMsg = "You are logged In Now , Please Wait ....";
-                localStorage.setItem("auth_key", Ttoken.access_token);
-                localStorage.setItem("refresh_key", Ttoken.refresh_token);
+                localStorage.setItem("auth_key", TokenResult.access_token);
+                localStorage.setItem("refresh_key", TokenResult.refresh_token);
                 instance.getUserFromServer();
                 this.mclose();
                 this.parentRouter.navigate(['/dashboard']);
@@ -117,11 +108,11 @@ export class AuthorizeComponent{
     var instance = this;
         this.authService.refreshLogin()
             .subscribe(
-            Ttoken => {
+            TokenResult => {
                 this.isLoading=false;
                 this.logMsg = "You are logged In Now , Please Wait ....";
-                localStorage.setItem("auth_key", Ttoken.access_token);
-                localStorage.setItem("refresh_key", Ttoken.refresh_token);
+                localStorage.setItem("auth_key", TokenResult.access_token);
+                localStorage.setItem("refresh_key", TokenResult.refresh_token);
                 instance.getUserFromServer();
                 this.mclose();
                 this.parentRouter.navigate(['/dashboard']);
@@ -145,10 +136,6 @@ export class AuthorizeComponent{
             this.isLoading=false;
             instance.userDetails = data;
             this.isLoggedin = true;
-            //broadcast auth status
-            this.sharedUserDetailsModel.isLoggedIn=true;
-            this.sharedUserDetailsModel.username=data.userName;
-            this.authStatemanager.broadcastUserStatus(this.sharedUserDetailsModel);
             },
             error => 
             {
@@ -165,11 +152,6 @@ export class AuthorizeComponent{
             localStorage.removeItem("refresh_key");
             this.parentRouter.navigate(['/']);
             this.isLoggedin = false;
-             //broadcast auth status
-            this.sharedUserDetailsModel.isLoggedIn=false;
-            this.sharedUserDetailsModel.username=null;
-            this.authStatemanager.broadcastUserStatus(this.sharedUserDetailsModel);
-           
         }, error => 
             {
              this.isLoading=false;
