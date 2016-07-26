@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		global.json = global.json
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "openiddict-angular2", "src\openiddict-angular2\openiddict-angular2.xproj", "{D3FB36A6-F850-4D37-AD5C-B41156C6B18E}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NgOidc", "src\openiddict-angular2\NgOidc.xproj", "{D3FB36A6-F850-4D37-AD5C-B41156C6B18E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

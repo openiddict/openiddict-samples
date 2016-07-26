@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using openiddict_angular2.Data;
-using openiddict_angular2.Models;
+using NgOidc.Data;
+using NgOidc.Models;
 using OpenIddict;
 using CryptoHelper;
 using NWebsec.AspNetCore.Middleware;
-namespace openiddict_angular2
+namespace NgOidc
 {
     public class Startup
     {

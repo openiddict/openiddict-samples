@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace openiddict_angular2.Models
+namespace NgOidc.Models
 {
     public class AuthorizeViewModel
     {

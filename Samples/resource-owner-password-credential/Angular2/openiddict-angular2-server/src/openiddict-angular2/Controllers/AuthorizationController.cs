@@ -12,9 +12,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
-using openiddict_angular2.Models;
+using NgOidc.Models;
 using OpenIddict;
-namespace openiddict_angular2.Controllers
+namespace NgOidc.Controllers
 {
     public class AuthorizationController : Controller
     {

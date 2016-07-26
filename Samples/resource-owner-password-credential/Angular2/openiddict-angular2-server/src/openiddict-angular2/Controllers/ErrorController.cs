@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Builder;
-using openiddict_angular2.Models;
-namespace openiddict_angular2.Controllers
+using NgOidc.Models;
+namespace NgOidc.Controllers
 {
     public class ErrorController : Controller
     {

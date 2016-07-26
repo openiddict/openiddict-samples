@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using openiddict_angular2.Models;
-using openiddict_angular2.Data;
-using openiddict_angular2.Models.AccountViewModels;
+using NgOidc.Models;
+using NgOidc.Data;
+using NgOidc.Models.AccountViewModels;
 using System;
 
-namespace openiddict_angular2.Controllers
+namespace NgOidc.Controllers
 {
     [Authorize]
     public class AccountController : Controller

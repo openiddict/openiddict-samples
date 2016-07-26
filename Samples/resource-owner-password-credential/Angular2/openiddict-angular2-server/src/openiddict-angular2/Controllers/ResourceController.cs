@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using openiddict_angular2.Models;
-using openiddict_angular2.Data;
+using NgOidc.Models;
+using NgOidc.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-namespace openiddict_angular2.Controllers
+namespace NgOidc.Controllers
 {
     [Authorize]
     public class ResourceController : Controller

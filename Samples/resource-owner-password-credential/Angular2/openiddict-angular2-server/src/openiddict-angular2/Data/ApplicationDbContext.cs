@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using openiddict_angular2.Models;
+using NgOidc.Models;
 using OpenIddict;
-namespace openiddict_angular2.Data
+namespace NgOidc.Data
 {
     public class ApplicationDbContext : OpenIddictDbContext<ApplicationUser, IdentityRole>
     {

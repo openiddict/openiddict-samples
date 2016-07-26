@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace openiddict_angular2.Models.AccountViewModels
+namespace NgOidc.Models.AccountViewModels
 {
     public class RegisterViewModel
     {
