@@ -11,6 +11,8 @@ using NgOidc.Models;
 using OpenIddict;
 using CryptoHelper;
 using NWebsec.AspNetCore.Middleware;
+using System;
+
 namespace NgOidc
 {
     public class Startup
@@ -59,7 +61,9 @@ namespace NgOidc
                                //Other flows not needed for this example.
                                .AllowRefreshTokenFlow()
                                .AllowPasswordFlow()
-                                // During development, you can disable the HTTPS requirement.
+                             .SetAccessTokenLifetime(TimeSpan.FromSeconds(30))
+                             .SetRefreshTokenLifetime(TimeSpan.FromDays(1))
+                               // During development, you can disable the HTTPS requirement.
                                .DisableHttpsRequirement();
 
                      //IMPORTANT !!! Change CORS policy on production server

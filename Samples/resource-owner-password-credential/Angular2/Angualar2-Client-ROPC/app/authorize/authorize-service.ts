@@ -1,14 +1,14 @@
 ﻿import {Injectable} from '@angular/core';
 import {Http, Response, Headers, RequestOptions} from '@angular/http';
-import {LogModel, RegisterModel, TokenResult,Regresult} from './authorize-component'
+import {LogModel, RegisterModel, TokenResult, Regresult} from './authorize-component'
 import {Configuration} from '../app.constants'
 import {Observable} from 'rxjs/Rx';
-import {JwtHelper,tokenNotExpired} from 'angular2-jwt'
+import {JwtHelper, tokenNotExpired} from 'angular2-jwt'
 import 'rxjs/add/operator/map';
 @Injectable()
 export class Authservice {
-    constructor(public jwtHelper: JwtHelper,private http: Http, private app: Configuration) { }
-  
+    constructor(public jwtHelper: JwtHelper, private http: Http, private app: Configuration) { }
+
     private authUrl = this.app.Server;  // URL to web api
     private headers = new Headers({ 'Content-Type': 'application/X-www-form-urlencoded' });
     private jheaders = new Headers({ 'Content-Type': 'application/json' });
@@ -17,29 +17,29 @@ export class Authservice {
     private joptions = new RequestOptions({ headers: this.jheaders });
     private Authoptions;// = new RequestOptions({ headers: this.authheaders });
     private tokenParams = "grant_type=password" +// password type reuqets with credentials read more on grant_types
-                          "&client_id=localApp" +
-                          "&resource="+ this.app.FileServer + // audience url . read more on docs /blog
-                          "&responseType=token" + // get token 
-                          "&scope=offline_access profile email roles"; // offline_access for refresh_token read more on docs / blog
-    
+    "&client_id=localApp" +
+    "&resource=" + this.app.FileServer + // audience url . read more on docs /blog
+    "&responseType=token" + // get token 
+    "&scope=offline_access profile email roles"; // offline_access for refresh_token read more on docs / blog
+
     authenticated() {
-       return tokenNotExpired("auth_key");
+        return tokenNotExpired("auth_key");
     }
 
     logout() {
         if (localStorage.getItem("auth_key")) {
-            this.authheaders = new Headers({'Content-Type': 'application/x-www-form-urlencoded' });
+            this.authheaders = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
             this.Authoptions = new RequestOptions({ headers: this.authheaders });
             return this.http.post(this.authUrl + "/connect/revoke",
-            "token="+ localStorage.getItem("refresh_key") +"&token_type=refresh_token",  this.Authoptions)
-            .map(res => res)
-            .catch(this.handleError);
+                "token=" + localStorage.getItem("refresh_key") + "&token_type=refresh_token", this.Authoptions)
+                .map(res => res)
+                .catch(this.handleError);
         }
     }
 
     login(inputType: LogModel): Observable<TokenResult> {
-        return this.http.post(this.authUrl + "/connect/token" ,
-             this.tokenParams + "&username=" + inputType.username + "&password=" + inputType.password, this.options)
+        return this.http.post(this.authUrl + "/connect/token",
+            this.tokenParams + "&username=" + inputType.username + "&password=" + inputType.password, this.options)
             .map(res => <TokenResult>res.json())
             .catch(this.handleError)
     }
@@ -47,7 +47,7 @@ export class Authservice {
     refreshLogin(): Observable<TokenResult> {
         let refreshParams = "grant_type=refresh_token" +
             "&client_id=localApp" +
-            "&resource=" + this.app.FileServer  +
+            "&resource=" + this.app.FileServer +
             "&refresh_token=" + localStorage.getItem("refresh_key"); // get refresh token stored when logged in 
         return this.http.post(this.authUrl + "/connect/token", refreshParams, this.options)
             .map(res => <TokenResult>res.json())
@@ -60,7 +60,7 @@ export class Authservice {
             .map(res => <Regresult>res.json())
             .catch(this.handleError)
     }
-   
+
     private handleError(error: Response) {
         return Observable.throw(error || 'Server error');
     }

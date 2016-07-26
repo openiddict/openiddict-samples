@@ -1,11 +1,11 @@
-﻿<ul *ngIf="!isLoggedin"class="nav navbar-nav navbar-right">
+﻿<ul *ngIf="!isLoggedin" class="nav navbar-nav navbar-right">
     <li><button class="btn btn-link" (click)="mopen()">Login</button></li>
 </ul>
 <ul *ngIf="isLoggedin" class="nav navbar-nav navbar-right">
     <li><button class="btn btn-link">Welcome {{userDetails.userName}}</button></li>
     <li><button class="btn btn-link" (click)="logout()">Logout</button></li>
 </ul>
-<modal #myModal  id="login-modal"  tabindex="-1" role="dialog"  style="display: none;">
+<modal #myModal id="login-modal" tabindex="-1" role="dialog" style="display: none;">
     <modal-header style="text-align:center">
         <img class="img-circle" width="100" id="img_logo" src="http://bootsnipp.com/img/logo.jpg">
     </modal-header>
@@ -19,7 +19,8 @@
                         </span>
                     </div>
                 </div>
-                <input name="nusername" [(ngModel)]="model.username" class="form-control" type="text" placeholder="Username (type ERROR for error effect)" required>
+                <input name="nusername" [(ngModel)]="model.username" class="form-control" type="text" placeholder="Username (type ERROR for error effect)"
+                    required>
                 <input name="npassword" [(ngModel)]="model.password" class="form-control" type="password" placeholder="Password" required>
                 <div class="checkbox">
                     <label>
@@ -31,24 +32,28 @@
                 <div style="text-align:center">
                     <button type="submit" (click)="login(model)" class="btn btn-primary btn-lg btn-block">Login</button>
                 </div>
-             <div>
-                 {{externals}}
-             </div>
+                <div>
+                    {{externals}}
+                </div>
             </div>
         </form>
         <form id="register-form" name="Registerform" [hidden]="!registerBool">
             <div class="modal-body">
                 <div id="div-register-msg">
-                    <div id="text-register-msg"> <div id="text-login-msg">
-                        <span class="red-text text-darken-2">
+                    <div id="text-register-msg">
+                        <div id="text-login-msg">
+                            <span class="red-text text-darken-2">
                          <img style="vertical-align:middle" src="../../images/Preloader.gif" width="30" [hidden]="!isLoading" /> {{logMsg}}
                         </span>
-                    </div>
+                        </div>
                     </div>
                 </div>
-                <input id="register_username" name="nEmail" [(ngModel)]="rmodel.Email" class="form-control" type="text" placeholder="Email (type ERROR for error effect)" required>
-                <input id="register_email" name="nPassword"  [(ngModel)]="rmodel.Password" class="form-control" type="password" placeholder="Password" required>
-                <input id="register_password" name="nConfirmPassword"  [(ngModel)]="rmodel.ConfirmPassword" class="form-control" type="password" placeholder="Confirm Password" required>
+                <input id="register_username" name="nEmail" [(ngModel)]="rmodel.Email" class="form-control" type="text" placeholder="Email (type ERROR for error effect)"
+                    required>
+                <input id="register_email" name="nPassword" [(ngModel)]="rmodel.Password" class="form-control" type="password" placeholder="Password"
+                    required>
+                <input id="register_password" name="nConfirmPassword" [(ngModel)]="rmodel.ConfirmPassword" class="form-control" type="password"
+                    placeholder="Confirm Password" required>
             </div>
             <div class="modal-footer">
                 <div>
@@ -58,7 +63,7 @@
         </form>
     </modal-body>
     <modal-footer>
-            <button id="register_login_btn" (click)="callLogin()" type="button" class="btn btn-link">Log In</button>
+        <button id="register_login_btn" (click)="callLogin()" type="button" class="btn btn-link">Log In</button>
         <button id="login_register_btn" (click)="callRegister()" type="button" class="btn btn-link">Register</button>
     </modal-footer>
 </modal>

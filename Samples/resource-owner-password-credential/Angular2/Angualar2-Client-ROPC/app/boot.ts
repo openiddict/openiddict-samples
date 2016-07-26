@@ -9,11 +9,11 @@ import {Authservice} from './authorize/authorize-service';
 import {ResourceService} from './resource/resource-service';
 import {disableDeprecatedForms, provideForms} from '@angular/forms';
 enableProdMode();
-bootstrap(AppComponent, [ disableDeprecatedForms(),
-                        provideForms(),
-                        JwtHelper,
-                        HTTP_PROVIDERS, 
-                        Authservice,
-                        ResourceService, 
-                        APP_ROUTER_PROVIDERS,
-                        Configuration]);
+bootstrap(AppComponent, [disableDeprecatedForms(),
+    provideForms(),
+    JwtHelper,
+    HTTP_PROVIDERS,
+    Authservice,
+    ResourceService,
+    APP_ROUTER_PROVIDERS,
+    Configuration]);
