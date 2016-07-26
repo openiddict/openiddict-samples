@@ -1,0 +1,4 @@
+{
+  "aureliaHost": "http://localhost:9000", 
+  "oidcClientHost": "http://localhost:5000"
+}
