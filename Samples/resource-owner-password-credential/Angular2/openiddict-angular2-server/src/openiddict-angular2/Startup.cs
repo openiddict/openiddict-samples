@@ -62,8 +62,6 @@ namespace NgOidc
                       //Other flows not needed for this example.
                       .AllowRefreshTokenFlow()
                       .AllowPasswordFlow()
-                    .SetAccessTokenLifetime(TimeSpan.FromSeconds(30))
-                    .SetRefreshTokenLifetime(TimeSpan.FromDays(1))
                       // During development, you can disable the HTTPS requirement.
                       .DisableHttpsRequirement();
 
