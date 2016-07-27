@@ -1,4 +1,4 @@
-﻿import {Injectable} from '@angular/core';
+﻿import {Injectable, EventEmitter} from '@angular/core';
 import {Http, Response, Headers, RequestOptions} from '@angular/http';
 import {LogModel, RegisterModel, TokenResult, Regresult} from './authorize-component'
 import {Configuration} from '../app.constants'
@@ -8,6 +8,16 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class Authservice {
     constructor(public jwtHelper: JwtHelper, private http: Http, private app: Configuration) { }
+
+    //event emitter to open login box
+    loginEmitter = new EventEmitter();
+    emitNotLoggedIn() {
+        this.loginEmitter.emit(null);
+    }
+    getLoggedInEmitter() {
+        return this.loginEmitter;
+    }
+
 
     private authUrl = this.app.Server;  // URL to web api
     private headers = new Headers({ 'Content-Type': 'application/X-www-form-urlencoded' });
@@ -22,8 +32,14 @@ export class Authservice {
     "&responseType=token" + // get token 
     "&scope=offline_access profile email roles"; // offline_access for refresh_token read more on docs / blog
 
+    //common method to check auth status
     authenticated() {
-        return tokenNotExpired("auth_key");
+        if (tokenNotExpired("auth_key")) {
+            return true;
+        } else {
+            this.emitNotLoggedIn();
+            return false;
+        }
     }
 
     logout() {

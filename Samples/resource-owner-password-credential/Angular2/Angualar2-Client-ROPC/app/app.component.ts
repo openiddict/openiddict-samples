@@ -12,9 +12,10 @@ import {Authservice} from './authorize/authorize-service';
 
 export class AppComponent {
     private log: boolean;
+ 
     constructor(public jwtHelper: JwtHelper,
         private authservice: Authservice,
-        private _parentRouter: Router) { }
+        private _parentRouter: Router) {}
 
     @ViewChild(AuthorizeComponent)
     private authorizeComponentRefer: AuthorizeComponent;
@@ -23,9 +24,6 @@ export class AppComponent {
         if (this.authservice.authenticated()) { //validation for secure routes there are other ways too but i think its simplest
             this._parentRouter.navigate(['/dashboard']);
             this.authorizeComponentRefer.logstatus();
-        }
-        else {
-            this.authorizeComponentRefer.mopen();
         }
     }
 

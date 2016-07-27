@@ -4,7 +4,7 @@ import {Router} from '@angular/router';
 import {Authservice} from './authorize-service';
 import {ResourceService} from '../resource/resource-service';
 import { MODAL_DIRECTIVES, ModalComponent  } from 'ng2-bs3-modal/ng2-bs3-modal';
-declare var System;
+declare var System, $;
 @Component({
     selector: 'authorize',
     templateUrl: '/app/authorize/authorize-component.html',
@@ -15,7 +15,8 @@ export class AuthorizeComponent {
     constructor(public jwtHelper: JwtHelper,
         private parentRouter: Router,
         private authService: Authservice,
-        private resourceService: ResourceService) { }
+        private resourceService: ResourceService) {
+    }
 
     public userDetails: any;
     public isLoggedin: boolean;
@@ -25,11 +26,15 @@ export class AuthorizeComponent {
     public rmodel: RegisterModel;
     public loginBool: boolean;
     public registerBool: boolean;
+    public refreshBool: boolean;
     public user: string;
     public authdata: any;
     public authState: any;
-
+    public payloader: any;
+    subscription: any;
     ngOnInit() {
+        this.subscription = this.authService.getLoggedInEmitter()
+            .subscribe(item => { this.mopen(); });
         var instance = this;
         // check if auth key is present.
         if (this.authService.authenticated()) {
@@ -46,8 +51,10 @@ export class AuthorizeComponent {
         this.rmodel = new RegisterModel();
         // below logic is for my login form snippet  to view login/register 
         this.logMsg = "Type your credentials.";
+        this.payloader = "Authorizing Server Access";
         this.loginBool = true;
         this.registerBool = false;
+        this.refreshBool = false;
         //end of logic
     }
     // below logic is for my login form snippet to view login/register 
@@ -56,10 +63,25 @@ export class AuthorizeComponent {
 
     public mclose() {
         this.modal.close();
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
     }
 
     public mopen() {
-        this.modal.open();
+        if (localStorage.getItem('refresh_key')) {
+            this.refreshBool = true;
+            this.loginBool = false;
+            this.registerBool = false;
+            this.modal.open();// check if refresh key is present it wont be present for external logged in users
+            this.refreshLogin(); // renew auth key and redirect
+        }
+        else {
+            this.refreshBool = false;
+            this.loginBool = true;
+            this.registerBool = false;
+            this.modal.open();
+        }
+
     }
 
     public logstatus() {
@@ -68,11 +90,13 @@ export class AuthorizeComponent {
 
     public callLogin() { // method to open login form
         this.loginBool = true;
+        this.refreshBool = false;
         this.registerBool = false;
     }
 
     public callRegister() {//method to open register form
         this.loginBool = false;
+        this.refreshBool = false;
         this.registerBool = true;
     }
     // end
@@ -113,6 +137,7 @@ export class AuthorizeComponent {
                 localStorage.setItem("auth_key", TokenResult.access_token);
                 localStorage.setItem("refresh_key", TokenResult.refresh_token);
                 instance.getUserFromServer();
+                this.payloader = "Authorized";
                 this.mclose();
                 this.parentRouter.navigate(['/dashboard']);
             },
@@ -134,6 +159,7 @@ export class AuthorizeComponent {
             this.isLoading = false;
             instance.userDetails = data;
             this.isLoggedin = true;
+            this.mclose();
         },
             error => {
                 this.isLoading = false;
@@ -150,9 +176,9 @@ export class AuthorizeComponent {
             this.parentRouter.navigate(['/']);
             this.isLoggedin = false;
         }, error => {
-                this.isLoading = false;
-                this.logMsg = error
-            });
+            this.isLoading = false;
+            this.logMsg = error
+        });
     }
 
     public userRegister(creds: RegisterModel) {

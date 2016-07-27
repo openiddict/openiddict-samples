@@ -37,6 +37,18 @@
                 </div>
             </div>
         </form>
+         <form  [hidden]="!refreshBool">
+            <div class="modal-body">
+                   <div id="text-login-msg" [hidden]="!isLoading">
+                        <span class="red-text text-darken-2">
+                         <img style="vertical-align:middle" src="../../images/Preloader.gif" width="30" /> Please wait
+                        </span>
+                    </div>
+               <h3>{{payloader}}</h3>   
+                 <button type="submit" [hidden]="!isLoading" (click)="mclose()" class="btn btn-primary btn-lg btn-block">Close</button>
+                      
+            </div>
+        </form>
         <form id="register-form" name="Registerform" [hidden]="!registerBool">
             <div class="modal-body">
                 <div id="div-register-msg">

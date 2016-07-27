@@ -11,14 +11,12 @@ export class ResourceService {
     private authUrl = this.app.Server;  // URL to web api
 
     getUserInfo() {
-        if (this.authservice.authenticated()) {
             let authheaders = new Headers({ "Authorization": "Bearer " + localStorage.getItem("auth_key") });
             let Authoptions = new RequestOptions({ headers: authheaders });
             return this.http.get(this.authUrl + "/api/Resource", Authoptions)
                 .map(res => res.json())
                 .catch(this.handleError);
-        }
-    }
+          }
 
     private handleError(error: Response) {
         return Observable.throw(error || 'Server error');
