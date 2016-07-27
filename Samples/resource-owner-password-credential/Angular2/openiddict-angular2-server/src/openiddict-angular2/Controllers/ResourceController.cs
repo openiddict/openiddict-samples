@@ -21,7 +21,6 @@ namespace NgOidc.Controllers
         public async Task<IActionResult> Get()
         {
             var user = await _userManager.GetUserAsync(User);
-            /*if (user == null) return BadRequest("No user - not logged in");// if Authorize is not applied*/
             return Ok(user);
         }
     }

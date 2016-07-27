@@ -18,7 +18,6 @@ export class Authservice {
         return this.loginEmitter;
     }
 
-
     private authUrl = this.app.Server;  // URL to web api
     private headers = new Headers({ 'Content-Type': 'application/X-www-form-urlencoded' });
     private jheaders = new Headers({ 'Content-Type': 'application/json' });

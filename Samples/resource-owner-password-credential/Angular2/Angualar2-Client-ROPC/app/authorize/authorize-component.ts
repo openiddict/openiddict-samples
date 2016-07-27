@@ -81,7 +81,6 @@ export class AuthorizeComponent {
             this.registerBool = false;
             this.modal.open();
         }
-
     }
 
     public logstatus() {
