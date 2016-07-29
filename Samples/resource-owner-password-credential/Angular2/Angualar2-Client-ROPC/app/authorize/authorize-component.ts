@@ -42,8 +42,8 @@ export class AuthorizeComponent {
             this.parentRouter.navigate(['/dashboard']);
         }
         else {
-            if (localStorage.getItem('refresh_key')) { // check if refresh key is present it wont be present for external logged in users
-                this.refreshLogin(); // renew auth key and redirect
+            if (localStorage.getItem('refresh_key')) { // check if refresh key is present 
+                this.refreshLogin(); // renew auth key 
             }
         }
 
@@ -72,8 +72,8 @@ export class AuthorizeComponent {
             this.refreshBool = true;
             this.loginBool = false;
             this.registerBool = false;
-            this.modal.open();// check if refresh key is present it wont be present for external logged in users
-            this.refreshLogin(); // renew auth key and redirect
+            this.modal.open();// check if refresh key is present 
+            this.refreshLogin(); // renew auth key
         }
         else {
             this.refreshBool = false;
@@ -154,29 +154,29 @@ export class AuthorizeComponent {
     public getUserFromServer() {
         this.isLoading = true;
         var instance = this;
-        this.resourceService.getUserInfo().subscribe(data => {
+        this.resourceService.getUserInfo().subscribe(Data => {
             this.isLoading = false;
-            instance.userDetails = data;
+            instance.userDetails = Data;
             this.isLoggedin = true;
             this.mclose();
         },
-            error => {
+            Error => {
                 this.isLoading = false;
-                instance.userDetails = error;
+                instance.userDetails = Error;
             });
     }
 
     public logout() {
         this.isLoading = true;
-        this.authService.logout().subscribe(data => {
+        this.authService.logout().subscribe(Data => {
             this.isLoading = false;
             localStorage.removeItem("auth_key");
             localStorage.removeItem("refresh_key");
             this.parentRouter.navigate(['/']);
             this.isLoggedin = false;
-        }, error => {
+        }, Error => {
             this.isLoading = false;
-            this.logMsg = error
+            this.logMsg = Error
         });
     }
 
@@ -235,5 +235,4 @@ export class TokenResult {
 export class Regresult {
     public succeeded: string;
     public errors: any[];
-
 }

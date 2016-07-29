@@ -24,7 +24,7 @@ export class Authservice {
     private authheaders;
     private options = new RequestOptions({ headers: this.headers });
     private joptions = new RequestOptions({ headers: this.jheaders });
-    private Authoptions;// = new RequestOptions({ headers: this.authheaders });
+    private authoptions;// = new RequestOptions({ headers: this.authheaders });
     private tokenParams = "grant_type=password" +// password type reuqets with credentials read more on grant_types
     "&client_id=localApp" +
     "&resource=" + this.app.FileServer + // audience url . read more on docs /blog
@@ -44,9 +44,9 @@ export class Authservice {
     logout() {
         if (localStorage.getItem("auth_key")) {
             this.authheaders = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
-            this.Authoptions = new RequestOptions({ headers: this.authheaders });
+            this.authoptions = new RequestOptions({ headers: this.authheaders });
             return this.http.post(this.authUrl + "/connect/revoke",
-                "token=" + localStorage.getItem("refresh_key") + "&token_type=refresh_token", this.Authoptions)
+                "token=" + localStorage.getItem("refresh_key") + "&token_type=refresh_token", this.authoptions)
                 .map(res => res)
                 .catch(this.handleError);
         }

@@ -27,13 +27,13 @@ export class UserComponent {
         this.isLoading = true;
         if (this.authservice.authenticated()) {
             this.resourceService.getUserInfo().subscribe(
-                data => {
+                Data => {
                     this.isLoading = false;
-                    this.payload = JSON.stringify(data);
+                    this.payload = JSON.stringify(Data);
                 },
-                error => {
+                Error => {
                     this.isLoading = false;
-                    this.payload = error
+                    this.payload = Error
                 });
         } else { this._parentRouter.navigate(['/']); }
     }

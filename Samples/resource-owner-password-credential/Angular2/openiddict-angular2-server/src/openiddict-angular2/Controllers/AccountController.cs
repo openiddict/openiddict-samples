@@ -14,22 +14,18 @@ namespace NgOidc.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger _logger;
+
         public AccountController(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            ILoggerFactory loggerFactory,
-            ApplicationDbContext applicationDbContext)
+            ILoggerFactory loggerFactory)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
         // Custom Register
         [Route("api/account/register")]
         [HttpPost]
-        //  [ValidateAntiForgeryToken]
         [AllowAnonymous]
         public async Task<IActionResult> RegisterHttp([FromBody]RegisterViewModel dto)
         {
@@ -48,13 +44,5 @@ namespace NgOidc.Controllers
 
             return BadRequest(result);
         }
-
-        #region Helpers
-        private Task<ApplicationUser> GetCurrentUserAsync()
-        {
-            return _userManager.GetUserAsync(HttpContext.User);
-        }
-
-        #endregion
     }
 }

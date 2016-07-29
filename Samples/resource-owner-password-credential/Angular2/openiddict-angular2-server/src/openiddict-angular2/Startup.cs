@@ -55,6 +55,7 @@ namespace NgOidc
 
             services.AddOpenIddict<ApplicationUser, IdentityRole, ApplicationDbContext>()
                       .UseJsonWebTokens()
+                      .AddEphemeralSigningKey()
                       .EnableAuthorizationEndpoint("/connect/authorize")
                       .EnableTokenEndpoint("/connect/token")
                       .EnableUserinfoEndpoint("/connect/userinfo")
@@ -130,7 +131,7 @@ namespace NgOidc
 
             });
 
-            /// Add Client application to your database
+            // Add Client application to your database
             using (var context = new ApplicationDbContext(
                       app.ApplicationServices.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
             {

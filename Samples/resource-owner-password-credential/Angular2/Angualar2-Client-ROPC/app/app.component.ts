@@ -21,7 +21,7 @@ export class AppComponent {
     private authorizeComponentRefer: AuthorizeComponent;
 
     public authcheck() {
-        if (this.authservice.authenticated()) { //validation for secure routes there are other ways too but i think its simplest
+        if (this.authservice.authenticated()) { 
             this._parentRouter.navigate(['/dashboard']);
             this.authorizeComponentRefer.logstatus();
         }

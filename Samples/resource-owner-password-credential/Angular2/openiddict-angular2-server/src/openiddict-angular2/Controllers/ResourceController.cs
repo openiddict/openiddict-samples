@@ -9,11 +9,9 @@ namespace NgOidc.Controllers
     [Authorize]
     public class ResourceController : Controller
     {
-        private ApplicationDbContext _context;
         private UserManager<ApplicationUser> _userManager;
-        public ResourceController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ResourceController(UserManager<ApplicationUser> userManager)
         {
-            _context = context;
             _userManager = userManager;
         }
 

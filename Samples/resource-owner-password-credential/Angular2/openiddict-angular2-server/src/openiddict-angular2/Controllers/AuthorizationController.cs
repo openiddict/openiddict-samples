@@ -19,16 +19,13 @@ namespace NgOidc.Controllers
     public class AuthorizationController : Controller
     {
         private readonly OpenIddictApplicationManager<OpenIddictApplication> _applicationManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly OpenIddictUserManager<ApplicationUser> _userManager;
 
         public AuthorizationController(
             OpenIddictApplicationManager<OpenIddictApplication> applicationManager,
-            SignInManager<ApplicationUser> signInManager,
             OpenIddictUserManager<ApplicationUser> userManager)
         {
             _applicationManager = applicationManager;
-            _signInManager = signInManager;
             _userManager = userManager;
         }
 
@@ -102,8 +99,7 @@ namespace NgOidc.Controllers
             // Notify OpenIddict that the authorization grant has been denied by the resource owner
             // to redirect the user agent to the client application using the appropriate response_mode.
             return Forbid(OpenIdConnectServerDefaults.AuthenticationScheme);
-        }
-        */
+        } */
     }
 
 
