@@ -21,7 +21,7 @@
                 </div>
                 <input name="nusername" [(ngModel)]="model.username" class="form-control" type="text" placeholder="Username (type ERROR for error effect)"
                     required>
-                <input name="npassword" [(ngModel)]="model.password" class="form-control" type="password" placeholder="Password" required>
+                <input name="npassword" style="margin-top:10px" [(ngModel)]="model.password" class="form-control" type="password" placeholder="Password" required>
                 <div class="checkbox">
                     <label>
                         <input type="checkbox"> Remember me
@@ -62,9 +62,9 @@
                 </div>
                 <input id="register_username" name="nEmail" [(ngModel)]="rmodel.Email" class="form-control" type="text" placeholder="Email (type ERROR for error effect)"
                     required>
-                <input id="register_email" name="nPassword" [(ngModel)]="rmodel.Password" class="form-control" type="password" placeholder="Password"
+                <input id="register_email" style="margin-top:10px" name="nPassword" [(ngModel)]="rmodel.Password" class="form-control" type="password" placeholder="Password"
                     required>
-                <input id="register_password" name="nConfirmPassword" [(ngModel)]="rmodel.ConfirmPassword" class="form-control" type="password"
+                <input id="register_password" style="margin-top:10px" name="nConfirmPassword" [(ngModel)]="rmodel.ConfirmPassword" class="form-control" type="password"
                     placeholder="Confirm Password" required>
             </div>
             <div class="modal-footer">
