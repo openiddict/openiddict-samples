@@ -50,9 +50,11 @@ namespace Mvc.Server {
                 });
             }
 
+            // Flow the request_id to allow OpenIddict to restore
+            // the original authorization request from the cache.
             return View(new AuthorizeViewModel {
                 ApplicationName = application.DisplayName,
-                Parameters = request.Parameters,
+                RequestId = request.RequestId,
                 Scope = request.Scope
             });
         }
@@ -100,8 +102,10 @@ namespace Mvc.Server {
             // Extract the authorization request from the ASP.NET environment.
             var request = HttpContext.GetOpenIdConnectRequest();
 
+            // Flow the request_id to allow OpenIddict to restore
+            // the original logout request from the distributed cache.
             return View(new LogoutViewModel {
-                Parameters = request.Parameters
+                RequestId = request.RequestId,
             });
         }
 
