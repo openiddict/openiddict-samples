@@ -6,13 +6,11 @@
 
 using System;
 using System.Security.Claims;
-using System.Threading;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Server;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -37,10 +35,7 @@ namespace Mvc.Server {
         }
 
         [Authorize, HttpGet, Route("~/connect/authorize")]
-        public async Task<IActionResult> Authorize() {
-            // Extract the authorization request from the ASP.NET environment.
-            var request = HttpContext.GetOpenIdConnectRequest();
-
+        public async Task<IActionResult> Authorize(OpenIdConnectRequest request) {
             // Retrieve the application details from the database.
             var application = await _applicationManager.FindByClientIdAsync(request.ClientId);
             if (application == null) {
@@ -60,10 +55,7 @@ namespace Mvc.Server {
         }
 
         [Authorize, HttpPost("~/connect/authorize/accept"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Accept() {
-            // Extract the authorization request from the ASP.NET environment.
-            var request = HttpContext.GetOpenIdConnectRequest();
-
+        public async Task<IActionResult> Accept(OpenIdConnectRequest request) {
             // Retrieve the profile of the logged in user.
             var user = await _userManager.GetUserAsync(User);
             if (user == null) {
@@ -98,10 +90,7 @@ namespace Mvc.Server {
         }
 
         [HttpGet("~/connect/logout")]
-        public IActionResult Logout() {
-            // Extract the authorization request from the ASP.NET environment.
-            var request = HttpContext.GetOpenIdConnectRequest();
-
+        public IActionResult Logout(OpenIdConnectRequest request) {
             // Flow the request_id to allow OpenIddict to restore
             // the original logout request from the distributed cache.
             return View(new LogoutViewModel {
@@ -110,7 +99,7 @@ namespace Mvc.Server {
         }
 
         [HttpPost("~/connect/logout"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout(CancellationToken cancellationToken) {
+        public async Task<IActionResult> Logout() {
             // Ask ASP.NET Core Identity to delete the local and external cookies created
             // when the user agent is redirected from the external identity provider
             // after a successful authentication flow (e.g Google or Facebook).
