@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - Auth Server</title>
+
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.0.0/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap-touch-carousel/0.8.0/css/bootstrap-touch-carousel.css" />
+    </head>
+    <body>
+       <div class="container">
+           <h1>Auth Server</h1>
+            @RenderBody()
+        </div>
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.4.min.js"></script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.0.0/bootstrap.min.js"></script>
+        <script src="https://ajax.aspnetcdn.com/ajax/hammer.js/2.0.4/hammer.min.js"></script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap-touch-carousel/0.8.0/js/bootstrap-touch-carousel.js"></script>
+        @RenderSection("scripts", required: false)
+    </body>
+</html>

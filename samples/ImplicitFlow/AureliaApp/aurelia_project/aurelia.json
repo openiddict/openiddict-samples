@@ -1,0 +1,131 @@
+{
+  "name": "aurelia-app",
+  "type": "project:application",
+  "platform": {
+    "id": "web",
+    "displayName": "Web",
+    "output": "scripts"
+  },
+  "transpiler": {
+    "id": "typescript",
+    "displayName": "TypeScript",
+    "fileExtension": ".ts",
+    "dtsSource": [
+      "./typings/**/*.d.ts",
+      "./custom_typings/**/*.d.ts"
+    ],
+    "source": "src\\**\\*.ts"
+  },
+  "markupProcessor": {
+    "id": "none",
+    "displayName": "None",
+    "fileExtension": ".html",
+    "source": "src\\**\\*.html"
+  },
+  "editor": {
+    "id": "vscode",
+    "displayName": "Visual Studio Code"
+  },
+  "unitTestRunner": {
+    "id": "karma",
+    "displayName": "Karma",
+    "source": "test\\unit\\**\\*.ts"
+  },
+  "paths": {
+    "root": "src"
+  },
+  "testFramework": {
+    "id": "jasmine",
+    "displayName": "Jasmine"
+  },
+  "build": {
+    "targets": [
+      {
+        "id": "web",
+        "displayName": "Web",
+        "output": "scripts"
+      }
+    ],
+    "loader": {
+      "type": "require",
+      "configTarget": "vendor-bundle.js",
+      "includeBundleMetadataInConfig": "auto",
+      "plugins": [
+        {
+          "name": "text",
+          "extensions": [
+            ".html",
+            ".css"
+          ],
+          "stub":false 
+        }
+      ]
+    },
+    "options": {
+      "minify": "",
+      "sourcemaps": "dev & stage & prod"
+    },
+    "bundles": [
+      {
+        "name": "open-id-bundle.js",
+        "dependencies": [
+          "oidc-client",
+          {
+            "name": "aurelia-open-id-connect", 
+            "path": "../node_modules/aurelia-open-id-connect/dist/amd/",
+            "main": "index"
+          }
+        ]
+      },
+      {
+        "name": "app-bundle.js",
+        "source": [
+          "**/src/*.{js,html}"
+        ]
+      },
+      {
+        "name": "vendor-bundle.js",
+        "prepend": [
+          "node_modules/bluebird/js/browser/bluebird.core.js",
+          "node_modules/requirejs/require.js"
+        ],
+        "dependencies": [
+          "aurelia-binding",
+          "aurelia-bootstrapper",
+          "aurelia-dependency-injection",
+          "aurelia-event-aggregator",
+          "aurelia-framework",
+          "aurelia-fetch-client",
+          "aurelia-history",
+          "aurelia-history-browser",
+          "aurelia-loader",
+          "aurelia-loader-default",
+          "aurelia-logging",
+          "aurelia-logging-console",
+          "aurelia-metadata",
+          "aurelia-pal",
+          "aurelia-pal-browser",
+          "aurelia-path",
+          "aurelia-polyfills",
+          "aurelia-route-recognizer",
+          "aurelia-router",
+          "aurelia-task-queue",
+          "aurelia-templating",
+          "aurelia-templating-binding",
+          "aurelia-templating-resources",
+          "text",
+          {
+            "name": "aurelia-templating-resources",
+            "path": "../node_modules/aurelia-templating-resources/dist/amd",
+            "main": "aurelia-templating-resources"
+          },
+          {
+            "name": "aurelia-templating-router",
+            "path": "../node_modules/aurelia-templating-router/dist/amd",
+            "main": "aurelia-templating-router"
+          }
+        ]
+      }
+    ]
+  }
+}
