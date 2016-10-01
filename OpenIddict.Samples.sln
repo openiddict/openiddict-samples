@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mvc", "Mvc", "{F47D1283-0EE9-4728-8026-58405C29B786}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeFlow", "CodeFlow", "{F47D1283-0EE9-4728-8026-58405C29B786}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Mvc.Client", "samples\Mvc\Mvc.Client\Mvc.Client.xproj", "{96B22EB9-771A-4DCA-B828-E6EA2774CF1B}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ClientApp", "samples\CodeFlow\ClientApp\ClientApp.xproj", "{96B22EB9-771A-4DCA-B828-E6EA2774CF1B}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Mvc.Server", "samples\Mvc\Mvc.Server\Mvc.Server.xproj", "{7CBEAFD2-E3D0-4424-9B78-E87AB52327A6}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AuthorizationServer", "samples\CodeFlow\AuthorizationServer\AuthorizationServer.xproj", "{7CBEAFD2-E3D0-4424-9B78-E87AB52327A6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Implicit", "Implicit", "{E0ADFFCA-A604-42D1-8F6D-DE888E061188}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ImplicitFlow", "ImplicitFlow", "{E0ADFFCA-A604-42D1-8F6D-DE888E061188}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ResourceServer01", "samples\ImplicitFlow\ResourceServer01\ResourceServer01.xproj", "{BA61A766-958E-4960-B6FA-D1140A67511C}"
 EndProject
