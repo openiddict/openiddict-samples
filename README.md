@@ -4,10 +4,10 @@ ASP.NET Core samples demonstrating **how to use [OpenIddict](https://github.com/
 
 ## Support
 
-**Need help or wanna share your thoughts? Don't hesitate to join our dedicated chat rooms:**
+**Need help or wanna share your thoughts?** Don't hesitate to join us on Gitter or ask your question on StackOverflow:
 
-- **JabbR: [https://jabbr.net/#/rooms/aspnet-contrib](https://jabbr.net/#/rooms/aspnet-contrib)**
 - **Gitter: [https://gitter.im/openiddict/openiddict-core](https://gitter.im/openiddict/openiddict-core)**
+- **StackOverflow: [https://stackoverflow.com/questions/tagged/openiddict](https://stackoverflow.com/questions/tagged/openiddict)**
 
 ## Contributors
 
