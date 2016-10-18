@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using AuthorizationServer.Models;
 using AuthorizationServer.Services;
@@ -16,16 +15,16 @@ namespace AuthorizationServer {
                 options.UseSqlite("Filename=./authorization.db");
             });
 
-            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
-                .AddEntityFrameworkStores<ApplicationDbContext, Guid>();
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             // Register the OpenIddict services, including the default Entity Framework stores.
-            services.AddOpenIddict<ApplicationUser, IdentityRole<Guid>, ApplicationDbContext, Guid>()
+            services.AddOpenIddict<ApplicationDbContext>()
 
                 // Enable the authorization, logout, userinfo, and introspection endpoints.
                 .EnableAuthorizationEndpoint("/connect/authorize")
                 .EnableLogoutEndpoint("/connect/logout")
-                .EnableUserinfoEndpoint("/connect/userinfo")
+                .EnableUserinfoEndpoint("/Account/Userinfo")
                 .EnableIntrospectionEndpoint("/connect/introspect")
 
                 // Note: the sample only uses the implicit code flow but you can enable
@@ -73,7 +72,7 @@ namespace AuthorizationServer {
                 context.Database.EnsureCreated();
 
                 if (!context.Applications.Any()) {
-                    context.Applications.Add(new OpenIddictApplication<Guid> {
+                    context.Applications.Add(new OpenIddictApplication {
                         ClientId = "Aurelia.OpenIdConnect",
                         DisplayName = "Aurelia Open Id Connect",
                         LogoutRedirectUri = "http://localhost:9000/signout-oidc",
@@ -81,13 +80,13 @@ namespace AuthorizationServer {
                         Type = OpenIddictConstants.ClientTypes.Public
                     });
 
-                    context.Applications.Add(new OpenIddictApplication<Guid> {
+                    context.Applications.Add(new OpenIddictApplication {
                         ClientId = "ResourceServer01",
                         ClientSecret = Crypto.HashPassword("secret_secret_secret"),
                         Type = OpenIddictConstants.ClientTypes.Confidential
                     });
 
-                    context.Applications.Add(new OpenIddictApplication<Guid> {
+                    context.Applications.Add(new OpenIddictApplication {
                         ClientId = "ResourceServer02",
                         ClientSecret = Crypto.HashPassword("secret_secret_secret"),
                         Type = OpenIddictConstants.ClientTypes.Confidential

@@ -1,10 +1,8 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OpenIddict;
 
 namespace AuthorizationServer.Models {
-    public class ApplicationDbContext : OpenIddictDbContext<ApplicationUser, IdentityRole<Guid>, Guid> {
+    public class ApplicationDbContext : OpenIddictDbContext<ApplicationUser> {
         public ApplicationDbContext(DbContextOptions options)
             : base(options) { }
 

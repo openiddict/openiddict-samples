@@ -4,7 +4,6 @@
  * the license and the contributors participating to this project.
  */
 
-using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -22,14 +21,14 @@ using OpenIddict;
 
 namespace AuthorizationServer {
     public class AuthorizationController : Controller {
-        private readonly OpenIddictApplicationManager<OpenIddictApplication<Guid>> _applicationManager;
+        private readonly OpenIddictApplicationManager<OpenIddictApplication> _applicationManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly OpenIddictUserManager<ApplicationUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public AuthorizationController(
-            OpenIddictApplicationManager<OpenIddictApplication<Guid>> applicationManager,
+            OpenIddictApplicationManager<OpenIddictApplication> applicationManager,
             SignInManager<ApplicationUser> signInManager,
-            OpenIddictUserManager<ApplicationUser> userManager) {
+            UserManager<ApplicationUser> userManager) {
             _applicationManager = applicationManager;
             _signInManager = signInManager;
             _userManager = userManager;
@@ -58,21 +57,8 @@ namespace AuthorizationServer {
                 });
             }
 
-            // Create a new ClaimsIdentity containing the claims that
-            // will be used to create an id_token, a token or a code.
-            var identity = await _userManager.CreateIdentityAsync(user, request.GetScopes());
-
-            // Create a new authentication ticket holding the user identity.
-            var ticket = new AuthenticationTicket(
-                new ClaimsPrincipal(identity),
-                new AuthenticationProperties(),
-                OpenIdConnectServerDefaults.AuthenticationScheme);
-
-            // Hard code the resources, because oidc-client-js 
-            // does not support the resource property. Use `Union`
-            // to support future use of the resource property.
-            ticket.SetResources(request.GetResources().Union(new[] { "ResourceServer01", "ResourceServer02" }));
-            ticket.SetScopes(request.GetScopes());
+            // Create a new authentication ticket.
+            var ticket = await CreateTicketAsync(request, user);
 
             // Returning a SignInResult will ask OpenIddict to issue the appropriate access/identity tokens.
             return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
@@ -91,6 +77,58 @@ namespace AuthorizationServer {
             // Returning a SignOutResult will ask OpenIddict to redirect the user agent
             // to the post_logout_redirect_uri specified by the client application.
             return SignOut(OpenIdConnectServerDefaults.AuthenticationScheme);
+        }
+
+        private async Task<AuthenticationTicket> CreateTicketAsync(OpenIdConnectRequest request, ApplicationUser user) {
+            // Set the list of scopes granted to the client application.
+            // Note: the offline_access scope must be granted
+            // to allow OpenIddict to return a refresh token.
+            var scopes = new[] {
+                OpenIdConnectConstants.Scopes.OpenId,
+                OpenIdConnectConstants.Scopes.Email,
+                OpenIdConnectConstants.Scopes.Profile,
+                OpenIdConnectConstants.Scopes.OfflineAccess
+            }.Intersect(request.GetScopes());
+
+            // Create a new ClaimsPrincipal containing the claims that
+            // will be used to create an id_token, a token or a code.
+            var principal = await _signInManager.CreateUserPrincipalAsync(user);
+
+            // Note: by default, claims are NOT automatically included in the access and identity tokens.
+            // To allow OpenIddict to serialize them, you must attach them a destination, that specifies
+            // whether they should be included in access tokens, in identity tokens or in both.
+
+            foreach (var claim in principal.Claims) {
+                // Always include the user identifier in the
+                // access token and the identity token.
+                if (claim.Type == ClaimTypes.NameIdentifier) {
+                    claim.SetDestinations(OpenIdConnectConstants.Destinations.AccessToken,
+                                          OpenIdConnectConstants.Destinations.IdentityToken);
+                }
+
+                // Include the name claim, but only if the "profile" scope was requested.
+                else if (claim.Type == ClaimTypes.Name && scopes.Contains(OpenIdConnectConstants.Scopes.Profile)) {
+                    claim.SetDestinations(OpenIdConnectConstants.Destinations.IdentityToken);
+                }
+
+                // Include the role claims, but only if the "roles" scope was requested.
+                else if (claim.Type == ClaimTypes.Role && scopes.Contains(OpenIddictConstants.Scopes.Roles)) {
+                    claim.SetDestinations(OpenIdConnectConstants.Destinations.AccessToken,
+                                          OpenIdConnectConstants.Destinations.IdentityToken);
+                }
+
+                // The other claims won't be added to the access
+                // and identity tokens and will be kept private.
+            }
+
+            // Create a new authentication ticket holding the user identity.
+            var ticket = new AuthenticationTicket(
+                principal, new AuthenticationProperties(),
+                OpenIdConnectServerDefaults.AuthenticationScheme);
+
+            ticket.SetScopes(scopes);
+
+            return ticket;
         }
     }
 }

@@ -1,13 +1,12 @@
-using System;
 using System.Linq;
+using AuthorizationServer.Models;
+using AuthorizationServer.Services;
 using CryptoHelper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using AuthorizationServer.Models;
-using AuthorizationServer.Services;
 using NWebsec.AspNetCore.Middleware;
 using OpenIddict;
 
@@ -25,12 +24,12 @@ namespace AuthorizationServer {
                 options.UseSqlServer(configuration["Data:DefaultConnection:ConnectionString"]));
 
             // Register the Identity services.
-            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
-                .AddEntityFrameworkStores<ApplicationDbContext, Guid>()
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             // Register the OpenIddict services, including the default Entity Framework stores.
-            services.AddOpenIddict<ApplicationUser, IdentityRole<Guid>, ApplicationDbContext, Guid>()
+            services.AddOpenIddict<ApplicationDbContext>()
                 // Register the ASP.NET Core MVC binder used by OpenIddict.
                 // Note: if you don't call this method, you won't be able to
                 // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
@@ -40,7 +39,7 @@ namespace AuthorizationServer {
                 .EnableAuthorizationEndpoint("/connect/authorize")
                 .EnableLogoutEndpoint("/connect/logout")
                 .EnableTokenEndpoint("/connect/token")
-                .EnableUserinfoEndpoint("/connect/userinfo")
+                .EnableUserinfoEndpoint("/Account/Userinfo")
 
                 // Note: the Mvc.Client sample only uses the authorization code flow but you can enable
                 // the other flows if you need to support implicit, password or client credentials.
@@ -148,7 +147,7 @@ namespace AuthorizationServer {
                     //     Type = OpenIddictConstants.ClientTypes.Confidential
                     // });
 
-                    context.Applications.Add(new OpenIddictApplication<Guid> {
+                    context.Applications.Add(new OpenIddictApplication {
                         ClientId = "myClient",
                         ClientSecret = Crypto.HashPassword("secret_secret_secret"),
                         DisplayName = "My client application",
@@ -166,7 +165,7 @@ namespace AuthorizationServer {
                     // * Scope: openid email profile roles
                     // * Grant type: authorization code
                     // * Request access token locally: yes
-                    context.Applications.Add(new OpenIddictApplication<Guid> {
+                    context.Applications.Add(new OpenIddictApplication {
                         ClientId = "postman",
                         DisplayName = "Postman",
                         RedirectUri = "https://www.getpostman.com/oauth2/callback",
