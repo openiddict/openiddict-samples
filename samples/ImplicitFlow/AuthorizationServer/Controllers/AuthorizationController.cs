@@ -87,7 +87,8 @@ namespace AuthorizationServer {
                 OpenIdConnectConstants.Scopes.OpenId,
                 OpenIdConnectConstants.Scopes.Email,
                 OpenIdConnectConstants.Scopes.Profile,
-                OpenIdConnectConstants.Scopes.OfflineAccess
+                OpenIdConnectConstants.Scopes.OfflineAccess,
+                OpenIddictConstants.Scopes.Roles
             }.Intersect(request.GetScopes());
 
             // Create a new ClaimsPrincipal containing the claims that
