@@ -67,7 +67,7 @@ namespace AuthorizationServer {
             // Alternatively, you can also store the certificate as an embedded .pfx resource
             // directly in this assembly or in a file published alongside this project:
             // 
-            // services.AddOpenIddict<ApplicationUser, IdentityRole<Guid>, ApplicationDbContext, Guid>()
+            // services.AddOpenIddict<ApplicationDbContext>()
             //     .AddSigningCertificate(
             //          assembly: typeof(Startup).GetTypeInfo().Assembly,
             //          resource: "AuthorizationServer.Certificate.pfx",
