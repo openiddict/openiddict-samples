@@ -1,11 +1,11 @@
-using AspNet.Security.OAuth.Validation;
+using System.Security.Claims;
+using AspNet.Security.OAuth.Introspection;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace ResourceServer02.Controllers {
     public class ResourceController : Controller {
-        [Authorize(ActiveAuthenticationSchemes = OAuthValidationDefaults.AuthenticationScheme)]
+        [Authorize(ActiveAuthenticationSchemes = OAuthIntrospectionDefaults.AuthenticationScheme)]
         [HttpGet]
         public IActionResult Private() {
             var identity = User.Identity as ClaimsIdentity;

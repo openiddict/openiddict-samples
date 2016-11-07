@@ -5,7 +5,6 @@
  */
 
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Server;
@@ -111,6 +110,8 @@ namespace AuthorizationServer {
                 OpenIdConnectConstants.Scopes.OfflineAccess,
                 OpenIddictConstants.Scopes.Roles
             }.Intersect(request.GetScopes()));
+
+            ticket.SetResources("ResourceServer01", "ResourceServer02");
 
             return ticket;
         }

@@ -46,6 +46,13 @@ namespace AuthorizationServer {
                 .AllowAuthorizationCodeFlow()
                 .AllowRefreshTokenFlow()
 
+                // When request caching is enabled, authorization and logout requests
+                // are stored in the distributed cache by OpenIddict and the user agent
+                // is redirected to the same page with a single parameter (request_id).
+                // This allows flowing large OpenID Connect requests even when using
+                // an external authentication provider like Google, Facebook or Twitter.
+                .EnableRequestCaching()
+
                 // During development, you can disable the HTTPS requirement.
                 .DisableHttpsRequirement()
 

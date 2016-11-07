@@ -12,7 +12,7 @@ namespace AuthorizationServer {
     public class Startup {
         public void ConfigureServices(IServiceCollection services) {
             services.AddDbContext<ApplicationDbContext>(options => {
-                options.UseSqlite("Filename=./authorization.db");
+                options.UseInMemoryDatabase();
             });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -24,8 +24,8 @@ namespace AuthorizationServer {
                 // Enable the authorization, logout, userinfo, and introspection endpoints.
                 .EnableAuthorizationEndpoint("/connect/authorize")
                 .EnableLogoutEndpoint("/connect/logout")
-                .EnableUserinfoEndpoint("/Account/Userinfo")
                 .EnableIntrospectionEndpoint("/connect/introspect")
+                .EnableUserinfoEndpoint("/Account/Userinfo")
 
                 // Note: the sample only uses the implicit code flow but you can enable
                 // the other flows if you need to support implicit, password or client credentials.
@@ -52,9 +52,12 @@ namespace AuthorizationServer {
             app.UseCors(builder => {
                 builder.WithOrigins("http://localhost:9000");
                 builder.WithMethods("GET");
+                builder.WithHeaders("Authorization");
             });
 
             app.UseOpenIddict();
+
+            app.UseOAuthValidation();
 
             app.UseMvcWithDefaultRoute();
 
