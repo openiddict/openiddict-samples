@@ -5,10 +5,10 @@
  */
 
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Server;
+using AuthorizationServer.Helpers;
 using AuthorizationServer.Models;
 using AuthorizationServer.ViewModels.Authorization;
 using AuthorizationServer.ViewModels.Shared;
@@ -34,7 +34,7 @@ namespace AuthorizationServer {
             _userManager = userManager;
         }
 
-        [Authorize, HttpGet, Route("~/connect/authorize")]
+        [Authorize, HttpGet("~/connect/authorize")]
         public async Task<IActionResult> Authorize(OpenIdConnectRequest request) {
             // Retrieve the application details from the database.
             var application = await _applicationManager.FindByClientIdAsync(request.ClientId);
@@ -54,7 +54,8 @@ namespace AuthorizationServer {
             });
         }
 
-        [Authorize, HttpPost("~/connect/authorize/accept"), ValidateAntiForgeryToken]
+        [Authorize, FormValueRequired("submit.Accept")]
+        [HttpPost("~/connect/authorize"), ValidateAntiForgeryToken]
         public async Task<IActionResult> Accept(OpenIdConnectRequest request) {
             // Retrieve the profile of the logged in user.
             var user = await _userManager.GetUserAsync(User);
@@ -72,7 +73,8 @@ namespace AuthorizationServer {
             return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
         }
 
-        [Authorize, HttpPost("~/connect/authorize/deny"), ValidateAntiForgeryToken]
+        [Authorize, FormValueRequired("submit.Deny")]
+        [HttpPost("~/connect/authorize"), ValidateAntiForgeryToken]
         public IActionResult Deny() {
             // Notify OpenIddict that the authorization grant has been denied by the resource owner
             // to redirect the user agent to the client application using the appropriate response_mode.

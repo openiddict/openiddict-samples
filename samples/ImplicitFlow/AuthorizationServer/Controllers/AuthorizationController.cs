@@ -33,7 +33,7 @@ namespace AuthorizationServer {
             _userManager = userManager;
         }
 
-        [Authorize, HttpGet, Route("~/connect/authorize")]
+        [Authorize, HttpGet("~/connect/authorize")]
         public async Task<IActionResult> Authorize() {
             // Extract the authorization request from the ASP.NET environment.
             var request = HttpContext.GetOpenIdConnectRequest();

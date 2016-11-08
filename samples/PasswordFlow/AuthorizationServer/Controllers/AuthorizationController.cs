@@ -5,7 +5,6 @@
  */
 
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Server;
@@ -31,8 +30,7 @@ namespace AuthorizationServer {
             _userManager = userManager;
         }
 
-        [HttpPost("~/connect/token")]
-        [Produces("application/json")]
+        [HttpPost("~/connect/token"), Produces("application/json")]
         public async Task<IActionResult> Exchange(OpenIdConnectRequest request) {
             if (request.IsPasswordGrantType()) {
                 var user = await _userManager.FindByNameAsync(request.Username);
