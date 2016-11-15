@@ -45,19 +45,15 @@
     <TypeScriptCompile Include="src\login.ts" />
     <TypeScriptCompile Include="src\main.ts" />
     <TypeScriptCompile Include="src\open-id-connect-configuration.ts" />
-    <TypeScriptCompile Include="typings\globals\core-js\index.d.ts" />
-    <TypeScriptCompile Include="typings\index.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="aurelia_project\aurelia.json" />
     <Content Include="aurelia_project\tasks\build.json" />
     <Content Include="aurelia_project\tasks\run.json" />
     <Content Include="scripts\app-bundle.js.map" />
-    <Content Include="typings\globals\core-js\typings.json" />
     <Content Include="package.json" />
     <Content Include="tsconfig.json" />
     <Content Include="tslint.json" />
-    <Content Include="typings.json" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>

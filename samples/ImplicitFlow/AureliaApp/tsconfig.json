@@ -9,6 +9,8 @@
         "declaration": true,
         "removeComments": true,
         "emitDecoratorMetadata": true,
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "lib": [ "es2015", "dom" ]
     }
 }
+

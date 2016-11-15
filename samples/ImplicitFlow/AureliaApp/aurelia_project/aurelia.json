@@ -11,8 +11,8 @@
     "displayName": "TypeScript",
     "fileExtension": ".ts",
     "dtsSource": [
-      "./typings/**/*.d.ts",
-      "./custom_typings/**/*.d.ts"
+      "./custom_typings/**/*.d.ts",
+      "./node_modules/@types/**/*.d.ts"
     ],
     "source": "src\\**\\*.ts"
   },

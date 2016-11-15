@@ -9,9 +9,8 @@
     "url": "https://github.com/openiddict/openiddict-samples.git"
   },
   "scripts": {
-    "start:typings": "node_modules/.bin/typings install -y",
     "start:start": "node_modules/.bin/au run",
-    "start": "npm run start:typings && npm run start:start"
+    "start": "npm run start:start"
   },
   "dependencies": {
     "aurelia-binding": "^1.0.3",
@@ -27,7 +26,7 @@
     "aurelia-logging": "^1.0.0",
     "aurelia-logging-console": "^1.0.0",
     "aurelia-metadata": "^1.0.0",
-    "aurelia-open-id-connect": "github:shaunluttin/aurelia-open-id-connect#0.7.4",
+    "aurelia-open-id-connect": "github:shaunluttin/aurelia-open-id-connect#0.9.6",
     "aurelia-pal": "^1.0.0",
     "aurelia-pal-browser": "^1.0.0",
     "aurelia-path": "^1.0.0",
@@ -43,7 +42,6 @@
     "bluebird": "^3.4.6",
     "connect-history-api-fallback": "^1.3.0",
     "github": "^2.6.0",
-    "oidc-client": "^1.1.0",
     "requirejs": "^2.2.0",
     "text": "github:requirejs/text"
   },
@@ -64,7 +62,6 @@
     "source-map": "^0.5.6",
     "through2": "^2.0.1",
     "tslint": "^3.15.1",
-    "typescript": "^2.0.2",
-    "typings": "^1.3.3"
+    "typescript": "^2.0.2"
   }
 }
