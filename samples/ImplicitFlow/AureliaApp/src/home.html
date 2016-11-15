@@ -1,0 +1,35 @@
+<template>
+  <style type="text/css">
+    pre {
+      background: #eee;
+      padding: 1em;
+      overflow: auto;
+    }
+    
+    pre#resources {
+      height: 75px;
+    }
+  </style>
+
+  <div>
+    <h3>Resource Server Response</h3>
+    <p>
+      <button click.trigger="queryResourceServer(01, true)">Resource Server 01 - Private</button>
+      <button click.trigger="queryResourceServer(01, false)">Resource Server 01 - Public</button>
+      <button click.trigger="queryResourceServer(02, true)">Resource Server 02 - Private</button>
+      <button click.trigger="queryResourceServer(02, false)">Resource Server 02 - Public</button>
+      <pre id="resources">
+<template repeat.for="msg of resourceServerMessage">${msg}</template>
+      </pre>
+    </p>
+  </div>
+  <div show.bind="inMemoryUser != null">
+    <h3>Authorization Server Response</h3>
+      <p>Current Time: ${currentTime}</p>
+      <p>Access Token Expires In: ${accessTokenExpiresIn}</p>
+      <button click.trigger="loginSilent()">Manual Silent Login</button>
+      <p>
+        <pre>${userAsJson}</pre>
+      </p>
+  </div>
+</template>

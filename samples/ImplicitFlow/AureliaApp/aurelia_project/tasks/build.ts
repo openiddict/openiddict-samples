@@ -1,8 +1,8 @@
-import * as gulp from "gulp";
-import transpile from "./transpile";
-import processMarkup from "./process-markup";
-import { build } from "aurelia-cli";
-import * as project from "../aurelia.json";
+import * as gulp from 'gulp';
+import transpile from './transpile';
+import processMarkup from './process-markup';
+import {build} from 'aurelia-cli';
+import * as project from '../aurelia.json';
 
 export default gulp.series(
   readProjectConfiguration,

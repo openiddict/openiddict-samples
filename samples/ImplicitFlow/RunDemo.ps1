@@ -28,26 +28,26 @@ function global:Kill-Demo {
 Push-Location "./AuthorizationServer"
 dotnet restore
 dotnet build --no-incremental #rebuild
-$global:p += Start-Process dotnet -ArgumentList "watch run server.urls=http://localhost:12345" -PassThru
+$global:p += Start-Process dotnet -ArgumentList "watch run server.urls=http://localhost:12345" -PassThru -WindowStyle Minimized
 Pop-Location
 
 # Aurelia Application
 Push-Location "./AureliaApp"
 npm install -y
-$global:p += Start-Process npm -ArgumentList "run start" -PassThru
+$global:p += Start-Process npm -ArgumentList "run demo" -PassThru -WindowStyle Minimized
 Pop-Location
 
 # Resource Server 01
 Push-Location "./ResourceServer01"
 dotnet restore
 dotnet build --no-incremental
-$global:p += Start-Process dotnet -ArgumentList "watch run server.urls=http://localhost:5001" -PassThru
+$global:p += Start-Process dotnet -ArgumentList "watch run server.urls=http://localhost:5001" -PassThru -WindowStyle Minimized
 Pop-Location
 
 # Resource Server 02
 Push-Location "./ResourceServer02"
 dotnet restore
 dotnet build --no-incremental
-$global:p += Start-Process dotnet -ArgumentList "watch run server.urls=http://localhost:5002" -PassThru
+$global:p += Start-Process dotnet -ArgumentList "watch run server.urls=http://localhost:5002" -PassThru -WindowStyle Minimized
 Pop-Location
 

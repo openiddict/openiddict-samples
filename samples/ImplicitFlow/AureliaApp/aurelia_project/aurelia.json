@@ -1,10 +1,11 @@
 {
-  "name": "aurelia-app",
+  "name": "demo",
   "type": "project:application",
   "platform": {
     "id": "web",
     "displayName": "Web",
-    "output": "scripts"
+    "output": "scripts",
+    "index": "index.html"
   },
   "transpiler": {
     "id": "typescript",
@@ -26,24 +27,21 @@
     "id": "vscode",
     "displayName": "Visual Studio Code"
   },
-  "unitTestRunner": {
-    "id": "karma",
-    "displayName": "Karma",
-    "source": "test\\unit\\**\\*.ts"
-  },
   "paths": {
-    "root": "src"
-  },
-  "testFramework": {
-    "id": "jasmine",
-    "displayName": "Jasmine"
+    "root": "src",
+    "resources": "src\\resources",
+    "elements": "src\\resources\\elements",
+    "attributes": "src\\resources\\attributes",
+    "valueConverters": "src\\resources\\value-converters",
+    "bindingBehaviors": "src\\resources\\binding-behaviors"
   },
   "build": {
     "targets": [
       {
         "id": "web",
         "displayName": "Web",
-        "output": "scripts"
+        "output": "scripts",
+        "index": "index.html"
       }
     ],
     "loader": {
@@ -62,25 +60,15 @@
       ]
     },
     "options": {
-      "minify": "",
-      "sourcemaps": "dev & stage & prod"
+      "minify": "stage & prod",
+      "sourcemaps": "dev & stage"
     },
     "bundles": [
       {
-        "name": "open-id-bundle.js",
-        "dependencies": [
-          "oidc-client",
-          {
-            "name": "aurelia-open-id-connect", 
-            "path": "../node_modules/aurelia-open-id-connect/dist/amd/",
-            "main": "index"
-          }
-        ]
-      },
-      {
         "name": "app-bundle.js",
         "source": [
-          "**/src/*.{js,html}"
+          "[**/*.js]",
+          "**/*.{css,html}"
         ]
       },
       {
@@ -94,8 +82,8 @@
           "aurelia-bootstrapper",
           "aurelia-dependency-injection",
           "aurelia-event-aggregator",
-          "aurelia-framework",
           "aurelia-fetch-client",
+          "aurelia-framework",
           "aurelia-history",
           "aurelia-history-browser",
           "aurelia-loader",
@@ -112,7 +100,6 @@
           "aurelia-task-queue",
           "aurelia-templating",
           "aurelia-templating-binding",
-          "aurelia-templating-resources",
           "text",
           {
             "name": "aurelia-templating-resources",
@@ -123,7 +110,13 @@
             "name": "aurelia-templating-router",
             "path": "../node_modules/aurelia-templating-router/dist/amd",
             "main": "aurelia-templating-router"
-          }
+          },
+          {
+            "name": "aurelia-open-id-connect",
+            "path": "../node_modules/aurelia-open-id-connect/dist/amd",
+            "main": "index"
+          },
+          "oidc-client"
         ]
       }
     ]

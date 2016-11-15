@@ -3,7 +3,7 @@ import oidcConfig from "./open-id-connect-configuration";
 
 // Configure Bluebird Promises.
 // Note: You may want to use environment-specific configuration.
-(<any>Promise).config({
+(<any> Promise).config({
   warnings: {
     wForgottenReturn: false,
   },
@@ -13,6 +13,8 @@ export function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration()
     .plugin("aurelia-open-id-connect", (callback) => callback(oidcConfig));
+
+  aurelia.use.globalResources("./navbar.html");
 
   aurelia.use.developmentLogging();
 

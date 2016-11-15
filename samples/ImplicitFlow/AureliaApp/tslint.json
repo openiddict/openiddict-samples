@@ -1,4 +1,10 @@
 {
   "extends": "tslint:recommended",
-  "rules": {}
+  "rules": {
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format"
+    ]
+  }
 }

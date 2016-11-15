@@ -25,6 +25,9 @@ namespace AuthorizationServer {
                 .EnableLogoutEndpoint("/connect/logout")
                 .EnableIntrospectionEndpoint("/connect/introspect")
                 .EnableUserinfoEndpoint("/Account/Userinfo")
+                // Set absurdly low token lifetimes to demonstrate automatic token renewal
+                .SetIdentityTokenLifetime(System.TimeSpan.FromSeconds(30))  
+                .SetAccessTokenLifetime(System.TimeSpan.FromSeconds(10))
 
                 // Note: the sample only uses the implicit code flow but you can enable
                 // the other flows if you need to support implicit, password or client credentials.
