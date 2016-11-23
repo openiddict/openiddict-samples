@@ -4,7 +4,7 @@
   "version": "0.2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shaunluttin/aurelia-open-id-connect"
+    "url": "https://github.com/openiddict/openiddict-samples.git" 
   },
   "author": "Shaun Luttin <shaun@bigfont.ca>",
   "license": "MIT",
