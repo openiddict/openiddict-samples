@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNet.Security.OAuth.Validation;
-using AspNet.Security.OpenIdConnect.Extensions;
+using AspNet.Security.OpenIdConnect.Primitives;
 using AuthorizationServer.Models;
 using AuthorizationServer.Services;
 using AuthorizationServer.ViewModels.Account;

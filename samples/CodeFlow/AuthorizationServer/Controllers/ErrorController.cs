@@ -4,10 +4,9 @@
  * the license and the contributors participating to this project.
  */
 
-using AspNet.Security.OpenIdConnect.Extensions;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using AuthorizationServer.ViewModels.Shared;
+using AspNet.Security.OpenIdConnect.Primitives;
 
 namespace AuthorizationServer {
     public class ErrorController : Controller {
