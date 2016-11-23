@@ -1,6 +1,6 @@
 {
   "name": "aurelia-open-id-connect-demo",
-  "description": "A demo to shows aurelia-open-id-connect working with an OpenIddict.",
+  "description": "This demo shows aurelia-open-id-connect working with OpenIddict.",
   "version": "0.2.0",
   "repository": {
     "type": "git",
