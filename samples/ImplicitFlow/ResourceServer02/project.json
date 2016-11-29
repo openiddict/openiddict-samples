@@ -12,7 +12,7 @@
   },
 
   "dependencies": {
-    "AspNet.Security.OAuth.Introspection": "1.0.0-alpha2-final",
+    "AspNet.Security.OAuth.Introspection": "1.0.0-alpha3-final",
     "Microsoft.AspNetCore.Mvc": "1.0.0",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
     "Microsoft.AspNetCore.Server.Kestrel": "1.0.0",
