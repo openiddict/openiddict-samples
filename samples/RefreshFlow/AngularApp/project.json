@@ -1,0 +1,15 @@
+{
+  "buildOptions": {
+    "compile": {
+      "exclude": [
+        "node_modules/"
+      ]
+    }
+  },
+
+  "dependencies": { },
+
+  "frameworks": {
+    "net45": { }
+  }
+}
