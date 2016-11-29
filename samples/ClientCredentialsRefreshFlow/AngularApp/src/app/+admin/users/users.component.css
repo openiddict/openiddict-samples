@@ -1,0 +1,8 @@
+.users{
+  display: flex;
+}
+.users__user{
+  width: 300px;
+  box-shadow: 5px 5px 2px lightgray;
+  padding:5px;
+}

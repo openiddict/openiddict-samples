@@ -1,0 +1,31 @@
+<div class="users__user">
+    <div>
+        {{user.id}}
+    </div>
+    <div>
+        {{user.userName}}
+    </div>
+    <div>
+        {{user.emailConfirmed}}
+    </div>
+    <div>
+        {{user.joinDate}}
+    </div>
+    <div>
+        {{user.url}}
+    </div>
+    <div>
+        {{user.firstName}}
+    </div>
+    <div>
+        {{user.lastName}}
+    </div>
+    <div *ngIf="user?.roles">
+        Roles:
+        <div *ngFor="let role of user.roles">
+            {{role.name}}
+            <button (click)="removeFromRole(user.id, role.id)">Remove</button>
+        </div>
+        <button>Add</button>
+    </div>
+</div>

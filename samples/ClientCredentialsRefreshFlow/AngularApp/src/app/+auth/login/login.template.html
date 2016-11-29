@@ -1,0 +1,30 @@
+<h1>Login</h1>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" >
+
+    <validation-summary [errorMessages]="errors" ></validation-summary>
+
+    <div>
+        <md-input placeholder="Username" formControlName="username"></md-input>
+        <app-control-messages [control]="loginForm.controls.username"></app-control-messages>
+    </div>
+
+    <div>
+        <md-input placeholder="Password" formControlName="password"></md-input>
+        <app-control-messages [control]="loginForm.controls.password"></app-control-messages>
+    </div>
+
+
+    <button md-raised-button color="primary" type="submit" [disabled]="!loginForm.valid" >Submit</button>
+    <a  routerLink="/auth/forgot-password" >Forgot your password?</a>
+</form>
+
+<div>
+    <button md-raised-button color="primary" type="submit" (click)="facebookAuthorize()"  >Login with Facebook</button>
+</div>
+<div>
+    <button md-raised-button color="primary" type="submit" (click)="googleAuthorize()"  >Login with Google</button>
+    <div id="my-signin2"></div>
+</div>
+
+
+

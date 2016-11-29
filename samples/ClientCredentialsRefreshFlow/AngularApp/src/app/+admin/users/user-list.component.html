@@ -1,0 +1,9 @@
+<h3>Users</h3>
+<button (click)="getUsers()">refresh</button>
+<div class="users">
+    <div *ngIf="users" >
+        <div *ngFor="let user of users | async" >
+            <app-user [user]="user"></app-user>
+        </div>
+    </div>
+</div>
