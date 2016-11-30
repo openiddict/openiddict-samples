@@ -8,7 +8,7 @@ export const AuthReadyActionTypes = {
 
 @Injectable()
 export class AuthReadyActions {
-    Ready(): Action {
+    ready(): Action {
         return {
             type: AuthReadyActionTypes.READY
         };

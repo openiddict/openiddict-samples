@@ -9,12 +9,12 @@ export const LoggedInActionTypes = {
 
 @Injectable()
 export class LoggedInActions {
-    LoggedIn(): Action {
+    loggedIn(): Action {
         return{
             type: LoggedInActionTypes.LOGGED_IN
         };
     }
-    NotLoggedIn(): Action {
+    notLoggedIn(): Action {
         return {
             type: LoggedInActionTypes.NOT_LOGGED_IN
         };

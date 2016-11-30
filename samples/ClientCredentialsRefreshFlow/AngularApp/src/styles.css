@@ -1,12 +1,5 @@
 /* Globals */
-@import '~https://fonts.googleapis.com/icon?family=Material+Icons';
-@import '~@angular/material/core/theming/prebuilt/deeppurple-amber.css';
 
 body{
   font-family: Arial, serif;
-}
-
-a{
-  color:blue;
-  text-decoration: none;
 }

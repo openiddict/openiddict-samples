@@ -1,0 +1,24 @@
+<h1>Register</h1>
+
+<form [formGroup]="registerForm" novalidate (ngSubmit)="onSubmit()">
+
+    <div>
+        Email: <input formControlName="userName" />
+    </div>
+
+    <div>
+        Password: <input formControlName="password" />
+    </div>
+
+    <div>
+        Confirm Password: <input formControlName="confirmPassword" />
+    </div>
+    <div *ngIf="registerForm.errors?.invalidCompare && registerForm.touched">
+        Passwords must match
+    </div>
+
+    <button md-raised-button color="primary" type="submit" [disabled]="!registerForm.valid" >Submit</button>
+</form>
+
+Response: <br />
+<code><pre>{{response | json}}</pre></code>

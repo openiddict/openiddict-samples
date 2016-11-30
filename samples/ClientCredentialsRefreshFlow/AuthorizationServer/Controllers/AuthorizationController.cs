@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authentication;
 using OpenIddict;
 using AspNet.Security.OpenIdConnect.Server;
 using Microsoft.AspNetCore.Http.Authentication;
-using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
 using AspNet.Security.OpenIdConnect.Primitives;
 using AuthorizationServer.Models;
@@ -22,19 +21,13 @@ namespace AuthorizationServer.Controllers
         private readonly OpenIddictApplicationManager<OpenIddictApplication> _applicationManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IConfiguration _configuration;
-        private readonly IExternalAuthorizationManager _externalAuthManager;
 
         public AuthorizationController(
             OpenIddictApplicationManager<OpenIddictApplication> applicationManager,
             SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager,
-            IConfiguration configuration,
-            IExternalAuthorizationManager externalAuthManager
+            UserManager<ApplicationUser> userManager
             )
         {
-            _externalAuthManager = externalAuthManager;
-            _configuration = configuration;
             _applicationManager = applicationManager;
             _signInManager = signInManager;
             _userManager = userManager;
@@ -111,80 +104,6 @@ namespace AuthorizationServer.Controllers
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
 
-            else if (request.GrantType == "urn:ietf:params:oauth:grant-type:external_identity_token")
-            {
-                //Assertion should be the access_token
-                // Reject the request if the "assertion" parameter is missing.
-                if (string.IsNullOrEmpty(request.Assertion))
-                {
-                    return BadRequest(new OpenIdConnectResponse
-                    {
-                        Error = OpenIdConnectConstants.Errors.InvalidRequest,
-                        ErrorDescription = "The mandatory 'assertion' parameter was missing."
-                    });
-                };
-
-                ExternalAuthProviders provider;
-
-                var providerExists = Enum.TryParse(request["provider"].ToString(), out provider);
-
-                if (! providerExists)
-                {
-                    return BadRequest(new OpenIdConnectResponse
-                    {
-                        Error = OpenIdConnectConstants.Errors.InvalidRequest,
-                        ErrorDescription = "The mandatory 'provider' parameter was missing."
-                    });
-                };
-
-                var isValid = await _externalAuthManager.VerifyExternalAccessToken( request.Assertion, provider);
-
-                if (!isValid)
-                {
-                    return BadRequest(new OpenIdConnectResponse
-                    {
-                        Error = OpenIdConnectConstants.Errors.InvalidRequest,
-                        ErrorDescription = "Invalid access_token, this usually happens when it is expired"
-                    });
-                }
-
-                var profile = await _externalAuthManager.GetProfile(request.Assertion, provider);
-
-                var user = await  _userManager.FindByEmailAsync(profile.email);
-                
-                if(user == null)
-                {
-                    return BadRequest(new OpenIdConnectResponse
-                    {
-                        Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                        ErrorDescription = "The user does not exist"
-                    });
-                }
-
-                var ticket = await CreateTicketAsync(request, user);
-
-                // Create a new ClaimsIdentity containing the claims that
-                // will be used to create an id_token and/or an access token.
-                //var identity = new ClaimsIdentity(OpenIdConnectServerDefaults.AuthenticationScheme);
-
-                // Manually validate the identity token issued by Google,
-                // including the issuer, the signature and the audience.
-                // Then, copy the claims you need to the "identity" instance.
-
-                // Create a new authentication ticket holding the user identity.
-                //var ticket = new AuthenticationTicket(
-                //    new ClaimsPrincipal(identity),
-                //    new AuthenticationProperties(),
-                //    OpenIdConnectServerDefaults.AuthenticationScheme);
-
-                //ticket.SetScopes(
-                //    OpenIdConnectConstants.Scopes.OpenId,
-                //    OpenIdConnectConstants.Scopes.OfflineAccess);
-
-                return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
-            }
-
-
             return BadRequest(new OpenIdConnectResponse
             {
                 Error = OpenIdConnectConstants.Errors.UnsupportedGrantType,
@@ -194,11 +113,9 @@ namespace AuthorizationServer.Controllers
 
         private async Task<AuthenticationTicket> CreateTicketAsync(OpenIdConnectRequest request, ApplicationUser user)
         {
+            var principal = await _signInManager.CreateUserPrincipalAsync(user);
             // Create a new ClaimsPrincipal containing the claims that
             // will be used to create an id_token, a token or a code.
-            var principal = await _signInManager.CreateUserPrincipalAsync(user);
-            var identity = (ClaimsIdentity)principal.Identity;
-            identity.AddClaim(new Claim(ClaimTypes.GivenName, user.FirstName ?? ""));
             // Note: by default, claims are NOT automatically included in the access and identity tokens.
             // To allow OpenIddict to serialize them, you must attach them a destination, that specifies
             // whether they should be included in access tokens, in identity tokens or in both.

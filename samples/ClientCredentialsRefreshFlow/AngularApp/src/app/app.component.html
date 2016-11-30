@@ -1,3 +1,11 @@
-<app-header></app-header>
+
+
+<code><pre>{{(authState$ | async) | json}}</pre></code>
+<br />
+<button (click)="refreshToken()">Refresh Token</button>
+<hr />
+<a [routerLink]="['/login']">Login</a>
+<a [routerLink]="['/register']">Register</a>
+
+
 <router-outlet></router-outlet>
-<app-alerts></app-alerts>

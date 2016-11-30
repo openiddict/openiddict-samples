@@ -20,14 +20,6 @@ namespace AuthorizationServer
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
 
-            if (env.IsDevelopment())
-            {
-                //Authentication:External:Facebook:appToken
-                //Authentication:External:Facebook:appId
-                //Authentication:External:Google:clientId
-                builder.AddUserSecrets("OppenIddict.Samples.ClientCredentialsRerfreshFlow.AuthorizationServer");
-            }
-
             Configuration = builder.Build();
         }
 
@@ -36,17 +28,12 @@ namespace AuthorizationServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var env = services.BuildServiceProvider().GetRequiredService<IHostingEnvironment>();
-            
-            services.AddSingleton<IConfiguration>(Configuration);
-            services.AddTransient< IExternalAuthorizationManager, ExternalAuthorizationManager>();
-
+            services.AddCors();
             services.AddMvc();
 
             services.AddDbContext<ApplicationDbContext>(options => {
                 options.UseInMemoryDatabase();
-            });
-            
+            });            
            
             // Register the Identity services.
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -58,8 +45,7 @@ namespace AuthorizationServer
                .AddMvcBinders()
                .EnableTokenEndpoint("/connect/token")
                .AllowPasswordFlow()
-               .AllowRefreshTokenFlow()                                   //or should this just be external then check in the controller
-               .AllowCustomFlow("urn:ietf:params:oauth:grant-type:external_identity_token")            
+               .AllowRefreshTokenFlow() 
 
                 // During development, you can disable the HTTPS requirement.
                 .DisableHttpsRequirement()
@@ -78,13 +64,13 @@ namespace AuthorizationServer
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseIdentity();
-
             app.UseCors(builder => {
-                builder.WithOrigins("http://localhost:9000");
-                builder.WithMethods("GET");
-                builder.WithHeaders("Authorization");
+                builder.WithOrigins("http://localhost:4200");
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
             });
+
+            app.UseIdentity();            
 
             app.UseOpenIddict();
 

@@ -14,8 +14,6 @@ const initialState: ProfileModel = {
     iss: null,
     unique_name: null,
     email_confirmed: false,
-    first_name: null,
-    last_name: null
 };
 
 export function profileReducer(state = initialState, action: Action): ProfileModel {

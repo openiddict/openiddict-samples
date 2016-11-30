@@ -8,8 +8,6 @@ namespace AuthorizationServer.Models
         public ApplicationDbContext(DbContextOptions options)
             : base(options) { }
 
-        public DbSet<ExternalAccount> ExternalAccounts { get; set; }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
