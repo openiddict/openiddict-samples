@@ -41,7 +41,7 @@ export class AuthTokenService {
             scope: ['openid offline_access']
         });
 
-        return this.http.post('http://localhost:5000/connect/token', this.encodeObjectToParams(data) , options)
+        return this.http.post('http://localhost:5056/connect/token', this.encodeObjectToParams(data) , options)
             .map( res => res.json())
             .map( (tokens: AuthTokenModel) => {
                 this.store.dispatch(this.authTokenActions.load(tokens));

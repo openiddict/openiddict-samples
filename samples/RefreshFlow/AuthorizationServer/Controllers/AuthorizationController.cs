@@ -1,15 +1,13 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using AspNet.Security.OpenIdConnect.Extensions;
 using Microsoft.AspNetCore.Authentication;
-using OpenIddict;
-using AspNet.Security.OpenIdConnect.Server;
 using Microsoft.AspNetCore.Http.Authentication;
-using Microsoft.Extensions.Configuration;
+using AspNet.Security.OpenIdConnect.Extensions;
+using AspNet.Security.OpenIdConnect.Server;
 using AspNet.Security.OpenIdConnect.Primitives;
+using OpenIddict;
 using AuthorizationServer.Models;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
