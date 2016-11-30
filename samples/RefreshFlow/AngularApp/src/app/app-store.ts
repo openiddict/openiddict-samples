@@ -1,4 +1,3 @@
-import { Alert }              from '../core/models/alert.model';
 import { AuthState, authReducer } from '../core/auth-store/auth.store';
 import { ActionReducer, combineReducers } from '@ngrx/store';
 import { compose } from '@ngrx/core/compose';
