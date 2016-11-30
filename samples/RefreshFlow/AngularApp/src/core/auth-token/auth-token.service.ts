@@ -12,6 +12,7 @@ import { LoggedInActions } from '../auth-store/logged-in.actions';
 import { AuthTokenActions } from './auth-token.actions';
 import { AuthReadyActions } from '../auth-store/auth-ready.actions';
 import { ProfileActions } from '../profile/profile.actions';
+import { RefreshGrant } from '../models/refresh-grant-model';
 
 @Injectable()
 export class AuthTokenService {
@@ -30,12 +31,13 @@ export class AuthTokenService {
 
     getTokens(data: LoginModel | RefreshGrant, grantType: string): Observable<void> {
         // data can be any since it can either be a refresh tokens or login details
-        // The request for tokens must be x-www-form-urlencoded IE: parameter string, it cant be json
+        // The request for tokens must be x-www-form-urlencoded
         let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded'});
         let options = new RequestOptions({ headers: headers });
 
         Object.assign(data, {
             grant_type: grantType,
+            // offline_access is required for a refresh token
             scope: ['openid offline_access']
         });
 
@@ -129,7 +131,4 @@ export class AuthTokenService {
             .join('&');
     }
 
-}
-export interface RefreshGrant {
-    refresh_token: string;
 }

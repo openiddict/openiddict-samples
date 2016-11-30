@@ -13,9 +13,6 @@
     <div>
         Confirm Password: <input formControlName="confirmPassword" />
     </div>
-    <div *ngIf="registerForm.errors?.invalidCompare && registerForm.touched">
-        Passwords must match
-    </div>
 
     <button md-raised-button color="primary" type="submit" [disabled]="!registerForm.valid" >Submit</button>
 </form>
