@@ -26,9 +26,8 @@ namespace AuthorizationServer {
                 // Enable the token endpoint.
                 .EnableTokenEndpoint("/connect/token")
 
-                // Enable the password and the refresh token flows.
+                // Enable the password flow.
                 .AllowPasswordFlow()
-                .AllowRefreshTokenFlow()
 
                 // During development, you can disable the HTTPS requirement.
                 .DisableHttpsRequirement()

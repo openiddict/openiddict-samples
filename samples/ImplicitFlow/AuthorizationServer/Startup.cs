@@ -20,7 +20,6 @@ namespace AuthorizationServer {
 
             // Register the OpenIddict services, including the default Entity Framework stores.
             services.AddOpenIddict<ApplicationDbContext>()
-
                 // Enable the authorization, logout, userinfo, and introspection endpoints.
                 .EnableAuthorizationEndpoint("/connect/authorize")
                 .EnableLogoutEndpoint("/connect/logout")

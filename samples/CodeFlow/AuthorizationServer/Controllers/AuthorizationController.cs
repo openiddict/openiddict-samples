@@ -126,13 +126,10 @@ namespace AuthorizationServer {
                 OpenIdConnectServerDefaults.AuthenticationScheme);
 
             // Set the list of scopes granted to the client application.
-            // Note: the offline_access scope must be granted
-            // to allow OpenIddict to return a refresh token.
             ticket.SetScopes(new[] {
                 OpenIdConnectConstants.Scopes.OpenId,
                 OpenIdConnectConstants.Scopes.Email,
                 OpenIdConnectConstants.Scopes.Profile,
-                OpenIdConnectConstants.Scopes.OfflineAccess,
                 OpenIddictConstants.Scopes.Roles
             }.Intersect(request.GetScopes()));
 

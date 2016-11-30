@@ -44,7 +44,6 @@ namespace AuthorizationServer {
                 // Note: the Mvc.Client sample only uses the authorization code flow but you can enable
                 // the other flows if you need to support implicit, password or client credentials.
                 .AllowAuthorizationCodeFlow()
-                .AllowRefreshTokenFlow()
 
                 // When request caching is enabled, authorization and logout requests
                 // are stored in the distributed cache by OpenIddict and the user agent
