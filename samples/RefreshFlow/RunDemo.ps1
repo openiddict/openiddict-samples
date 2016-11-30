@@ -28,7 +28,7 @@ function global:Kill-Demo {
 Push-Location "./AuthorizationServer"
 dotnet restore
 dotnet build --no-incremental #rebuild
-$global:p += Start-Process dotnet -ArgumentList "run server.urls=http://localhost:5000" -PassThru
+$global:p += Start-Process dotnet -ArgumentList "run server.urls=http://localhost:5056" -PassThru
 Pop-Location
 
 # Angular Application
@@ -37,4 +37,4 @@ npm install -y
 $global:p += Start-Process ng -ArgumentList "serve" -PassThru
 Pop-Location
 
-Start-Process -FilePath http://localhost:4200
+Start-Process -FilePath http://localhost:5055

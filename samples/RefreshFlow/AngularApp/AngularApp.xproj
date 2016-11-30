@@ -8,7 +8,7 @@
 
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>7e6138ff-060c-4636-87ff-63f6581965d1</ProjectGuid>
+    <ProjectGuid>9c934c2e-bc44-4644-a77b-edc5dcba4624</ProjectGuid>
     <RootNamespace>AngularApp</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
