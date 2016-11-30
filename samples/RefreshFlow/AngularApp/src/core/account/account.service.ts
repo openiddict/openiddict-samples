@@ -38,7 +38,7 @@ export class AccountService {
 
         this.store.dispatch(this.loggedInAction.notLoggedIn());
         this.store.dispatch(this.authTokenActions.delete());
-        this.store.dispatch(this.profileActions.Delete());
+        this.store.dispatch(this.profileActions.delete());
     }
 
 }

@@ -28,7 +28,6 @@ export class AppComponent implements OnInit, OnDestroy {
         this.tokens.startupTokenRefresh()
             .subscribe(
             () => {
-                console.info('startup done');
                 // we manage to refresh the tokens so we can carry with the scheduleRefresh
                 this.tokens.scheduleRefresh();
             }, error => {

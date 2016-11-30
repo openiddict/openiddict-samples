@@ -44,16 +44,18 @@ export class AuthTokenService {
         return this.http.post('http://localhost:5056/connect/token', this.encodeObjectToParams(data) , options)
             .map( res => res.json())
             .map( (tokens: AuthTokenModel) => {
+                let now = new Date();
+                tokens.expiration_date = new Date(now.getTime() + tokens.expires_in * 1000).getTime().toString();
+
                 this.store.dispatch(this.authTokenActions.load(tokens));
                 this.store.dispatch(this.loggedInActions.loggedIn());
 
                 let profile = this.jwtHelper.decodeToken(tokens.id_token) as ProfileModel;
-                this.store.dispatch(this.profileActions.Load(profile));
+                this.store.dispatch(this.profileActions.load(profile));
 
                 this.storage.setItem('auth-tokens', tokens);
-            })
-            .do( _ => this.store.dispatch(this.authReadActions.ready()))
-          //  .catch( error => this.httpExceptions.handleTokenBadRequest(error));
+                this.store.dispatch(this.authReadActions.ready());
+            });
 
     }
 
@@ -88,11 +90,11 @@ export class AuthTokenService {
                 }
                 // parse the token into a model and throw it into the store
                 this.store.dispatch(this.authTokenActions.load(tokens));
-
-                if (!this.jwtHelper.isTokenExpired(tokens.id_token)) {
+                
+                if(+tokens.expiration_date < new Date().getTime()) {
                     // grab the profile out so we can store it
                     let profile = this.jwtHelper.decodeToken(tokens.id_token) as ProfileModel;
-                    this.store.dispatch(this.profileActions.Load(profile));
+                    this.store.dispatch(this.profileActions.load(profile));
 
                     // we can let the app know that we're good to go ahead of time
                     this.store.dispatch(this.loggedInActions.loggedIn());

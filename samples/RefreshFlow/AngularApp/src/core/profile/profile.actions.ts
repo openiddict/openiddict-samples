@@ -10,13 +10,13 @@ export const ProfileActionTypes = {
 
 @Injectable()
 export class ProfileActions {
-    Load(payload: ProfileModel): Action {
+    load(payload: ProfileModel): Action {
         return {
             type: ProfileActionTypes.LOAD,
             payload
         };
     }
-    Delete(): Action {
+    delete(): Action {
         return {
             type: ProfileActionTypes.DELETE
         };

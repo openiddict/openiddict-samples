@@ -7,7 +7,8 @@ const initalState: AuthTokenModel = {
     access_token: null,
     refresh_token: null,
     expires_in: 0,
-    token_type: null
+    token_type: null,
+    expiration_date: null
 };
 
 export function authTokenReducer(state = initalState, action: Action): AuthTokenModel {
