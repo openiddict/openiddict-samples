@@ -17,10 +17,6 @@
       "../node_modules/@types"
     ]
   },
-  // "files": [
-  //   "app/app.module.ts",
-  //   "main.ts"
-  // ],
     "exclude": [
     "node_modules",
     "dist"
