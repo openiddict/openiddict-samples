@@ -1,7 +1,6 @@
 import { Action } from '@ngrx/store';
-
-import { AuthTokenModel } from '../models/auth-tokens.model';
 import { AuthTokenActionTypes } from './auth-token.actions';
+import { AuthTokenModel } from '../models/auth-tokens-model';
 
 const initalState: AuthTokenModel = {
     id_token: null,

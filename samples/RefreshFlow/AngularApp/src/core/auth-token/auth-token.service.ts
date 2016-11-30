@@ -7,12 +7,12 @@ import { ProfileModel } from '../models/profile-model';
 import { LoginModel } from '../models/login-model';
 import { Storage } from '../storage';
 import { JwtHelper } from 'angular2-jwt';
-import { AuthTokenModel } from '../models/auth-tokens.model';
 import { LoggedInActions } from '../auth-store/logged-in.actions';
 import { AuthTokenActions } from './auth-token.actions';
 import { AuthReadyActions } from '../auth-store/auth-ready.actions';
 import { ProfileActions } from '../profile/profile.actions';
 import { RefreshGrant } from '../models/refresh-grant-model';
+import { AuthTokenModel } from '../models/auth-tokens-model';
 
 @Injectable()
 export class AuthTokenService {
@@ -114,7 +114,6 @@ export class AuthTokenService {
             .take(1)
             .flatMap((tokens: AuthTokenModel) => {
                 let delay = tokens.expires_in / 2 * 1000;
-                console.log(delay);
                 return Observable.interval(delay);
             });
 

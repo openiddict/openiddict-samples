@@ -3,6 +3,7 @@ import { ActionReducer, combineReducers } from '@ngrx/store';
 import { compose } from '@ngrx/core/compose';
 import { storeFreeze } from 'ngrx-store-freeze';
 import { environment } from '../environments/environment';
+
 export interface AppState {
     auth: AuthState;
 }
