@@ -5,13 +5,12 @@ import { AppState } from '../../app/app-store';
 import { Store } from '@ngrx/store';
 import { ProfileModel } from '../models/profile-model';
 import { LoginModel } from '../models/login-model';
-import { Storage } from '../storage';
 import { JwtHelper } from 'angular2-jwt';
 import { LoggedInActions } from '../auth-store/logged-in.actions';
 import { AuthTokenActions } from './auth-token.actions';
 import { AuthReadyActions } from '../auth-store/auth-ready.actions';
 import { ProfileActions } from '../profile/profile.actions';
-import { RefreshGrant } from '../models/refresh-grant-model';
+import { RefreshGrantModel } from '../models/refresh-grant-model';
 import { AuthTokenModel } from '../models/auth-tokens-model';
 
 @Injectable()
@@ -19,8 +18,7 @@ export class AuthTokenService {
     refreshSubscription$: Subscription;
     jwtHelper: JwtHelper = new JwtHelper();
 
-    constructor(private storage: Storage,
-                private http: Http,
+    constructor(private http: Http,
                 private store: Store<AppState>,
                 private loggedInActions: LoggedInActions,
                 private authTokenActions: AuthTokenActions,
@@ -29,7 +27,7 @@ export class AuthTokenService {
     ) { }
 
 
-    getTokens(data: LoginModel | RefreshGrant, grantType: string): Observable<void> {
+    getTokens(data: LoginModel | RefreshGrantModel, grantType: string): Observable<void> {
         // data can be any since it can either be a refresh tokens or login details
         // The request for tokens must be x-www-form-urlencoded
         let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded'});
@@ -53,14 +51,15 @@ export class AuthTokenService {
                 let profile = this.jwtHelper.decodeToken(tokens.id_token) as ProfileModel;
                 this.store.dispatch(this.profileActions.load(profile));
 
-                this.storage.setItem('auth-tokens', tokens);
+
+                localStorage.setItem('auth-tokens', JSON.stringify(tokens));
                 this.store.dispatch(this.authReadActions.ready());
             });
 
     }
 
     deleteTokens() {
-        this.storage.removeItem('auth-tokens');
+        localStorage.removeItem('auth-tokens');
         this.store.dispatch(this.authTokenActions.delete());
     }
 
@@ -75,23 +74,27 @@ export class AuthTokenService {
             .first()
             .flatMap( refreshToken => {
                 return this.getTokens(
-                    { refresh_token: refreshToken } as RefreshGrant, 'refresh_token')
+                    { refresh_token: refreshToken } as RefreshGrantModel, 'refresh_token')
+                    // This should only happen if the refresh token has expired
                     .catch( error => Observable.throw('Session Expired'));
             });
     }
 
     startupTokenRefresh() {
-        return this.storage.getItem('auth-tokens')
-            .flatMap( (tokens: AuthTokenModel) => {
+        let tokensString = localStorage.getItem('auth-tokens');
+        let tokensModel = JSON.parse(tokensString) as AuthTokenModel;
+
+        return Observable.of(tokensModel)
+            .flatMap( tokens => {
                 // check if the token is even if localStorage, if it isn't tell them it's not and return
                 if (!tokens) {
                     this.store.dispatch(this.authReadActions.ready());
                     return Observable.throw('No token in Storage');
                 }
-                // parse the token into a model and throw it into the store
                 this.store.dispatch(this.authTokenActions.load(tokens));
-                
-                if(+tokens.expiration_date < new Date().getTime()) {
+
+                // the "+" below is to convert "tokens.expiration_date" to a number so we can compare
+                if (+tokens.expiration_date < new Date().getTime()) {
                     // grab the profile out so we can store it
                     let profile = this.jwtHelper.decodeToken(tokens.id_token) as ProfileModel;
                     this.store.dispatch(this.profileActions.load(profile));
@@ -101,7 +104,6 @@ export class AuthTokenService {
                     this.store.dispatch(this.authReadActions.ready());
                 }
 
-                // it if is able to refresh then the getTokens method will let the app know that we're auth ready
                 return this.refreshTokens();
             })
             .catch(error => {
@@ -115,12 +117,14 @@ export class AuthTokenService {
         let source = this.store.select( state => state.auth.authTokens)
             .take(1)
             .flatMap((tokens: AuthTokenModel) => {
-                let delay = tokens.expires_in / 2 * 1000;
-                return Observable.interval(delay);
+                // the interval is how long inbetween token refreshes
+                // here we are taking half of the time it takes to expired
+                // you may want to change how this time interval is calculated
+                let interval = tokens.expires_in / 2 * 1000;
+                return Observable.interval(interval);
             });
 
         this.refreshSubscription$ = source.subscribe(() => {
-            console.log('refresh fired');
             this.refreshTokens()
                 .subscribe( );
         });

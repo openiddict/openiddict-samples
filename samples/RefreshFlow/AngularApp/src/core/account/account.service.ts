@@ -23,7 +23,7 @@ export class AccountService {
 
     register(data: RegisterModel): Observable<Response> {
         return this.http.post('http://localhost:5056/account/register', data)
-            .catch(res => Observable.throw(res.json()))
+            .catch(res => Observable.throw(res.json()));
     }
 
     login(user: LoginModel)  {

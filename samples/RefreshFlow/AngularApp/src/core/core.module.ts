@@ -1,6 +1,5 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { LocalStorageBackend, Storage, StorageBackend } from './storage';
 import { AuthTokenService } from './auth-token/auth-token.service';
 import { AccountService } from './account/account.service';
 import { LoggedInActions } from './auth-store/logged-in.actions';
@@ -18,9 +17,6 @@ import { AuthReadyActions } from './auth-store/auth-ready.actions';
         ProfileActions,
         AuthTokenActions,
         AuthReadyActions,
-
-        { provide: StorageBackend, useClass: LocalStorageBackend },
-        Storage,
     ]
 
 })

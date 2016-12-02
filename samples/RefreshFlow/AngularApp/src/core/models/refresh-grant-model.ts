@@ -1,3 +1,3 @@
-export interface RefreshGrant {
+export interface RefreshGrantModel {
     refresh_token: string;
 }
