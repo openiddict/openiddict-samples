@@ -1,12 +1,11 @@
 {
   "name": "openiddict-samples.refresh-flow.angularapp",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "angular-cli": {},
   "scripts": {
     "start": "ng serve --port 5055",
     "lint": "tslint \"src/**/*.ts\""
   },
-  "private": true,
   "dependencies": {
     "@angular/common": "^2.2.0",
     "@angular/compiler": "^2.2.0",
