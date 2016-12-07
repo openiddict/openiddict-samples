@@ -22,7 +22,7 @@ export class AuthTokenService {
                 private store: Store<AppState>,
                 private loggedInActions: LoggedInActions,
                 private authTokenActions: AuthTokenActions,
-                private authReadActions: AuthReadyActions,
+                private authReadyActions: AuthReadyActions,
                 private profileActions: ProfileActions
     ) { }
 
@@ -53,7 +53,7 @@ export class AuthTokenService {
 
 
                 localStorage.setItem('auth-tokens', JSON.stringify(tokens));
-                this.store.dispatch(this.authReadActions.ready());
+                this.store.dispatch(this.authReadyActions.ready());
             });
 
     }
@@ -74,9 +74,14 @@ export class AuthTokenService {
             .first()
             .flatMap( refreshToken => {
                 return this.getTokens(
-                    { refresh_token: refreshToken } as RefreshGrantModel, 'refresh_token')
+                    { refresh_token: refreshToken }, 'refresh_token')
                     // This should only happen if the refresh token has expired
-                    .catch( error => Observable.throw('Session Expired'));
+                    .catch( error => {
+                      // let the app know that we cant refresh the token
+                      // which means something is invalid and they aren't logged in
+                      this.loggedInActions.notLoggedIn();
+                      return Observable.throw('Session Expired')
+                    });
             });
     }
 
@@ -88,7 +93,7 @@ export class AuthTokenService {
             .flatMap( tokens => {
                 // check if the token is even if localStorage, if it isn't tell them it's not and return
                 if (!tokens) {
-                    this.store.dispatch(this.authReadActions.ready());
+                    this.store.dispatch(this.authReadyActions.ready());
                     return Observable.throw('No token in Storage');
                 }
                 this.store.dispatch(this.authTokenActions.load(tokens));
@@ -101,14 +106,14 @@ export class AuthTokenService {
 
                     // we can let the app know that we're good to go ahead of time
                     this.store.dispatch(this.loggedInActions.loggedIn());
-                    this.store.dispatch(this.authReadActions.ready());
+                    this.store.dispatch(this.authReadyActions.ready());
                 }
 
                 return this.refreshTokens();
             })
             .catch(error => {
                 this.store.dispatch(this.loggedInActions.notLoggedIn());
-                this.store.dispatch(this.authReadActions.ready());
+                this.store.dispatch(this.authReadyActions.ready());
                 return Observable.throw(error);
             });
     }
