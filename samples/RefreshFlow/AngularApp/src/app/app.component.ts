@@ -23,7 +23,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.authState$ = this.store.map(state => state.auth);
+        this.authState$ = this.store.select(state => state.auth);
 
         this.tokens.startupTokenRefresh()
             .subscribe(

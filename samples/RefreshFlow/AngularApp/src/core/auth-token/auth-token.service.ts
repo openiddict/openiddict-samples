@@ -70,7 +70,7 @@ export class AuthTokenService {
     }
 
     refreshTokens(): Observable<Response> {
-        return this.store.map( state => state.auth.authTokens.refresh_token)
+        return this.store.select( state => state.auth.authTokens.refresh_token)
             .first()
             .flatMap( refreshToken => {
                 return this.getTokens(
