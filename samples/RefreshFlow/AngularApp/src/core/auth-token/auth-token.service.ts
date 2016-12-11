@@ -99,9 +99,9 @@ export class AuthTokenService {
                 this.store.dispatch(this.authTokenActions.load(tokens));
 
                 // the "+" below is to convert "tokens.expiration_date" to a number so we can compare
-                if (+tokens.expiration_date < new Date().getTime()) {
+                if (+tokens.expiration_date > new Date().getTime()) {
                     // grab the profile out so we can store it
-                    let profile = this.jwtHelper.decodeToken(tokens.id_token) as ProfileModel;
+                    let profile: ProfileModel = this.jwtHelper.decodeToken(tokens.id_token);
                     this.store.dispatch(this.profileActions.load(profile));
 
                     // we can let the app know that we're good to go ahead of time
@@ -109,7 +109,10 @@ export class AuthTokenService {
                     this.store.dispatch(this.authReadyActions.ready());
                 }
 
-                return this.refreshTokens();
+                return this.refreshTokens()
+                  .map( () => {
+                    this.scheduleRefresh();
+                  });
             })
             .catch(error => {
                 this.store.dispatch(this.loggedInActions.notLoggedIn());

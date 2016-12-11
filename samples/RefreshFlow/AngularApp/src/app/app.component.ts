@@ -25,14 +25,9 @@ export class AppComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.authState$ = this.store.select(state => state.auth);
 
+        // This starts up the token refresh preocess for the app
         this.tokens.startupTokenRefresh()
-            .subscribe(
-            () => {
-                // we manage to refresh the tokens so we can carry with the scheduleRefresh
-                this.tokens.scheduleRefresh();
-            }, error => {
-                console.error(error);
-            });
+            .subscribe();
     }
 
     ngOnDestroy(): void {
