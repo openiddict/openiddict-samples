@@ -13,11 +13,11 @@ using AuthorizationServer.Models;
 using AuthorizationServer.ViewModels.Shared;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using OpenIddict;
+using OpenIddict.Core;
+using OpenIddict.Models;
 
 namespace AuthorizationServer {
     public class AuthorizationController : Controller {
@@ -35,12 +35,9 @@ namespace AuthorizationServer {
         }
 
         [Authorize, HttpGet("~/connect/authorize")]
-        public async Task<IActionResult> Authorize() {
-            // Extract the authorization request from the ASP.NET environment.
-            var request = HttpContext.GetOpenIdConnectRequest();
-
+        public async Task<IActionResult> Authorize(OpenIdConnectRequest request) {
             // Retrieve the application details from the database.
-            var application = await _applicationManager.FindByClientIdAsync(request.ClientId);
+            var application = await _applicationManager.FindByClientIdAsync(request.ClientId, HttpContext.RequestAborted);
             if (application == null) {
                 return View("Error", new ErrorViewModel {
                     Error = OpenIdConnectConstants.Errors.InvalidClient,
@@ -66,9 +63,6 @@ namespace AuthorizationServer {
 
         [HttpGet("~/connect/logout")]
         public async Task<IActionResult> Logout() {
-            // Extract the authorization request from the ASP.NET environment.
-            var request = HttpContext.GetOpenIdConnectRequest();
-
             // Ask ASP.NET Core Identity to delete the local and external cookies created
             // when the user agent is redirected from the external identity provider
             // after a successful authentication flow (e.g Google or Facebook).
@@ -102,13 +96,10 @@ namespace AuthorizationServer {
                 OpenIdConnectServerDefaults.AuthenticationScheme);
 
             // Set the list of scopes granted to the client application.
-            // Note: the offline_access scope must be granted
-            // to allow OpenIddict to return a refresh token.
             ticket.SetScopes(new[] {
                 OpenIdConnectConstants.Scopes.OpenId,
                 OpenIdConnectConstants.Scopes.Email,
                 OpenIdConnectConstants.Scopes.Profile,
-                OpenIdConnectConstants.Scopes.OfflineAccess,
                 OpenIddictConstants.Scopes.Roles
             }.Intersect(request.GetScopes()));
 

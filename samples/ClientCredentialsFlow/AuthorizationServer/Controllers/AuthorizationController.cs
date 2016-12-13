@@ -12,7 +12,8 @@ using AspNet.Security.OpenIdConnect.Server;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using OpenIddict;
+using OpenIddict.Core;
+using OpenIddict.Models;
 
 namespace AuthorizationServer {
     public class AuthorizationController : Controller {
@@ -28,7 +29,7 @@ namespace AuthorizationServer {
                 // Note: the client credentials are automatically validated by OpenIddict:
                 // if client_id or client_secret are invalid, this action won't be invoked.
 
-                var application = await _applicationManager.FindByClientIdAsync(request.ClientId);
+                var application = await _applicationManager.FindByClientIdAsync(request.ClientId, HttpContext.RequestAborted);
                 if (application == null) {
                     return BadRequest(new OpenIdConnectResponse {
                         Error = OpenIdConnectConstants.Errors.InvalidClient,

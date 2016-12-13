@@ -4,7 +4,8 @@ using CryptoHelper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using OpenIddict;
+using OpenIddict.Core;
+using OpenIddict.Models;
 
 namespace AuthorizationServer {
     public class Startup {
@@ -13,8 +14,11 @@ namespace AuthorizationServer {
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase());
 
-            // Register the OpenIddict services, including the default Entity Framework stores.
-            services.AddOpenIddict<ApplicationDbContext>()
+            // Register the OpenIddict services.
+            services.AddOpenIddict()
+                // Register the Entity Framework stores.
+                .AddEntityFrameworkCoreStores<ApplicationDbContext>()
+
                 // Register the ASP.NET Core MVC binder used by OpenIddict.
                 // Note: if you don't call this method, you won't be able to
                 // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
@@ -81,8 +85,10 @@ namespace AuthorizationServer {
                 app.ApplicationServices.GetRequiredService<DbContextOptions<ApplicationDbContext>>())) {
                 context.Database.EnsureCreated();
 
-                if (!context.Applications.Any()) {
-                    context.Applications.Add(new OpenIddictApplication {
+                var applications = context.Set<OpenIddictApplication>();
+
+                if (!applications.Any()) {
+                    applications.Add(new OpenIddictApplication {
                         ClientId = "AB08936C-5049-4499-9958-1B8E6E218743",
                         ClientSecret = Crypto.HashPassword("388D45FA-B36B-4988-BA59-B187D329C207"),
                         DisplayName = "My client application",

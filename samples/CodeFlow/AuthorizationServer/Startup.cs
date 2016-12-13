@@ -8,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NWebsec.AspNetCore.Middleware;
-using OpenIddict;
+using OpenIddict.Core;
+using OpenIddict.Models;
 
 namespace AuthorizationServer {
     public class Startup {
@@ -28,8 +29,11 @@ namespace AuthorizationServer {
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            // Register the OpenIddict services, including the default Entity Framework stores.
-            services.AddOpenIddict<ApplicationDbContext>()
+            // Register the OpenIddict services.
+            services.AddOpenIddict()
+                // Register the Entity Framework stores.
+                .AddEntityFrameworkCoreStores<ApplicationDbContext>()
+
                 // Register the ASP.NET Core MVC binder used by OpenIddict.
                 // Note: if you don't call this method, you won't be able to
                 // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
@@ -44,7 +48,6 @@ namespace AuthorizationServer {
                 // Note: the Mvc.Client sample only uses the authorization code flow but you can enable
                 // the other flows if you need to support implicit, password or client credentials.
                 .AllowAuthorizationCodeFlow()
-                .AllowRefreshTokenFlow()
 
                 // When request caching is enabled, authorization and logout requests
                 // are stored in the distributed cache by OpenIddict and the user agent
@@ -139,8 +142,10 @@ namespace AuthorizationServer {
                 app.ApplicationServices.GetRequiredService<DbContextOptions<ApplicationDbContext>>())) {
                 context.Database.EnsureCreated();
 
+                var applications = context.Set<OpenIddictApplication>();
+
                 // Add Mvc.Client to the known applications.
-                if (!context.Applications.Any()) {
+                if (!applications.Any()) {
                     // Note: when using the introspection middleware, your resource server
                     // MUST be registered as an OAuth2 client and have valid credentials.
                     // 
@@ -151,7 +156,7 @@ namespace AuthorizationServer {
                     //     Type = OpenIddictConstants.ClientTypes.Confidential
                     // });
 
-                    context.Applications.Add(new OpenIddictApplication {
+                    applications.Add(new OpenIddictApplication {
                         ClientId = "myClient",
                         ClientSecret = Crypto.HashPassword("secret_secret_secret"),
                         DisplayName = "My client application",
@@ -169,7 +174,7 @@ namespace AuthorizationServer {
                     // * Scope: openid email profile roles
                     // * Grant type: authorization code
                     // * Request access token locally: yes
-                    context.Applications.Add(new OpenIddictApplication {
+                    applications.Add(new OpenIddictApplication {
                         ClientId = "postman",
                         DisplayName = "Postman",
                         RedirectUri = "https://www.getpostman.com/oauth2/callback",

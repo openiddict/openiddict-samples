@@ -1,12 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OpenIddict;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AuthorizationServer.Models {
-    public class ApplicationDbContext : OpenIddictDbContext<ApplicationUser> {
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser> {
         public ApplicationDbContext(DbContextOptions options)
             : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder) {
+            // Register the entity sets needed by OpenIddict.
+            // Note: use the generic overload if you need
+            // to replace the default OpenIddict entities.
+            builder.UseOpenIddict();
+
             base.OnModelCreating(builder);
 
             // Customize the ASP.NET Identity model and override the defaults if needed.

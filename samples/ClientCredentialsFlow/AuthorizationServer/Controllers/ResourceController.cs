@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 using AspNet.Security.OAuth.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OpenIddict;
+using OpenIddict.Core;
+using OpenIddict.Models;
 
 namespace AuthorizationServer.Controllers {
     [Route("api")]
@@ -19,7 +20,7 @@ namespace AuthorizationServer.Controllers {
         public async Task<IActionResult> GetMessage() {
             var identifier = User.FindFirst(ClaimTypes.NameIdentifier);
 
-            var application = await _applicationManager.FindByClientIdAsync(identifier.Value);
+            var application = await _applicationManager.FindByClientIdAsync(identifier.Value, HttpContext.RequestAborted);
             if (application == null) {
                 return BadRequest();
             }
