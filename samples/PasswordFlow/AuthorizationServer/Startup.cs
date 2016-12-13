@@ -9,7 +9,15 @@ namespace AuthorizationServer {
         public void ConfigureServices(IServiceCollection services) {
             services.AddMvc();
 
-            services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase());
+            services.AddDbContext<ApplicationDbContext>(options => {
+                // Configure the context to use an in-memory store.
+                options.UseInMemoryDatabase();
+
+                // Register the entity sets needed by OpenIddict.
+                // Note: use the generic overload if you need
+                // to replace the default OpenIddict entities.
+                options.UseOpenIddict();
+            });
 
             // Register the Identity services.
             services.AddIdentity<ApplicationUser, IdentityRole>()
