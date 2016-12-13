@@ -27,7 +27,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
         // This starts up the token refresh preocess for the app
         this.tokens.startupTokenRefresh()
-            .subscribe();
+            .subscribe(
+                () => console.info('Startup success'),
+                error => console.warn(error)
+              );
     }
 
     ngOnDestroy(): void {

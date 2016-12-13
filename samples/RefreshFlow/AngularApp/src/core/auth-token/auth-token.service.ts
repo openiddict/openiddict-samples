@@ -70,11 +70,11 @@ export class AuthTokenService {
     }
 
     refreshTokens(): Observable<Response> {
-        return this.store.select( state => state.auth.authTokens.refresh_token)
+        return this.store.select( state => state.auth.authTokens)
             .first()
-            .flatMap( refreshToken => {
+            .flatMap( tokens => {
                 return this.getTokens(
-                    { refresh_token: refreshToken }, 'refresh_token')
+                    { refresh_token: tokens.refresh_token }, 'refresh_token')
                     // This should only happen if the refresh token has expired
                     .catch( error => {
                       // let the app know that we cant refresh the token
@@ -87,10 +87,10 @@ export class AuthTokenService {
 
     startupTokenRefresh() {
         let tokensString = localStorage.getItem('auth-tokens');
-        let tokensModel = JSON.parse(tokensString) as AuthTokenModel;
-
+        let tokensModel = tokensString == null ? null : JSON.parse(tokensString);
         return Observable.of(tokensModel)
             .flatMap( tokens => {
+              debugger
                 // check if the token is even if localStorage, if it isn't tell them it's not and return
                 if (!tokens) {
                     this.store.dispatch(this.authReadyActions.ready());
