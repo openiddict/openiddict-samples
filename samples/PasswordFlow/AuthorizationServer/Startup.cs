@@ -16,8 +16,11 @@ namespace AuthorizationServer {
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            // Register the OpenIddict services, including the default Entity Framework stores.
-            services.AddOpenIddict<ApplicationDbContext>()
+            // Register the OpenIddict services.
+            services.AddOpenIddict()
+                // Register the Entity Framework stores.
+                .AddEntityFrameworkCoreStores<ApplicationDbContext>()
+
                 // Register the ASP.NET Core MVC binder used by OpenIddict.
                 // Note: if you don't call this method, you won't be able to
                 // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.

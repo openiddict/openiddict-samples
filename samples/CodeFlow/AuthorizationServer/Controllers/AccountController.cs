@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json.Linq;
-using OpenIddict;
+using OpenIddict.Core;
 
 namespace AuthorizationServer.Controllers {
     [Authorize]

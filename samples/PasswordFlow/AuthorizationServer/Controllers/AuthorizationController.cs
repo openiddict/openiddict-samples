@@ -14,7 +14,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using OpenIddict;
+using OpenIddict.Core;
+using OpenIddict.Models;
 
 namespace AuthorizationServer {
     public class AuthorizationController : Controller {

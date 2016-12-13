@@ -17,6 +17,7 @@
     "AspNet.Security.OAuth.Introspection": "1.0.0-alpha3-final",
     "AspNet.Security.OAuth.Validation": "1.0.0-alpha3-final",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
+    "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.0",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
     "Microsoft.AspNetCore.Server.Kestrel": "1.0.0",
@@ -27,6 +28,7 @@
     "Microsoft.Extensions.Logging.Console": "1.0.0",
     "Microsoft.Extensions.Logging.Debug": "1.0.0",
     "OpenIddict": "1.0.0-*",
+    "OpenIddict.EntityFrameworkCore": "1.0.0-*",
     "OpenIddict.Mvc": "1.0.0-*"
   },
 

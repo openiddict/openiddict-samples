@@ -18,7 +18,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using OpenIddict;
+using OpenIddict.Core;
+using OpenIddict.Models;
 
 namespace AuthorizationServer {
     public class AuthorizationController : Controller {
@@ -38,7 +39,7 @@ namespace AuthorizationServer {
         [Authorize, HttpGet("~/connect/authorize")]
         public async Task<IActionResult> Authorize(OpenIdConnectRequest request) {
             // Retrieve the application details from the database.
-            var application = await _applicationManager.FindByClientIdAsync(request.ClientId);
+            var application = await _applicationManager.FindByClientIdAsync(request.ClientId, HttpContext.RequestAborted);
             if (application == null) {
                 return View("Error", new ErrorViewModel {
                     Error = OpenIdConnectConstants.Errors.InvalidClient,
