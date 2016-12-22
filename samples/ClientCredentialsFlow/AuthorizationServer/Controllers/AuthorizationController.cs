@@ -4,6 +4,7 @@
  * the license and the contributors participating to this project.
  */
 
+using System.Diagnostics;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
@@ -25,6 +26,10 @@ namespace AuthorizationServer {
 
         [HttpPost("~/connect/token"), Produces("application/json")]
         public async Task<IActionResult> Exchange(OpenIdConnectRequest request) {
+            Debug.Assert(request.IsTokenRequest(),
+                "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
+                "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
+
             if (request.IsClientCredentialsGrantType()) {
                 // Note: the client credentials are automatically validated by OpenIddict:
                 // if client_id or client_secret are invalid, this action won't be invoked.

@@ -4,6 +4,7 @@
  * the license and the contributors participating to this project.
  */
 
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
@@ -38,6 +39,10 @@ namespace AuthorizationServer {
 
         [Authorize, HttpGet("~/connect/authorize")]
         public async Task<IActionResult> Authorize(OpenIdConnectRequest request) {
+            Debug.Assert(request.IsAuthorizationRequest(),
+                "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
+                "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
+
             // Retrieve the application details from the database.
             var application = await _applicationManager.FindByClientIdAsync(request.ClientId, HttpContext.RequestAborted);
             if (application == null) {
@@ -59,6 +64,10 @@ namespace AuthorizationServer {
         [Authorize, FormValueRequired("submit.Accept")]
         [HttpPost("~/connect/authorize"), ValidateAntiForgeryToken]
         public async Task<IActionResult> Accept(OpenIdConnectRequest request) {
+            Debug.Assert(request.IsAuthorizationRequest(),
+                "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
+                "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
+
             // Retrieve the profile of the logged in user.
             var user = await _userManager.GetUserAsync(User);
             if (user == null) {
@@ -106,6 +115,10 @@ namespace AuthorizationServer {
 
         [HttpPost("~/connect/token"), Produces("application/json")]
         public async Task<IActionResult> Exchange(OpenIdConnectRequest request) {
+            Debug.Assert(request.IsTokenRequest(),
+                "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
+                "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
+
             if (request.IsAuthorizationCodeGrantType()) {
                 // Retrieve the claims principal stored in the authorization code.
                 var info = await HttpContext.Authentication.GetAuthenticateInfoAsync(

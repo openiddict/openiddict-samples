@@ -1,4 +1,11 @@
-﻿using System.Linq;
+﻿/*
+ * Licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
+ * See https://github.com/openiddict/openiddict-core for more information concerning
+ * the license and the contributors participating to this project.
+ */
+
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Primitives;
@@ -30,6 +37,10 @@ namespace AuthorizationServer.Controllers {
 
         [HttpPost("~/connect/token"), Produces("application/json")]
         public async Task<IActionResult> Exchange(OpenIdConnectRequest request) {
+            Debug.Assert(request.IsTokenRequest(),
+                "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
+                "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
+
             if (request.IsPasswordGrantType()) {
                 var user = await _userManager.FindByNameAsync(request.Username);
                 if (user == null) {

@@ -4,6 +4,7 @@
  * the license and the contributors participating to this project.
  */
 
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
@@ -36,6 +37,10 @@ namespace AuthorizationServer {
 
         [Authorize, HttpGet("~/connect/authorize")]
         public async Task<IActionResult> Authorize(OpenIdConnectRequest request) {
+            Debug.Assert(request.IsAuthorizationRequest(),
+                "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
+                "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
+
             // Retrieve the application details from the database.
             var application = await _applicationManager.FindByClientIdAsync(request.ClientId, HttpContext.RequestAborted);
             if (application == null) {
