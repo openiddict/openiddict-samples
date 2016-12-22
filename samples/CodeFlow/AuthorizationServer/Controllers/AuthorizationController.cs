@@ -104,7 +104,46 @@ namespace AuthorizationServer {
             return SignOut(OpenIdConnectServerDefaults.AuthenticationScheme);
         }
 
-        private async Task<AuthenticationTicket> CreateTicketAsync(OpenIdConnectRequest request, ApplicationUser user) {
+        [HttpPost("~/connect/token"), Produces("application/json")]
+        public async Task<IActionResult> Exchange(OpenIdConnectRequest request) {
+            if (request.IsAuthorizationCodeGrantType()) {
+                // Retrieve the claims principal stored in the authorization code.
+                var info = await HttpContext.Authentication.GetAuthenticateInfoAsync(
+                    OpenIdConnectServerDefaults.AuthenticationScheme);
+
+                // Retrieve the user profile corresponding to the authorization code.
+                var user = await _userManager.GetUserAsync(info.Principal);
+                if (user == null) {
+                    return BadRequest(new OpenIdConnectResponse {
+                        Error = OpenIdConnectConstants.Errors.InvalidGrant,
+                        ErrorDescription = "The authorization code is no longer valid."
+                    });
+                }
+
+                // Ensure the user is still allowed to sign in.
+                if (!await _signInManager.CanSignInAsync(user)) {
+                    return BadRequest(new OpenIdConnectResponse {
+                        Error = OpenIdConnectConstants.Errors.InvalidGrant,
+                        ErrorDescription = "The user is no longer allowed to sign in."
+                    });
+                }
+
+                // Create a new authentication ticket, but reuse the properties stored
+                // in the authorization code, including the scopes originally granted.
+                var ticket = await CreateTicketAsync(request, user, info.Properties);
+
+                return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
+            }
+
+            return BadRequest(new OpenIdConnectResponse {
+                Error = OpenIdConnectConstants.Errors.UnsupportedGrantType,
+                ErrorDescription = "The specified grant type is not supported."
+            });
+        }
+
+        private async Task<AuthenticationTicket> CreateTicketAsync(
+            OpenIdConnectRequest request, ApplicationUser user,
+            AuthenticationProperties properties = null) {
             // Create a new ClaimsPrincipal containing the claims that
             // will be used to create an id_token, a token or a code.
             var principal = await _signInManager.CreateUserPrincipalAsync(user);
@@ -122,17 +161,20 @@ namespace AuthorizationServer {
             }
 
             // Create a new authentication ticket holding the user identity.
-            var ticket = new AuthenticationTicket(
-                principal, new AuthenticationProperties(),
+            var ticket = new AuthenticationTicket(principal, properties,
                 OpenIdConnectServerDefaults.AuthenticationScheme);
 
-            // Set the list of scopes granted to the client application.
-            ticket.SetScopes(new[] {
-                OpenIdConnectConstants.Scopes.OpenId,
-                OpenIdConnectConstants.Scopes.Email,
-                OpenIdConnectConstants.Scopes.Profile,
-                OpenIddictConstants.Scopes.Roles
-            }.Intersect(request.GetScopes()));
+            if (!request.IsAuthorizationCodeGrantType() && !request.IsRefreshTokenGrantType()) {
+                // Set the list of scopes granted to the client application.
+                // Note: the offline_access scope must be granted
+                // to allow OpenIddict to return a refresh token.
+                ticket.SetScopes(new[] {
+                    OpenIdConnectConstants.Scopes.OpenId,
+                    OpenIdConnectConstants.Scopes.Email,
+                    OpenIdConnectConstants.Scopes.Profile,
+                    OpenIddictConstants.Scopes.Roles
+                }.Intersect(request.GetScopes()));
+            }
 
             return ticket;
         }

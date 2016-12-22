@@ -48,7 +48,7 @@ namespace ClientApp {
                 // the different endpoints URIs or the token validation parameters explicitly.
                 Authority = "http://localhost:54540/",
 
-                Scope = { "email", "roles", "offline_access" }
+                Scope = { "email", "roles" }
             });
 
             app.UseMvc();
