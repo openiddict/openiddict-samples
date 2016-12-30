@@ -1,6 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using AuthorizationServer.Models;
-using CryptoHelper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -89,21 +90,26 @@ namespace AuthorizationServer {
 
             app.UseWelcomePage();
 
-            using (var context = new ApplicationDbContext(
-                app.ApplicationServices.GetRequiredService<DbContextOptions<ApplicationDbContext>>())) {
-                context.Database.EnsureCreated();
+            // Seed the database with the sample application.
+            // Note: in a real world application, this step should be part of a setup script.
+            InitializeAsync(app.ApplicationServices, CancellationToken.None).GetAwaiter().GetResult();
+        }
 
-                var applications = context.Set<OpenIddictApplication>();
+        private async Task InitializeAsync(IServiceProvider services, CancellationToken cancellationToken) {
+            // Create a new service scope to ensure the database context is correctly disposed when this methods returns.
+            using (var scope = services.GetRequiredService<IServiceScopeFactory>().CreateScope()) {
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                await context.Database.EnsureCreatedAsync();
 
-                if (!applications.Any()) {
-                    applications.Add(new OpenIddictApplication {
-                        ClientId = "AB08936C-5049-4499-9958-1B8E6E218743",
-                        ClientSecret = Crypto.HashPassword("388D45FA-B36B-4988-BA59-B187D329C207"),
-                        DisplayName = "My client application",
-                        Type = OpenIddictConstants.ClientTypes.Confidential
-                    });
+                var manager = scope.ServiceProvider.GetRequiredService<OpenIddictApplicationManager<OpenIddictApplication>>();
 
-                    context.SaveChanges();
+                if (await manager.FindByClientIdAsync("console", cancellationToken) == null) {
+                    var application = new OpenIddictApplication {
+                        ClientId = "console",
+                        DisplayName = "My client application"
+                    };
+
+                    await manager.CreateAsync(application, "388D45FA-B36B-4988-BA59-B187D329C207", cancellationToken);
                 }
             }
         }

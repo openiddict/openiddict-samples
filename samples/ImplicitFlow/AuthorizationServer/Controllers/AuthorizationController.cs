@@ -108,7 +108,7 @@ namespace AuthorizationServer {
                 OpenIddictConstants.Scopes.Roles
             }.Intersect(request.GetScopes()));
 
-            ticket.SetResources("ResourceServer01", "ResourceServer02");
+            ticket.SetResources("resource-server-1", "resource-server-2");
 
             return ticket;
         }

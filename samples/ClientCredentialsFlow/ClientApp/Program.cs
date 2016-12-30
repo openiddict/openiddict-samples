@@ -26,7 +26,7 @@ namespace ClientApp {
             var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:52698/connect/token");
             request.Content = new FormUrlEncodedContent(new Dictionary<string, string> {
                 ["grant_type"] = "client_credentials",
-                ["client_id"] = "AB08936C-5049-4499-9958-1B8E6E218743",
+                ["client_id"] = "console",
                 ["client_secret"] = "388D45FA-B36B-4988-BA59-B187D329C207"
             });
 

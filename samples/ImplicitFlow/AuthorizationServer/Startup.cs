@@ -1,7 +1,8 @@
-using System.Linq;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using AuthorizationServer.Models;
 using AuthorizationServer.Services;
-using CryptoHelper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -75,44 +76,45 @@ namespace AuthorizationServer {
 
             app.UseMvcWithDefaultRoute();
 
-            // In a production app, seed this in a setup tool.
-            SeedDatabase(app);
+            // Seed the database with the sample applications.
+            // Note: in a real world application, this step should be part of a setup script.
+            InitializeAsync(app.ApplicationServices, CancellationToken.None).GetAwaiter().GetResult();
         }
 
-        private void SeedDatabase(IApplicationBuilder app) {
-            var options = app
-                .ApplicationServices
-                .GetRequiredService<DbContextOptions<ApplicationDbContext>>();
+        private async Task InitializeAsync(IServiceProvider services, CancellationToken cancellationToken) {
+            // Create a new service scope to ensure the database context is correctly disposed when this methods returns.
+            using (var scope = services.GetRequiredService<IServiceScopeFactory>().CreateScope()) {
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                await context.Database.EnsureCreatedAsync();
 
-            using (var context = new ApplicationDbContext(options)) {
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
+                var manager = scope.ServiceProvider.GetRequiredService<OpenIddictApplicationManager<OpenIddictApplication>>();
 
-                var applications = context.Set<OpenIddictApplication>();
-
-                if (!applications.Any()) {
-                    applications.Add(new OpenIddictApplication {
-                        ClientId = "Aurelia.OpenIdConnect",
-                        DisplayName = "Aurelia Open Id Connect",
+                if (await manager.FindByClientIdAsync("aurelia", cancellationToken) == null) {
+                    var application = new OpenIddictApplication {
+                        ClientId = "aurelia",
+                        DisplayName = "Aurelia client application",
                         LogoutRedirectUri = "http://localhost:9000/signout-oidc",
-                        RedirectUri = "http://localhost:9000/signin-oidc",
-                        Type = OpenIddictConstants.ClientTypes.Public
-                    });
+                        RedirectUri = "http://localhost:9000/signin-oidc"
+                    };
 
-                    applications.Add(new OpenIddictApplication {
-                        ClientId = "ResourceServer01",
-                        ClientSecret = Crypto.HashPassword("secret_secret_secret"),
-                        Type = OpenIddictConstants.ClientTypes.Confidential
-                    });
-
-                    applications.Add(new OpenIddictApplication {
-                        ClientId = "ResourceServer02",
-                        ClientSecret = Crypto.HashPassword("secret_secret_secret"),
-                        Type = OpenIddictConstants.ClientTypes.Confidential
-                    });
+                    await manager.CreateAsync(application, cancellationToken);
                 }
 
-                context.SaveChanges();
+                if (await manager.FindByClientIdAsync("resource-server-1", cancellationToken) == null) {
+                    var application = new OpenIddictApplication {
+                        ClientId = "resource-server-1"
+                    };
+
+                    await manager.CreateAsync(application, "846B62D0-DEF9-4215-A99D-86E6B8DAB342", cancellationToken);
+                }
+
+                if (await manager.FindByClientIdAsync("resource-server-2", cancellationToken) == null) {
+                    var application = new OpenIddictApplication {
+                        ClientId = "resource-server-2"
+                    };
+
+                    await manager.CreateAsync(application, "C744604A-CD05-4092-9CF8-ECB7DC3499A2", cancellationToken);
+                }
             }
         }
     }

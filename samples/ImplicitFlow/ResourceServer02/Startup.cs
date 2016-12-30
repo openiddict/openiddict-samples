@@ -13,9 +13,9 @@ namespace ResourceServer02 {
                 options.AutomaticAuthenticate = true;
                 options.AutomaticChallenge = true;
                 options.Authority = "http://localhost:12345";
-                options.Audiences.Add("ResourceServer02");
-                options.ClientId = "ResourceServer02";
-                options.ClientSecret = "secret_secret_secret";
+                options.Audiences.Add("resource-server-2");
+                options.ClientId = "resource-server-2";
+                options.ClientSecret = "C744604A-CD05-4092-9CF8-ECB7DC3499A2";
             });
 
             app.UseCors(builder => {
