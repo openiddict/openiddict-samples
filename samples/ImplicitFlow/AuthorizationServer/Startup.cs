@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AuthorizationServer.Extensions;
 using AuthorizationServer.Models;
 using AuthorizationServer.Services;
 using Microsoft.AspNetCore.Builder;
@@ -40,7 +41,7 @@ namespace AuthorizationServer {
                 .EnableAuthorizationEndpoint("/connect/authorize")
                 .EnableLogoutEndpoint("/connect/logout")
                 .EnableIntrospectionEndpoint("/connect/introspect")
-                .EnableUserinfoEndpoint("/Account/Userinfo")
+                .EnableUserinfoEndpoint("/api/userinfo")
 
                 // Note: the sample only uses the implicit code flow but you can enable
                 // the other flows if you need to support implicit, password or client credentials.
@@ -78,17 +79,21 @@ namespace AuthorizationServer {
         }
 
         public void Configure(IApplicationBuilder app) {
-            app.UseIdentity();
-
             app.UseCors(builder => {
                 builder.WithOrigins("http://localhost:9000");
                 builder.WithMethods("GET");
                 builder.WithHeaders("Authorization");
             });
 
-            app.UseOpenIddict();
+            app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api"), branch => {
+                branch.UseIdentity();
+            });
 
-            app.UseOAuthValidation();
+            app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), branch => {
+                branch.UseOAuthValidation();
+            });
+
+            app.UseOpenIddict();
 
             app.UseMvcWithDefaultRoute();
 
