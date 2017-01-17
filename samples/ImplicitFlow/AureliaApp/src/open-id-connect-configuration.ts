@@ -13,7 +13,7 @@ const oidcConfig: OpenIdConnectConfiguration = {
         automaticSilentRenew: false, // true,
         // interval in milliseconds to check the user's session
         checkSessionInterval: 10000,
-        client_id: "Aurelia.OpenIdConnect",
+        client_id: "aurelia",
         filterProtocolClaims: true,
         loadUserInfo: false,
         post_logout_redirect_uri: `${environment.urls.host}/signout-oidc`,
