@@ -7,7 +7,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Primitives;
@@ -15,7 +14,6 @@ using AspNet.Security.OpenIdConnect.Server;
 using AuthorizationServer.Models;
 using AuthorizationServer.ViewModels.Shared;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -41,12 +39,31 @@ namespace AuthorizationServer.Controllers
             _userManager = userManager;
         }
 
-        [Authorize, HttpGet("~/connect/authorize")]
+        [HttpGet("~/connect/authorize")]
         public async Task<IActionResult> Authorize(OpenIdConnectRequest request)
         {
             Debug.Assert(request.IsAuthorizationRequest(),
                 "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
                 "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
+
+            if (!User.Identity.IsAuthenticated)
+            {
+                // If the client application request promptless authentication,
+                // return an error indicating that the user is not logged in.
+                if (request.HasPrompt(OpenIdConnectConstants.Prompts.None))
+                {
+                    var properties = new AuthenticationProperties(new Dictionary<string, string>
+                    {
+                        [OpenIdConnectConstants.Properties.Error] = OpenIdConnectConstants.Errors.LoginRequired,
+                        [OpenIdConnectConstants.Properties.ErrorDescription] = "The user is not logged in."
+                    });
+
+                    // Ask OpenIddict to return a login_required error to the client application.
+                    return Forbid(properties, OpenIdConnectServerDefaults.AuthenticationScheme);
+                }
+
+                return Challenge();
+            }
 
             // Retrieve the profile of the logged in user.
             var user = await _userManager.GetUserAsync(User);

@@ -1,22 +1,36 @@
 import { autoinject } from "aurelia-framework";
 import { RouterConfiguration, Router } from "aurelia-router";
-import { OpenIdConnect } from "aurelia-open-id-connect";
+import { User, Log } from "oidc-client";
+import { OpenIdConnect, OpenIdConnectRoles } from "aurelia-open-id-connect";
 
 @autoinject
 export class App {
 
-    constructor(private openIdConnect: OpenIdConnect) { }
+  private router: Router;
+  private user: User;
 
-    public configureRouter(routerConfiguration: RouterConfiguration, router: Router) {
+  constructor(private openIdConnect: OpenIdConnect) {
+    this.openIdConnect.logger.enableLogging(Log.INFO);
+    this.openIdConnect.userManager.getUser().then((user) => {
+      this.user = user;
+    });
+  }
 
-        // switch from hash (#) to slash (/) navigation
-        routerConfiguration.options.pushState = true;
+  public configureRouter(routerConfiguration: RouterConfiguration, router: Router) {
 
-        // configure routes
-        routerConfiguration.map([
-            { moduleId: "login", route: ["", "login"] },
-        ]);
+    // switch from hash (#) to slash (/) navigation
+    routerConfiguration.options.pushState = true;
+    routerConfiguration.title = "OpenID Connect Implicit Flow Demo";
 
-        this.openIdConnect.Configure(routerConfiguration);
-    }
+    // configure routes
+    routerConfiguration.map([
+      {
+        moduleId: "home", name: "home", nav: true, route: [""],
+        settings: { roles: [OpenIdConnectRoles.Everyone] }, title: "home",
+      },
+    ]);
+
+    this.openIdConnect.configure(routerConfiguration);
+    this.router = router;
+  }
 }

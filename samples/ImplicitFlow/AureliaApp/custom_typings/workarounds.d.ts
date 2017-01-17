@@ -1,3 +1,1 @@
-interface ReadableStream {}
-
 interface URLSearchParams {}
