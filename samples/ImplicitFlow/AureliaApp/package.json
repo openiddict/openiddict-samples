@@ -18,7 +18,7 @@
   "dependencies": {
     "aurelia-bootstrapper": "^1.0.0",
     "aurelia-fetch-client": "^1.0.0",
-    "aurelia-open-id-connect": "github:shaunluttin/aurelia-open-id-connect#f9146cb442dbfcf78f3cf4629cf64d5eeec06d06",
+    "aurelia-open-id-connect": "github:shaunluttin/aurelia-open-id-connect#0.12.0",
     "babel-polyfill": "^6.20.0",
     "bluebird": "^3.4.1",
     "requirejs": "^2.3.2",
