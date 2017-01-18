@@ -12,7 +12,7 @@ namespace ResourceServer02 {
             app.UseOAuthIntrospection(options => {
                 options.AutomaticAuthenticate = true;
                 options.AutomaticChallenge = true;
-                options.Authority = "http://localhost:12345";
+                options.Authority = "http://localhost:5000";
                 options.Audiences.Add("resource-server-2");
                 options.ClientId = "resource-server-2";
                 options.ClientSecret = "C744604A-CD05-4092-9CF8-ECB7DC3499A2";
