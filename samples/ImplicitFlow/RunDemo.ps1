@@ -28,7 +28,7 @@ function global:Kill-Demo {
 Push-Location "./AuthorizationServer"
 dotnet restore
 dotnet build --no-incremental #rebuild
-$global:p += Start-Process dotnet -ArgumentList "watch run server.urls=http://localhost:12345" -PassThru
+$global:p += Start-Process dotnet -ArgumentList "watch run server.urls=http://localhost:5000" -PassThru
 Pop-Location
 
 # Aurelia Application
