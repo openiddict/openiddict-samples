@@ -1,39 +1,31 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AuthTokenService } from '../core/auth-token/auth-token.service';
-import { Store } from '@ngrx/store';
-import { AppState } from './app-store';
-import { Observable } from 'rxjs';
-import { AuthState } from '../core/auth-store/auth.store';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { AuthService } from '../core/auth.service';
+import { AuthStateModel } from '../core/models/auth-state-model';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
 })
-export class AppComponent implements OnInit, OnDestroy {
-    authState$: Observable<AuthState>;
+export class AppComponent implements OnInit {
+    authState$: Observable<AuthStateModel>;
 
-    constructor(private tokens: AuthTokenService,
-                private store: Store<AppState>
+    constructor(
+        private authService: AuthService,
     ) { }
 
     refreshToken() {
-        this.tokens.refreshTokens()
+        this.authService.refreshTokens()
             .subscribe();
     }
 
     ngOnInit(): void {
-        this.authState$ = this.store.select(state => state.auth);
-
+        this.authState$ = this.authService.state$;
         // This starts up the token refresh preocess for the app
-        this.tokens.startupTokenRefresh()
+        this.authService.init()
             .subscribe(
-                () => console.info('Startup success'),
-                error => console.warn(error)
-              );
-    }
-
-    ngOnDestroy(): void {
-        this.tokens.unsubscribeRefresh();
+            () => { console.info('Startup success'); },
+            error => console.warn(error)
+            );
     }
 }

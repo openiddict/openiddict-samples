@@ -4,8 +4,6 @@
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "noImplicitAny": true,
-    "skipLibCheck": true,
     "lib": ["es6", "dom"],
     "mapRoot": "./",
     "module": "es6",
@@ -16,9 +14,5 @@
     "typeRoots": [
       "../node_modules/@types"
     ]
-  },
-    "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  }
 }
