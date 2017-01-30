@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Core;
 using OpenIddict.Models;
 
-namespace AuthorizationServer {
+namespace AuthorizationServer.Controllers {
     public class AuthorizationController : Controller {
         private readonly OpenIddictApplicationManager<OpenIddictApplication> _applicationManager;
 

@@ -18,19 +18,15 @@ using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Core;
-using OpenIddict.Models;
 
-namespace AuthorizationServer {
+namespace AuthorizationServer.Controllers {
     public class AuthorizationController : Controller {
-        private readonly OpenIddictApplicationManager<OpenIddictApplication> _applicationManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public AuthorizationController(
-            OpenIddictApplicationManager<OpenIddictApplication> applicationManager,
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager) {
-            _applicationManager = applicationManager;
             _signInManager = signInManager;
             _userManager = userManager;
         }
@@ -40,15 +36,6 @@ namespace AuthorizationServer {
             Debug.Assert(request.IsAuthorizationRequest(),
                 "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
                 "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
-
-            // Retrieve the application details from the database.
-            var application = await _applicationManager.FindByClientIdAsync(request.ClientId, HttpContext.RequestAborted);
-            if (application == null) {
-                return View("Error", new ErrorViewModel {
-                    Error = OpenIdConnectConstants.Errors.InvalidClient,
-                    ErrorDescription = "Details concerning the calling client application cannot be found in the database"
-                });
-            }
 
             // Retrieve the profile of the logged in user.
             var user = await _userManager.GetUserAsync(User);

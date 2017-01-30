@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using AuthorizationServer.ViewModels.Shared;
 using AspNet.Security.OpenIdConnect.Primitives;
 
-namespace AuthorizationServer {
+namespace AuthorizationServer.Controllers {
     public class ErrorController : Controller {
         [HttpGet, HttpPost, Route("~/error")]
         public IActionResult Error(OpenIdConnectResponse response) {

@@ -8,7 +8,7 @@ using AuthorizationServer.ViewModels.Shared;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AuthorizationServer {
+namespace AuthorizationServer.Controllers {
     public class ErrorController : Controller {
         [HttpGet, HttpPost, Route("~/error")]
         public IActionResult Error() {
