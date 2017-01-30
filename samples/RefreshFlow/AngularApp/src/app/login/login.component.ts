@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AccountService } from '../../core/account/account.service';
+import { AuthService } from '../../core/auth.service';
 
 @Component({
     selector: 'app-login',
@@ -11,10 +11,10 @@ export class LoginComponent implements OnInit {
     loginForm: FormGroup;
     response: any;
 
-    constructor(private formBuilder: FormBuilder,
-                private account: AccountService
+    constructor(
+        private formBuilder: FormBuilder,
+        private authService: AuthService
     ) { }
-
 
     ngOnInit(): void {
         this.loginForm = this.formBuilder.group({
@@ -24,12 +24,12 @@ export class LoginComponent implements OnInit {
     }
 
     onSubmit() {
-        this.account.login(this.loginForm.value)
-            .subscribe( () => {
+        this.authService.login(this.loginForm.value)
+            .subscribe(() => {
                 this.ngOnInit();
                 this.response = 'Successfully loggedin';
             },
-            error => this.response = error );
+            error => this.response = error);
     }
 
 }
