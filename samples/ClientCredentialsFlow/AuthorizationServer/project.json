@@ -14,8 +14,8 @@
   },
 
   "dependencies": {
-    "AspNet.Security.OAuth.Introspection": "1.0.0-alpha3-final",
-    "AspNet.Security.OAuth.Validation": "1.0.0-alpha3-final",
+    "AspNet.Security.OAuth.Introspection": "1.0.0-*",
+    "AspNet.Security.OAuth.Validation": "1.0.0-*",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.0",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
