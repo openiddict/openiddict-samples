@@ -3,13 +3,17 @@ using AspNet.Security.OAuth.Introspection;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ResourceServer01.Controllers {
-    public class ResourceController : Controller {
+namespace ResourceServer01.Controllers
+{
+    public class ResourceController : Controller
+    {
         [Authorize(ActiveAuthenticationSchemes = OAuthIntrospectionDefaults.AuthenticationScheme)]
         [HttpGet]
-        public IActionResult Private() {
+        public IActionResult Private()
+        {
             var identity = User.Identity as ClaimsIdentity;
-            if (identity == null) {
+            if (identity == null)
+            {
                 return BadRequest();
             }
 
@@ -17,7 +21,8 @@ namespace ResourceServer01.Controllers {
         }
 
         [HttpGet]
-        public IActionResult Public() {
+        public IActionResult Public()
+        {
             return Content("This is a public endpoint that is at ResourceServer01; it does not require authorization.");
         }
     }

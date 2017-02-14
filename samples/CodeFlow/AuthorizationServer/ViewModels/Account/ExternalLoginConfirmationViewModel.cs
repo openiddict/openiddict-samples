@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AuthorizationServer.ViewModels.Account {
+namespace AuthorizationServer.ViewModels.Account
+{
     public class ExternalLoginConfirmationViewModel
     {
         [Required]

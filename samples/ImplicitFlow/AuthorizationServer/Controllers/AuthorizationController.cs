@@ -19,28 +19,34 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Core;
 
-namespace AuthorizationServer.Controllers {
-    public class AuthorizationController : Controller {
+namespace AuthorizationServer.Controllers
+{
+    public class AuthorizationController : Controller
+    {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public AuthorizationController(
             SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager) {
+            UserManager<ApplicationUser> userManager)
+        {
             _signInManager = signInManager;
             _userManager = userManager;
         }
 
         [Authorize, HttpGet("~/connect/authorize")]
-        public async Task<IActionResult> Authorize(OpenIdConnectRequest request) {
+        public async Task<IActionResult> Authorize(OpenIdConnectRequest request)
+        {
             Debug.Assert(request.IsAuthorizationRequest(),
                 "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
                 "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
 
             // Retrieve the profile of the logged in user.
             var user = await _userManager.GetUserAsync(User);
-            if (user == null) {
-                return View("Error", new ErrorViewModel {
+            if (user == null)
+            {
+                return View("Error", new ErrorViewModel
+                {
                     Error = OpenIdConnectConstants.Errors.ServerError,
                     ErrorDescription = "An internal error has occurred"
                 });
@@ -54,7 +60,8 @@ namespace AuthorizationServer.Controllers {
         }
 
         [HttpGet("~/connect/logout")]
-        public async Task<IActionResult> Logout() {
+        public async Task<IActionResult> Logout()
+        {
             // Ask ASP.NET Core Identity to delete the local and external cookies created
             // when the user agent is redirected from the external identity provider
             // after a successful authentication flow (e.g Google or Facebook).
@@ -65,7 +72,8 @@ namespace AuthorizationServer.Controllers {
             return SignOut(OpenIdConnectServerDefaults.AuthenticationScheme);
         }
 
-        private async Task<AuthenticationTicket> CreateTicketAsync(OpenIdConnectRequest request, ApplicationUser user) {
+        private async Task<AuthenticationTicket> CreateTicketAsync(OpenIdConnectRequest request, ApplicationUser user)
+        {
             // Create a new ClaimsPrincipal containing the claims that
             // will be used to create an id_token, a token or a code.
             var principal = await _signInManager.CreateUserPrincipalAsync(user);
@@ -74,7 +82,8 @@ namespace AuthorizationServer.Controllers {
             // To allow OpenIddict to serialize them, you must attach them a destination, that specifies
             // whether they should be included in access tokens, in identity tokens or in both.
 
-            foreach (var claim in principal.Claims) {
+            foreach (var claim in principal.Claims)
+            {
                 // In this sample, every claim is serialized in both the access and the identity tokens.
                 // In a real world application, you'd probably want to exclude confidential claims
                 // or apply a claims policy based on the scopes requested by the client application.
@@ -88,7 +97,8 @@ namespace AuthorizationServer.Controllers {
                 OpenIdConnectServerDefaults.AuthenticationScheme);
 
             // Set the list of scopes granted to the client application.
-            ticket.SetScopes(new[] {
+            ticket.SetScopes(new[]
+            {
                 OpenIdConnectConstants.Scopes.OpenId,
                 OpenIdConnectConstants.Scopes.Email,
                 OpenIdConnectConstants.Scopes.Profile,

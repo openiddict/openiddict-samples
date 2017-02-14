@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AuthorizationServer.ViewModels.Manage {
-    public class VerifyPhoneNumberViewModel {
+namespace AuthorizationServer.ViewModels.Manage
+{
+    public class VerifyPhoneNumberViewModel
+    {
         [Required]
         public string Code { get; set; }
 

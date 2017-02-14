@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AuthorizationServer.ViewModels.Account {
-    public class LoginViewModel {
+namespace AuthorizationServer.ViewModels.Account
+{
+    public class LoginViewModel
+    {
         [Required]
         [EmailAddress]
         public string Email { get; set; }

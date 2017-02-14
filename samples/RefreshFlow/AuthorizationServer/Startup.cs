@@ -4,13 +4,17 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AuthorizationServer {
-    public class Startup {
-        public void ConfigureServices(IServiceCollection services) {
+namespace AuthorizationServer
+{
+    public class Startup
+    {
+        public void ConfigureServices(IServiceCollection services)
+        {
             services.AddCors();
             services.AddMvc();
 
-            services.AddDbContext<ApplicationDbContext>(options => {
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
                 // Configure the context to use an in-memory store.
                 options.UseInMemoryDatabase();
 
@@ -46,10 +50,12 @@ namespace AuthorizationServer {
                 .DisableHttpsRequirement();
         }
 
-        public void Configure(IApplicationBuilder app) {
+        public void Configure(IApplicationBuilder app)
+        {
             app.UseDeveloperExceptionPage();
 
-            app.UseCors(builder => {
+            app.UseCors(builder =>
+            {
                 builder.WithOrigins("http://localhost:5055");
                 builder.AllowAnyHeader();
                 builder.AllowAnyMethod();
@@ -67,7 +73,8 @@ namespace AuthorizationServer {
             // Using it is recommended if your resource server is in a
             // different application/separated from the authorization server.
             //
-            // app.UseOAuthIntrospection(options => {
+            // app.UseOAuthIntrospection(options =>
+            // {
             //     options.AutomaticAuthenticate = true;
             //     options.AutomaticChallenge = true;
             //     options.Authority = "http://localhost:54895/";

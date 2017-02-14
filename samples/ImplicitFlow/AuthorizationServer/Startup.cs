@@ -11,10 +11,14 @@ using Microsoft.Extensions.DependencyInjection;
 using OpenIddict.Core;
 using OpenIddict.Models;
 
-namespace AuthorizationServer {
-    public class Startup {
-        public void ConfigureServices(IServiceCollection services) {
-            services.AddDbContext<ApplicationDbContext>(options => {
+namespace AuthorizationServer
+{
+    public class Startup
+    {
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
                 // Configure the context to use an in-memory store.
                 options.UseInMemoryDatabase();
 
@@ -78,18 +82,22 @@ namespace AuthorizationServer {
             services.AddTransient<ISmsSender, AuthMessageSender>();
         }
 
-        public void Configure(IApplicationBuilder app) {
-            app.UseCors(builder => {
+        public void Configure(IApplicationBuilder app)
+        {
+            app.UseCors(builder =>
+            {
                 builder.WithOrigins("http://localhost:9000");
                 builder.WithMethods("GET");
                 builder.WithHeaders("Authorization");
             });
 
-            app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api"), branch => {
+            app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api"), branch =>
+            {
                 branch.UseIdentity();
             });
 
-            app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), branch => {
+            app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), branch =>
+            {
                 branch.UseOAuthValidation();
             });
 
@@ -102,16 +110,20 @@ namespace AuthorizationServer {
             InitializeAsync(app.ApplicationServices, CancellationToken.None).GetAwaiter().GetResult();
         }
 
-        private async Task InitializeAsync(IServiceProvider services, CancellationToken cancellationToken) {
+        private async Task InitializeAsync(IServiceProvider services, CancellationToken cancellationToken)
+        {
             // Create a new service scope to ensure the database context is correctly disposed when this methods returns.
-            using (var scope = services.GetRequiredService<IServiceScopeFactory>().CreateScope()) {
+            using (var scope = services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
                 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 await context.Database.EnsureCreatedAsync();
 
                 var manager = scope.ServiceProvider.GetRequiredService<OpenIddictApplicationManager<OpenIddictApplication>>();
 
-                if (await manager.FindByClientIdAsync("aurelia", cancellationToken) == null) {
-                    var application = new OpenIddictApplication {
+                if (await manager.FindByClientIdAsync("aurelia", cancellationToken) == null)
+                {
+                    var application = new OpenIddictApplication
+                    {
                         ClientId = "aurelia",
                         DisplayName = "Aurelia client application",
                         LogoutRedirectUri = "http://localhost:9000/signout-oidc",
@@ -121,16 +133,20 @@ namespace AuthorizationServer {
                     await manager.CreateAsync(application, cancellationToken);
                 }
 
-                if (await manager.FindByClientIdAsync("resource-server-1", cancellationToken) == null) {
-                    var application = new OpenIddictApplication {
+                if (await manager.FindByClientIdAsync("resource-server-1", cancellationToken) == null)
+                {
+                    var application = new OpenIddictApplication
+                    {
                         ClientId = "resource-server-1"
                     };
 
                     await manager.CreateAsync(application, "846B62D0-DEF9-4215-A99D-86E6B8DAB342", cancellationToken);
                 }
 
-                if (await manager.FindByClientIdAsync("resource-server-2", cancellationToken) == null) {
-                    var application = new OpenIddictApplication {
+                if (await manager.FindByClientIdAsync("resource-server-2", cancellationToken) == null)
+                {
+                    var application = new OpenIddictApplication
+                    {
                         ClientId = "resource-server-2"
                     };
 

@@ -2,14 +2,19 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ResourceServer02 {
-    public class Startup {
-        public void ConfigureServices(IServiceCollection services) {
+namespace ResourceServer02
+{
+    public class Startup
+    {
+        public void ConfigureServices(IServiceCollection services)
+        {
             services.AddMvc();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
-            app.UseOAuthIntrospection(options => {
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            app.UseOAuthIntrospection(options =>
+            {
                 options.AutomaticAuthenticate = true;
                 options.AutomaticChallenge = true;
                 options.Authority = "http://localhost:12345";
@@ -18,13 +23,15 @@ namespace ResourceServer02 {
                 options.ClientSecret = "C744604A-CD05-4092-9CF8-ECB7DC3499A2";
             });
 
-            app.UseCors(builder => {
+            app.UseCors(builder =>
+            {
                 builder.WithOrigins("http://localhost:9000");
                 builder.WithMethods("GET");
                 builder.WithHeaders("Authorization");
             });
 
-            app.UseMvc(routes => {
+            app.UseMvc(routes =>
+            {
                 routes.MapRoute(
                     name: "empty",
                     template: "{controller=Resource}/{action=Public}"

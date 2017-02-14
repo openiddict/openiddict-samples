@@ -5,17 +5,20 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AuthorizationServer.Controllers {
+namespace AuthorizationServer.Controllers
+{
     [Authorize]
     [Route("[controller]")]
-    public class AccountController : Controller {
+    public class AccountController : Controller
+    {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _applicationDbContext;
         private static bool _databaseChecked;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
-            ApplicationDbContext applicationDbContext) {
+            ApplicationDbContext applicationDbContext)
+        {
             _userManager = userManager;
             _applicationDbContext = applicationDbContext;
         }
@@ -24,12 +27,15 @@ namespace AuthorizationServer.Controllers {
         // POST: /Account/Register
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] RegisterViewModel model) {
+        public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
+        {
             EnsureDatabaseCreated(_applicationDbContext);
-            if (ModelState.IsValid) {
+            if (ModelState.IsValid)
+            {
                 var user = new ApplicationUser { UserName = model.UserName, Email = model.UserName };
                 var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded) {
+                if (result.Succeeded)
+                {
                     return Ok();
                 }
                 AddErrors(result);
@@ -46,15 +52,19 @@ namespace AuthorizationServer.Controllers {
         // not yet supported in this release.
         // Please see this http://go.microsoft.com/fwlink/?LinkID=615859 for more information on how to do deploy the database
         // when publishing your application.
-        private static void EnsureDatabaseCreated(ApplicationDbContext context) {
-            if (!_databaseChecked) {
+        private static void EnsureDatabaseCreated(ApplicationDbContext context)
+        {
+            if (!_databaseChecked)
+            {
                 _databaseChecked = true;
                 context.Database.EnsureCreated();
             }
         }
 
-        private void AddErrors(IdentityResult result) {
-            foreach (var error in result.Errors) {
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
         }

@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 
-namespace AuthorizationServer.ViewModels.Manage {
+namespace AuthorizationServer.ViewModels.Manage
+{
     public class ManageLoginsViewModel
     {
         public IList<UserLoginInfo> CurrentLogins { get; set; }

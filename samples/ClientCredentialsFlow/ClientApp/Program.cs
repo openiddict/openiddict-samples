@@ -5,11 +5,14 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace ClientApp {
-    public class Program {
+namespace ClientApp
+{
+    public class Program
+    {
         public static void Main(string[] args) => MainAsync(args).GetAwaiter().GetResult();
 
-        public static async Task MainAsync(string[] args) {
+        public static async Task MainAsync(string[] args)
+        {
             var client = new HttpClient();
 
             var token = await GetTokenAsync(client);
@@ -22,9 +25,11 @@ namespace ClientApp {
             Console.ReadLine();
         }
 
-        public static async Task<string> GetTokenAsync(HttpClient client) {
+        public static async Task<string> GetTokenAsync(HttpClient client)
+        {
             var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:52698/connect/token");
-            request.Content = new FormUrlEncodedContent(new Dictionary<string, string> {
+            request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
+            {
                 ["grant_type"] = "client_credentials",
                 ["client_id"] = "console",
                 ["client_secret"] = "388D45FA-B36B-4988-BA59-B187D329C207"
@@ -34,14 +39,16 @@ namespace ClientApp {
             response.EnsureSuccessStatusCode();
 
             var payload = JObject.Parse(await response.Content.ReadAsStringAsync());
-            if (payload["error"] != null) {
+            if (payload["error"] != null)
+            {
                 throw new InvalidOperationException("An error occurred while retrieving an access token.");
             }
 
             return (string) payload["access_token"];
         }
 
-        public static async Task<string> GetResourceAsync(HttpClient client, string token) {
+        public static async Task<string> GetResourceAsync(HttpClient client, string token)
+        {
             var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:52698/api/message");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 

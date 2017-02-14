@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AuthorizationServer.ViewModels.Account {
-    public class RegisterViewModel {
+namespace AuthorizationServer.ViewModels.Account
+{
+    public class RegisterViewModel
+    {
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]

@@ -57,7 +57,7 @@
             ".html",
             ".css"
           ],
-          "stub":false 
+          "stub":false
         }
       ]
     },
@@ -71,7 +71,7 @@
         "dependencies": [
           "oidc-client",
           {
-            "name": "aurelia-open-id-connect", 
+            "name": "aurelia-open-id-connect",
             "path": "../node_modules/aurelia-open-id-connect/dist/amd/",
             "main": "index"
           }

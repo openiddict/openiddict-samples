@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace ClientApp {
-    public class Program {
+namespace ClientApp
+{
+    public class Program
+    {
         public static void Main(string[] args) => MainAsync(args).GetAwaiter().GetResult();
 
-        public static async Task MainAsync(string[] args) {
+        public static async Task MainAsync(string[] args)
+        {
             var client = new HttpClient();
 
             const string email = "bob@le-magnifique.com", password = "}s>EWG@f4g;_v7nB";
@@ -28,7 +31,8 @@ namespace ClientApp {
             Console.ReadLine();
         }
 
-        public static async Task CreateAccountAsync(HttpClient client, string email, string password) {
+        public static async Task CreateAccountAsync(HttpClient client, string email, string password)
+        {
             var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58795/Account/Register");
             request.Content = new StringContent(JsonConvert.SerializeObject(new { email, password }), Encoding.UTF8, "application/json");
 
@@ -36,9 +40,11 @@ namespace ClientApp {
             response.EnsureSuccessStatusCode();
         }
 
-        public static async Task<string> GetTokenAsync(HttpClient client, string email, string password) {
+        public static async Task<string> GetTokenAsync(HttpClient client, string email, string password)
+        {
             var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58795/connect/token");
-            request.Content = new FormUrlEncodedContent(new Dictionary<string, string> {
+            request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
+            {
                 ["grant_type"] = "password",
                 ["username"] = email,
                 ["password"] = password
@@ -48,14 +54,16 @@ namespace ClientApp {
             response.EnsureSuccessStatusCode();
 
             var payload = JObject.Parse(await response.Content.ReadAsStringAsync());
-            if (payload["error"] != null) {
+            if (payload["error"] != null)
+            {
                 throw new InvalidOperationException("An error occurred while retrieving an access token.");
             }
 
             return (string) payload["access_token"];
         }
 
-        public static async Task<string> GetResourceAsync(HttpClient client, string token) {
+        public static async Task<string> GetResourceAsync(HttpClient client, string token)
+        {
             var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:58795/api/message");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 

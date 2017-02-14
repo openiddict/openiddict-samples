@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AuthorizationServer.ViewModels.Account {
-    public class ResetPasswordViewModel {
+namespace AuthorizationServer.ViewModels.Account
+{
+    public class ResetPasswordViewModel
+    {
         [Required]
         [EmailAddress]
         public string Email { get; set; }

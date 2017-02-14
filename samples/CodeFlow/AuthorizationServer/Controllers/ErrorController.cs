@@ -4,21 +4,26 @@
  * the license and the contributors participating to this project.
  */
 
-using Microsoft.AspNetCore.Mvc;
-using AuthorizationServer.ViewModels.Shared;
 using AspNet.Security.OpenIdConnect.Primitives;
+using AuthorizationServer.ViewModels.Shared;
+using Microsoft.AspNetCore.Mvc;
 
-namespace AuthorizationServer.Controllers {
-    public class ErrorController : Controller {
+namespace AuthorizationServer.Controllers
+{
+    public class ErrorController : Controller
+    {
         [HttpGet, HttpPost, Route("~/error")]
-        public IActionResult Error(OpenIdConnectResponse response) {
+        public IActionResult Error(OpenIdConnectResponse response)
+        {
             // If the error was not caused by an invalid
             // OIDC request, display a generic error page.
-            if (response == null) {
+            if (response == null)
+            {
                 return View(new ErrorViewModel());
             }
 
-            return View(new ErrorViewModel {
+            return View(new ErrorViewModel
+            {
                 Error = response.Error,
                 ErrorDescription = response.ErrorDescription
             });

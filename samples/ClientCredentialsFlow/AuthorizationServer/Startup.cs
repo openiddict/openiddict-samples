@@ -8,12 +8,16 @@ using Microsoft.Extensions.DependencyInjection;
 using OpenIddict.Core;
 using OpenIddict.Models;
 
-namespace AuthorizationServer {
-    public class Startup {
-        public void ConfigureServices(IServiceCollection services) {
+namespace AuthorizationServer
+{
+    public class Startup
+    {
+        public void ConfigureServices(IServiceCollection services)
+        {
             services.AddMvc();
 
-            services.AddDbContext<ApplicationDbContext>(options => {
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
                 // Configure the context to use an in-memory store.
                 options.UseInMemoryDatabase();
 
@@ -43,7 +47,8 @@ namespace AuthorizationServer {
                 .DisableHttpsRequirement();
         }
 
-        public void Configure(IApplicationBuilder app) {
+        public void Configure(IApplicationBuilder app)
+        {
             app.UseDeveloperExceptionPage();
 
             // Add a middleware used to validate access
@@ -54,7 +59,8 @@ namespace AuthorizationServer {
             // Using it is recommended if your resource server is in a
             // different application/separated from the authorization server.
             //
-            // app.UseOAuthIntrospection(options => {
+            // app.UseOAuthIntrospection(options =>
+            // {
             //     options.AutomaticAuthenticate = true;
             //     options.AutomaticChallenge = true;
             //     options.Authority = "http://localhost:54540/";
@@ -74,16 +80,20 @@ namespace AuthorizationServer {
             InitializeAsync(app.ApplicationServices, CancellationToken.None).GetAwaiter().GetResult();
         }
 
-        private async Task InitializeAsync(IServiceProvider services, CancellationToken cancellationToken) {
+        private async Task InitializeAsync(IServiceProvider services, CancellationToken cancellationToken)
+        {
             // Create a new service scope to ensure the database context is correctly disposed when this methods returns.
-            using (var scope = services.GetRequiredService<IServiceScopeFactory>().CreateScope()) {
+            using (var scope = services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
                 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 await context.Database.EnsureCreatedAsync();
 
                 var manager = scope.ServiceProvider.GetRequiredService<OpenIddictApplicationManager<OpenIddictApplication>>();
 
-                if (await manager.FindByClientIdAsync("console", cancellationToken) == null) {
-                    var application = new OpenIddictApplication {
+                if (await manager.FindByClientIdAsync("console", cancellationToken) == null)
+                {
+                    var application = new OpenIddictApplication
+                    {
                         ClientId = "console",
                         DisplayName = "My client application"
                     };
