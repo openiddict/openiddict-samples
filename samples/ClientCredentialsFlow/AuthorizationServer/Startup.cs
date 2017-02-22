@@ -61,12 +61,11 @@ namespace AuthorizationServer
             //
             // app.UseOAuthIntrospection(options =>
             // {
-            //     options.AutomaticAuthenticate = true;
-            //     options.AutomaticChallenge = true;
-            //     options.Authority = "http://localhost:54540/";
+            //     options.Authority = new Uri("http://localhost:52698/");
             //     options.Audiences.Add("resource_server");
             //     options.ClientId = "resource_server";
             //     options.ClientSecret = "875sqd4s5d748z78z7ds1ff8zz8814ff88ed8ea4z4zzd";
+            //     options.RequireHttpsMetadata = false;
             // });
 
             app.UseOpenIddict();

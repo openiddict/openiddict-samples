@@ -1,5 +1,5 @@
+using System;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ResourceServer01
@@ -11,16 +11,15 @@ namespace ResourceServer01
             services.AddMvc();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
             app.UseOAuthIntrospection(options =>
             {
-                options.AutomaticAuthenticate = true;
-                options.AutomaticChallenge = true;
-                options.Authority = "http://localhost:12345";
+                options.Authority = new Uri("http://localhost:12345");
                 options.Audiences.Add("resource-server-1");
                 options.ClientId = "resource-server-1";
                 options.ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342";
+                options.RequireHttpsMetadata = false;
             });
 
             app.UseCors(builder =>
