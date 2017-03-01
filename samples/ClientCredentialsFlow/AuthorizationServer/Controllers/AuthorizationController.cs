@@ -66,14 +66,17 @@ namespace AuthorizationServer.Controllers
         {
             // Create a new ClaimsIdentity containing the claims that
             // will be used to create an id_token, a token or a code.
-            var identity = new ClaimsIdentity(OpenIdConnectServerDefaults.AuthenticationScheme);
+            var identity = new ClaimsIdentity(
+                OpenIdConnectServerDefaults.AuthenticationScheme,
+                OpenIdConnectConstants.Claims.Name,
+                OpenIdConnectConstants.Claims.Role);
 
-            // Use the client_id as the name identifier.
-            identity.AddClaim(ClaimTypes.NameIdentifier, application.ClientId,
+            // Use the client_id as the subject identifier.
+            identity.AddClaim(OpenIdConnectConstants.Claims.Subject, application.ClientId,
                 OpenIdConnectConstants.Destinations.AccessToken,
                 OpenIdConnectConstants.Destinations.IdentityToken);
 
-            identity.AddClaim(ClaimTypes.Name, application.DisplayName,
+            identity.AddClaim(OpenIdConnectConstants.Claims.Name, application.DisplayName,
                 OpenIdConnectConstants.Destinations.AccessToken,
                 OpenIdConnectConstants.Destinations.IdentityToken);
 

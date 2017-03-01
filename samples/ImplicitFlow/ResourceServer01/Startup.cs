@@ -20,6 +20,10 @@ namespace ResourceServer01
                 options.ClientId = "resource-server-1";
                 options.ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342";
                 options.RequireHttpsMetadata = false;
+
+                // Note: you can override the default name and role claims:
+                // options.NameClaimType = "custom_name_claim";
+                // options.RoleClaimType = "custom_role_claim";
             });
 
             app.UseCors(builder =>

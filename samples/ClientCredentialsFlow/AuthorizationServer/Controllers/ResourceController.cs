@@ -1,6 +1,6 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AspNet.Security.OAuth.Validation;
+using AspNet.Security.OpenIdConnect.Primitives;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Core;
@@ -22,9 +22,13 @@ namespace AuthorizationServer.Controllers
         [HttpGet("message")]
         public async Task<IActionResult> GetMessage()
         {
-            var identifier = User.FindFirst(ClaimTypes.NameIdentifier);
+            var subject = User.FindFirst(OpenIdConnectConstants.Claims.Subject)?.Value;
+            if (string.IsNullOrEmpty(subject))
+            {
+                return BadRequest();
+            }
 
-            var application = await _applicationManager.FindByClientIdAsync(identifier.Value, HttpContext.RequestAborted);
+            var application = await _applicationManager.FindByClientIdAsync(subject, HttpContext.RequestAborted);
             if (application == null)
             {
                 return BadRequest();
