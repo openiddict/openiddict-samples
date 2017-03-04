@@ -40,23 +40,31 @@ namespace AuthorizationServer
             });
 
             // Register the OpenIddict services.
-            services.AddOpenIddict()
+            services.AddOpenIddict(options =>
+            {
                 // Register the Entity Framework stores.
-                .AddEntityFrameworkCoreStores<ApplicationDbContext>()
+                options.AddEntityFrameworkCoreStores<ApplicationDbContext>();
 
                 // Register the ASP.NET Core MVC binder used by OpenIddict.
                 // Note: if you don't call this method, you won't be able to
                 // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
-                .AddMvcBinders()
+                options.AddMvcBinders();
 
                 // Enable the token endpoint.
-                .EnableTokenEndpoint("/connect/token")
+                options.EnableTokenEndpoint("/connect/token");
 
                 // Enable the password flow.
-                .AllowPasswordFlow()
+                options.AllowPasswordFlow();
 
                 // During development, you can disable the HTTPS requirement.
-                .DisableHttpsRequirement();
+                options.DisableHttpsRequirement();
+
+                // Note: to use JWT access tokens instead of the default
+                // encrypted format, the following lines are required:
+                //
+                // options.UseJsonWebTokens();
+                // options.AddEphemeralSigningKey();
+            });
         }
 
         public void Configure(IApplicationBuilder app)
@@ -66,6 +74,24 @@ namespace AuthorizationServer
             // Add a middleware used to validate access
             // tokens and protect the API endpoints.
             app.UseOAuthValidation();
+
+            // If you prefer using JWT, don't forget to disable the automatic
+            // JWT -> WS-Federation claims mapping used by the JWT middleware:
+            //
+            // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            // JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+            //
+            // app.UseJwtBearerAuthentication(new JwtBearerOptions
+            // {
+            //     Authority = "http://localhost:58795/",
+            //     Audience = "resource_server",
+            //     RequireHttpsMetadata = false,
+            //     TokenValidationParameters = new TokenValidationParameters
+            //     {
+            //         NameClaimType = OpenIdConnectConstants.Claims.Subject,
+            //         RoleClaimType = OpenIdConnectConstants.Claims.Role
+            //     }
+            // });
 
             // Alternatively, you can also use the introspection middleware.
             // Using it is recommended if your resource server is in a

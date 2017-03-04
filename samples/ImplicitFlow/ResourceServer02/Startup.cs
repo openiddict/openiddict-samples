@@ -15,7 +15,7 @@ namespace ResourceServer02
         {
             app.UseOAuthIntrospection(options =>
             {
-                options.Authority = new Uri("http://localhost:12345");
+                options.Authority = new Uri("http://localhost:12345/");
                 options.Audiences.Add("resource-server-2");
                 options.ClientId = "resource-server-2";
                 options.ClientSecret = "C744604A-CD05-4092-9CF8-ECB7DC3499A2";
@@ -25,6 +25,24 @@ namespace ResourceServer02
                 // options.NameClaimType = "custom_name_claim";
                 // options.RoleClaimType = "custom_role_claim";
             });
+
+            // If you prefer using JWT, don't forget to disable the automatic
+            // JWT -> WS-Federation claims mapping used by the JWT middleware:
+            //
+            // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            // JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+            //
+            // app.UseJwtBearerAuthentication(new JwtBearerOptions
+            // {
+            //     Authority = "http://localhost:12345/",
+            //     Audience = "resource-server-2",
+            //     RequireHttpsMetadata = false,
+            //     TokenValidationParameters = new TokenValidationParameters
+            //     {
+            //         NameClaimType = OpenIdConnectConstants.Claims.Subject,
+            //         RoleClaimType = OpenIdConnectConstants.Claims.Role
+            //     }
+            // });
 
             app.UseCors(builder =>
             {

@@ -214,6 +214,8 @@ namespace AuthorizationServer.Controllers
                 }.Intersect(request.GetScopes()));
             }
 
+            ticket.SetResources("resource_server");
+
             return ticket;
         }
     }

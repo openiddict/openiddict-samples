@@ -150,6 +150,8 @@ namespace AuthorizationServer.Controllers
                 OpenIddictConstants.Scopes.Roles
             }.Intersect(request.GetScopes()));
 
+            ticket.SetResources("resource_server");
+
             return ticket;
         }
     }

@@ -81,10 +81,14 @@ namespace AuthorizationServer.Controllers
                 OpenIdConnectConstants.Destinations.IdentityToken);
 
             // Create a new authentication ticket holding the user identity.
-            return new AuthenticationTicket(
+            var ticket = new AuthenticationTicket(
                 new ClaimsPrincipal(identity),
                 new AuthenticationProperties(),
                 OpenIdConnectServerDefaults.AuthenticationScheme);
+
+            ticket.SetResources("resource_server");
+
+            return ticket;
         }
     }
 }
