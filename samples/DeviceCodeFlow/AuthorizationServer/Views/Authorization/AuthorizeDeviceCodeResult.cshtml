@@ -1,0 +1,36 @@
+﻿@model AuthorizationServer.ViewModels.Authorization.AuthorizeDeviceCodeResultViewModel
+@{
+    ViewData["Title"] = Model.Authorized ? "Authorized Device" : "Denied Authorization of Device";
+}
+
+<div class="jumbotron">
+    @if (Model.Authorized)
+    {
+        <h1>Device Authorized</h1>
+    }
+    else
+    {
+        <h1>Device Denied</h1>
+
+    }
+
+    <p class="lead text-left">
+        @if (Model.Authorized)
+        {
+            <span>You have authorized</span>
+        }
+        else
+        {
+            <span>You have declined to authorize</span>
+        }
+        <strong>@Model.ApplicationName</strong>
+        to access your data (scopes requested: @Model.Scope)
+    </p>
+
+    <p class="lead text-left">
+        You can manage your device and application authorizations <a href="#">here</a>
+    </p>
+
+    <p class="lead text-left">It is safe to close this page now.</p>
+
+</div>

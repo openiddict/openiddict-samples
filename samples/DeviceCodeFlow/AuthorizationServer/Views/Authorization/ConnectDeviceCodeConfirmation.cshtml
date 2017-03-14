@@ -1,0 +1,28 @@
+﻿@model AuthorizationServer.ViewModels.Authorization.AuthorizeDeviceCodeViewModel
+@{
+    ViewData["Title"] = "Authorize Device";
+}
+
+<div class="jumbotron">
+    <h1>Authorization</h1>
+
+    <p class="lead text-left">Do you want to grant <strong>@Model.ApplicationName</strong> access to your data? (scopes requested: @Model.Scope)</p>
+
+    <form asp-action="AcceptDevice" method="post" class="form-horizontal">
+        @Html.AntiForgeryToken()
+
+        @if (ViewData.ModelState.Any(x => x.Value.Errors.Any()))
+        {
+            <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert">×</a>
+                <h4>Validation Errors</h4>
+                @Html.ValidationSummary()
+            </div>
+        }
+
+        <input type="hidden" asp-for="UserCode" class="form-control" />
+
+        <input class="btn btn-lg btn-success" name="submit.Accept" type="submit" value="Yes" />
+        <input class="btn btn-lg btn-danger" name="submit.Deny" type="submit" value="No" />
+    </form>
+</div>

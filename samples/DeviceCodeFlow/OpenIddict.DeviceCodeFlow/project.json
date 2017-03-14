@@ -1,0 +1,33 @@
+﻿{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "AspNet.Security.OpenIdConnect.Primitives": "1.0.0-*",
+    "Microsoft.AspNetCore.Identity": "1.0.0", 
+    "Microsoft.AspNetCore.Authentication.OpenIdConnect": "1.0.2",
+    "OpenIddict": "1.0.0-*",
+    "OpenIddict.Core": "1.0.0-*"
+  },
+
+  "frameworks": {
+    "net451": {
+      "dependencies": {
+        "Microsoft.NETCore.Platforms": "1.0.1"
+      }
+    },
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0"
+        },
+        "Wiry.Base32": "1.0.6"
+      },
+
+      "imports": [
+        "dnxcore50",
+        "portable-net451+win8"
+      ]
+    }
+  }
+}

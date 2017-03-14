@@ -37,6 +37,16 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AuthorizationServer", "samp
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AngularApp", "samples\RefreshFlow\AngularApp\AngularApp.xproj", "{9C934C2E-BC44-4644-A77B-EDC5DCBA4624}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DeviceCodeFlow", "DeviceCodeFlow", "{275D2F5D-EA8F-4DB9-898F-EFB227E0C020}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AuthorizationServer", "samples\DeviceCodeFlow\AuthorizationServer\AuthorizationServer.xproj", "{31940786-0057-4822-876E-DD1010453DC6}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ClientApp", "samples\DeviceCodeFlow\ClientApp\ClientApp.xproj", "{0BDB2037-4CF1-4E6F-BBEE-CE9FA8A6D79B}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "OpenIddict.DeviceCodeFlow", "samples\DeviceCodeFlow\OpenIddict.DeviceCodeFlow\OpenIddict.DeviceCodeFlow.xproj", "{3E399845-06C5-4432-A514-3BB984656D07}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "OpenIddict.DeviceCodeFlow.EntityFrameworkCore", "samples\DeviceCodeFlow\OpenIddict.DeviceCodeFlow.EntityFrameworkCore\OpenIddict.DeviceCodeFlow.EntityFrameworkCore.xproj", "{7487E669-2828-4D4D-ADAE-868885821B74}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +101,22 @@ Global
 		{9C934C2E-BC44-4644-A77B-EDC5DCBA4624}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C934C2E-BC44-4644-A77B-EDC5DCBA4624}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C934C2E-BC44-4644-A77B-EDC5DCBA4624}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31940786-0057-4822-876E-DD1010453DC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31940786-0057-4822-876E-DD1010453DC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31940786-0057-4822-876E-DD1010453DC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31940786-0057-4822-876E-DD1010453DC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BDB2037-4CF1-4E6F-BBEE-CE9FA8A6D79B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BDB2037-4CF1-4E6F-BBEE-CE9FA8A6D79B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BDB2037-4CF1-4E6F-BBEE-CE9FA8A6D79B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BDB2037-4CF1-4E6F-BBEE-CE9FA8A6D79B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E399845-06C5-4432-A514-3BB984656D07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E399845-06C5-4432-A514-3BB984656D07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E399845-06C5-4432-A514-3BB984656D07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E399845-06C5-4432-A514-3BB984656D07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7487E669-2828-4D4D-ADAE-868885821B74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7487E669-2828-4D4D-ADAE-868885821B74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7487E669-2828-4D4D-ADAE-868885821B74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7487E669-2828-4D4D-ADAE-868885821B74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,5 +134,9 @@ Global
 		{81382AEF-4096-4653-85D9-9A55FC67885C} = {677D0C2C-B66E-487E-B915-CFE1C63CB1CC}
 		{EB20BBB7-591C-44AB-8FDE-3272CAC2BF56} = {E8108CC6-A798-423C-99C6-A37BEBCEE7F0}
 		{9C934C2E-BC44-4644-A77B-EDC5DCBA4624} = {E8108CC6-A798-423C-99C6-A37BEBCEE7F0}
+		{31940786-0057-4822-876E-DD1010453DC6} = {275D2F5D-EA8F-4DB9-898F-EFB227E0C020}
+		{0BDB2037-4CF1-4E6F-BBEE-CE9FA8A6D79B} = {275D2F5D-EA8F-4DB9-898F-EFB227E0C020}
+		{3E399845-06C5-4432-A514-3BB984656D07} = {275D2F5D-EA8F-4DB9-898F-EFB227E0C020}
+		{7487E669-2828-4D4D-ADAE-868885821B74} = {275D2F5D-EA8F-4DB9-898F-EFB227E0C020}
 	EndGlobalSection
 EndGlobal
