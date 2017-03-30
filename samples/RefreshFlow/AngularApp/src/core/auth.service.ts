@@ -31,6 +31,14 @@ export class AuthService {
     ) {
         this.state = new BehaviorSubject<AuthStateModel>(this.initalState);
         this.state$ = this.state.asObservable();
+
+        this.tokens$ = this.state.filter(state => state.authReady)
+            .map(state => state.tokens);
+
+        this.profile$ = this.state.filter(state => state.authReady)
+            .map(state => state.profile);
+
+        this.loggedIn$ = this.tokens$.map(tokens => !!tokens);
     }
     init(): Observable<AuthTokenModel> {
         return this.startupTokenRefresh()
