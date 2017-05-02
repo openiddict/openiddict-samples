@@ -169,7 +169,7 @@ namespace AuthorizationServer.Controllers
                     destinations.Add(OpenIdConnectConstants.Destinations.IdentityToken);
                 }
 
-                claim.SetDestinations(OpenIdConnectConstants.Destinations.AccessToken);
+                claim.SetDestinations(destinations);
             }
 
             return ticket;
