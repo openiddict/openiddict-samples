@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25402.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{06BD12FF-DA2D-4149-9CDA-C30BF1E84EB4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{037F2264-DFA9-4CCE-893F-C8F07E2D905D}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NgOidc", "src\openiddict-angular2\NgOidc.xproj", "{D3FB36A6-F850-4D37-AD5C-B41156C6B18E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D3FB36A6-F850-4D37-AD5C-B41156C6B18E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3FB36A6-F850-4D37-AD5C-B41156C6B18E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3FB36A6-F850-4D37-AD5C-B41156C6B18E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3FB36A6-F850-4D37-AD5C-B41156C6B18E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D3FB36A6-F850-4D37-AD5C-B41156C6B18E} = {06BD12FF-DA2D-4149-9CDA-C30BF1E84EB4}
+	EndGlobalSection
+EndGlobal
