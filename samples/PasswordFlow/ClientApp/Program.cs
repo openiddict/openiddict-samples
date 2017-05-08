@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -33,10 +34,18 @@ namespace ClientApp
 
         public static async Task CreateAccountAsync(HttpClient client, string email, string password)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58795/Account/Register");
-            request.Content = new StringContent(JsonConvert.SerializeObject(new { email, password }), Encoding.UTF8, "application/json");
+            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58795/Account/Register")
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(new { email, password }), Encoding.UTF8, "application/json")
+            };
 
+            // Ignore 409 responses, as they indicate that the account already exists.
             var response = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead);
+            if (response.StatusCode == HttpStatusCode.Conflict)
+            {
+                return;
+            }
+
             response.EnsureSuccessStatusCode();
         }
 

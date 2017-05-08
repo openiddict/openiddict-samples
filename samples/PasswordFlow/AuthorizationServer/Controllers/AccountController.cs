@@ -2,6 +2,7 @@
 using AuthorizationServer.Models;
 using AuthorizationServer.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,7 +32,13 @@ namespace AuthorizationServer.Controllers
             EnsureDatabaseCreated(_applicationDbContext);
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = await _userManager.FindByNameAsync(model.Email);
+                if (user != null)
+                {
+                    return StatusCode(StatusCodes.Status409Conflict);
+                }
+
+                user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

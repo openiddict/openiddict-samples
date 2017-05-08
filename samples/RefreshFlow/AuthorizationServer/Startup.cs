@@ -3,6 +3,7 @@ using AuthorizationServer.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AuthorizationServer
@@ -11,13 +12,18 @@ namespace AuthorizationServer
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("config.json")
+                .AddEnvironmentVariables()
+                .Build();
+
             services.AddCors();
             services.AddMvc();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                // Configure the context to use an in-memory store.
-                options.UseInMemoryDatabase();
+                // Configure the context to use Microsoft SQL Server.
+                options.UseSqlServer(configuration["Data:DefaultConnection:ConnectionString"]);
 
                 // Register the entity sets needed by OpenIddict.
                 // Note: use the generic overload if you need

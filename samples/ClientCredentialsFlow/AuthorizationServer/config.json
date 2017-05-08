@@ -1,0 +1,7 @@
+{
+  "Data": {
+    "DefaultConnection": {
+      "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=openiddict-client-credentials-flow-sample;Trusted_Connection=True;MultipleActiveResultSets=true"
+    }
+  }
+}
