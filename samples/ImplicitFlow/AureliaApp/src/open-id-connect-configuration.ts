@@ -8,9 +8,9 @@ const oidcConfig: OpenIdConnectConfiguration = {
     userManagerSettings: <UserManagerSettings>{
         // number of seconds in advance of access token expiry
         // to raise the access token expiring event
-        accessTokenExpiringNotificationTime: 1,
+        accessTokenExpiringNotificationTime: 3585,
         authority: environment.urls.authority,
-        automaticSilentRenew: false, // true,
+        automaticSilentRenew: true,
         // interval in milliseconds to check the user's session
         checkSessionInterval: 10000,
         client_id: "aurelia",
@@ -23,11 +23,7 @@ const oidcConfig: OpenIdConnectConfiguration = {
         // number of millisecods to wait for the authorization
         // server to response to silent renew request
         silentRequestTimeout: 10000,
-        silent_redirect_uri: `${environment.urls.host}/signin-oidc`,
-        userStore: new WebStorageStateStore({
-            prefix: "oidc",
-            store: window.localStorage,
-        }),
+        silent_redirect_uri: `${environment.urls.host}/signin-oidc`
     },
 };
 
