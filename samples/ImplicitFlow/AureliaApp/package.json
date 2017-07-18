@@ -27,7 +27,6 @@
   },
   "peerDependencies": {},
   "devDependencies": {
-    "@types/whatwg-fetch": "0.0.33",
     "aurelia-cli": "github:shaunluttin/cli#0.1.0-sourcemaps",
     "aurelia-tools": "^0.2.2",
     "browser-sync": "^2.13.0",
