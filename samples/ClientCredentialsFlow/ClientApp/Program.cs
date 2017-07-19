@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
@@ -15,14 +16,26 @@ namespace ClientApp
         {
             var client = new HttpClient();
 
-            var token = await GetTokenAsync(client);
-            Console.WriteLine("Access token: {0}", token);
-            Console.WriteLine();
+            try
+            {
+                var token = await GetTokenAsync(client);
+                Console.WriteLine("Access token: {0}", token);
+                Console.WriteLine();
 
-            var resource = await GetResourceAsync(client, token);
-            Console.WriteLine("API response: {0}", resource);
-
-            Console.ReadLine();
+                var resource = await GetResourceAsync(client, token);
+                Console.WriteLine("API response: {0}", resource);
+                Console.ReadLine();
+            }
+            catch (System.Net.Http.HttpRequestException ex)
+            {
+                var builder = new StringBuilder();
+                builder.AppendLine("+++++++++++++++++++++");
+                builder.AppendLine(ex.Message);
+                builder.AppendLine(ex.InnerException.Message);
+                builder.AppendLine("Make sure you started the authorization server.");
+                builder.AppendLine("+++++++++++++++++++++");
+                Console.WriteLine(builder.ToString());
+            }
         }
 
         public static async Task<string> GetTokenAsync(HttpClient client)
