@@ -35,5 +35,3 @@ Push-Location "./AngularApp"
 npm install -y
 $global:p += Start-Process npm -ArgumentList "run start" -PassThru
 Pop-Location
-
-Start-Process -FilePath http://localhost:5055
