@@ -1,12 +1,11 @@
-                                                          
 $global:p = @();                                  
                                                           
 function global:Find-ChildProcess {
   param($ID=$PID)
 
   $result = Get-CimInstance win32_process | 
-    where { $_.ParentProcessId -eq $ID } 
-    select -Property ProcessId 
+    Where-Object { $_.ParentProcessId -eq $ID } 
+    Select-Object -Property ProcessId 
 
   $result
   $result | 
@@ -18,8 +17,8 @@ function global:Find-ChildProcess {
 
 function global:Kill-Demo {
   $Global:p | 
-    foreach { Find-ChildProcess -ID $_.Id } | 
-    foreach { kill -id $_.ProcessId }
+    ForEach-Object { Find-ChildProcess -ID $_.Id } | 
+    ForEach-Object { Stop-Process -id $_.ProcessId }
 }
 
 [System.Environment]::SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
