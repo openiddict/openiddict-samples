@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.IO;
 
 namespace AuthorizationServer
 {
@@ -17,6 +18,7 @@ namespace AuthorizationServer
                 .ConfigureLogging(options => options.AddConsole())
                 .ConfigureLogging(options => options.AddDebug())
                 .UseConfiguration(configuration)
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseKestrel()
                 .UseStartup<Startup>()
