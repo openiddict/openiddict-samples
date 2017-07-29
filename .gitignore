@@ -22,6 +22,7 @@ _references.js
 x64/
 [Bb]in/
 [Oo]bj/
+artifacts/
 
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 !packages/*/build/
