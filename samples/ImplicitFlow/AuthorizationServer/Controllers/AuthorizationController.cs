@@ -14,8 +14,6 @@ using AspNet.Security.OpenIdConnect.Server;
 using AuthorizationServer.Models;
 using AuthorizationServer.ViewModels.Shared;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;

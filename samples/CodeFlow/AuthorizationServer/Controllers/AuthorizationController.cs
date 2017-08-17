@@ -7,7 +7,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Primitives;
@@ -18,8 +17,6 @@ using AuthorizationServer.ViewModels.Authorization;
 using AuthorizationServer.ViewModels.Shared;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -144,8 +141,7 @@ namespace AuthorizationServer.Controllers
             if (request.IsAuthorizationCodeGrantType())
             {
                 // Retrieve the claims principal stored in the authorization code.
-                var info = await HttpContext.Authentication.GetAuthenticateInfoAsync(
-                    OpenIdConnectServerDefaults.AuthenticationScheme);
+                var info = await HttpContext.AuthenticateAsync(OpenIdConnectServerDefaults.AuthenticationScheme);
 
                 // Retrieve the user profile corresponding to the authorization code.
                 // Note: if you want to automatically invalidate the authorization code

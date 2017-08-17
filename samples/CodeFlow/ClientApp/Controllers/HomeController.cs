@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,7 +28,7 @@ namespace ClientApp.Controllers
         [Authorize, HttpPost("~/")]
         public async Task<ActionResult> Index(CancellationToken cancellationToken)
         {
-            var token = await HttpContext.Authentication.GetTokenAsync("access_token");
+            var token = await HttpContext.GetTokenAsync(CookieAuthenticationDefaults.AuthenticationScheme, "access_token");
             if (string.IsNullOrEmpty(token))
             {
                 throw new InvalidOperationException("The access token cannot be found in the authentication ticket. " +
