@@ -73,6 +73,11 @@ export class AuthService {
     }
 
     private storeToken(tokens: AuthTokenModel): void {
+        const previousTokens = this.retrieveTokens();
+        if (previousTokens != null && tokens.refresh_token == null) {
+            tokens.refresh_token = previousTokens.refresh_token;
+        }
+
         localStorage.setItem('auth-tokens', JSON.stringify(tokens));
     }
 
@@ -87,8 +92,8 @@ export class AuthService {
     }
 
     private updateState(newState: AuthStateModel): void {
-        const previoudState = this.state.getValue();
-        this.state.next(Object.assign({}, previoudState, newState));
+        const previousState = this.state.getValue();
+        this.state.next(Object.assign({}, previousState, newState));
     }
 
     private getTokens(data: RefreshGrantModel | LoginModel, grantType: string): Observable<Response> {
