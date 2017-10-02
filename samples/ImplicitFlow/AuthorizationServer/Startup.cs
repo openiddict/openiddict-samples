@@ -144,35 +144,37 @@ namespace AuthorizationServer
 
                 if (await manager.FindByClientIdAsync("aurelia", cancellationToken) == null)
                 {
-                    var application = new OpenIddictApplication
+                    var descriptor = new OpenIddictApplicationDescriptor
                     {
                         ClientId = "aurelia",
                         DisplayName = "Aurelia client application",
-                        LogoutRedirectUri = "http://localhost:9000/signout-oidc",
-                        RedirectUri = "http://localhost:9000/signin-oidc"
+                        PostLogoutRedirectUris = { new Uri("http://localhost:9000/signout-oidc") },
+                        RedirectUris = { new Uri("http://localhost:9000/signin-oidc") }
                     };
 
-                    await manager.CreateAsync(application, cancellationToken);
+                    await manager.CreateAsync(descriptor, cancellationToken);
                 }
 
                 if (await manager.FindByClientIdAsync("resource-server-1", cancellationToken) == null)
                 {
-                    var application = new OpenIddictApplication
+                    var descriptor = new OpenIddictApplicationDescriptor
                     {
-                        ClientId = "resource-server-1"
+                        ClientId = "resource-server-1",
+                        ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342"
                     };
 
-                    await manager.CreateAsync(application, "846B62D0-DEF9-4215-A99D-86E6B8DAB342", cancellationToken);
+                    await manager.CreateAsync(descriptor, cancellationToken);
                 }
 
                 if (await manager.FindByClientIdAsync("resource-server-2", cancellationToken) == null)
                 {
-                    var application = new OpenIddictApplication
+                    var descriptor = new OpenIddictApplicationDescriptor
                     {
-                        ClientId = "resource-server-2"
+                        ClientId = "resource-server-2",
+                        ClientSecret = "C744604A-CD05-4092-9CF8-ECB7DC3499A2"
                     };
 
-                    await manager.CreateAsync(application, "C744604A-CD05-4092-9CF8-ECB7DC3499A2", cancellationToken);
+                    await manager.CreateAsync(descriptor, cancellationToken);
                 }
             }
         }

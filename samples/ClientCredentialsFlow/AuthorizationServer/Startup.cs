@@ -123,13 +123,14 @@ namespace AuthorizationServer
 
                 if (await manager.FindByClientIdAsync("console", cancellationToken) == null)
                 {
-                    var application = new OpenIddictApplication
+                    var descriptor = new OpenIddictApplicationDescriptor
                     {
                         ClientId = "console",
+                        ClientSecret = "388D45FA-B36B-4988-BA59-B187D329C207",
                         DisplayName = "My client application"
                     };
 
-                    await manager.CreateAsync(application, "388D45FA-B36B-4988-BA59-B187D329C207", cancellationToken);
+                    await manager.CreateAsync(descriptor, cancellationToken);
                 }
             }
         }
