@@ -22,7 +22,7 @@ namespace AuthorizationServer.Controllers
 
         //
         // GET: /api/userinfo
-        [Authorize(AuthenticationSchemes = OAuthValidationDefaults.AuthenticationScheme)]
+        [Authorize(ActiveAuthenticationSchemes = OAuthValidationDefaults.AuthenticationScheme)]
         [HttpGet("userinfo"), Produces("application/json")]
         public async Task<IActionResult> Userinfo()
         {

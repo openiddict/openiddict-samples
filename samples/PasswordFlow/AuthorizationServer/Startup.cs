@@ -1,7 +1,7 @@
 ﻿using AspNet.Security.OpenIdConnect.Primitives;
 using AuthorizationServer.Models;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -72,9 +72,15 @@ namespace AuthorizationServer
                 // options.UseJsonWebTokens();
                 // options.AddEphemeralSigningKey();
             });
+        }
 
-            services.AddAuthentication()
-                .AddOAuthValidation();
+        public void Configure(IApplicationBuilder app)
+        {
+            app.UseDeveloperExceptionPage();
+
+            // Add a middleware used to validate access
+            // tokens and protect the API endpoints.
+            app.UseOAuthValidation();
 
             // If you prefer using JWT, don't forget to disable the automatic
             // JWT -> WS-Federation claims mapping used by the JWT middleware:
@@ -82,39 +88,32 @@ namespace AuthorizationServer
             // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             // JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
             //
-            // services.AddAuthentication()
-            //     .AddJwtBearer(options =>
+            // app.UseJwtBearerAuthentication(new JwtBearerOptions
+            // {
+            //     Authority = "http://localhost:58795/",
+            //     Audience = "resource_server",
+            //     RequireHttpsMetadata = false,
+            //     TokenValidationParameters = new TokenValidationParameters
             //     {
-            //         options.Authority = "http://localhost:58795/";
-            //         options.Audience = "resource_server";
-            //         options.RequireHttpsMetadata = false;
-            //         options.TokenValidationParameters = new TokenValidationParameters
-            //         {
-            //             NameClaimType = OpenIdConnectConstants.Claims.Subject,
-            //             RoleClaimType = OpenIdConnectConstants.Claims.Role
-            //         };
-            //     });
+            //         NameClaimType = OpenIdConnectConstants.Claims.Subject,
+            //         RoleClaimType = OpenIdConnectConstants.Claims.Role
+            //     }
+            // });
 
             // Alternatively, you can also use the introspection middleware.
             // Using it is recommended if your resource server is in a
             // different application/separated from the authorization server.
             //
-            // services.AddAuthentication()
-            //     .AddOAuthIntrospection(options =>
-            //     {
-            //         options.Authority = new Uri("http://localhost:58795/");
-            //         options.Audiences.Add("resource_server");
-            //         options.ClientId = "resource_server";
-            //         options.ClientSecret = "875sqd4s5d748z78z7ds1ff8zz8814ff88ed8ea4z4zzd";
-            //         options.RequireHttpsMetadata = false;
-            //     });
-        }
+            // app.UseOAuthIntrospection(options =>
+            // {
+            //     options.Authority = new Uri("http://localhost:58795/");
+            //     options.Audiences.Add("resource_server");
+            //     options.ClientId = "resource_server";
+            //     options.ClientSecret = "875sqd4s5d748z78z7ds1ff8zz8814ff88ed8ea4z4zzd";
+            //     options.RequireHttpsMetadata = false;
+            // });
 
-        public void Configure(IApplicationBuilder app)
-        {
-            app.UseDeveloperExceptionPage();
-
-            app.UseAuthentication();
+            app.UseOpenIddict();
 
             app.UseMvcWithDefaultRoute();
 

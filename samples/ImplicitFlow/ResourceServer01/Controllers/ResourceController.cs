@@ -7,7 +7,7 @@ namespace ResourceServer01.Controllers
 {
     public class ResourceController : Controller
     {
-        [Authorize(AuthenticationSchemes = OAuthIntrospectionDefaults.AuthenticationScheme)]
+        [Authorize(ActiveAuthenticationSchemes = OAuthIntrospectionDefaults.AuthenticationScheme)]
         [HttpGet]
         public IActionResult Private()
         {

@@ -2,10 +2,11 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
+using AuthorizationServer.Extensions;
 using AuthorizationServer.Models;
 using AuthorizationServer.Services;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -96,9 +97,6 @@ namespace AuthorizationServer
                 // options.UseJsonWebTokens();
             });
 
-            services.AddAuthentication()
-                .AddOAuthValidation();
-
             services.AddCors();
             services.AddMvc();
 
@@ -115,7 +113,17 @@ namespace AuthorizationServer
                 builder.WithHeaders("Authorization");
             });
 
-            app.UseAuthentication();
+            app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api"), branch =>
+            {
+                branch.UseIdentity();
+            });
+
+            app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), branch =>
+            {
+                branch.UseOAuthValidation();
+            });
+
+            app.UseOpenIddict();
 
             app.UseMvcWithDefaultRoute();
 

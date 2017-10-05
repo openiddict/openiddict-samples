@@ -2,10 +2,11 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
+using AuthorizationServer.Extensions;
 using AuthorizationServer.Models;
 using AuthorizationServer.Services;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -89,54 +90,6 @@ namespace AuthorizationServer
                 // options.AddEphemeralSigningKey();
             });
 
-            services.AddAuthentication()
-                .AddGoogle(options =>
-                {
-                    options.ClientId = "560027070069-37ldt4kfuohhu3m495hk2j4pjp92d382.apps.googleusercontent.com";
-                    options.ClientSecret = "n2Q-GEw9RQjzcRbU3qhfTj8f";
-                })
-
-                .AddTwitter(options =>
-                {
-                    options.ConsumerKey = "6XaCTaLbMqfj6ww3zvZ5g";
-                    options.ConsumerSecret = "Il2eFzGIrYhz6BWjYhVXBPQSfZuS4xoHpSSyD9PI";
-                })
-
-                .AddOAuthValidation();
-
-            // If you prefer using JWT, don't forget to disable the automatic
-            // JWT -> WS-Federation claims mapping used by the JWT middleware:
-            //
-            // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            // JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
-            //
-            // services.AddAuthentication()
-            //     .AddJwtBearer(options =>
-            //     {
-            //         options.Authority = "http://localhost:54540/";
-            //         options.Audience = "resource_server";
-            //         options.RequireHttpsMetadata = false;
-            //         options.TokenValidationParameters = new TokenValidationParameters
-            //         {
-            //             NameClaimType = OpenIdConnectConstants.Claims.Subject,
-            //             RoleClaimType = OpenIdConnectConstants.Claims.Role
-            //         };
-            //     });
-
-            // Alternatively, you can also use the introspection middleware.
-            // Using it is recommended if your resource server is in a
-            // different application/separated from the authorization server.
-            //
-            // services.AddAuthentication()
-            //     .AddOAuthIntrospection(options =>
-            //     {
-            //         options.Authority = new Uri("http://localhost:54540/");
-            //         options.Audiences.Add("resource_server");
-            //         options.ClientId = "resource_server";
-            //         options.ClientSecret = "875sqd4s5d748z78z7ds1ff8zz8814ff88ed8ea4z4zzd";
-            //         options.RequireHttpsMetadata = false;
-            //     });
-
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
         }
@@ -147,9 +100,64 @@ namespace AuthorizationServer
 
             app.UseStaticFiles();
 
-            app.UseStatusCodePagesWithReExecute("/error");
+            app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), branch =>
+            {
+                // Add a middleware used to validate access
+                // tokens and protect the API endpoints.
+                branch.UseOAuthValidation();
 
-            app.UseAuthentication();
+                // If you prefer using JWT, don't forget to disable the automatic
+                // JWT -> WS-Federation claims mapping used by the JWT middleware:
+                //
+                // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+                // JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+                //
+                // branch.UseJwtBearerAuthentication(new JwtBearerOptions
+                // {
+                //     Authority = "http://localhost:54540/",
+                //     Audience = "resource_server",
+                //     RequireHttpsMetadata = false,
+                //     TokenValidationParameters = new TokenValidationParameters
+                //     {
+                //         NameClaimType = OpenIdConnectConstants.Claims.Subject,
+                //         RoleClaimType = OpenIdConnectConstants.Claims.Role
+                //     }
+                // });
+
+                // Alternatively, you can also use the introspection middleware.
+                // Using it is recommended if your resource server is in a
+                // different application/separated from the authorization server.
+                //
+                // branch.UseOAuthIntrospection(options =>
+                // {
+                //     options.Authority = new Uri("http://localhost:54540/");
+                //     options.Audiences.Add("resource_server");
+                //     options.ClientId = "resource_server";
+                //     options.ClientSecret = "875sqd4s5d748z78z7ds1ff8zz8814ff88ed8ea4z4zzd";
+                //     options.RequireHttpsMetadata = false;
+                // });
+            });
+
+            app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api"), branch =>
+            {
+                branch.UseStatusCodePagesWithReExecute("/error");
+
+                branch.UseIdentity();
+
+                branch.UseGoogleAuthentication(new GoogleOptions
+                {
+                    ClientId = "560027070069-37ldt4kfuohhu3m495hk2j4pjp92d382.apps.googleusercontent.com",
+                    ClientSecret = "n2Q-GEw9RQjzcRbU3qhfTj8f"
+                });
+
+                branch.UseTwitterAuthentication(new TwitterOptions
+                {
+                    ConsumerKey = "6XaCTaLbMqfj6ww3zvZ5g",
+                    ConsumerSecret = "Il2eFzGIrYhz6BWjYhVXBPQSfZuS4xoHpSSyD9PI"
+                });
+            });
+
+            app.UseOpenIddict();
 
             app.UseMvcWithDefaultRoute();
 
@@ -175,7 +183,7 @@ namespace AuthorizationServer
                         ClientId = "mvc",
                         ClientSecret = "901564A5-E7FE-42CB-B10D-61EF6A8F3654",
                         DisplayName = "MVC client application",
-                        PostLogoutRedirectUris = { new Uri("http://localhost:53507/signout-callback-oidc") },
+                        PostLogoutRedirectUris = { new Uri("http://localhost:53507/") },
                         RedirectUris = { new Uri("http://localhost:53507/signin-oidc") }
                     };
 

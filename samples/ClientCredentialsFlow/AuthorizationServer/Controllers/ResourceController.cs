@@ -18,7 +18,7 @@ namespace AuthorizationServer.Controllers
             _applicationManager = applicationManager;
         }
 
-        [Authorize(AuthenticationSchemes = OAuthValidationDefaults.AuthenticationScheme)]
+        [Authorize(ActiveAuthenticationSchemes = OAuthValidationDefaults.AuthenticationScheme)]
         [HttpGet("message")]
         public async Task<IActionResult> GetMessage()
         {

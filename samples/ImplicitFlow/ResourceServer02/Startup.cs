@@ -1,5 +1,4 @@
 using System;
-using AspNet.Security.OAuth.Introspection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,12 +8,12 @@ namespace ResourceServer02
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = OAuthIntrospectionDefaults.AuthenticationScheme;
-            })
+            services.AddMvc();
+        }
 
-            .AddOAuthIntrospection(options =>
+        public void Configure(IApplicationBuilder app)
+        {
+            app.UseOAuthIntrospection(options =>
             {
                 options.Authority = new Uri("http://localhost:12345/");
                 options.Audiences.Add("resource-server-2");
@@ -33,36 +32,24 @@ namespace ResourceServer02
             // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             // JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
             //
-            // services.AddAuthentication(options =>
+            // app.UseJwtBearerAuthentication(new JwtBearerOptions
             // {
-            //     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            // })
-            //
-            // .AddJwtBearer(options =>
-            // {
-            //     options.Authority = "http://localhost:12345/";
-            //     options.Audience = "resource-server-2";
-            //     options.RequireHttpsMetadata = false;
-            //     options.TokenValidationParameters = new TokenValidationParameters
+            //     Authority = "http://localhost:12345/",
+            //     Audience = "resource-server-2",
+            //     RequireHttpsMetadata = false,
+            //     TokenValidationParameters = new TokenValidationParameters
             //     {
             //         NameClaimType = OpenIdConnectConstants.Claims.Subject,
             //         RoleClaimType = OpenIdConnectConstants.Claims.Role
-            //     };
+            //     }
             // });
 
-            services.AddMvc();
-        }
-
-        public void Configure(IApplicationBuilder app)
-        {
             app.UseCors(builder =>
             {
                 builder.WithOrigins("http://localhost:9000");
                 builder.WithMethods("GET");
                 builder.WithHeaders("Authorization");
             });
-
-            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
