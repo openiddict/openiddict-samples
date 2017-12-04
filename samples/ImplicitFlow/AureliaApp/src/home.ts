@@ -18,10 +18,6 @@ export class Home {
         return JSON.stringify(environment, null, 4);
     }
 
-    private get userAsJson(): string {
-        return JSON.stringify(this.inMemoryUser, null, 4);
-    };
-
     constructor(private openIdConnect: OpenIdConnect, private httpClient: HttpClient) {
         this.setInMemoryUserOnUserLoadedEvent();
         this.setTimeUntilAccessTokenExpiry();
@@ -66,15 +62,6 @@ export class Home {
             .then((response) => response.ok ? response.text() : response.statusText)
             .then((data) => this.resourceServerMessage.splice(1, 0, `${data}\n`))
             .catch((err) => this.resourceServerMessage.splice(1, 0, `${err.message}\n`));
-    }
-
-    public loginSilent() {
-        this.openIdConnect.loginSilent().catch((error) => {
-            // if this is a timeout error,
-            // then use a text editor to increase the silentRequestTimeout value,
-            // that we configure in open-id-connect-configuration.ts
-            console.log(error);
-        });
     }
 
     private setInMemoryUserOnUserLoadedEvent() {

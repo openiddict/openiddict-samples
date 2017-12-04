@@ -22,8 +22,6 @@ export function configure(aurelia: Aurelia) {
     .standardConfiguration()
     .plugin("aurelia-open-id-connect", () => oidcConfig);
 
-  aurelia.use.globalResources("./navbar.html");
-
   aurelia.use.developmentLogging();
 
   aurelia.start().then(() => aurelia.setRoot());
