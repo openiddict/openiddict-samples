@@ -24,8 +24,7 @@ export class App {
       {
         moduleId: "home",
         name: "home",
-        nav: true,
-        route: [""],
+        route: ["", "home"],
         title: "home",
       },
     ]);

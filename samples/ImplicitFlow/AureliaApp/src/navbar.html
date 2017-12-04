@@ -1,5 +1,0 @@
-<template bindable="router, user">
-  <template repeat.for="row of router.navigation  | openIdConnectNavigationFilter:user">
-    <a href.bind="row.href">${row.title}</a>
-  </template>
-</template>
