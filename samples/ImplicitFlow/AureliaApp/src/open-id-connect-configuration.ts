@@ -1,10 +1,12 @@
 import environment from "./environment";
 import { OpenIdConnectConfiguration } from "aurelia-open-id-connect";
-import { UserManagerSettings, WebStorageStateStore } from "oidc-client";
+import { Log, UserManagerSettings, WebStorageStateStore } from "oidc-client";
 
 const oidcConfig: OpenIdConnectConfiguration = {
-    loginRedirectModuleId: "home",
-    logoutRedirectModuleId: "home",
+    loginRedirectRoute: "home",
+    logoutRedirectRoute: "home",
+    unauthorizedRedirectRoute: "home",
+    logLevel: Log.DEBUG,
     userManagerSettings: <UserManagerSettings>{
         // number of seconds in advance of access token expiry
         // to raise the access token expiring event
