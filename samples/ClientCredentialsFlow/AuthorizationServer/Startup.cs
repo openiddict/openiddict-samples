@@ -127,7 +127,12 @@ namespace AuthorizationServer
                     {
                         ClientId = "console",
                         ClientSecret = "388D45FA-B36B-4988-BA59-B187D329C207",
-                        DisplayName = "My client application"
+                        DisplayName = "My client application",
+                        Permissions =
+                        {
+                            OpenIddictConstants.Permissions.Endpoints.Token,
+                            OpenIddictConstants.Permissions.GrantTypes.ClientCredentials
+                        }
                     };
 
                     await manager.CreateAsync(descriptor, cancellationToken);

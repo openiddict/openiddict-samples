@@ -149,7 +149,13 @@ namespace AuthorizationServer
                         ClientId = "aurelia",
                         DisplayName = "Aurelia client application",
                         PostLogoutRedirectUris = { new Uri("http://localhost:9000/signout-oidc") },
-                        RedirectUris = { new Uri("http://localhost:9000/signin-oidc") }
+                        RedirectUris = { new Uri("http://localhost:9000/signin-oidc") },
+                        Permissions =
+                        {
+                            OpenIddictConstants.Permissions.Endpoints.Authorization,
+                            OpenIddictConstants.Permissions.Endpoints.Logout,
+                            OpenIddictConstants.Permissions.GrantTypes.Implicit
+                        }
                     };
 
                     await manager.CreateAsync(descriptor, cancellationToken);
@@ -160,7 +166,11 @@ namespace AuthorizationServer
                     var descriptor = new OpenIddictApplicationDescriptor
                     {
                         ClientId = "resource-server-1",
-                        ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342"
+                        ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342",
+                        Permissions =
+                        {
+                            OpenIddictConstants.Permissions.Endpoints.Introspection
+                        }
                     };
 
                     await manager.CreateAsync(descriptor, cancellationToken);
@@ -171,7 +181,11 @@ namespace AuthorizationServer
                     var descriptor = new OpenIddictApplicationDescriptor
                     {
                         ClientId = "resource-server-2",
-                        ClientSecret = "C744604A-CD05-4092-9CF8-ECB7DC3499A2"
+                        ClientSecret = "C744604A-CD05-4092-9CF8-ECB7DC3499A2",
+                        Permissions =
+                        {
+                            OpenIddictConstants.Permissions.Endpoints.Introspection
+                        }
                     };
 
                     await manager.CreateAsync(descriptor, cancellationToken);
