@@ -121,10 +121,10 @@ namespace AuthorizationServer
 
             // Seed the database with the sample applications.
             // Note: in a real world application, this step should be part of a setup script.
-            InitializeAsync(app.ApplicationServices, CancellationToken.None).GetAwaiter().GetResult();
+            InitializeAsync(app.ApplicationServices).GetAwaiter().GetResult();
         }
 
-        private async Task InitializeAsync(IServiceProvider services, CancellationToken cancellationToken)
+        private async Task InitializeAsync(IServiceProvider services)
         {
             // Create a new service scope to ensure the database context is correctly disposed when this methods returns.
             using (var scope = services.GetRequiredService<IServiceScopeFactory>().CreateScope())
@@ -134,7 +134,7 @@ namespace AuthorizationServer
 
                 var manager = scope.ServiceProvider.GetRequiredService<OpenIddictApplicationManager<OpenIddictApplication>>();
 
-                if (await manager.FindByClientIdAsync("aurelia", cancellationToken) == null)
+                if (await manager.FindByClientIdAsync("aurelia") == null)
                 {
                     var descriptor = new OpenIddictApplicationDescriptor
                     {
@@ -150,10 +150,10 @@ namespace AuthorizationServer
                         }
                     };
 
-                    await manager.CreateAsync(descriptor, cancellationToken);
+                    await manager.CreateAsync(descriptor);
                 }
 
-                if (await manager.FindByClientIdAsync("resource-server-1", cancellationToken) == null)
+                if (await manager.FindByClientIdAsync("resource-server-1") == null)
                 {
                     var descriptor = new OpenIddictApplicationDescriptor
                     {
@@ -165,10 +165,10 @@ namespace AuthorizationServer
                         }
                     };
 
-                    await manager.CreateAsync(descriptor, cancellationToken);
+                    await manager.CreateAsync(descriptor);
                 }
 
-                if (await manager.FindByClientIdAsync("resource-server-2", cancellationToken) == null)
+                if (await manager.FindByClientIdAsync("resource-server-2") == null)
                 {
                     var descriptor = new OpenIddictApplicationDescriptor
                     {
@@ -180,7 +180,7 @@ namespace AuthorizationServer
                         }
                     };
 
-                    await manager.CreateAsync(descriptor, cancellationToken);
+                    await manager.CreateAsync(descriptor);
                 }
             }
         }
