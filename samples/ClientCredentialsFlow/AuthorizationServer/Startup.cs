@@ -108,10 +108,10 @@ namespace AuthorizationServer
 
             // Seed the database with the sample application.
             // Note: in a real world application, this step should be part of a setup script.
-            InitializeAsync(app.ApplicationServices, CancellationToken.None).GetAwaiter().GetResult();
+            InitializeAsync(app.ApplicationServices).GetAwaiter().GetResult();
         }
 
-        private async Task InitializeAsync(IServiceProvider services, CancellationToken cancellationToken)
+        private async Task InitializeAsync(IServiceProvider services)
         {
             // Create a new service scope to ensure the database context is correctly disposed when this methods returns.
             using (var scope = services.GetRequiredService<IServiceScopeFactory>().CreateScope())
@@ -121,7 +121,7 @@ namespace AuthorizationServer
 
                 var manager = scope.ServiceProvider.GetRequiredService<OpenIddictApplicationManager<OpenIddictApplication>>();
 
-                if (await manager.FindByClientIdAsync("console", cancellationToken) == null)
+                if (await manager.FindByClientIdAsync("console") == null)
                 {
                     var descriptor = new OpenIddictApplicationDescriptor
                     {
@@ -135,7 +135,7 @@ namespace AuthorizationServer
                         }
                     };
 
-                    await manager.CreateAsync(descriptor, cancellationToken);
+                    await manager.CreateAsync(descriptor);
                 }
             }
         }
