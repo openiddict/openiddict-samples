@@ -11,7 +11,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Certificate.pfx" />
 
-    <None Include="config.json">
+    <None Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="AspNet.Security.OAuth.Validation" Version="$(AspNetContribOpenIdExtensionsVersion)" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Twitter" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="$(AspNetCoreVersion)" />

@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
 using AuthorizationServer.Models;
@@ -16,19 +15,21 @@ namespace AuthorizationServer
 {
     public class Startup
     {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
         public void ConfigureServices(IServiceCollection services)
         {
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("config.json")
-                .AddEnvironmentVariables()
-                .Build();
-
             services.AddMvc();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 // Configure the context to use Microsoft SQL Server.
-                options.UseSqlServer(configuration["Data:DefaultConnection:ConnectionString"]);
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
 
                 // Register the entity sets needed by OpenIddict.
                 // Note: use the generic overload if you need
