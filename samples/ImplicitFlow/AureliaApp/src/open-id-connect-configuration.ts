@@ -19,7 +19,7 @@ const oidcConfig: OpenIdConnectConfiguration = {
         post_logout_redirect_uri: `${environment.urls.host}/signout-oidc`,
         redirect_uri: `${environment.urls.host}/signin-oidc`,
         response_type: "id_token token",
-        scope: "openid email roles profile",
+        scope: "openid email roles profile api1 api2",
         // number of millisecods to wait for the authorization
         // server to response to silent renew request
         silentRequestTimeout: 10000,

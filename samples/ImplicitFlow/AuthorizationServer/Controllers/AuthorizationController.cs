@@ -5,6 +5,7 @@
  */
 
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,21 +19,25 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using OpenIddict.Core;
+using OpenIddict.Models;
 
 namespace AuthorizationServer.Controllers
 {
     public class AuthorizationController : Controller
     {
         private readonly IOptions<IdentityOptions> _identityOptions;
+        private readonly OpenIddictScopeManager<OpenIddictScope> _scopeManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public AuthorizationController(
             IOptions<IdentityOptions> identityOptions,
+            OpenIddictScopeManager<OpenIddictScope> scopeManager,
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager)
         {
             _identityOptions = identityOptions;
+            _scopeManager = scopeManager;
             _signInManager = signInManager;
             _userManager = userManager;
         }
@@ -106,15 +111,10 @@ namespace AuthorizationServer.Controllers
                 OpenIdConnectServerDefaults.AuthenticationScheme);
 
             // Set the list of scopes granted to the client application.
-            ticket.SetScopes(new[]
-            {
-                OpenIdConnectConstants.Scopes.OpenId,
-                OpenIdConnectConstants.Scopes.Email,
-                OpenIdConnectConstants.Scopes.Profile,
-                OpenIddictConstants.Scopes.Roles
-            }.Intersect(request.GetScopes()));
+            var scopes = request.GetScopes().ToImmutableArray();
 
-            ticket.SetResources("resource-server-1", "resource-server-2");
+            ticket.SetScopes(scopes);
+            ticket.SetResources(await _scopeManager.ListResourcesAsync(scopes));
 
             // Note: by default, claims are NOT automatically included in the access and identity tokens.
             // To allow OpenIddict to serialize them, you must attach them a destination, that specifies
