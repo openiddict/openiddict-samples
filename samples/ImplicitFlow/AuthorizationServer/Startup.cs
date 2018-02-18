@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
 using AuthorizationServer.Extensions;
@@ -17,17 +16,18 @@ namespace AuthorizationServer
 {
     public class Startup
     {
-        public void ConfigureServices(IServiceCollection services)
-        {
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("config.json")
+        public IConfiguration Configuration { get; }
+            = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
                 .AddEnvironmentVariables()
                 .Build();
 
+        public void ConfigureServices(IServiceCollection services)
+        {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 // Configure the context to use Microsoft SQL Server.
-                options.UseSqlServer(configuration["Data:DefaultConnection:ConnectionString"]);
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
 
                 // Register the entity sets needed by OpenIddict.
                 // Note: use the generic overload if you need
@@ -64,6 +64,15 @@ namespace AuthorizationServer
                        .EnableLogoutEndpoint("/connect/logout")
                        .EnableIntrospectionEndpoint("/connect/introspect")
                        .EnableUserinfoEndpoint("/api/userinfo");
+
+                // Mark the "email", "profile" and "roles" scopes as supported scopes.
+                options.RegisterScopes(OpenIdConnectConstants.Scopes.Email,
+                                       OpenIdConnectConstants.Scopes.Profile,
+                                       OpenIddictConstants.Scopes.Roles);
+
+                // Enable scope validation, so that authorization and token requests
+                // that specify unregistered scopes are automatically rejected.
+                options.EnableScopeValidation();
 
                 // Note: the sample only uses the implicit code flow but you can enable
                 // the other flows if you need to support implicit, password or client credentials.
@@ -140,55 +149,88 @@ namespace AuthorizationServer
                 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 await context.Database.EnsureCreatedAsync();
 
-                var manager = scope.ServiceProvider.GetRequiredService<OpenIddictApplicationManager<OpenIddictApplication>>();
+                await CreateApplicationsAsync();
+                await CreateScopesAsync();
 
-                if (await manager.FindByClientIdAsync("aurelia") == null)
+                async Task CreateApplicationsAsync()
                 {
-                    var descriptor = new OpenIddictApplicationDescriptor
-                    {
-                        ClientId = "aurelia",
-                        DisplayName = "Aurelia client application",
-                        PostLogoutRedirectUris = { new Uri("http://localhost:9000/signout-oidc") },
-                        RedirectUris = { new Uri("http://localhost:9000/signin-oidc") },
-                        Permissions =
-                        {
-                            OpenIddictConstants.Permissions.Endpoints.Authorization,
-                            OpenIddictConstants.Permissions.Endpoints.Logout,
-                            OpenIddictConstants.Permissions.GrantTypes.Implicit
-                        }
-                    };
+                    var manager = scope.ServiceProvider.GetRequiredService<OpenIddictApplicationManager<OpenIddictApplication>>();
 
-                    await manager.CreateAsync(descriptor);
+                    if (await manager.FindByClientIdAsync("aurelia") == null)
+                    {
+                        var descriptor = new OpenIddictApplicationDescriptor
+                        {
+                            ClientId = "aurelia",
+                            DisplayName = "Aurelia client application",
+                            PostLogoutRedirectUris = { new Uri("http://localhost:9000/signout-oidc") },
+                            RedirectUris = { new Uri("http://localhost:9000/signin-oidc") },
+                            Permissions =
+                            {
+                                OpenIddictConstants.Permissions.Endpoints.Authorization,
+                                OpenIddictConstants.Permissions.Endpoints.Logout,
+                                OpenIddictConstants.Permissions.GrantTypes.Implicit
+                            }
+                        };
+
+                        await manager.CreateAsync(descriptor);
+                    }
+
+                    if (await manager.FindByClientIdAsync("resource-server-1") == null)
+                    {
+                        var descriptor = new OpenIddictApplicationDescriptor
+                        {
+                            ClientId = "resource-server-1",
+                            ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342",
+                            Permissions =
+                            {
+                                OpenIddictConstants.Permissions.Endpoints.Introspection
+                            }
+                        };
+
+                        await manager.CreateAsync(descriptor);
+                    }
+
+                    if (await manager.FindByClientIdAsync("resource-server-2") == null)
+                    {
+                        var descriptor = new OpenIddictApplicationDescriptor
+                        {
+                            ClientId = "resource-server-2",
+                            ClientSecret = "C744604A-CD05-4092-9CF8-ECB7DC3499A2",
+                            Permissions =
+                            {
+                                OpenIddictConstants.Permissions.Endpoints.Introspection
+                            }
+                        };
+
+                        await manager.CreateAsync(descriptor);
+                    }
                 }
 
-                if (await manager.FindByClientIdAsync("resource-server-1") == null)
+                async Task CreateScopesAsync()
                 {
-                    var descriptor = new OpenIddictApplicationDescriptor
+                    var manager = scope.ServiceProvider.GetRequiredService<OpenIddictScopeManager<OpenIddictScope>>();
+
+                    if (await manager.FindByNameAsync("api1") == null)
                     {
-                        ClientId = "resource-server-1",
-                        ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342",
-                        Permissions =
+                        var descriptor = new OpenIddictScopeDescriptor
                         {
-                            OpenIddictConstants.Permissions.Endpoints.Introspection
-                        }
-                    };
+                            Name = "api1",
+                            Resources = { "resource-server-1" }
+                        };
 
-                    await manager.CreateAsync(descriptor);
-                }
+                        await manager.CreateAsync(descriptor);
+                    }
 
-                if (await manager.FindByClientIdAsync("resource-server-2") == null)
-                {
-                    var descriptor = new OpenIddictApplicationDescriptor
+                    if (await manager.FindByNameAsync("api2") == null)
                     {
-                        ClientId = "resource-server-2",
-                        ClientSecret = "C744604A-CD05-4092-9CF8-ECB7DC3499A2",
-                        Permissions =
+                        var descriptor = new OpenIddictScopeDescriptor
                         {
-                            OpenIddictConstants.Permissions.Endpoints.Introspection
-                        }
-                    };
+                            Name = "api2",
+                            Resources = { "resource-server-2" }
+                        };
 
-                    await manager.CreateAsync(descriptor);
+                        await manager.CreateAsync(descriptor);
+                    }
                 }
             }
         }
