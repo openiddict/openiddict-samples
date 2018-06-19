@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenIddict.Abstractions;
 using OpenIddict.Core;
-using OpenIddict.Models;
+using OpenIddict.EntityFrameworkCore.Models;
 
 namespace AuthorizationServer
 {
@@ -52,43 +53,61 @@ namespace AuthorizationServer
                 options.ClaimsIdentity.RoleClaimType = OpenIdConnectConstants.Claims.Role;
             });
 
-            // Register the OpenIddict services.
-            services.AddOpenIddict(options =>
-            {
-                // Register the Entity Framework stores.
-                options.AddEntityFrameworkCoreStores<ApplicationDbContext>();
+            services.AddOpenIddict()
 
-                // Register the ASP.NET Core MVC binder used by OpenIddict.
-                // Note: if you don't call this method, you won't be able to
-                // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
-                options.AddMvcBinders();
+                // Register the OpenIddict core services.
+                .AddCore(options =>
+                {
+                    // Register the Entity Framework stores and models.
+                    options.UseEntityFrameworkCore()
+                           .UseDbContext<ApplicationDbContext>();
+                })
 
-                // Enable the authorization, logout, token and userinfo endpoints.
-                options.EnableAuthorizationEndpoint("/connect/authorize")
-                       .EnableLogoutEndpoint("/connect/logout")
-                       .EnableTokenEndpoint("/connect/token")
-                       .EnableUserinfoEndpoint("/api/userinfo");
+                // Register the OpenIddict server handler.
+                .AddServer(options =>
+                {
+                    // Register the ASP.NET Core MVC binder used by OpenIddict.
+                    // Note: if you don't call this method, you won't be able to
+                    // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
+                    options.UseMvc();
 
-                // Note: the Mvc.Client sample only uses the authorization code flow but you can enable
-                // the other flows if you need to support implicit, password or client credentials.
-                options.AllowAuthorizationCodeFlow();
+                    // Enable the authorization, logout, token and userinfo endpoints.
+                    options.EnableAuthorizationEndpoint("/connect/authorize")
+                           .EnableLogoutEndpoint("/connect/logout")
+                           .EnableTokenEndpoint("/connect/token")
+                           .EnableUserinfoEndpoint("/api/userinfo");
 
-                // When request caching is enabled, authorization and logout requests
-                // are stored in the distributed cache by OpenIddict and the user agent
-                // is redirected to the same page with a single parameter (request_id).
-                // This allows flowing large OpenID Connect requests even when using
-                // an external authentication provider like Google, Facebook or Twitter.
-                options.EnableRequestCaching();
+                    // Mark the "email", "profile" and "roles" scopes as supported scopes.
+                    options.RegisterScopes(OpenIdConnectConstants.Scopes.Email,
+                                           OpenIdConnectConstants.Scopes.Profile,
+                                           OpenIddictConstants.Scopes.Roles);
 
-                // During development, you can disable the HTTPS requirement.
-                options.DisableHttpsRequirement();
+                    // Note: the Mvc.Client sample only uses the authorization code flow but you can enable
+                    // the other flows if you need to support implicit, password or client credentials.
+                    options.AllowAuthorizationCodeFlow();
 
-                // Note: to use JWT access tokens instead of the default
-                // encrypted format, the following lines are required:
-                //
-                // options.UseJsonWebTokens();
-                // options.AddEphemeralSigningKey();
-            });
+                    // When request caching is enabled, authorization and logout requests
+                    // are stored in the distributed cache by OpenIddict and the user agent
+                    // is redirected to the same page with a single parameter (request_id).
+                    // This allows flowing large OpenID Connect requests even when using
+                    // an external authentication provider like Google, Facebook or Twitter.
+                    options.EnableRequestCaching();
+
+                    // During development, you can disable the HTTPS requirement.
+                    options.DisableHttpsRequirement();
+
+                    // Note: to use JWT access tokens instead of the default
+                    // encrypted format, the following lines are required:
+                    //
+                    // options.UseJsonWebTokens();
+                    // options.AddEphemeralSigningKey();
+                })
+
+                // Register the OpenIddict validation handler.
+                // Note: the OpenIddict validation handler is only compatible with the
+                // default token format or with reference tokens and cannot be used with
+                // JWT tokens. For JWT tokens, use the Microsoft JWT bearer handler.
+                .AddValidation();
 
             services.AddAuthentication()
                 .AddGoogle(options =>
@@ -101,9 +120,7 @@ namespace AuthorizationServer
                 {
                     options.ConsumerKey = "6XaCTaLbMqfj6ww3zvZ5g";
                     options.ConsumerSecret = "Il2eFzGIrYhz6BWjYhVXBPQSfZuS4xoHpSSyD9PI";
-                })
-
-                .AddOAuthValidation();
+                });
 
             // If you prefer using JWT, don't forget to disable the automatic
             // JWT -> WS-Federation claims mapping used by the JWT middleware:
@@ -184,7 +201,10 @@ namespace AuthorizationServer
                             OpenIddictConstants.Permissions.Endpoints.Logout,
                             OpenIddictConstants.Permissions.Endpoints.Token,
                             OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
-                            OpenIddictConstants.Permissions.GrantTypes.RefreshToken
+                            OpenIddictConstants.Permissions.GrantTypes.RefreshToken,
+                            OpenIddictConstants.Permissions.Scopes.Email,
+                            OpenIddictConstants.Permissions.Scopes.Profile,
+                            OpenIddictConstants.Permissions.Scopes.Roles
                         }
                     };
 
@@ -211,7 +231,10 @@ namespace AuthorizationServer
                         {
                             OpenIddictConstants.Permissions.Endpoints.Authorization,
                             OpenIddictConstants.Permissions.Endpoints.Token,
-                            OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode
+                            OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
+                            OpenIddictConstants.Permissions.Scopes.Email,
+                            OpenIddictConstants.Permissions.Scopes.Profile,
+                            OpenIddictConstants.Permissions.Scopes.Roles
                         }
                     };
 

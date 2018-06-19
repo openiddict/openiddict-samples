@@ -5,8 +5,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenIddict.Abstractions;
 using OpenIddict.Core;
-using OpenIddict.Models;
+using OpenIddict.EntityFrameworkCore.Models;
 
 namespace AuthorizationServer
 {
@@ -34,35 +35,45 @@ namespace AuthorizationServer
                 options.UseOpenIddict();
             });
 
-            // Register the OpenIddict services.
-            services.AddOpenIddict(options =>
-            {
-                // Register the Entity Framework stores.
-                options.AddEntityFrameworkCoreStores<ApplicationDbContext>();
+            services.AddOpenIddict()
 
-                // Register the ASP.NET Core MVC binder used by OpenIddict.
-                // Note: if you don't call this method, you won't be able to
-                // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
-                options.AddMvcBinders();
+                // Register the OpenIddict core services.
+                .AddCore(options =>
+                {
+                    // Register the Entity Framework stores and models.
+                    options.UseEntityFrameworkCore()
+                           .UseDbContext<ApplicationDbContext>();
+                })
 
-                // Enable the token endpoint.
-                options.EnableTokenEndpoint("/connect/token");
+                // Register the OpenIddict server handler.
+                .AddServer(options =>
+                {
+                    // Register the ASP.NET Core MVC binder used by OpenIddict.
+                    // Note: if you don't call this method, you won't be able to
+                    // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
+                    options.UseMvc();
 
-                // Enable the client credentials flow.
-                options.AllowClientCredentialsFlow();
+                    // Enable the token endpoint.
+                    options.EnableTokenEndpoint("/connect/token");
 
-                // During development, you can disable the HTTPS requirement.
-                options.DisableHttpsRequirement();
+                    // Enable the client credentials flow.
+                    options.AllowClientCredentialsFlow();
 
-                // Note: to use JWT access tokens instead of the default
-                // encrypted format, the following lines are required:
-                //
-                // options.UseJsonWebTokens();
-                // options.AddEphemeralSigningKey();
-            });
+                    // During development, you can disable the HTTPS requirement.
+                    options.DisableHttpsRequirement();
 
-            services.AddAuthentication()
-                .AddOAuthValidation();
+                    // Note: to use JWT access tokens instead of the default
+                    // encrypted format, the following lines are required:
+                    //
+                    // options.UseJsonWebTokens();
+                    // options.AddEphemeralSigningKey();
+                })
+
+                // Register the OpenIddict validation handler.
+                // Note: the OpenIddict validation handler is only compatible with the
+                // default token format or with reference tokens and cannot be used with
+                // JWT tokens. For JWT tokens, use the Microsoft JWT bearer handler.
+                .AddValidation();
 
             // If you prefer using JWT, don't forget to disable the automatic
             // JWT -> WS-Federation claims mapping used by the JWT middleware:

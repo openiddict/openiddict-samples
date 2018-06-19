@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenIddict.Abstractions;
 using OpenIddict.Core;
-using OpenIddict.Models;
+using OpenIddict.EntityFrameworkCore.Models;
 
 namespace AuthorizationServer
 {
@@ -48,66 +49,72 @@ namespace AuthorizationServer
                 options.ClaimsIdentity.RoleClaimType = OpenIdConnectConstants.Claims.Role;
             });
 
-            // Register the OpenIddict services.
-            services.AddOpenIddict(options =>
-            {
-                // Register the Entity Framework stores.
-                options.AddEntityFrameworkCoreStores<ApplicationDbContext>();
+            services.AddOpenIddict()
 
-                // Register the ASP.NET Core MVC binder used by OpenIddict.
-                // Note: if you don't call this method, you won't be able to
-                // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
-                options.AddMvcBinders();
+                // Register the OpenIddict core services.
+                .AddCore(options =>
+                {
+                    // Register the Entity Framework stores and models.
+                    options.UseEntityFrameworkCore()
+                           .UseDbContext<ApplicationDbContext>();
+                })
 
-                // Enable the authorization, logout, userinfo, and introspection endpoints.
-                options.EnableAuthorizationEndpoint("/connect/authorize")
-                       .EnableLogoutEndpoint("/connect/logout")
-                       .EnableIntrospectionEndpoint("/connect/introspect")
-                       .EnableUserinfoEndpoint("/api/userinfo");
+                // Register the OpenIddict server handler.
+                .AddServer(options =>
+                {
+                    // Register the ASP.NET Core MVC binder used by OpenIddict.
+                    // Note: if you don't call this method, you won't be able to
+                    // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
+                    options.UseMvc();
 
-                // Mark the "email", "profile" and "roles" scopes as supported scopes.
-                options.RegisterScopes(OpenIdConnectConstants.Scopes.Email,
-                                       OpenIdConnectConstants.Scopes.Profile,
-                                       OpenIddictConstants.Scopes.Roles);
+                    // Enable the authorization, logout, userinfo, and introspection endpoints.
+                    options.EnableAuthorizationEndpoint("/connect/authorize")
+                           .EnableLogoutEndpoint("/connect/logout")
+                           .EnableIntrospectionEndpoint("/connect/introspect")
+                           .EnableUserinfoEndpoint("/api/userinfo");
 
-                // Enable scope validation, so that authorization and token requests
-                // that specify unregistered scopes are automatically rejected.
-                options.EnableScopeValidation();
+                    // Mark the "email", "profile" and "roles" scopes as supported scopes.
+                    options.RegisterScopes(OpenIdConnectConstants.Scopes.Email,
+                                           OpenIdConnectConstants.Scopes.Profile,
+                                           OpenIddictConstants.Scopes.Roles);
 
-                // Note: the sample only uses the implicit code flow but you can enable
-                // the other flows if you need to support implicit, password or client credentials.
-                options.AllowImplicitFlow();
+                    // Note: the sample only uses the implicit code flow but you can enable
+                    // the other flows if you need to support implicit, password or client credentials.
+                    options.AllowImplicitFlow();
 
-                // During development, you can disable the HTTPS requirement.
-                options.DisableHttpsRequirement();
+                    // During development, you can disable the HTTPS requirement.
+                    options.DisableHttpsRequirement();
 
-                // Register a new ephemeral key, that is discarded when the application
-                // shuts down. Tokens signed using this key are automatically invalidated.
-                // This method should only be used during development.
-                options.AddEphemeralSigningKey();
+                    // Register a new ephemeral key, that is discarded when the application
+                    // shuts down. Tokens signed using this key are automatically invalidated.
+                    // This method should only be used during development.
+                    options.AddEphemeralSigningKey();
 
-                // On production, using a X.509 certificate stored in the machine store is recommended.
-                // You can generate a self-signed certificate using Pluralsight's self-cert utility:
-                // https://s3.amazonaws.com/pluralsight-free/keith-brown/samples/SelfCert.zip
-                //
-                // options.AddSigningCertificate("7D2A741FE34CC2C7369237A5F2078988E17A6A75");
-                //
-                // Alternatively, you can also store the certificate as an embedded .pfx resource
-                // directly in this assembly or in a file published alongside this project:
-                //
-                // options.AddSigningCertificate(
-                //     assembly: typeof(Startup).GetTypeInfo().Assembly,
-                //     resource: "AuthorizationServer.Certificate.pfx",
-                //     password: "OpenIddict");
+                    // On production, using a X.509 certificate stored in the machine store is recommended.
+                    // You can generate a self-signed certificate using Pluralsight's self-cert utility:
+                    // https://s3.amazonaws.com/pluralsight-free/keith-brown/samples/SelfCert.zip
+                    //
+                    // options.AddSigningCertificate("7D2A741FE34CC2C7369237A5F2078988E17A6A75");
+                    //
+                    // Alternatively, you can also store the certificate as an embedded .pfx resource
+                    // directly in this assembly or in a file published alongside this project:
+                    //
+                    // options.AddSigningCertificate(
+                    //     assembly: typeof(Startup).GetTypeInfo().Assembly,
+                    //     resource: "AuthorizationServer.Certificate.pfx",
+                    //     password: "OpenIddict");
 
-                // Note: to use JWT access tokens instead of the default
-                // encrypted format, the following line is required:
-                //
-                // options.UseJsonWebTokens();
-            });
+                    // Note: to use JWT access tokens instead of the default
+                    // encrypted format, the following line is required:
+                    //
+                    // options.UseJsonWebTokens();
+                })
 
-            services.AddAuthentication()
-                .AddOAuthValidation();
+                // Register the OpenIddict validation handler.
+                // Note: the OpenIddict validation handler is only compatible with the
+                // default token format or with reference tokens and cannot be used with
+                // JWT tokens. For JWT tokens, use the Microsoft JWT bearer handler.
+                .AddValidation();
 
             services.AddCors();
             services.AddMvc();
@@ -161,7 +168,12 @@ namespace AuthorizationServer
                             {
                                 OpenIddictConstants.Permissions.Endpoints.Authorization,
                                 OpenIddictConstants.Permissions.Endpoints.Logout,
-                                OpenIddictConstants.Permissions.GrantTypes.Implicit
+                                OpenIddictConstants.Permissions.GrantTypes.Implicit,
+                                OpenIddictConstants.Permissions.Scopes.Email,
+                                OpenIddictConstants.Permissions.Scopes.Profile,
+                                OpenIddictConstants.Permissions.Scopes.Roles,
+                                OpenIddictConstants.Permissions.Prefixes.Scope + "api1",
+                                OpenIddictConstants.Permissions.Prefixes.Scope + "api2"
                             }
                         };
 
