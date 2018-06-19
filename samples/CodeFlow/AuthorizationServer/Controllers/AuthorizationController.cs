@@ -11,7 +11,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Primitives;
-using AspNet.Security.OpenIdConnect.Server;
 using AuthorizationServer.Helpers;
 using AuthorizationServer.Models;
 using AuthorizationServer.ViewModels.Authorization;
@@ -23,8 +22,10 @@ using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using OpenIddict.Abstractions;
 using OpenIddict.Core;
-using OpenIddict.Models;
+using OpenIddict.EntityFrameworkCore.Models;
+using OpenIddict.Server;
 
 namespace AuthorizationServer.Controllers
 {
@@ -107,7 +108,7 @@ namespace AuthorizationServer.Controllers
         {
             // Notify OpenIddict that the authorization grant has been denied by the resource owner
             // to redirect the user agent to the client application using the appropriate response_mode.
-            return Forbid(OpenIdConnectServerDefaults.AuthenticationScheme);
+            return Forbid(OpenIddictServerDefaults.AuthenticationScheme);
         }
 
         [HttpGet("~/connect/logout")]
@@ -131,7 +132,7 @@ namespace AuthorizationServer.Controllers
 
             // Returning a SignOutResult will ask OpenIddict to redirect the user agent
             // to the post_logout_redirect_uri specified by the client application.
-            return SignOut(OpenIdConnectServerDefaults.AuthenticationScheme);
+            return SignOut(OpenIddictServerDefaults.AuthenticationScheme);
         }
 
         [HttpPost("~/connect/token"), Produces("application/json")]
@@ -145,7 +146,7 @@ namespace AuthorizationServer.Controllers
             {
                 // Retrieve the claims principal stored in the authorization code.
                 var info = await HttpContext.Authentication.GetAuthenticateInfoAsync(
-                    OpenIdConnectServerDefaults.AuthenticationScheme);
+                    OpenIddictServerDefaults.AuthenticationScheme);
 
                 // Retrieve the user profile corresponding to the authorization code.
                 // Note: if you want to automatically invalidate the authorization code
@@ -195,7 +196,7 @@ namespace AuthorizationServer.Controllers
 
             // Create a new authentication ticket holding the user identity.
             var ticket = new AuthenticationTicket(principal, properties,
-                OpenIdConnectServerDefaults.AuthenticationScheme);
+                OpenIddictServerDefaults.AuthenticationScheme);
 
             if (!request.IsAuthorizationCodeGrantType())
             {

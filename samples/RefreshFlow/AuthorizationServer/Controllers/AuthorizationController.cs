@@ -11,7 +11,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Primitives;
-using AspNet.Security.OpenIdConnect.Server;
 using AuthorizationServer.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -19,7 +18,8 @@ using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using OpenIddict.Core;
+using OpenIddict.Abstractions;
+using OpenIddict.Server;
 
 namespace AuthorizationServer.Controllers
 {
@@ -118,7 +118,7 @@ namespace AuthorizationServer.Controllers
             {
                 // Retrieve the claims principal stored in the refresh token.
                 var info = await HttpContext.Authentication.GetAuthenticateInfoAsync(
-                    OpenIdConnectServerDefaults.AuthenticationScheme);
+                    OpenIddictServerDefaults.AuthenticationScheme);
 
                 // Retrieve the user profile corresponding to the refresh token.
                 // Note: if you want to automatically invalidate the refresh token
@@ -168,7 +168,7 @@ namespace AuthorizationServer.Controllers
 
             // Create a new authentication ticket holding the user identity.
             var ticket = new AuthenticationTicket(principal, properties,
-                OpenIdConnectServerDefaults.AuthenticationScheme);
+                OpenIddictServerDefaults.AuthenticationScheme);
 
             if (!request.IsRefreshTokenGrantType())
             {

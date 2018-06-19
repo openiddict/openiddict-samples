@@ -9,12 +9,12 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Primitives;
-using AspNet.Security.OpenIdConnect.Server;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Core;
-using OpenIddict.Models;
+using OpenIddict.EntityFrameworkCore.Models;
+using OpenIddict.Server;
 
 namespace AuthorizationServer.Controllers
 {
@@ -67,7 +67,7 @@ namespace AuthorizationServer.Controllers
             // Create a new ClaimsIdentity containing the claims that
             // will be used to create an id_token, a token or a code.
             var identity = new ClaimsIdentity(
-                OpenIdConnectServerDefaults.AuthenticationScheme,
+                OpenIddictServerDefaults.AuthenticationScheme,
                 OpenIdConnectConstants.Claims.Name,
                 OpenIdConnectConstants.Claims.Role);
 
@@ -84,7 +84,7 @@ namespace AuthorizationServer.Controllers
             var ticket = new AuthenticationTicket(
                 new ClaimsPrincipal(identity),
                 new AuthenticationProperties(),
-                OpenIdConnectServerDefaults.AuthenticationScheme);
+                OpenIddictServerDefaults.AuthenticationScheme);
 
             ticket.SetResources("resource_server");
 

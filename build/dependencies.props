@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <AspNetCoreVersion>1.0.0</AspNetCoreVersion>
-    <AspNetContribOpenIdExtensionsVersion>1.0.0</AspNetContribOpenIdExtensionsVersion>
+    <AspNetContribOpenIdExtensionsVersion>1.1.0-preview-final</AspNetContribOpenIdExtensionsVersion>
     <JsonNetVersion>9.0.1</JsonNetVersion>
     <NetStandardImplicitPackageVersion>1.6.0</NetStandardImplicitPackageVersion>
-    <OpenIddictVersion>1.0.0-*</OpenIddictVersion>
+    <OpenIddictVersion>1.0.0-rc3-final</OpenIddictVersion>
     <RuntimeFrameworkVersion>1.0.0</RuntimeFrameworkVersion>
   </PropertyGroup>
 

@@ -7,11 +7,9 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Primitives;
-using AspNet.Security.OpenIdConnect.Server;
 using AuthorizationServer.Models;
 using AuthorizationServer.ViewModels.Shared;
 using Microsoft.AspNetCore.Authentication;
@@ -20,8 +18,10 @@ using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using OpenIddict.Abstractions;
 using OpenIddict.Core;
-using OpenIddict.Models;
+using OpenIddict.EntityFrameworkCore.Models;
+using OpenIddict.Server;
 
 namespace AuthorizationServer.Controllers
 {
@@ -64,7 +64,7 @@ namespace AuthorizationServer.Controllers
                     });
 
                     // Ask OpenIddict to return a login_required error to the client application.
-                    return Forbid(properties, OpenIdConnectServerDefaults.AuthenticationScheme);
+                    return Forbid(properties, OpenIddictServerDefaults.AuthenticationScheme);
                 }
 
                 return Challenge();
@@ -98,7 +98,7 @@ namespace AuthorizationServer.Controllers
 
             // Returning a SignOutResult will ask OpenIddict to redirect the user agent
             // to the post_logout_redirect_uri specified by the client application.
-            return SignOut(OpenIdConnectServerDefaults.AuthenticationScheme);
+            return SignOut(OpenIddictServerDefaults.AuthenticationScheme);
         }
 
         private async Task<AuthenticationTicket> CreateTicketAsync(OpenIdConnectRequest request, ApplicationUser user)
@@ -110,7 +110,7 @@ namespace AuthorizationServer.Controllers
             // Create a new authentication ticket holding the user identity.
             var ticket = new AuthenticationTicket(principal,
                 new AuthenticationProperties(),
-                OpenIdConnectServerDefaults.AuthenticationScheme);
+                OpenIddictServerDefaults.AuthenticationScheme);
 
             // Set the list of scopes granted to the client application.
             var scopes = request.GetScopes().ToImmutableArray();

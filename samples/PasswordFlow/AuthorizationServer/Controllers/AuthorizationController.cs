@@ -11,7 +11,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Primitives;
-using AspNet.Security.OpenIdConnect.Server;
 using AuthorizationServer.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -19,7 +18,8 @@ using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using OpenIddict.Core;
+using OpenIddict.Abstractions;
+using OpenIddict.Server;
 
 namespace AuthorizationServer.Controllers
 {
@@ -130,7 +130,7 @@ namespace AuthorizationServer.Controllers
             // Create a new authentication ticket holding the user identity.
             var ticket = new AuthenticationTicket(principal,
                 new AuthenticationProperties(),
-                OpenIdConnectServerDefaults.AuthenticationScheme);
+                OpenIddictServerDefaults.AuthenticationScheme);
 
             // Set the list of scopes granted to the client application.
             ticket.SetScopes(new[]

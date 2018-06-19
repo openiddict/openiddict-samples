@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
-using AspNet.Security.OAuth.Validation;
 using AspNet.Security.OpenIdConnect.Primitives;
 using AuthorizationServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
-using OpenIddict.Core;
+using OpenIddict.Abstractions;
+using OpenIddict.Validation;
 
 namespace AuthorizationServer.Controllers
 {
@@ -22,7 +22,7 @@ namespace AuthorizationServer.Controllers
 
         //
         // GET: /api/userinfo
-        [Authorize(ActiveAuthenticationSchemes = OAuthValidationDefaults.AuthenticationScheme)]
+        [Authorize(ActiveAuthenticationSchemes = OpenIddictValidationDefaults.AuthenticationScheme)]
         [HttpGet("userinfo"), Produces("application/json")]
         public async Task<IActionResult> Userinfo()
         {
