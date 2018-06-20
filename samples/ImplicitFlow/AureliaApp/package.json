@@ -9,16 +9,15 @@
   "author": "Shaun Luttin <shaun@bigfont.ca>",
   "license": "MIT",
   "scripts": {
-    "start": "node_modules/.bin/au run --watch"
+    "start": "au run --watch"
   },
   "dependencyNotes": {
-    "aurelia-open-id-connect": "For development, we use the local aurelia-open-id-connect package.",
-    "aurelia-cli": "For sourcemaps, we use our fork of the aurelia-cli, which creates proper sourcemaps."
+    "aurelia-open-id-connect": "For development, we use the local aurelia-open-id-connect package."
   },
   "dependencies": {
     "aurelia-bootstrapper": "^1.0.0",
     "aurelia-fetch-client": "^1.0.0",
-    "aurelia-open-id-connect": "github:shaunluttin/aurelia-open-id-connect#0.12.0",
+    "aurelia-open-id-connect": "^1.0.1",
     "babel-polyfill": "^6.20.0",
     "bluebird": "^3.4.1",
     "requirejs": "^2.3.2",
@@ -27,7 +26,7 @@
   },
   "peerDependencies": {},
   "devDependencies": {
-    "aurelia-cli": "github:shaunluttin/cli#0.1.0-sourcemaps",
+    "aurelia-cli": "^0.32.0",
     "aurelia-tools": "^0.2.2",
     "browser-sync": "^2.13.0",
     "connect-history-api-fallback": "^1.2.0",

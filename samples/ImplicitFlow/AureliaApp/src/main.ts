@@ -20,9 +20,7 @@ export function configure(aurelia: Aurelia) {
 
   aurelia.use
     .standardConfiguration()
-    .plugin("aurelia-open-id-connect", (callback) => callback(oidcConfig));
-
-  aurelia.use.globalResources("./navbar.html");
+    .plugin("aurelia-open-id-connect", () => oidcConfig);
 
   aurelia.use.developmentLogging();
 
