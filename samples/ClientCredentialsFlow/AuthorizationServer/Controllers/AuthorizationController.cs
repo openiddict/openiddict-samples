@@ -85,7 +85,7 @@ namespace AuthorizationServer.Controllers
                 new AuthenticationProperties(),
                 OpenIddictServerDefaults.AuthenticationScheme);
 
-            ticket.SetResources("resource_server");
+            ticket.SetResources("resource-server");
 
             return ticket;
         }

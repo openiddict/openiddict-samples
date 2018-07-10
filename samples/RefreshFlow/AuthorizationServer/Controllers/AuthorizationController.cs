@@ -142,7 +142,7 @@ namespace AuthorizationServer.Controllers
                 }.Intersect(request.GetScopes()));
             }
 
-            ticket.SetResources("resource_server");
+            ticket.SetResources("resource-server");
 
             // Note: by default, claims are NOT automatically included in the access and identity tokens.
             // To allow OpenIddict to serialize them, you must attach them a destination, that specifies
