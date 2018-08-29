@@ -16,8 +16,6 @@ dotnet build --no-incremental #rebuild
 Start-Process dotnet -ArgumentList "watch run server.urls=http://localhost:12345" -PassThru 
 Pop-Location
 
-exit
-
 # Aurelia Application
 Push-Location "./AureliaApp"
 npm install -y
