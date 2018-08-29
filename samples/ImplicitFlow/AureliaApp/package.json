@@ -1,51 +1,113 @@
 {
-  "name": "aurelia-open-id-connect-demo",
-  "description": "A demo to show aurelia-open-id-connect working with an OpenID Connect provider.",
-  "version": "0.0.0",
+  "name": "aureliaapp",
+  "description": "An Aurelia client application.",
+  "version": "0.1.0",
   "repository": {
-    "type": "git",
-    "url": "https://github.com/shaunluttin/aurelia-open-id-connect"
+    "type": "???",
+    "url": "???"
   },
-  "author": "Shaun Luttin <shaun@bigfont.ca>",
   "license": "MIT",
-  "scripts": {
-    "start": "node_modules/.bin/au run --watch"
-  },
-  "dependencyNotes": {
-    "aurelia-open-id-connect": "For development, we use the local aurelia-open-id-connect package.",
-    "aurelia-cli": "For sourcemaps, we use our fork of the aurelia-cli, which creates proper sourcemaps."
-  },
   "dependencies": {
-    "aurelia-bootstrapper": "^1.0.0",
-    "aurelia-fetch-client": "^1.0.0",
-    "aurelia-open-id-connect": "github:shaunluttin/aurelia-open-id-connect#0.12.0",
-    "babel-polyfill": "^6.20.0",
-    "bluebird": "^3.4.1",
-    "requirejs": "^2.3.2",
-    "text": "github:requirejs/text",
-    "whatwg-fetch": "^2.0.1"
+    "aurelia-bootstrapper": "^2.2.0",
+    "aurelia-animator-css": "^1.0.4",
+    "bluebird": "^3.5.1",
+    "aurelia-polyfills": "^1.3.0"
   },
   "peerDependencies": {},
   "devDependencies": {
-    "aurelia-cli": "github:shaunluttin/cli#0.1.0-sourcemaps",
-    "aurelia-tools": "^0.2.2",
-    "browser-sync": "^2.13.0",
-    "connect-history-api-fallback": "^1.2.0",
-    "event-stream": "^3.3.3",
-    "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-changed-in-place": "^2.0.3",
-    "gulp-notify": "^2.2.0",
-    "gulp-plumber": "^1.1.0",
+    "aurelia-cli": "^0.34.0",
+    "aurelia-testing": "^1.0.0-beta.4.0.0",
+    "aurelia-tools": "^2.0.0",
+    "gulp": "^4.0.0",
+    "minimatch": "^3.0.4",
+    "through2": "^2.0.3",
+    "vinyl-fs": "^3.0.2",
+    "ts-loader": "^4.0.1",
+    "ts-node": "^7.0.0",
+    "@types/node": "^9.4.7",
+    "@types/lodash": "^4.14.105",
+    "@types/webpack": "^4.1.1",
+    "typescript": "^2.7.2",
+    "jest": "^22.4.2",
+    "jest-cli": "^23.0.0-alpha.0",
+    "plugin-error": "^1.0.1",
+    "aurelia-loader-nodejs": "^1.0.1",
+    "aurelia-pal-nodejs": "^1.0.0-beta.3.2.0",
+    "ts-jest": "^22.4.1",
+    "@types/jest": "^22.2.0",
+    "jasmine-core": "^3.1.0",
+    "karma": "^2.0.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "latest",
+    "karma-jasmine": "^1.1.1",
+    "karma-mocha-reporter": "latest",
+    "karma-webpack": "^v4.0.0-beta.0",
+    "karma-coverage-istanbul-reporter": "^1.4.2",
+    "jest-jasmine2": "^23.0.0-alpha.0",
+    "jest-matchers": "^20.0.3",
+    "karma-typescript-preprocessor": "^0.3.1",
     "gulp-rename": "^1.2.2",
-    "gulp-sourcemaps": "^2.0.0-alpha",
-    "gulp-tslint": "^5.0.0",
-    "gulp-typescript": "^2.13.6",
-    "minimatch": "^3.0.2",
-    "through2": "^2.0.1",
-    "tslint": "^3.11.0",
-    "tslint-microsoft-contrib": "^2.0.13",
-    "typescript": "^2.1.0",
-    "uglify-js": "^2.6.3",
-    "vinyl-fs": "^2.4.3"
-  }
+    "html-webpack-plugin": "^3.0.6",
+    "copy-webpack-plugin": "^4.5.1",
+    "mini-css-extract-plugin": "^0.4.1",
+    "aurelia-webpack-plugin": "^3.0.0-rc.1",
+    "duplicate-package-checker-webpack-plugin": "^3.0.0",
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.12",
+    "webpack-dev-server": "^3.1.1",
+    "expose-loader": "^0.7.5",
+    "style-loader": "^0.20.3",
+    "url-loader": "^1.0.1",
+    "del": "^3.0.0",
+    "css-loader": "^0.28.11",
+    "nps": "^5.8.2",
+    "nps-utils": "^1.5.0",
+    "file-loader": "^1.1.11",
+    "json-loader": "^0.5.7",
+    "html-loader": "^0.5.5",
+    "istanbul-instrumenter-loader": "^3.0.0",
+    "opn": "^5.3.0",
+    "webpack-bundle-analyzer": "latest"
+  },
+  "jest": {
+    "modulePaths": [
+      "<rootDir>/src",
+      "<rootDir>/node_modules"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "\\.spec\\.(ts|js)x?$",
+    "setupFiles": [
+      "<rootDir>/test/jest-pretest.ts"
+    ],
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.{js,ts}",
+      "!**/*.spec.{js,ts}",
+      "!**/node_modules/**",
+      "!**/test/**"
+    ],
+    "coverageDirectory": "<rootDir>/test/coverage-jest",
+    "coverageReporters": [
+      "json",
+      "lcov",
+      "text",
+      "html"
+    ]
+  },
+  "engines": {
+    "node": ">= 6.0.0"
+  },
+  "scripts": {
+    "start": "nps",
+    "test": "nps test"
+  },
+  "main": "dist/app.bundle.js"
 }

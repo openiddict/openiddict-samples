@@ -1,130 +1,73 @@
 {
-  "name": "demo",
+  "name": "AureliaApp",
   "type": "project:application",
+  "bundler": {
+    "id": "webpack",
+    "displayName": "Webpack"
+  },
+  "build": {
+    "options": {
+      "server": "dev",
+      "extractCss": "prod",
+      "coverage": false
+    }
+  },
   "platform": {
     "id": "web",
     "displayName": "Web",
-    "output": "scripts",
-    "index": "index.html"
+    "hmr": false,
+    "open": false,
+    "port": 8080,
+    "output": "dist"
+  },
+  "loader": {
+    "id": "none",
+    "displayName": "None"
   },
   "transpiler": {
     "id": "typescript",
     "displayName": "TypeScript",
-    "fileExtension": ".ts",
-    "dtsSource": [
-      "./custom_typings/**/*.d.ts",
-      "./node_modules/@types/**/*.d.ts"
-    ],
-    "source": "src\\**\\*.ts"
+    "fileExtension": ".ts"
   },
   "markupProcessor": {
+    "id": "minimum",
+    "displayName": "Minimal Minification",
+    "fileExtension": ".html"
+  },
+  "cssProcessor": {
     "id": "none",
     "displayName": "None",
-    "fileExtension": ".html",
-    "source": "src\\**\\*.html"
+    "fileExtension": ".css"
   },
   "editor": {
     "id": "vscode",
     "displayName": "Visual Studio Code"
   },
+  "unitTestRunners": [
+    {
+      "id": "jest",
+      "displayName": "Jest"
+    },
+    {
+      "id": "karma",
+      "displayName": "Karma"
+    }
+  ],
+  "integrationTestRunner": {
+    "id": "none",
+    "displayName": "None"
+  },
   "paths": {
     "root": "src",
-    "resources": "src\\resources",
-    "elements": "src\\resources\\elements",
-    "attributes": "src\\resources\\attributes",
-    "valueConverters": "src\\resources\\value-converters",
-    "bindingBehaviors": "src\\resources\\binding-behaviors"
+    "resources": "resources",
+    "elements": "resources/elements",
+    "attributes": "resources/attributes",
+    "valueConverters": "resources/value-converters",
+    "bindingBehaviors": "resources/binding-behaviors"
   },
-  "build": {
-    "targets": [
-      {
-        "id": "web",
-        "displayName": "Web",
-        "output": "scripts",
-        "index": "index.html"
-      }
-    ],
-    "loader": {
-      "type": "require",
-      "configTarget": "vendor-bundle.js",
-      "includeBundleMetadataInConfig": "auto",
-      "plugins": [
-        {
-          "name": "text",
-          "extensions": [
-            ".html",
-            ".css"
-          ],
-          "stub": false
-        }
-      ]
-    },
-    "options": {
-      "minify": "false",
-      "sourcemaps": "true"
-    },
-    "bundles": [
-      {
-        "name": "app-bundle.js",
-        "source": [
-          "[**/*.js]",
-          "**/*.{css,html}"
-        ]
-      },
-      {
-        "name": "debug-bundle.js",
-        "dependencies": [
-          "aurelia-router"
-        ]
-      },
-      {
-        "name": "vendor-bundle.js",
-        "prepend": [
-          "node_modules/bluebird/js/browser/bluebird.core.js",
-          "node_modules/requirejs/require.js"
-        ],
-        "dependencies": [
-          "aurelia-binding",
-          "aurelia-bootstrapper",
-          "aurelia-dependency-injection",
-          "aurelia-event-aggregator",
-          "aurelia-fetch-client",
-          "aurelia-framework",
-          "aurelia-history",
-          "aurelia-history-browser",
-          "aurelia-loader",
-          "aurelia-loader-default",
-          "aurelia-logging",
-          "aurelia-logging-console",
-          "aurelia-metadata",
-          "aurelia-pal",
-          "aurelia-pal-browser",
-          "aurelia-path",
-          "aurelia-polyfills",
-          "aurelia-route-recognizer",
-          "aurelia-task-queue",
-          "aurelia-templating",
-          "aurelia-templating-binding",
-          "whatwg-fetch",
-          "text",
-          {
-            "name": "aurelia-templating-resources",
-            "path": "../node_modules/aurelia-templating-resources/dist/amd",
-            "main": "aurelia-templating-resources"
-          },
-          {
-            "name": "aurelia-templating-router",
-            "path": "../node_modules/aurelia-templating-router/dist/amd",
-            "main": "aurelia-templating-router"
-          },
-          {
-            "name": "aurelia-open-id-connect",
-            "path": "../node_modules/aurelia-open-id-connect/dist/amd",
-            "main": "index"
-          },
-          "oidc-client"
-        ]
-      }
-    ]
-  }
+  "testFramework": {
+    "id": "jasmine",
+    "displayName": "Jasmine"
+  },
+  "packageManager": "yarn"
 }
