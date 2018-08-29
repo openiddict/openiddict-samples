@@ -17,7 +17,7 @@
     "displayName": "Web",
     "hmr": false,
     "open": false,
-    "port": 8080,
+    "port": 9000,
     "output": "dist"
   },
   "loader": {
