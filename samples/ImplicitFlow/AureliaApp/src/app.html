@@ -1,3 +1,13 @@
 <template>
-  <h1>${message}</h1>
+  <h1>OpenID Connect Implicit Flow Demo</h1>
+  <p>This page demonstrates the OpenID Connect Implicit Flow for a single page web application.</p>
+
+  <open-id-connect-user-block></open-id-connect-user-block> 
+
+  <template repeat.for="row of router.navigation">
+    <a href.bind="row.href">${row.title}</a>
+  </template>
+
+  <router-view></router-view>
+  
 </template>
