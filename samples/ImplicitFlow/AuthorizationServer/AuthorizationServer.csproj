@@ -38,8 +38,4 @@
     <PackageReference Include="OpenIddict.Mvc" Version="$(OpenIddictVersion)" />
   </ItemGroup>
 
-  <ItemGroup>
-    <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.0" />
-  </ItemGroup>
-
 </Project>
