@@ -1,30 +1,35 @@
-import { Aurelia } from "aurelia-framework";
-import oidcConfig from "./open-id-connect-configuration";
-import environment from "./environment";
+/// <reference types="aurelia-loader-webpack/src/webpack-hot-interface"/>
+// we want font-awesome to load as soon as possible to show the fa-spinner
+import {Aurelia} from 'aurelia-framework'
+import {PLATFORM} from 'aurelia-pal';
+import * as Bluebird from 'bluebird';
+import environment from './environment';
+import oidcConfig from './open-id-connect-configuration';
 
-// Configure Bluebird Promises.
-// Note: You may want to use environment-specific configuration.
-(<any>Promise).config({
-  warnings: {
-    wForgottenReturn: false,
-  },
-});
+// remove out if you don't want a Promise polyfill (remove also from webpack.config.js)
+Bluebird.config({ warnings: { wForgottenReturn: false } });
 
 export function configure(aurelia: Aurelia) {
-
-  if (environment.useHttps && location.protocol !== "https:") {
-    // location.protocol is buggy in Firefox
-    // see also http://stackoverflow.com/a/10036029
-    location.href = "https:" + window.location.href.substring(window.location.protocol.length);
-  }
-
   aurelia.use
     .standardConfiguration()
-    .plugin("aurelia-open-id-connect", (callback) => callback(oidcConfig));
+    .feature(PLATFORM.moduleName('resources/index'));
 
-  aurelia.use.globalResources("./navbar.html");
+  aurelia.use.plugin(PLATFORM.moduleName('aurelia-open-id-connect'), () => oidcConfig);
 
-  aurelia.use.developmentLogging();
+  // Uncomment the line below to enable animation.
+  // aurelia.use.plugin(PLATFORM.moduleName('aurelia-animator-css'));
+  // if the css animator is enabled, add swap-order="after" to all router-view elements
 
-  aurelia.start().then(() => aurelia.setRoot());
+  // Anyone wanting to use HTMLImports to load views, will need to install the following plugin.
+  // aurelia.use.plugin(PLATFORM.moduleName('aurelia-html-import-template-loader'));
+
+  if (environment.debug) {
+    aurelia.use.developmentLogging();
+  }
+
+  if (environment.testing) {
+    aurelia.use.plugin(PLATFORM.moduleName('aurelia-testing'));
+  }
+
+  return aurelia.start().then(() => aurelia.setRoot(PLATFORM.moduleName('app')));
 }

@@ -1,62 +1,47 @@
-import * as gulp from 'gulp';
-import * as browserSync from 'browser-sync';
-import * as historyApiFallback from 'connect-history-api-fallback/lib';
+import {config} from './build';
+import configureEnvironment from './environment';
+import * as webpack from 'webpack';
+import * as Server from 'webpack-dev-server';
 import * as project from '../aurelia.json';
-import build from './build';
-import {CLIOptions} from 'aurelia-cli';
+import {CLIOptions, reportWebpackReadiness} from 'aurelia-cli';
+import * as gulp from 'gulp';
 
-function onChange(path) {
-  console.log(`File Changed: ${path}`);
-}
+function runWebpack(done) {
+  // https://webpack.github.io/docs/webpack-dev-server.html
+  let opts = {
+    host: 'localhost',
+    publicPath: config.output.publicPath,
+    filename: config.output.filename,
+    hot: project.platform.hmr || CLIOptions.hasFlag('hmr'),
+    port: project.platform.port,
+    contentBase: config.output.path,
+    historyApiFallback: true,
+    open: project.platform.open,
+    stats: {
+      colors: require('supports-color')
+    },
+    https: config.devServer.https
+  } as any;
 
-function reload(done) {
-  browserSync.reload();
-  done();
-}
-
-let serve = gulp.series(
-  build,
-  done => {
-    browserSync({
-      online: false,
-      open: false,
-      port: 9000,
-      logLevel: 'silent',
-      server: {
-        baseDir: ['.'],
-        middleware: [historyApiFallback(), function(req, res, next) {
-          res.setHeader('Access-Control-Allow-Origin', '*');
-          next();
-        }]
-      }
-    }, function (err, bs) {
-      let urls = bs.options.get('urls').toJS();
-      console.log(`Application Available At: ${urls.local}`);
-      console.log(`BrowserSync Available At: ${urls.ui}`);
-      done();
-    });
+  if (project.platform.hmr || CLIOptions.hasFlag('hmr')) {
+    config.plugins.push(new webpack.HotModuleReplacementPlugin());
+    config.entry.app.unshift(`webpack-dev-server/client?http://${opts.host}:${opts.port}/`, 'webpack/hot/dev-server');
   }
-);
 
-let refresh = gulp.series(
-  build,
-  reload
-);
+  const compiler = webpack(config);
+  let server = new Server(compiler, opts);
 
-let watch = function() {
-  gulp.watch(project.transpiler.source, refresh).on('change', onChange);
-  gulp.watch(project.markupProcessor.source, refresh).on('change', onChange);
+  server.listen(opts.port, opts.host, function(err) {
+    if (err) throw err;
+
+    reportWebpackReadiness(opts);
+    done();
+  });
 }
 
-let run;
+const run = gulp.series(
+  configureEnvironment,
+  runWebpack
+);
 
-if (CLIOptions.hasFlag('watch')) {
-  run = gulp.series(
-    serve,
-    watch
-  );
-} else {
-  run = serve;
-}
-
-export default run;
+export { run as default };
