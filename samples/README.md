@@ -6,5 +6,6 @@
 
 Scripts: 
 
+    .\ClientCredentialsFlow\RunDemo.ps1
     .\CodeFlow\RunDemo.ps1
     .\ImplicitFlow\RunDemo.ps1

@@ -1,10 +1,13 @@
 function global:Stop-Demo {
     Write-Output "Kill all dotnet and node processes?";
-    Read-Host "Input <y> + <enter> for yes or <enter> for no"
-    if ('y' -eq $response) {
+    $response = Read-Host "Input <y> + <enter> for yes or <enter> for no"
+    if ("y" -eq $response) {
+       Write-Output "Stopping";
        Stop-Process -name node -ErrorAction SilentlyContinue;
        Stop-Process -name dotnet -ErrorAction SilentlyContinue; 
     }
+
+    Write-Output "Not Stopping";
 }
 
 function Start-Browser($clientUrl) {
