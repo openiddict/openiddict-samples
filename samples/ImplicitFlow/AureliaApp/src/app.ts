@@ -27,7 +27,7 @@ export class App {
         moduleId: PLATFORM.moduleName("home"),
         name: "home",
         nav: true,
-        route: [""],
+        route: ["", "home"],
         settings: {
           roles: [OpenIdConnectRoles.Everyone]
         },
