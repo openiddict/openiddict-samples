@@ -107,6 +107,8 @@
     "node": ">= 6.0.0"
   },
   "scripts": {
+    "pretest": "npm install",
+    "prestart": "npm install",
     "start": "nps",
     "test": "nps test"
   },
