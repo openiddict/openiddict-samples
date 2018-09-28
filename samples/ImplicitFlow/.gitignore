@@ -5,3 +5,4 @@ typings/
 *.swp
 dist/
 npm-debug.log.*
+.chrome/
