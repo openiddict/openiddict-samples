@@ -7,11 +7,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AppWithFetchClient.Pages
 {
+    // disable client-side and server-side caching
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public class IndexModel : PageModel
     {
         public void OnGet()
         {
-
         }
     }
 }

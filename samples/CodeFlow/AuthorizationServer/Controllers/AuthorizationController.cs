@@ -46,14 +46,14 @@ namespace AuthorizationServer.Controllers
         }
 
         [Authorize, HttpGet("~/connect/authorize")]
-        public async Task<IActionResult> Authorize(OpenIdConnectRequest request)
+        public async Task<IActionResult> Authorize(OpenIdConnectRequest oidcRequest)
         {
-            Debug.Assert(request.IsAuthorizationRequest(),
+            Debug.Assert(oidcRequest.IsAuthorizationRequest(),
                 "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
                 "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
 
             // Retrieve the application details from the database.
-            var application = await _applicationManager.FindByClientIdAsync(request.ClientId, HttpContext.RequestAborted);
+            var application = await _applicationManager.FindByClientIdAsync(oidcRequest.ClientId, HttpContext.RequestAborted);
             if (application == null)
             {
                 return View("Error", new ErrorViewModel
@@ -68,16 +68,16 @@ namespace AuthorizationServer.Controllers
             return View(new AuthorizeViewModel
             {
                 ApplicationName = application.DisplayName,
-                RequestId = request.RequestId,
-                Scope = request.Scope
+                RequestId = oidcRequest.RequestId,
+                Scope = oidcRequest.Scope
             });
         }
 
         [Authorize, FormValueRequired("submit.Accept")]
         [HttpPost("~/connect/authorize"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Accept(OpenIdConnectRequest request)
+        public async Task<IActionResult> Accept(OpenIdConnectRequest oidcRequest)
         {
-            Debug.Assert(request.IsAuthorizationRequest(),
+            Debug.Assert(oidcRequest.IsAuthorizationRequest(),
                 "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
                 "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
 
@@ -93,7 +93,7 @@ namespace AuthorizationServer.Controllers
             }
 
             // Create a new authentication ticket.
-            var ticket = await CreateTicketAsync(request, user);
+            var ticket = await CreateTicketAsync(oidcRequest, user);
 
             // Returning a SignInResult will ask OpenIddict to issue the appropriate access/identity tokens.
             return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
@@ -109,13 +109,13 @@ namespace AuthorizationServer.Controllers
         }
 
         [HttpGet("~/connect/logout")]
-        public IActionResult Logout(OpenIdConnectRequest request)
+        public IActionResult Logout(OpenIdConnectRequest oidcRequest)
         {
             // Flow the request_id to allow OpenIddict to restore
             // the original logout request from the distributed cache.
             return View(new LogoutViewModel
             {
-                RequestId = request.RequestId,
+                RequestId = oidcRequest.RequestId,
             });
         }
 
@@ -133,13 +133,13 @@ namespace AuthorizationServer.Controllers
         }
 
         [HttpPost("~/connect/token"), Produces("application/json")]
-        public async Task<IActionResult> Exchange(OpenIdConnectRequest request)
+        public async Task<IActionResult> Exchange(OpenIdConnectRequest oidcRequest)
         {
-            Debug.Assert(request.IsTokenRequest(),
+            Debug.Assert(oidcRequest.IsTokenRequest(),
                 "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
                 "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
 
-            if (request.IsAuthorizationCodeGrantType())
+            if (oidcRequest.IsAuthorizationCodeGrantType())
             {
                 // Retrieve the claims principal stored in the authorization code.
                 var info = await HttpContext.AuthenticateAsync(OpenIddictServerDefaults.AuthenticationScheme);
@@ -170,7 +170,7 @@ namespace AuthorizationServer.Controllers
 
                 // Create a new authentication ticket, but reuse the properties stored
                 // in the authorization code, including the scopes originally granted.
-                var ticket = await CreateTicketAsync(request, user, info.Properties);
+                var ticket = await CreateTicketAsync(oidcRequest, user, info.Properties);
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
@@ -183,7 +183,7 @@ namespace AuthorizationServer.Controllers
         }
 
         private async Task<AuthenticationTicket> CreateTicketAsync(
-            OpenIdConnectRequest request, ApplicationUser user,
+            OpenIdConnectRequest oidcRequest, ApplicationUser user,
             AuthenticationProperties properties = null)
         {
             // Create a new ClaimsPrincipal containing the claims that
@@ -194,7 +194,7 @@ namespace AuthorizationServer.Controllers
             var ticket = new AuthenticationTicket(principal, properties,
                 OpenIddictServerDefaults.AuthenticationScheme);
 
-            if (!request.IsAuthorizationCodeGrantType())
+            if (!oidcRequest.IsAuthorizationCodeGrantType())
             {
                 // Set the list of scopes granted to the client application.
                 // Note: the offline_access scope must be granted
@@ -206,7 +206,7 @@ namespace AuthorizationServer.Controllers
                     OpenIdConnectConstants.Scopes.Profile,
                     OpenIdConnectConstants.Scopes.OfflineAccess,
                     OpenIddictConstants.Scopes.Roles
-                }.Intersect(request.GetScopes()));
+                }.Intersect(oidcRequest.GetScopes()));
             }
 
             ticket.SetResources("resource_server");

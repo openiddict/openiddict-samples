@@ -4,12 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - AppWithFetchClient</title>
+    <link href="/app.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <partial name="_LoginPartial" />
     <main>
         @RenderBody()
     </main>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- Load jquery because ASP.NET Core Identity uses it. -->
+    <script type="text/javascript" src="/node_modules/jquery/dist/jquery.min.js"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

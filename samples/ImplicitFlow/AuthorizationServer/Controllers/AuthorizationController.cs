@@ -43,9 +43,9 @@ namespace AuthorizationServer.Controllers
         }
 
         [HttpGet("~/connect/authorize")]
-        public async Task<IActionResult> Authorize(OpenIdConnectRequest request)
+        public async Task<IActionResult> Authorize(OpenIdConnectRequest oidcRequest)
         {
-            Debug.Assert(request.IsAuthorizationRequest(),
+            Debug.Assert(oidcRequest.IsAuthorizationRequest(),
                 "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
                 "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
 
@@ -53,7 +53,7 @@ namespace AuthorizationServer.Controllers
             {
                 // If the client application request promptless authentication,
                 // return an error indicating that the user is not logged in.
-                if (request.HasPrompt(OpenIdConnectConstants.Prompts.None))
+                if (oidcRequest.HasPrompt(OpenIdConnectConstants.Prompts.None))
                 {
                     var properties = new AuthenticationProperties(new Dictionary<string, string>
                     {
@@ -80,7 +80,7 @@ namespace AuthorizationServer.Controllers
             }
 
             // Create a new authentication ticket.
-            var ticket = await CreateTicketAsync(request, user);
+            var ticket = await CreateTicketAsync(oidcRequest, user);
 
             // Returning a SignInResult will ask OpenIddict to issue the appropriate access/identity tokens.
             return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
@@ -99,7 +99,7 @@ namespace AuthorizationServer.Controllers
             return SignOut(OpenIddictServerDefaults.AuthenticationScheme);
         }
 
-        private async Task<AuthenticationTicket> CreateTicketAsync(OpenIdConnectRequest request, ApplicationUser user)
+        private async Task<AuthenticationTicket> CreateTicketAsync(OpenIdConnectRequest oidcRequest, ApplicationUser user)
         {
             // Create a new ClaimsPrincipal containing the claims that
             // will be used to create an id_token, a token or a code.
@@ -111,7 +111,7 @@ namespace AuthorizationServer.Controllers
                 OpenIddictServerDefaults.AuthenticationScheme);
 
             // Set the list of scopes granted to the client application.
-            var scopes = request.GetScopes().ToImmutableArray();
+            var scopes = oidcRequest.GetScopes().ToImmutableArray();
 
             ticket.SetScopes(scopes);
             ticket.SetResources(await _scopeManager.ListResourcesAsync(scopes));
