@@ -1,38 +1,33 @@
-function global:Kill-Demo {
-    Write-Host "Kill all dotnet and node processes (default no)?";
-    $response = Read-Host "Input 'y' for yes; press enter to continue" 
-    if ('y' -eq $response) {
-       kill -name node -ErrorAction SilentlyContinue;
-       kill -name dotnet -ErrorAction SilentlyContinue; 
-    }
-}
+$root = $PSScriptRoot;
+. $root\..\Shared.ps1
 
-[System.Environment]::SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
+$clientUrl = "http://localhost:9000";
 
 # Authorization Server
-Push-Location "./AuthorizationServer"
+Push-Location "$root/AuthorizationServer"
 dotnet restore
 dotnet build --no-incremental #rebuild
 Start-Process dotnet -ArgumentList "watch run server.urls=http://localhost:12345" -PassThru 
 Pop-Location
 
 # Aurelia Application
-Push-Location "./AureliaApp"
+Push-Location "$root/AureliaApp"
 npm install -y
 Start-Process yarn -ArgumentList "run start" -PassThru
 Pop-Location
 
 # Resource Server 01
-Push-Location "./ResourceServer01"
+Push-Location "$root/ResourceServer01"
 dotnet restore
 dotnet build --no-incremental
 Start-Process dotnet -ArgumentList "watch run server.urls=http://localhost:5001" -PassThru
 Pop-Location
 
 # Resource Server 02
-Push-Location "./ResourceServer02"
+Push-Location "$root/ResourceServer02"
 dotnet restore
 dotnet build --no-incremental
 Start-Process dotnet -ArgumentList "watch run server.urls=http://localhost:5002" -PassThru
 Pop-Location
 
+Start-Browser $clientUrl;

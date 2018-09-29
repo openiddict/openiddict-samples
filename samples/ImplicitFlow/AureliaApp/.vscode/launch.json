@@ -1,10 +1,8 @@
 {
-  // Use IntelliSense to find out which attributes exist for node debugging
-  // Use hover for the description of the existing attributes
-  // For further information visit https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
     {
+      // This Chrome launch configuration requires the 'Debugger for Chrome' VS Code extension.
       "name": "Chrome",
       "type": "chrome",
       "request": "launch",
@@ -13,7 +11,8 @@
       "userDataDir": "${workspaceRoot}/.chrome",
       "sourceMapPathOverrides": {
         "webpack:///./src/*": "${webRoot}/*"
-      }
+      },
+      "preLaunchTask": "npmStart"
     }
   ]
 }

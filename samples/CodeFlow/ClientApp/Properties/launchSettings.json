@@ -15,8 +15,10 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "web": {
-      "commandName": "web",
+    "AuthorizationServer": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:53507",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

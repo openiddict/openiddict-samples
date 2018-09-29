@@ -1,37 +1,19 @@
-$global:p = @();                                  
-                                                          
-function global:Find-ChildProcess {
-  param($ID=$PID)
+$root = $PSScriptRoot;
+. $root\..\Shared.ps1
 
-  $result = Get-CimInstance win32_process | 
-    Where-Object { $_.ParentProcessId -eq $ID } 
-    Select-Object -Property ProcessId 
-
-  $result
-  $result | 
-    Where-Object { $_.ProcessId -ne $null } | 
-    ForEach-Object {
-      Find-ChildProcess -id $_.ProcessId
-    }
-}
-
-function global:Kill-Demo {
-  $Global:p | 
-    ForEach-Object { Find-ChildProcess -ID $_.Id } | 
-    ForEach-Object { Stop-Process -id $_.ProcessId }
-}
-
-[System.Environment]::SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
+$clientUrl = "http://localhost:5055";
 
 # Authorization Server
-Push-Location "./AuthorizationServer"
+Push-Location "$root/AuthorizationServer"
 dotnet restore
 dotnet build --no-incremental #rebuild
-$global:p += Start-Process dotnet -ArgumentList "run server.urls=http://localhost:5056" -PassThru
+Start-Process dotnet -ArgumentList "run server.urls=http://localhost:5056" -PassThru
 Pop-Location
 
 # Angular Application
-Push-Location "./AngularApp"
+Push-Location "$root/AngularApp"
 npm install -y
-$global:p += Start-Process npm -ArgumentList "run start" -PassThru
+Start-Process npm -ArgumentList "run start" -PassThru
 Pop-Location
+
+Start-Browser $clientUrl;
