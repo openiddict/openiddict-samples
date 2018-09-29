@@ -37,15 +37,15 @@ namespace AuthorizationServer.Controllers
         }
 
         [HttpPost("~/connect/token"), Produces("application/json")]
-        public async Task<IActionResult> Exchange(OpenIdConnectRequest request)
+        public async Task<IActionResult> Exchange(OpenIdConnectRequest oidcRequest)
         {
-            Debug.Assert(request.IsTokenRequest(),
+            Debug.Assert(oidcRequest.IsTokenRequest(),
                 "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
                 "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
 
-            if (request.IsPasswordGrantType())
+            if (oidcRequest.IsPasswordGrantType())
             {
-                var user = await _userManager.FindByNameAsync(request.Username);
+                var user = await _userManager.FindByNameAsync(oidcRequest.Username);
                 if (user == null)
                 {
                     return BadRequest(new OpenIdConnectResponse
@@ -56,7 +56,7 @@ namespace AuthorizationServer.Controllers
                 }
 
                 // Validate the username/password parameters and ensure the account is not locked out.
-                var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
+                var result = await _signInManager.CheckPasswordSignInAsync(user, oidcRequest.Password, lockoutOnFailure: true);
                 if (!result.Succeeded)
                 {
                     return BadRequest(new OpenIdConnectResponse
@@ -67,12 +67,12 @@ namespace AuthorizationServer.Controllers
                 }
 
                 // Create a new authentication ticket.
-                var ticket = await CreateTicketAsync(request, user);
+                var ticket = await CreateTicketAsync(oidcRequest, user);
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
 
-            else if (request.IsRefreshTokenGrantType())
+            else if (oidcRequest.IsRefreshTokenGrantType())
             {
                 // Retrieve the claims principal stored in the refresh token.
                 var info = await HttpContext.AuthenticateAsync(OpenIddictServerDefaults.AuthenticationScheme);
@@ -103,7 +103,7 @@ namespace AuthorizationServer.Controllers
 
                 // Create a new authentication ticket, but reuse the properties stored
                 // in the refresh token, including the scopes originally granted.
-                var ticket = await CreateTicketAsync(request, user, info.Properties);
+                var ticket = await CreateTicketAsync(oidcRequest, user, info.Properties);
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
@@ -116,7 +116,7 @@ namespace AuthorizationServer.Controllers
         }
 
         private async Task<AuthenticationTicket> CreateTicketAsync(
-            OpenIdConnectRequest request, ApplicationUser user,
+            OpenIdConnectRequest oidcRequest, ApplicationUser user,
             AuthenticationProperties properties = null)
         {
             // Create a new ClaimsPrincipal containing the claims that
@@ -127,7 +127,7 @@ namespace AuthorizationServer.Controllers
             var ticket = new AuthenticationTicket(principal, properties,
                 OpenIddictServerDefaults.AuthenticationScheme);
 
-            if (!request.IsRefreshTokenGrantType())
+            if (!oidcRequest.IsRefreshTokenGrantType())
             {
                 // Set the list of scopes granted to the client application.
                 // Note: the offline_access scope must be granted
@@ -139,7 +139,7 @@ namespace AuthorizationServer.Controllers
                     OpenIdConnectConstants.Scopes.Profile,
                     OpenIdConnectConstants.Scopes.OfflineAccess,
                     OpenIddictConstants.Scopes.Roles
-                }.Intersect(request.GetScopes()));
+                }.Intersect(oidcRequest.GetScopes()));
             }
 
             ticket.SetResources("resource_server");

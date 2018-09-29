@@ -27,18 +27,18 @@ namespace AuthorizationServer.Controllers
         }
 
         [HttpPost("~/connect/token"), Produces("application/json")]
-        public async Task<IActionResult> Exchange(OpenIdConnectRequest request)
+        public async Task<IActionResult> Exchange(OpenIdConnectRequest oidcRequest)
         {
-            Debug.Assert(request.IsTokenRequest(),
+            Debug.Assert(oidcRequest.IsTokenRequest(),
                 "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
                 "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
 
-            if (request.IsClientCredentialsGrantType())
+            if (oidcRequest.IsClientCredentialsGrantType())
             {
                 // Note: the client credentials are automatically validated by OpenIddict:
                 // if client_id or client_secret are invalid, this action won't be invoked.
 
-                var application = await _applicationManager.FindByClientIdAsync(request.ClientId, HttpContext.RequestAborted);
+                var application = await _applicationManager.FindByClientIdAsync(oidcRequest.ClientId, HttpContext.RequestAborted);
                 if (application == null)
                 {
                     return BadRequest(new OpenIdConnectResponse
@@ -49,7 +49,7 @@ namespace AuthorizationServer.Controllers
                 }
 
                 // Create a new authentication ticket.
-                var ticket = CreateTicket(request, application);
+                var ticket = CreateTicket(oidcRequest, application);
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
@@ -61,7 +61,7 @@ namespace AuthorizationServer.Controllers
             });
         }
 
-        private AuthenticationTicket CreateTicket(OpenIdConnectRequest request, OpenIddictApplication application)
+        private AuthenticationTicket CreateTicket(OpenIdConnectRequest oidcRequest, OpenIddictApplication application)
         {
             // Create a new ClaimsIdentity containing the claims that
             // will be used to create an id_token, a token or a code.
