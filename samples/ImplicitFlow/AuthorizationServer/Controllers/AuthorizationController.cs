@@ -6,7 +6,6 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Primitives;
@@ -19,6 +18,7 @@ using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
 using OpenIddict.Core;
 using OpenIddict.EntityFrameworkCore.Models;
+using OpenIddict.Mvc.Internal;
 using OpenIddict.Server;
 
 namespace AuthorizationServer.Controllers
@@ -43,17 +43,13 @@ namespace AuthorizationServer.Controllers
         }
 
         [HttpGet("~/connect/authorize")]
-        public async Task<IActionResult> Authorize(OpenIdConnectRequest oidcRequest)
+        public async Task<IActionResult> Authorize([ModelBinder(typeof(OpenIddictMvcBinder))] OpenIdConnectRequest request)
         {
-            Debug.Assert(oidcRequest.IsAuthorizationRequest(),
-                "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
-                "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
-
             if (!User.Identity.IsAuthenticated)
             {
                 // If the client application request promptless authentication,
                 // return an error indicating that the user is not logged in.
-                if (oidcRequest.HasPrompt(OpenIdConnectConstants.Prompts.None))
+                if (request.HasPrompt(OpenIdConnectConstants.Prompts.None))
                 {
                     var properties = new AuthenticationProperties(new Dictionary<string, string>
                     {
@@ -80,7 +76,7 @@ namespace AuthorizationServer.Controllers
             }
 
             // Create a new authentication ticket.
-            var ticket = await CreateTicketAsync(oidcRequest, user);
+            var ticket = await CreateTicketAsync(request, user);
 
             // Returning a SignInResult will ask OpenIddict to issue the appropriate access/identity tokens.
             return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
@@ -99,7 +95,7 @@ namespace AuthorizationServer.Controllers
             return SignOut(OpenIddictServerDefaults.AuthenticationScheme);
         }
 
-        private async Task<AuthenticationTicket> CreateTicketAsync(OpenIdConnectRequest oidcRequest, ApplicationUser user)
+        private async Task<AuthenticationTicket> CreateTicketAsync(OpenIdConnectRequest request, ApplicationUser user)
         {
             // Create a new ClaimsPrincipal containing the claims that
             // will be used to create an id_token, a token or a code.
@@ -111,7 +107,7 @@ namespace AuthorizationServer.Controllers
                 OpenIddictServerDefaults.AuthenticationScheme);
 
             // Set the list of scopes granted to the client application.
-            var scopes = oidcRequest.GetScopes().ToImmutableArray();
+            var scopes = request.GetScopes().ToImmutableArray();
 
             ticket.SetScopes(scopes);
             ticket.SetResources(await _scopeManager.ListResourcesAsync(scopes));

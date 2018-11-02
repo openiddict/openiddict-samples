@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
 using OpenIddict.Core;
 using OpenIddict.EntityFrameworkCore.Models;
+using OpenIddict.Mvc.Internal;
 using OpenIddict.Server;
 
 public class AuthorizationController : Controller
@@ -34,10 +35,10 @@ public class AuthorizationController : Controller
     }
 
     [HttpGet("~/connect/authorize")]
-    public async Task<IActionResult> Authorize(OpenIdConnectRequest oidcRequest)
+    public async Task<IActionResult> Authorize([ModelBinder(typeof(OpenIddictMvcBinder))] OpenIdConnectRequest request)
     {
         // This demo only supports first-party clients with prompt=none.
-        if (!oidcRequest.HasPrompt(OpenIdConnectConstants.Prompts.None))
+        if (!request.HasPrompt(OpenIdConnectConstants.Prompts.None))
         {
             var properties = new AuthenticationProperties(new Dictionary<string, string>
             {
@@ -77,13 +78,13 @@ public class AuthorizationController : Controller
         }
 
         // Create a new authentication ticket.
-        var ticket = await CreateTicketAsync(oidcRequest, user);
+        var ticket = await CreateTicketAsync(request, user);
 
         // Returning a SignInResult will ask OpenIddict to issue the appropriate access/identity tokens.
         return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
     }
 
-    private async Task<AuthenticationTicket> CreateTicketAsync(OpenIdConnectRequest oidcRequest, IdentityUser user)
+    private async Task<AuthenticationTicket> CreateTicketAsync(OpenIdConnectRequest request, IdentityUser user)
     {
         // Create a new ClaimsPrincipal containing the claims that
         // will be used to create an id_token, a token or a code.
@@ -95,7 +96,7 @@ public class AuthorizationController : Controller
             OpenIddictServerDefaults.AuthenticationScheme);
 
         // Set the list of scopes granted to the client application.
-        var scopes = oidcRequest.GetScopes().ToImmutableArray();
+        var scopes = request.GetScopes().ToImmutableArray();
 
         ticket.SetScopes(scopes);
         ticket.SetResources(await _scopeManager.ListResourcesAsync(scopes));

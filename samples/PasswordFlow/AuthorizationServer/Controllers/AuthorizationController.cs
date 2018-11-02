@@ -5,7 +5,6 @@
  */
 
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
@@ -16,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using OpenIddict.Abstractions;
+using OpenIddict.Mvc.Internal;
 using OpenIddict.Server;
 
 namespace AuthorizationServer.Controllers
@@ -37,15 +37,11 @@ namespace AuthorizationServer.Controllers
         }
 
         [HttpPost("~/connect/token"), Produces("application/json")]
-        public async Task<IActionResult> Exchange(OpenIdConnectRequest oidcRequest)
+        public async Task<IActionResult> Exchange([ModelBinder(typeof(OpenIddictMvcBinder))] OpenIdConnectRequest request)
         {
-            Debug.Assert(oidcRequest.IsTokenRequest(),
-                "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
-                "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
-
-            if (oidcRequest.IsPasswordGrantType())
+            if (request.IsPasswordGrantType())
             {
-                var user = await _userManager.FindByNameAsync(oidcRequest.Username);
+                var user = await _userManager.FindByNameAsync(request.Username);
                 if (user == null)
                 {
                     return BadRequest(new OpenIdConnectResponse
@@ -56,7 +52,7 @@ namespace AuthorizationServer.Controllers
                 }
 
                 // Validate the username/password parameters and ensure the account is not locked out.
-                var result = await _signInManager.CheckPasswordSignInAsync(user, oidcRequest.Password, lockoutOnFailure: true);
+                var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
                 if (!result.Succeeded)
                 {
                     return BadRequest(new OpenIdConnectResponse
@@ -67,7 +63,7 @@ namespace AuthorizationServer.Controllers
                 }
 
                 // Create a new authentication ticket.
-                var ticket = await CreateTicketAsync(oidcRequest, user);
+                var ticket = await CreateTicketAsync(request, user);
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
@@ -79,7 +75,7 @@ namespace AuthorizationServer.Controllers
             });
         }
 
-        private async Task<AuthenticationTicket> CreateTicketAsync(OpenIdConnectRequest oidcRequest, ApplicationUser user)
+        private async Task<AuthenticationTicket> CreateTicketAsync(OpenIdConnectRequest request, ApplicationUser user)
         {
             // Create a new ClaimsPrincipal containing the claims that
             // will be used to create an id_token, a token or a code.
@@ -97,7 +93,7 @@ namespace AuthorizationServer.Controllers
                 OpenIdConnectConstants.Scopes.Email,
                 OpenIdConnectConstants.Scopes.Profile,
                 OpenIddictConstants.Scopes.Roles
-            }.Intersect(oidcRequest.GetScopes()));
+            }.Intersect(request.GetScopes()));
 
             ticket.SetResources("resource-server");
 

@@ -4,7 +4,6 @@
  * the license and the contributors participating to this project.
  */
 
-using System.Diagnostics;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
@@ -13,6 +12,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Core;
 using OpenIddict.EntityFrameworkCore.Models;
+using OpenIddict.Mvc.Internal;
 using OpenIddict.Server;
 
 namespace AuthorizationServer.Controllers
@@ -27,18 +27,14 @@ namespace AuthorizationServer.Controllers
         }
 
         [HttpPost("~/connect/token"), Produces("application/json")]
-        public async Task<IActionResult> Exchange(OpenIdConnectRequest oidcRequest)
+        public async Task<IActionResult> Exchange([ModelBinder(typeof(OpenIddictMvcBinder))] OpenIdConnectRequest request)
         {
-            Debug.Assert(oidcRequest.IsTokenRequest(),
-                "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
-                "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
-
-            if (oidcRequest.IsClientCredentialsGrantType())
+            if (request.IsClientCredentialsGrantType())
             {
                 // Note: the client credentials are automatically validated by OpenIddict:
                 // if client_id or client_secret are invalid, this action won't be invoked.
 
-                var application = await _applicationManager.FindByClientIdAsync(oidcRequest.ClientId, HttpContext.RequestAborted);
+                var application = await _applicationManager.FindByClientIdAsync(request.ClientId, HttpContext.RequestAborted);
                 if (application == null)
                 {
                     return BadRequest(new OpenIdConnectResponse
@@ -49,7 +45,7 @@ namespace AuthorizationServer.Controllers
                 }
 
                 // Create a new authentication ticket.
-                var ticket = CreateTicket(oidcRequest, application);
+                var ticket = CreateTicket(application);
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
@@ -61,7 +57,7 @@ namespace AuthorizationServer.Controllers
             });
         }
 
-        private AuthenticationTicket CreateTicket(OpenIdConnectRequest oidcRequest, OpenIddictApplication application)
+        private AuthenticationTicket CreateTicket(OpenIddictApplication application)
         {
             // Create a new ClaimsIdentity containing the claims that
             // will be used to create an id_token, a token or a code.
