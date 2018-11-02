@@ -4,7 +4,6 @@
  * the license and the contributors participating to this project.
  */
 
-using System.Diagnostics;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
@@ -14,6 +13,7 @@ using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Core;
 using OpenIddict.EntityFrameworkCore.Models;
+using OpenIddict.Mvc.Internal;
 using OpenIddict.Server;
 
 namespace AuthorizationServer.Controllers
@@ -28,12 +28,8 @@ namespace AuthorizationServer.Controllers
         }
 
         [HttpPost("~/connect/token"), Produces("application/json")]
-        public async Task<IActionResult> Exchange(OpenIdConnectRequest request)
+        public async Task<IActionResult> Exchange([ModelBinder(BinderType = typeof(OpenIddictMvcBinder))] OpenIdConnectRequest request)
         {
-            Debug.Assert(request.IsTokenRequest(),
-                "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
-                "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
-
             if (request.IsClientCredentialsGrantType())
             {
                 // Note: the client credentials are automatically validated by OpenIddict:
@@ -50,7 +46,7 @@ namespace AuthorizationServer.Controllers
                 }
 
                 // Create a new authentication ticket.
-                var ticket = CreateTicket(request, application);
+                var ticket = CreateTicket(application);
 
                 return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
             }
@@ -62,7 +58,7 @@ namespace AuthorizationServer.Controllers
             });
         }
 
-        private AuthenticationTicket CreateTicket(OpenIdConnectRequest request, OpenIddictApplication application)
+        private AuthenticationTicket CreateTicket(OpenIddictApplication application)
         {
             // Create a new ClaimsIdentity containing the claims that
             // will be used to create an id_token, a token or a code.

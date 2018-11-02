@@ -8,16 +8,4 @@
     <TypeScriptEnabled>false</TypeScriptEnabled>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="node_modules\**\*" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="%2a%2a\**" />
-    <Compile Remove="%2a%2a\**" />
-    <Compile Remove="%2a%2a/%2a.cs" />
-    <EmbeddedResource Remove="%2a%2a\**" />
-    <EmbeddedResource Remove="%2a%2a/%2a.resx" />
-  </ItemGroup>
-
 </Project>
