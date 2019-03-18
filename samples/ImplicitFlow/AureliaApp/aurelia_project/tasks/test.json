@@ -1,6 +1,6 @@
 {
-  "name": "build",
-  "description": "Builds and processes all application assets.",
+  "name": "test",
+  "description": "Runs all unit tests and reports the results.",
   "flags": [
     {
       "name": "env",
@@ -9,7 +9,7 @@
     },
     {
       "name": "watch",
-      "description": "Watches source files for changes and refreshes the bundles automatically.",
+      "description": "Watches test files for changes and re-runs the tests automatically.",
       "type": "boolean"
     }
   ]

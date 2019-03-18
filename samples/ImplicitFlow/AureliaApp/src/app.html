@@ -1,7 +1,38 @@
 <template>
-  <h1>OpenID Connect Implicit Flow Demo</h1>
-  <p>This page demonstrates the OpenID Connect Implicit Flow for a single page web application.</p>
-  <navbar router.bind="router" user.bind="user"></navbar>
-  <open-id-connect-user-block></open-id-connect-user-block>
-  <router-view></router-view>
+
+  <style type="text/css">
+    ul {
+      padding-left: 0;
+      list-style: none;
+    }
+
+    li {
+      margin: 0 10px;
+      display: inline-block;
+    }
+
+    div.view {
+      margin: 10px 0;
+      padding: 15px;
+      border: thin solid silver;
+    }
+  </style>
+
+  <span>${router.title}</span>
+
+  <ul>
+    <li repeat.for="nav of router.navigation | openIdConnectNavigationFilter:user">
+      <a href.bind="nav.href">${nav.title}</a>
+    </li>
+    <li>
+      <open-id-connect-user-block></open-id-connect-user-block>
+    </li>
+  </ul>
+
+  <div class="view">
+    <router-view></router-view>
+  </div>
+
+  <open-id-connect-user-debug></open-id-connect-user-debug>
+
 </template>

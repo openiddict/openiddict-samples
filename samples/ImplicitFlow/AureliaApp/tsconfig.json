@@ -9,16 +9,20 @@
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "allowJs": true,
     "moduleResolution": "node",
-    "lib": [
-      "es2016",
-      "dom"
-    ]
+    "lib": ["es2017", "dom"]
   },
-  "include": [
-    "src/**/*"
-  ],
   "exclude": [
-    "node_modules/**/*"
-  ]
+    "node_modules",
+    "aurelia_project"
+  ],
+  "filesGlob": [
+    "./src/**/*.ts",
+    "./test/**/*.ts",
+    "./custom_typings/**/*.d.ts"
+  ],
+  "atom": {
+    "rewriteTsconfig": false
+  }
 }

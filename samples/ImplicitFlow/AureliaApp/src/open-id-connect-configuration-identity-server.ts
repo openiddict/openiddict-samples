@@ -1,25 +1,31 @@
 import { OpenIdConnectConfiguration } from "aurelia-open-id-connect";
-import { Log, UserManagerSettings, WebStorageStateStore } from "oidc-client";
+import { UserManagerSettings, WebStorageStateStore } from "oidc-client";
 
 const appHost = "http://localhost:9000";
 
 export default {
-  loginRedirectRoute: "private",
+  loginRedirectRoute: "index",
   logoutRedirectRoute: "index",
-  unauthorizedRedirectRoute: "index",
-  logLevel: Log.DEBUG,
   userManagerSettings: {
+
     // The number of seconds in advance of access token expiry
     // to raise the access token expiring event.
     accessTokenExpiringNotificationTime: 1,
+
     // Either host your own OpenID Provider or select a certified authority
     // from the list http://openid.net/certification/
-    authority: "http://localhost:12345",
-    automaticSilentRenew: false,
-    // The interval in milliseconds between checking the user's session.
-    checkSessionInterval: 10000,
+    authority: "https://demo.identityserver.io",
+
+    automaticSilentRenew: true,
+
+    // IdentityServer4 supports OpenID Connect Session Management
+    // https://openid.net/specs/openid-connect-session-1_0.html
+    monitorSession: true,
+    checkSessionInterval: 2000,
+
     // The client or application ID that the authority issues.
-    client_id: "aurelia",
+    client_id: "implicit",
+
     filterProtocolClaims: true,
     loadUserInfo: false,
     post_logout_redirect_uri: `${appHost}/signout-oidc`,

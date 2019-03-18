@@ -1,54 +1,58 @@
 {
-  "name": "aurelia-open-id-connect-demo",
-  "description": "A demo to show aurelia-open-id-connect working with an OpenID Connect provider.",
-  "version": "0.0.0",
+  "name": "aurelia-app-auth0",
+  "description": "An Aurelia client application.",
+  "version": "0.1.0",
   "repository": {
-    "type": "git",
-    "url": "https://github.com/shaunluttin/aurelia-open-id-connect"
+    "type": "???",
+    "url": "???"
   },
-  "author": "Shaun Luttin <shaun@bigfont.ca>",
-  "license": "MIT",
   "scripts": {
-    "tslint": "node_modules/.bin/tslint --config tslint.json --project tsconfig.json",
-    "demo": "node_modules/.bin/au run --watch --env dev",
-    "start:local:prod": "node_modules/.bin/au run --watch --env prod",
-    "build:local:prod": "node_modules/.bin/au build --env prod",
-    "build:azure:prod": "node_modules/.bin/au build --env prod.azure"
+    "demo": "au build && au run --watch"
   },
-  "dependencyNotes": {
-    "aurelia-cli": "For sourcemaps, we use our fork of the aurelia-cli, which creates proper sourcemaps."
-  },
+  "license": "MIT",
   "dependencies": {
-    "aurelia-bootstrapper": "^1.0.0",
-    "aurelia-fetch-client": "^1.0.0",
-    "aurelia-open-id-connect": "^2.0.1",
-    "babel-polyfill": "^6.16.0",
+    "aurelia-animator-css": "^1.0.2",
+    "aurelia-bootstrapper": "^2.1.1",
+    "aurelia-open-id-connect": "^1.0.3",
+    "aurelia-router": "^1.4.0",
     "bluebird": "^3.4.1",
+    "oidc-client": "^1.4.1",
     "requirejs": "^2.3.2",
-    "text": "github:requirejs/text",
-    "whatwg-fetch": "^2.0.1"
+    "text": "github:requirejs/text#latest"
   },
   "peerDependencies": {},
   "devDependencies": {
-    "aurelia-cli": "^1.0.0-beta.13",
-    "aurelia-tools": "^0.2.2",
+    "@types/jasmine": "^2.2.0",
+    "@types/node": "^6.0.45",
+    "aurelia-cli": "^0.31.3",
+    "aurelia-testing": "^1.0.0-beta.3.0.1",
+    "aurelia-tools": "^1.0.0",
     "browser-sync": "^2.13.0",
     "connect-history-api-fallback": "^1.2.0",
+    "debounce": "^1.0.2",
     "event-stream": "^3.3.3",
-    "gulp": "^4.0.0",
+    "gulp": "github:gulpjs/gulp#4.0",
     "gulp-changed-in-place": "^2.0.3",
-    "gulp-notify": "^2.2.0",
+    "gulp-htmlmin": "^3.0.0",
+    "gulp-notify": "^3.1.0",
     "gulp-plumber": "^1.1.0",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^2.0.0-alpha",
     "gulp-tslint": "^5.0.0",
-    "gulp-typescript": "^2.13.6",
+    "gulp-typescript": "^3.1.4",
+    "gulp-watch": "^4.3.11",
+    "html-minifier": "^3.2.3",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-jasmine": "^1.0.2",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-typescript-preprocessor": "^0.2.1",
     "minimatch": "^3.0.2",
     "through2": "^2.0.1",
     "tslint": "^3.11.0",
-    "tslint-microsoft-contrib": "^2.0.13",
-    "typescript": "^2.1.0",
-    "uglify-js": "^2.6.3",
+    "typescript": ">=1.9.0-dev || ^2.0.0",
+    "uglify-js": "^3.0.19",
     "vinyl-fs": "^2.4.3"
   }
 }

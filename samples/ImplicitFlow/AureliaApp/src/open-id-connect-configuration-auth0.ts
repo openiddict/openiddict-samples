@@ -14,12 +14,12 @@ export default {
     accessTokenExpiringNotificationTime: 1,
     // Either host your own OpenID Provider or select a certified authority
     // from the list http://openid.net/certification/
-    authority: "http://localhost:12345",
+    authority: "https://bigfont.auth0.com",
     automaticSilentRenew: false,
     // The interval in milliseconds between checking the user's session.
     checkSessionInterval: 10000,
     // The client or application ID that the authority issues.
-    client_id: "aurelia",
+    client_id: "VoHOI7uVmRSz5A0pDTnxRNNWZJU3nbY7",
     filterProtocolClaims: true,
     loadUserInfo: false,
     post_logout_redirect_uri: `${appHost}/signout-oidc`,
