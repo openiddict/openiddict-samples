@@ -33,7 +33,7 @@ Pop-Location
 # Aurelia Application
 Push-Location "./AureliaApp"
 npm install -y
-$global:p += Start-Process npm -ArgumentList "run start" -PassThru
+$global:p += Start-Process npm -ArgumentList "run demo" -PassThru
 Pop-Location
 
 # Resource Server 01
