@@ -55,13 +55,13 @@
             ".html",
             ".css"
           ],
-          "stub": false
+          "stub":false 
         }
       ]
     },
     "options": {
-      "minify": "false",
-      "sourcemaps": "true"
+      "minify": "stage & prod",
+      "sourcemaps": "dev & stage"
     },
     "bundles": [
       {
@@ -72,14 +72,9 @@
         ]
       },
       {
-        "name": "debug-bundle.js",
-        "dependencies": [
-          "aurelia-router"
-        ]
-      },
-      {
         "name": "vendor-bundle.js",
         "prepend": [
+          "node_modules/whatwg-fetch/fetch.js",
           "node_modules/bluebird/js/browser/bluebird.core.js",
           "node_modules/requirejs/require.js"
         ],
@@ -102,10 +97,10 @@
           "aurelia-path",
           "aurelia-polyfills",
           "aurelia-route-recognizer",
+          "aurelia-router",
           "aurelia-task-queue",
           "aurelia-templating",
           "aurelia-templating-binding",
-          "whatwg-fetch",
           "text",
           {
             "name": "aurelia-templating-resources",
