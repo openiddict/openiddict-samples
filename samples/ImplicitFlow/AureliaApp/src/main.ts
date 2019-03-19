@@ -1,5 +1,4 @@
 import { Aurelia } from 'aurelia-framework'
-import { OpenIdConnectConfiguration } from "aurelia-open-id-connect";
 import environment from './environment';
 import oidcConfig from "./open-id-connect-configuration";
 // import oidcConfig from "./open-id-connect-configuration-auth0";
