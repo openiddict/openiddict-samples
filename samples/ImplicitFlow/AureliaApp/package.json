@@ -7,10 +7,7 @@
     "url": "???"
   },
   "scripts": {
-    "demo": "au build && au run --watch",
-    "start:local:prod": "node_modules/.bin/au run --watch --env prod",
-    "build:local:prod": "node_modules/.bin/au build --env prod",
-    "build:azure:prod": "node_modules/.bin/au build --env prod.azure"
+    "demo": "au build && au run --watch"
   },
   "license": "MIT",
   "dependencies": {
