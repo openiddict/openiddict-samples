@@ -42,6 +42,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationServer", "samp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AngularApp", "samples\RefreshFlow\AngularApp\AngularApp.csproj", "{9C934C2E-BC44-4644-A77B-EDC5DCBA4624}"
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "AureliaApp", "samples\ImplicitFlow\AureliaApp\", "{8EEE0F5C-5A42-4AC4-9A2E-BBEE36892012}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_57357"
+		Debug.AspNetCompiler.PhysicalPath = "samples\ImplicitFlow\AureliaApp\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_57357\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_57357"
+		Release.AspNetCompiler.PhysicalPath = "samples\ImplicitFlow\AureliaApp\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_57357\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "57357"
+		SlnRelativePath = "samples\ImplicitFlow\AureliaApp\"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +113,10 @@ Global
 		{9C934C2E-BC44-4644-A77B-EDC5DCBA4624}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C934C2E-BC44-4644-A77B-EDC5DCBA4624}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C934C2E-BC44-4644-A77B-EDC5DCBA4624}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EEE0F5C-5A42-4AC4-9A2E-BBEE36892012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EEE0F5C-5A42-4AC4-9A2E-BBEE36892012}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EEE0F5C-5A42-4AC4-9A2E-BBEE36892012}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EEE0F5C-5A42-4AC4-9A2E-BBEE36892012}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,6 +138,7 @@ Global
 		{81382AEF-4096-4653-85D9-9A55FC67885C} = {677D0C2C-B66E-487E-B915-CFE1C63CB1CC}
 		{EB20BBB7-591C-44AB-8FDE-3272CAC2BF56} = {E8108CC6-A798-423C-99C6-A37BEBCEE7F0}
 		{9C934C2E-BC44-4644-A77B-EDC5DCBA4624} = {E8108CC6-A798-423C-99C6-A37BEBCEE7F0}
+		{8EEE0F5C-5A42-4AC4-9A2E-BBEE36892012} = {E0ADFFCA-A604-42D1-8F6D-DE888E061188}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3ECDD26-F40D-4AB4-BC48-8DF143F98FAE}
