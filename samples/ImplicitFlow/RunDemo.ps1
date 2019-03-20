@@ -7,7 +7,6 @@ function global:Find-ChildProcess {
         Where-Object { $_.ParentProcessId -eq $ID }
     Select-Object -Property ProcessId
 
-    $result
     $result |
         Where-Object { $null -ne $_.ProcessId } |
         ForEach-Object {
@@ -16,9 +15,15 @@ function global:Find-ChildProcess {
 }
 
 function global:Stop-Demo {
-    $Global:p |
-        ForEach-Object { Find-ChildProcess -ID $_.Id } |
-        ForEach-Object { Stop-Process -id $_.ProcessId }
+    $global:p |
+        ForEach-Object { 
+        Stop-Process -Id $_.Id;
+        Find-ChildProcess -ID $_.Id;
+    } |
+        ForEach-Object { 
+        Stop-Process -id 
+        $_.ProcessId 
+    }
 }
 
 [System.Environment]::SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
@@ -30,15 +35,15 @@ $cmds = {
     "dotnet watch run server.urls=http://localhost:12345"
 };
 
-$global:p += Start-Process powershell -ArgumentList $cmds -WorkingDirectory "./AuthorizationServer"
+$global:p += Start-Process powershell -ArgumentList $cmds -WorkingDirectory "./AuthorizationServer" -PassThru
 
 # Aurelia Application
 $cmds = {
-  "npm install -y";
-  "npm run demo";
+    "npm install -y";
+    "npm run demo";
 };
 
-$global:p += Start-Process powershell -ArgumentList $cmds -WorkingDirectory "./AureliaApp"
+$global:p += Start-Process powershell -ArgumentList $cmds -WorkingDirectory "./AureliaApp" -PassThru
 
 # Resource Server 01
 $cmds = {
@@ -47,7 +52,7 @@ $cmds = {
     "dotnet watch run server.urls=http://localhost:5001"
 };
 
-$global:p += Start-Process powershell -ArgumentList $cmds -WorkingDirectory "./ResourceServer01"
+$global:p += Start-Process powershell -ArgumentList $cmds -WorkingDirectory "./ResourceServer01" -PassThru
 
 # Resource Server 02
 $cmds = {
@@ -56,4 +61,4 @@ $cmds = {
     "dotnet watch run server.urls=http://localhost:5002"
 };
 
-$global:p += Start-Process powershell -ArgumentList $cmds -WorkingDirectory "./ResourceServer02"
+$global:p += Start-Process powershell -ArgumentList $cmds -WorkingDirectory "./ResourceServer02" -PassThru
