@@ -1,64 +1,37 @@
-$global:p = @();
-
-function global:Find-ChildProcess {
-    param($ID = $PID)
-
-    $result = Get-CimInstance win32_process |
-        Where-Object { $_.ParentProcessId -eq $ID }
-    Select-Object -Property ProcessId
-
-    $result |
-        Where-Object { $null -ne $_.ProcessId } |
-        ForEach-Object {
-        Find-ChildProcess -id $_.ProcessId
-    }
+function Start-Commands {
+    param($cmds, $dir)
+    Start-Process powershell -ArgumentList $cmds -WorkingDirectory $dir
 }
 
-function global:Stop-Demo {
-    $global:p |
-        ForEach-Object { 
-        Stop-Process -Id $_.Id;
-        Find-ChildProcess -ID $_.Id;
-    } |
-        ForEach-Object { 
-        Stop-Process -id 
-        $_.ProcessId 
-    }
+function Stop-Demo {
+    # TODO Kill all the processes that we started.
 }
 
 [System.Environment]::SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
 
 # Authorization Server
-$cmds = {
+Start-Commands -dir './AuthorizationServer' -cmds {
     "dotnet restore";
     "dotnet build --no-incremental"; #rebuild
     "dotnet watch run server.urls=http://localhost:12345"
-};
-
-$global:p += Start-Process powershell -ArgumentList $cmds -WorkingDirectory "./AuthorizationServer" -PassThru
-
-# Aurelia Application
-$cmds = {
-    "npm install -y";
-    "npm run demo";
-};
-
-$global:p += Start-Process powershell -ArgumentList $cmds -WorkingDirectory "./AureliaApp" -PassThru
+}
 
 # Resource Server 01
-$cmds = {
+Start-Commands -dir './ResourceServer01' -cmds {
     "dotnet restore";
     "dotnet build --no-incremental"; #rebuild
     "dotnet watch run server.urls=http://localhost:5001"
-};
-
-$global:p += Start-Process powershell -ArgumentList $cmds -WorkingDirectory "./ResourceServer01" -PassThru
+}
 
 # Resource Server 02
-$cmds = {
+Start-Commands -dir './ResourceServer02' -cmds {
     "dotnet restore";
     "dotnet build --no-incremental"; #rebuild
     "dotnet watch run server.urls=http://localhost:5002"
-};
+}
 
-$global:p += Start-Process powershell -ArgumentList $cmds -WorkingDirectory "./ResourceServer02" -PassThru
+# Aurelia Application
+Start-Commands -dir './AureliaApp' -cmds {
+    "npm install -y";
+    "npm run demo";
+}
