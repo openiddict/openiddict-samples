@@ -5,8 +5,8 @@ import environment from './environment';
 
 export default {
   loginRedirectRoute: "/private",
-  logoutRedirectRoute: "/index",
-  unauthorizedRedirectRoute: "/index",
+  logoutRedirectRoute: "/home",
+  unauthorizedRedirectRoute: "/home",
   logLevel: Log.DEBUG,
   userManagerSettings: {
     // The number of seconds in advance of access token expiry

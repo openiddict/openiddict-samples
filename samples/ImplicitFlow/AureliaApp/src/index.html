@@ -1,3 +1,48 @@
 <template>
-  <p>Index</p>
+  <style type="text/css">
+    pre {
+      background: #eee;
+      padding: 1em;
+      overflow: auto;
+    }
+    
+    pre#resources {
+      height: 75px;
+    }
+  </style>
+
+<!--#region Fork me on GitHub-->
+<a href="https://github.com/shaunluttin/openiddict-samples/tree/spa-sample-deploy-azure/samples/ImplicitFlow">
+  <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67"
+alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
+<!--#endregion-->
+
+<section>
+  <h3>Authorization Server Response</h3>
+  <p show.bind="inMemoryUser == null">
+    Try logging in. If you have already logged in, something has gone wrong; the web developer tools console, network, or storage tabs might have more information.
+  </p>
+  <p>Current Time: ${currentTime}</p>
+  <p>Access Token Expires In: ${accessTokenExpiresIn}</p>
+  <button click.trigger="loginSilent()">Manual Silent Login</button>
+  <p>
+    <pre>${userAsJson}</pre>
+  </p>
+</section>
+<section>
+  <h3>Resource Server Response</h3>
+  <p>
+    <button click.trigger="queryResourceServer(01, true)">Resource Server 01 - Private</button>
+    <button click.trigger="queryResourceServer(01, false)">Resource Server 01 - Public</button>
+    <button click.trigger="queryResourceServer(02, true)">Resource Server 02 - Private</button>
+    <button click.trigger="queryResourceServer(02, false)">Resource Server 02 - Public</button>
+    <pre id="resources">
+<template repeat.for="msg of resourceServerMessage">${msg}</template>
+      </pre>
+  </p>
+</section>
+<section>
+  <h3>Environment</h3>
+  <pre>${environmentAsJson}</pre>
+</section>
 </template>

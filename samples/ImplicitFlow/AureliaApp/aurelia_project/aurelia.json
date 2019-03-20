@@ -40,6 +40,7 @@
           "aurelia-dependency-injection",
           "aurelia-event-aggregator",
           "aurelia-framework",
+          "aurelia-fetch-client",
           "aurelia-history",
           "aurelia-history-browser",
           "aurelia-loader",
