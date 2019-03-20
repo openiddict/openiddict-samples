@@ -14,7 +14,7 @@
     "aurelia-animator-css": "^1.0.2",
     "aurelia-bootstrapper": "^2.1.1",
     "aurelia-fetch-client": "^1.8.2",
-    "aurelia-open-id-connect": "^2.0.1",
+    "aurelia-open-id-connect": "^2.0.2",
     "aurelia-router": "^1.4.0",
     "bluebird": "^3.4.1",
     "oidc-client": "^1.4.1",
