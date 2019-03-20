@@ -1,52 +1,59 @@
 $global:p = @();
 
 function global:Find-ChildProcess {
-  param($ID=$PID)
+    param($ID = $PID)
 
-  $result = Get-CimInstance win32_process |
-    Where-Object { $_.ParentProcessId -eq $ID }
+    $result = Get-CimInstance win32_process |
+        Where-Object { $_.ParentProcessId -eq $ID }
     Select-Object -Property ProcessId
 
-  $result
-  $result |
-    Where-Object { $_.ProcessId -ne $null } |
-    ForEach-Object {
-      Find-ChildProcess -id $_.ProcessId
+    $result
+    $result |
+        Where-Object { $null -ne $_.ProcessId } |
+        ForEach-Object {
+        Find-ChildProcess -id $_.ProcessId
     }
 }
 
-function global:Kill-Demo {
-  $Global:p |
-    ForEach-Object { Find-ChildProcess -ID $_.Id } |
-    ForEach-Object { Stop-Process -id $_.ProcessId }
+function global:Stop-Demo {
+    $Global:p |
+        ForEach-Object { Find-ChildProcess -ID $_.Id } |
+        ForEach-Object { Stop-Process -id $_.ProcessId }
 }
 
 [System.Environment]::SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
 
 # Authorization Server
-Push-Location "./AuthorizationServer"
-dotnet restore
-dotnet build --no-incremental #rebuild
-$global:p += Start-Process dotnet -ArgumentList "watch run server.urls=http://localhost:12345" -PassThru
-Pop-Location
+$cmds = {
+    "dotnet restore";
+    "dotnet build --no-incremental"; #rebuild
+    "dotnet watch run server.urls=http://localhost:12345"
+};
+
+$global:p += Start-Process powershell -ArgumentList $cmds -WorkingDirectory "./AuthorizationServer"
 
 # Aurelia Application
-Push-Location "./AureliaApp"
-npm install -y
-$global:p += Start-Process npm -ArgumentList "run demo" -PassThru
-Pop-Location
+$cmds = {
+  "npm install -y";
+  "npm run demo";
+};
+
+$global:p += Start-Process powershell -ArgumentList $cmds -WorkingDirectory "./AureliaApp"
 
 # Resource Server 01
-Push-Location "./ResourceServer01"
-dotnet restore
-dotnet build --no-incremental
-$global:p += Start-Process dotnet -ArgumentList "watch run server.urls=http://localhost:5001" -PassThru
-Pop-Location
+$cmds = {
+    "dotnet restore";
+    "dotnet build --no-incremental"; #rebuild
+    "dotnet watch run server.urls=http://localhost:5001"
+};
+
+$global:p += Start-Process powershell -ArgumentList $cmds -WorkingDirectory "./ResourceServer01"
 
 # Resource Server 02
-Push-Location "./ResourceServer02"
-dotnet restore
-dotnet build --no-incremental
-$global:p += Start-Process dotnet -ArgumentList "watch run server.urls=http://localhost:5002" -PassThru
-Pop-Location
+$cmds = {
+    "dotnet restore";
+    "dotnet build --no-incremental"; #rebuild
+    "dotnet watch run server.urls=http://localhost:5002"
+};
 
+$global:p += Start-Process powershell -ArgumentList $cmds -WorkingDirectory "./ResourceServer02"
