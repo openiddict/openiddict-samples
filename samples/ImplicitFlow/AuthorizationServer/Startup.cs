@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Primitives;
 using AuthorizationServer.Extensions;
@@ -87,7 +88,7 @@ namespace AuthorizationServer
                     // Register a new ephemeral key, that is discarded when the application
                     // shuts down. Tokens signed using this key are automatically invalidated.
                     // This method should only be used during development.
-                    options.AddEphemeralSigningKey();
+                    // options.AddEphemeralSigningKey();
 
                     // On production, using a X.509 certificate stored in the machine store is recommended.
                     // You can generate a self-signed certificate using Pluralsight's self-cert utility:
@@ -98,10 +99,12 @@ namespace AuthorizationServer
                     // Alternatively, you can also store the certificate as an embedded .pfx resource
                     // directly in this assembly or in a file published alongside this project:
                     //
-                    // options.AddSigningCertificate(
-                    //     assembly: typeof(Startup).GetTypeInfo().Assembly,
-                    //     resource: "AuthorizationServer.Certificate.pfx",
-                    //     password: "OpenIddict");
+                    var assembly = typeof(Startup).GetTypeInfo().Assembly;
+                    var assemblyName = assembly.GetName().Name;
+                    options.AddSigningCertificate(
+                        assembly: typeof(Startup).GetTypeInfo().Assembly,
+                        resource: $"{assemblyName}.Certificate.pfx",
+                        password: "OpenIddict");
 
                     // Note: to use JWT access tokens instead of the default
                     // encrypted format, the following line is required:
