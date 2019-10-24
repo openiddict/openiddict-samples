@@ -61,11 +61,6 @@ namespace AuthorizationServer
                 // Register the OpenIddict server handler.
                 .AddServer(options =>
                 {
-                    // Register the ASP.NET Core MVC binder used by OpenIddict.
-                    // Note: if you don't call this method, you won't be able to
-                    // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
-                    options.UseMvc();
-
                     // Enable the token endpoint.
                     options.EnableTokenEndpoint("/connect/token");
 

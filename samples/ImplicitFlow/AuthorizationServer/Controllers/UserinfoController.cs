@@ -29,11 +29,7 @@ namespace AuthorizationServer.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return BadRequest(new OpenIdConnectResponse
-                {
-                    Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                    ErrorDescription = "The user profile is no longer available."
-                });
+                return Challenge(OpenIddictValidationDefaults.AuthenticationScheme);
             }
 
             var claims = new JObject();
