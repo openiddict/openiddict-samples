@@ -112,7 +112,7 @@ namespace AuthorizationServer
                 .AddValidation();
 
             services.AddCors();
-            services.AddMvc();
+            services.AddMvc(option => option.EnableEndpointRouting = false);
 
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();

@@ -22,7 +22,7 @@ namespace AuthorizationServer
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc(option => option.EnableEndpointRouting = false);
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
