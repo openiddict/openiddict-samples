@@ -23,7 +23,6 @@ namespace AuthorizationServer
             services.AddMvc(option => option.EnableEndpointRouting = false);
 
 
-
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 // Configure the context to use Microsoft SQL Server.

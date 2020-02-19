@@ -4,6 +4,9 @@
     <AspNetContribOpenIdExtensionsVersion>2.0.0</AspNetContribOpenIdExtensionsVersion>
     <JsonNetVersion>10.0.2</JsonNetVersion>
     <OpenIddictVersion>2.0.1</OpenIddictVersion>
+    <EntityFrameworkCoreVersion>3.1.1</EntityFrameworkCoreVersion>
+    <AspNetCoreAuthThirdPartyVersion>3.1.1</AspNetCoreAuthThirdPartyVersion>
+    <AspNetCoreAuthVersion>2.2.0</AspNetCoreAuthVersion>
   </PropertyGroup>
 
 </Project>
