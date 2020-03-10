@@ -22,7 +22,8 @@ namespace AuthorizationServer
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddRouting();
+            services.AddControllers();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -108,11 +109,18 @@ namespace AuthorizationServer
         {
             app.UseDeveloperExceptionPage();
 
+            app.UseHttpsRedirection();
+            app.UseRouting();
+
             app.UseAuthentication();
+            app.UseAuthorization();
 
-            app.UseMvcWithDefaultRoute();
+            //app.UseWelcomePage();
 
-            app.UseWelcomePage();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             // Seed the database with the sample application.
             // Note: in a real world application, this step should be part of a setup script.

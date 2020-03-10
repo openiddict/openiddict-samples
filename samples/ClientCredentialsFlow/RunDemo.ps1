@@ -5,12 +5,12 @@ $root = $PSScriptRoot;
 Push-Location "$root/AuthorizationServer"
 dotnet restore
 dotnet build --no-incremental #rebuild
-Start-Process dotnet -ArgumentList "watch run -f netcoreapp2.0 server.urls=http://localhost:52698" -PassThru 
+Start-Process dotnet -ArgumentList "watch run -f netcoreapp3.1 server.urls=http://localhost:52698" -PassThru 
 Pop-Location
 
 # Client Application
 Push-Location "$root/ClientApp"
 dotnet restore
 dotnet build --no-incremental
-Start-Process dotnet -ArgumentList "watch run -f netcoreapp2.0" -PassThru
+Start-Process dotnet -ArgumentList "watch run -f netcoreapp3.1" -PassThru
 Pop-Location
