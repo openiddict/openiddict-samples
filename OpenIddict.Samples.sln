@@ -1,46 +1,67 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{6AB0C28E-4C8F-47C8-B3B3-3E74F50E4724}"
-	ProjectSection(SolutionItems) = preProject
-		build\dependencies.props = build\dependencies.props
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{8B467944-153B-4C90-BAB1-8F1B34C3075A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeFlow", "CodeFlow", "{F47D1283-0EE9-4728-8026-58405C29B786}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Velusia", "Velusia", "{F47D1283-0EE9-4728-8026-58405C29B786}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ImplicitFlow", "ImplicitFlow", "{E0ADFFCA-A604-42D1-8F6D-DE888E061188}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Zirku", "Zirku", "{E0ADFFCA-A604-42D1-8F6D-DE888E061188}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PasswordFlow", "PasswordFlow", "{F354FBF2-8FF6-424E-AF59-DB58EC767D39}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hollastin", "Hollastin", "{F354FBF2-8FF6-424E-AF59-DB58EC767D39}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClientCredentialsFlow", "ClientCredentialsFlow", "{677D0C2C-B66E-487E-B915-CFE1C63CB1CC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aridka", "Aridka", "{677D0C2C-B66E-487E-B915-CFE1C63CB1CC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RefreshFlow", "RefreshFlow", "{E8108CC6-A798-423C-99C6-A37BEBCEE7F0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Imynusoph", "Imynusoph", "{E8108CC6-A798-423C-99C6-A37BEBCEE7F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientApp", "samples\CodeFlow\ClientApp\ClientApp.csproj", "{96B22EB9-771A-4DCA-B828-E6EA2774CF1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Velusia.Client", "samples\Velusia\Velusia.Client\Velusia.Client.csproj", "{96B22EB9-771A-4DCA-B828-E6EA2774CF1B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationServer", "samples\CodeFlow\AuthorizationServer\AuthorizationServer.csproj", "{7CBEAFD2-E3D0-4424-9B78-E87AB52327A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Velusia.Server", "samples\Velusia\Velusia.Server\Velusia.Server.csproj", "{7CBEAFD2-E3D0-4424-9B78-E87AB52327A6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceServer01", "samples\ImplicitFlow\ResourceServer01\ResourceServer01.csproj", "{BA61A766-958E-4960-B6FA-D1140A67511C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zirku.Api1", "samples\Zirku\Zirku.Api1\Zirku.Api1.csproj", "{BA61A766-958E-4960-B6FA-D1140A67511C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceServer02", "samples\ImplicitFlow\ResourceServer02\ResourceServer02.csproj", "{D10D7632-54E7-42F3-9E1E-82F72F25ECC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zirku.Api2", "samples\Zirku\Zirku.Api2\Zirku.Api2.csproj", "{D10D7632-54E7-42F3-9E1E-82F72F25ECC4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationServer", "samples\ImplicitFlow\AuthorizationServer\AuthorizationServer.csproj", "{81B4872C-5F9F-4E4F-A895-E4057BD81E29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zirku.Server", "samples\Zirku\Zirku.Server\Zirku.Server.csproj", "{81B4872C-5F9F-4E4F-A895-E4057BD81E29}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationServer", "samples\PasswordFlow\AuthorizationServer\AuthorizationServer.csproj", "{A75B3EE1-70F2-467B-8251-DEC0B02F5299}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hollastin.Server", "samples\Hollastin\Hollastin.Server\Hollastin.Server.csproj", "{A75B3EE1-70F2-467B-8251-DEC0B02F5299}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientApp", "samples\PasswordFlow\ClientApp\ClientApp.csproj", "{24E80778-8E90-42CA-B052-B783C13B8968}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hollastin.Client", "samples\Hollastin\Hollastin.Client\Hollastin.Client.csproj", "{24E80778-8E90-42CA-B052-B783C13B8968}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationServer", "samples\ClientCredentialsFlow\AuthorizationServer\AuthorizationServer.csproj", "{11AC3EFC-B4C0-42E2-8DB3-B39B3817CAA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aridka.Server", "samples\Aridka\Aridka.Server\Aridka.Server.csproj", "{11AC3EFC-B4C0-42E2-8DB3-B39B3817CAA3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientApp", "samples\ClientCredentialsFlow\ClientApp\ClientApp.csproj", "{81382AEF-4096-4653-85D9-9A55FC67885C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aridka.Client", "samples\Aridka\Aridka.Client\Aridka.Client.csproj", "{81382AEF-4096-4653-85D9-9A55FC67885C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationServer", "samples\RefreshFlow\AuthorizationServer\AuthorizationServer.csproj", "{EB20BBB7-591C-44AB-8FDE-3272CAC2BF56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imynusoph.Server", "samples\Imynusoph\Imynusoph.Server\Imynusoph.Server.csproj", "{EB20BBB7-591C-44AB-8FDE-3272CAC2BF56}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AngularApp", "samples\RefreshFlow\AngularApp\AngularApp.csproj", "{9C934C2E-BC44-4644-A77B-EDC5DCBA4624}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imynusoph.Client", "samples\Imynusoph\Imynusoph.Client\Imynusoph.Client.csproj", "{9C934C2E-BC44-4644-A77B-EDC5DCBA4624}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{713DB665-E7C3-4106-A5C5-65B5046A1DC0}"
+	ProjectSection(SolutionItems) = preProject
+		eng\Signing.props = eng\Signing.props
+		eng\Version.Details.xml = eng\Version.Details.xml
+		eng\Versions.props = eng\Versions.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{1DBD2338-AD2E-4DCF-B1C3-0B4E31E76585}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		.travis.yml = .travis.yml
+		appveyor.yml = appveyor.yml
+		build.cmd = build.cmd
+		build.ps1 = build.ps1
+		build.sh = build.sh
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		global.json = global.json
+		LICENSE.md = LICENSE.md
+		NuGet.config = NuGet.config
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zirku.Client", "samples\Zirku\Zirku.Client\Zirku.Client.csproj", "{94035563-0B48-4BC0-B267-ACDE9B68A655}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -92,6 +113,10 @@ Global
 		{9C934C2E-BC44-4644-A77B-EDC5DCBA4624}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C934C2E-BC44-4644-A77B-EDC5DCBA4624}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C934C2E-BC44-4644-A77B-EDC5DCBA4624}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94035563-0B48-4BC0-B267-ACDE9B68A655}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94035563-0B48-4BC0-B267-ACDE9B68A655}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94035563-0B48-4BC0-B267-ACDE9B68A655}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94035563-0B48-4BC0-B267-ACDE9B68A655}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,6 +138,7 @@ Global
 		{81382AEF-4096-4653-85D9-9A55FC67885C} = {677D0C2C-B66E-487E-B915-CFE1C63CB1CC}
 		{EB20BBB7-591C-44AB-8FDE-3272CAC2BF56} = {E8108CC6-A798-423C-99C6-A37BEBCEE7F0}
 		{9C934C2E-BC44-4644-A77B-EDC5DCBA4624} = {E8108CC6-A798-423C-99C6-A37BEBCEE7F0}
+		{94035563-0B48-4BC0-B267-ACDE9B68A655} = {E0ADFFCA-A604-42D1-8F6D-DE888E061188}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3ECDD26-F40D-4AB4-BC48-8DF143F98FAE}

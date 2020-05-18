@@ -1,46 +1,16 @@
 #!/usr/bin/env bash
-repoFolder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $repoFolder
 
-koreBuildZip="https://github.com/aspnet/KoreBuild/archive/dev.zip"
-if [ ! -z $KOREBUILD_ZIP ]; then
-    koreBuildZip=$KOREBUILD_ZIP
-fi
+source="${BASH_SOURCE[0]}"
 
-buildFolder=".build"
-buildFile="$buildFolder/KoreBuild.sh"
+# resolve $SOURCE until the file is no longer a symlink
+while [[ -h $source ]]; do
+  scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
+  source="$(readlink "$source")"
 
-if test ! -d $buildFolder; then
-    echo "Downloading KoreBuild from $koreBuildZip"
+  # if $source was a relative symlink, we need to resolve it relative to the path where the
+  # symlink file was located
+  [[ $source != /* ]] && source="$scriptroot/$source"
+done
 
-    tempFolder="/tmp/KoreBuild-$(uuidgen)"
-    mkdir $tempFolder
-
-    localZipFile="$tempFolder/korebuild.zip"
-
-    retries=6
-    until (wget -O $localZipFile $koreBuildZip 2>/dev/null || curl -o $localZipFile --location $koreBuildZip 2>/dev/null)
-    do
-        echo "Failed to download '$koreBuildZip'"
-        if [ "$retries" -le 0 ]; then
-            exit 1
-        fi
-        retries=$((retries - 1))
-        echo "Waiting 10 seconds before retrying. Retries left: $retries"
-        sleep 10s
-    done
-
-    unzip -q -d $tempFolder $localZipFile
-
-    mkdir $buildFolder
-    cp -r $tempFolder/**/build/** $buildFolder
-
-    chmod +x $buildFile
-
-    # Cleanup
-    if test -d $tempFolder; then
-        rm -rf $tempFolder
-    fi
-fi
-
-$buildFile -r $repoFolder "$@"
+scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
+"$scriptroot/eng/common/build.sh" --build --restore $@

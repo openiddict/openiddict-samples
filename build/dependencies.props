@@ -1,9 +1,0 @@
-<Project>
-
-  <PropertyGroup>
-    <AspNetContribOpenIdExtensionsVersion>2.0.0</AspNetContribOpenIdExtensionsVersion>
-    <JsonNetVersion>10.0.2</JsonNetVersion>
-    <OpenIddictVersion>2.0.1</OpenIddictVersion>
-  </PropertyGroup>
-
-</Project>
