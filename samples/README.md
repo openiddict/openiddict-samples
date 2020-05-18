@@ -1,4 +1,4 @@
-# Usuage 
+# Usage 
 
 1. Install .NET Core
 1. Install NodeJS (only some demos require this)
