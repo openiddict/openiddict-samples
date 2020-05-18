@@ -17,8 +17,8 @@ namespace Zirku.Api2
             .AddOAuthIntrospection(options =>
             {
                 options.Authority = new Uri("http://localhost:12345/");
-                options.Audiences.Add("resource-server-2");
-                options.ClientId = "resource-server-2";
+                options.Audiences.Add("resource_server_2");
+                options.ClientId = "resource_server_2";
                 options.ClientSecret = "C744604A-CD05-4092-9CF8-ECB7DC3499A2";
                 options.RequireHttpsMetadata = false;
 
@@ -41,7 +41,7 @@ namespace Zirku.Api2
             // .AddJwtBearer(options =>
             // {
             //     options.Authority = "http://localhost:12345/";
-            //     options.Audience = "resource-server-2";
+            //     options.Audience = "resource_server_2";
             //     options.RequireHttpsMetadata = false;
             //     options.TokenValidationParameters = new TokenValidationParameters
             //     {

@@ -182,11 +182,11 @@ namespace Zirku.Server
                         await manager.CreateAsync(descriptor);
                     }
 
-                    if (await manager.FindByClientIdAsync("resource-server-1") == null)
+                    if (await manager.FindByClientIdAsync("resource_server_1") == null)
                     {
                         var descriptor = new OpenIddictApplicationDescriptor
                         {
-                            ClientId = "resource-server-1",
+                            ClientId = "resource_server_1",
                             ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342",
                             Permissions =
                             {
@@ -197,11 +197,11 @@ namespace Zirku.Server
                         await manager.CreateAsync(descriptor);
                     }
 
-                    if (await manager.FindByClientIdAsync("resource-server-2") == null)
+                    if (await manager.FindByClientIdAsync("resource_server_2") == null)
                     {
                         var descriptor = new OpenIddictApplicationDescriptor
                         {
-                            ClientId = "resource-server-2",
+                            ClientId = "resource_server_2",
                             ClientSecret = "C744604A-CD05-4092-9CF8-ECB7DC3499A2",
                             Permissions =
                             {
@@ -222,7 +222,7 @@ namespace Zirku.Server
                         var descriptor = new OpenIddictScopeDescriptor
                         {
                             Name = "api1",
-                            Resources = { "resource-server-1" }
+                            Resources = { "resource_server_1" }
                         };
 
                         await manager.CreateAsync(descriptor);
@@ -233,7 +233,7 @@ namespace Zirku.Server
                         var descriptor = new OpenIddictScopeDescriptor
                         {
                             Name = "api2",
-                            Resources = { "resource-server-2" }
+                            Resources = { "resource_server_2" }
                         };
 
                         await manager.CreateAsync(descriptor);
