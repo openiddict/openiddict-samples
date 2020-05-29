@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Velusia.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using OpenIddict.Validation;
+using OpenIddict.Validation.AspNetCore;
+using Velusia.Server.Models;
 
 namespace Velusia.Server.Controllers
 {
@@ -13,11 +13,9 @@ namespace Velusia.Server.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
 
         public ResourceController(UserManager<ApplicationUser> userManager)
-        {
-            _userManager = userManager;
-        }
+            => _userManager = userManager;
 
-        [Authorize(AuthenticationSchemes = OpenIddictValidationDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
         [HttpGet("message")]
         public async Task<IActionResult> GetMessage()
         {

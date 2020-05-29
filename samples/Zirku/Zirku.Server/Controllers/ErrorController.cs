@@ -4,9 +4,9 @@
  * the license and the contributors participating to this project.
  */
 
-using Zirku.Server.ViewModels.Shared;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
+using Zirku.Server.ViewModels.Shared;
 
 namespace Zirku.Server.Controllers
 {
@@ -17,7 +17,7 @@ namespace Zirku.Server.Controllers
         {
             // If the error was not caused by an invalid
             // OIDC request, display a generic error page.
-            var response = HttpContext.GetOpenIdConnectResponse();
+            var response = HttpContext.GetOpenIddictServerResponse();
             if (response == null)
             {
                 return View(new ErrorViewModel());

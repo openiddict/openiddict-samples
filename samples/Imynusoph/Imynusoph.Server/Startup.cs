@@ -1,10 +1,10 @@
-﻿using AspNet.Security.OpenIdConnect.Primitives;
-using Imynusoph.Server.Models;
+﻿using Imynusoph.Server.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Imynusoph.Server
 {
@@ -43,9 +43,9 @@ namespace Imynusoph.Server
             // which saves you from doing the mapping in your authorization controller.
             services.Configure<IdentityOptions>(options =>
             {
-                options.ClaimsIdentity.UserNameClaimType = OpenIdConnectConstants.Claims.Name;
-                options.ClaimsIdentity.UserIdClaimType = OpenIdConnectConstants.Claims.Subject;
-                options.ClaimsIdentity.RoleClaimType = OpenIdConnectConstants.Claims.Role;
+                options.ClaimsIdentity.UserNameClaimType = Claims.Name;
+                options.ClaimsIdentity.UserIdClaimType = Claims.Subject;
+                options.ClaimsIdentity.RoleClaimType = Claims.Role;
             });
 
             services.AddOpenIddict()
@@ -62,7 +62,7 @@ namespace Imynusoph.Server
                 .AddServer(options =>
                 {
                     // Enable the token endpoint.
-                    options.EnableTokenEndpoint("/connect/token");
+                    options.SetTokenEndpointUris("/connect/token");
 
                     // Enable the password and the refresh token flows.
                     options.AllowPasswordFlow()
@@ -71,54 +71,25 @@ namespace Imynusoph.Server
                     // Accept anonymous clients (i.e clients that don't send a client_id).
                     options.AcceptAnonymousClients();
 
-                    // During development, you can disable the HTTPS requirement.
-                    options.DisableHttpsRequirement();
+                    // Register the signing and encryption credentials.
+                    options.AddDevelopmentEncryptionCertificate()
+                           .AddDevelopmentSigningCertificate();
 
-                    // Note: to use JWT access tokens instead of the default
-                    // encrypted format, the following lines are required:
-                    //
-                    // options.UseJsonWebTokens();
-                    // options.AddEphemeralSigningKey();
+                    // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
+                    options.UseAspNetCore()
+                           .EnableTokenEndpointPassthrough()
+                           .DisableTransportSecurityRequirement(); // During development, you can disable the HTTPS requirement.
                 })
 
-                // Register the OpenIddict validation handler.
-                // Note: the OpenIddict validation handler is only compatible with the
-                // default token format or with reference tokens and cannot be used with
-                // JWT tokens. For JWT tokens, use the Microsoft JWT bearer handler.
-                .AddValidation();
+                // Register the OpenIddict validation components.
+                .AddValidation(options =>
+                {
+                    // Import the configuration from the local OpenIddict server instance.
+                    options.UseLocalServer();
 
-            // If you prefer using JWT, don't forget to disable the automatic
-            // JWT -> WS-Federation claims mapping used by the JWT middleware:
-            //
-            // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            // JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
-            //
-            // services.AddAuthentication()
-            //     .AddJwtBearer(options =>
-            //     {
-            //         options.Authority = "http://localhost:54895/";
-            //         options.Audience = "resource_server";
-            //         options.RequireHttpsMetadata = false;
-            //         options.TokenValidationParameters = new TokenValidationParameters
-            //         {
-            //             NameClaimType = OpenIdConnectConstants.Claims.Subject,
-            //             RoleClaimType = OpenIdConnectConstants.Claims.Role
-            //         };
-            //     });
-
-            // Alternatively, you can also use the introspection middleware.
-            // Using it is recommended if your resource server is in a
-            // different application/separated from the authorization server.
-            //
-            // services.AddAuthentication()
-            //     .AddOAuthIntrospection(options =>
-            //     {
-            //         options.Authority = new Uri("http://localhost:54895/");
-            //         options.Audiences.Add("resource_server");
-            //         options.ClientId = "resource_server";
-            //         options.ClientSecret = "875sqd4s5d748z78z7ds1ff8zz8814ff88ed8ea4z4zzd";
-            //         options.RequireHttpsMetadata = false;
-            //     });
+                    // Register the ASP.NET Core host.
+                    options.UseAspNetCore();
+                });
         }
 
         public void Configure(IApplicationBuilder app)

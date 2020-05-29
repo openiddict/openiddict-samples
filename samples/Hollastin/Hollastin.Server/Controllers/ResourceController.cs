@@ -3,7 +3,7 @@ using Hollastin.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using OpenIddict.Validation;
+using OpenIddict.Validation.AspNetCore;
 
 namespace Hollastin.Server.Controllers
 {
@@ -17,7 +17,7 @@ namespace Hollastin.Server.Controllers
             _userManager = userManager;
         }
 
-        [Authorize(AuthenticationSchemes = OpenIddictValidationDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
         [HttpGet("message")]
         public async Task<IActionResult> GetMessage()
         {

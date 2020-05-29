@@ -1,22 +1,15 @@
-﻿using System;
-using System.Threading.Tasks;
-using Aridka.Server.Models;
+﻿using Aridka.Server.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OpenIddict.Abstractions;
-using OpenIddict.Core;
-using OpenIddict.EntityFrameworkCore.Models;
 
 namespace Aridka.Server
 {
     public class Startup
     {
         public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+            => Configuration = configuration;
 
         public IConfiguration Configuration { get; }
 
@@ -37,7 +30,7 @@ namespace Aridka.Server
 
             services.AddOpenIddict()
 
-                // Register the OpenIddict core services.
+                // Register the OpenIddict core components.
                 .AddCore(options =>
                 {
                     // Register the Entity Framework stores and models.
@@ -45,63 +38,38 @@ namespace Aridka.Server
                            .UseDbContext<ApplicationDbContext>();
                 })
 
-                // Register the OpenIddict server handler.
+                // Register the OpenIddict server components.
                 .AddServer(options =>
                 {
                     // Enable the token endpoint.
-                    options.EnableTokenEndpoint("/connect/token");
+                    options.SetTokenEndpointUris("/connect/token");
 
                     // Enable the client credentials flow.
                     options.AllowClientCredentialsFlow();
 
-                    // During development, you can disable the HTTPS requirement.
-                    options.DisableHttpsRequirement();
+                    // Register the signing and encryption credentials.
+                    options.AddDevelopmentEncryptionCertificate()
+                           .AddDevelopmentSigningCertificate();
 
-                    // Note: to use JWT access tokens instead of the default
-                    // encrypted format, the following lines are required:
-                    //
-                    // options.UseJsonWebTokens();
-                    // options.AddEphemeralSigningKey();
+                    // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
+                    options.UseAspNetCore()
+                           .EnableTokenEndpointPassthrough()
+                           .DisableTransportSecurityRequirement(); // During development, you can disable the HTTPS requirement.
                 })
 
-                // Register the OpenIddict validation handler.
-                // Note: the OpenIddict validation handler is only compatible with the
-                // default token format or with reference tokens and cannot be used with
-                // JWT tokens. For JWT tokens, use the Microsoft JWT bearer handler.
-                .AddValidation();
+                // Register the OpenIddict validation components.
+                .AddValidation(options =>
+                {
+                    // Import the configuration from the local OpenIddict server instance.
+                    options.UseLocalServer();
 
-            // If you prefer using JWT, don't forget to disable the automatic
-            // JWT -> WS-Federation claims mapping used by the JWT middleware:
-            //
-            // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            // JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
-            //
-            // services.AddAuthentication()
-            //     .AddJwtBearer(options =>
-            //     {
-            //         options.Authority = "http://localhost:52698/";
-            //         options.Audience = "resource_server";
-            //         options.RequireHttpsMetadata = false;
-            //         options.TokenValidationParameters = new TokenValidationParameters
-            //         {
-            //             NameClaimType = OpenIdConnectConstants.Claims.Subject,
-            //             RoleClaimType = OpenIdConnectConstants.Claims.Role
-            //         };
-            //     });
+                    // Register the ASP.NET Core host.
+                    options.UseAspNetCore();
+                });
 
-            // Alternatively, you can also use the introspection middleware.
-            // Using it is recommended if your resource server is in a
-            // different application/separated from the authorization server.
-            //
-            // services.AddAuthentication()
-            //     .AddOAuthIntrospection(options =>
-            //     {
-            //         options.Authority = new Uri("http://localhost:52698/");
-            //         options.Audiences.Add("resource_server");
-            //         options.ClientId = "resource_server";
-            //         options.ClientSecret = "875sqd4s5d748z78z7ds1ff8zz8814ff88ed8ea4z4zzd";
-            //         options.RequireHttpsMetadata = false;
-            //     });
+            // Register the worker responsible of seeding the database with the sample clients.
+            // Note: in a real world application, this step should be part of a setup script.
+            services.AddHostedService<Worker>();
         }
 
         public void Configure(IApplicationBuilder app)
@@ -120,39 +88,6 @@ namespace Aridka.Server
             });
 
             app.UseWelcomePage();
-
-            // Seed the database with the sample application.
-            // Note: in a real world application, this step should be part of a setup script.
-            InitializeAsync(app.ApplicationServices).GetAwaiter().GetResult();
-        }
-
-        private async Task InitializeAsync(IServiceProvider services)
-        {
-            // Create a new service scope to ensure the database context is correctly disposed when this methods returns.
-            using (var scope = services.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                await context.Database.EnsureCreatedAsync();
-
-                var manager = scope.ServiceProvider.GetRequiredService<OpenIddictApplicationManager<OpenIddictApplication>>();
-
-                if (await manager.FindByClientIdAsync("console") == null)
-                {
-                    var descriptor = new OpenIddictApplicationDescriptor
-                    {
-                        ClientId = "console",
-                        ClientSecret = "388D45FA-B36B-4988-BA59-B187D329C207",
-                        DisplayName = "My client application",
-                        Permissions =
-                        {
-                            OpenIddictConstants.Permissions.Endpoints.Token,
-                            OpenIddictConstants.Permissions.GrantTypes.ClientCredentials
-                        }
-                    };
-
-                    await manager.CreateAsync(descriptor);
-                }
-            }
         }
     }
 }
