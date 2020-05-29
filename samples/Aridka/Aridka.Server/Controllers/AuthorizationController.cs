@@ -7,36 +7,34 @@
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AspNet.Security.OpenIdConnect.Extensions;
-using AspNet.Security.OpenIdConnect.Primitives;
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using OpenIddict.Abstractions;
 using OpenIddict.Core;
 using OpenIddict.EntityFrameworkCore.Models;
-using OpenIddict.Server;
+using OpenIddict.Server.AspNetCore;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Aridka.Server.Controllers
 {
     public class AuthorizationController : Controller
     {
-        private readonly OpenIddictApplicationManager<OpenIddictApplication> _applicationManager;
+        private readonly OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> _applicationManager;
 
-        public AuthorizationController(OpenIddictApplicationManager<OpenIddictApplication> applicationManager)
-        {
-            _applicationManager = applicationManager;
-        }
+        public AuthorizationController(OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> applicationManager)
+            => _applicationManager = applicationManager;
 
         [HttpPost("~/connect/token"), Produces("application/json")]
         public async Task<IActionResult> Exchange()
         {
-            var request = HttpContext.GetOpenIdConnectRequest();
+            var request = HttpContext.GetOpenIddictServerRequest();
             if (request.IsClientCredentialsGrantType())
             {
                 // Note: the client credentials are automatically validated by OpenIddict:
                 // if client_id or client_secret are invalid, this action won't be invoked.
 
-                var application = await _applicationManager.FindByClientIdAsync(request.ClientId, HttpContext.RequestAborted);
+                var application = await _applicationManager.FindByClientIdAsync(request.ClientId);
                 if (application == null)
                 {
                     throw new InvalidOperationException("The application details cannot be found in the database.");
@@ -45,28 +43,17 @@ namespace Aridka.Server.Controllers
                 // Create a new ClaimsIdentity containing the claims that
                 // will be used to create an id_token, a token or a code.
                 var identity = new ClaimsIdentity(
-                    OpenIddictServerDefaults.AuthenticationScheme,
-                    OpenIdConnectConstants.Claims.Name,
-                    OpenIdConnectConstants.Claims.Role);
+                    TokenValidationParameters.DefaultAuthenticationType,
+                    Claims.Name, Claims.Role);
 
                 // Use the client_id as the subject identifier.
-                identity.AddClaim(OpenIdConnectConstants.Claims.Subject, application.ClientId,
-                    OpenIdConnectConstants.Destinations.AccessToken,
-                    OpenIdConnectConstants.Destinations.IdentityToken);
+                identity.AddClaim(Claims.Subject, await _applicationManager.GetClientIdAsync(application),
+                    Destinations.AccessToken, Destinations.IdentityToken);
 
-                identity.AddClaim(OpenIdConnectConstants.Claims.Name, application.DisplayName,
-                    OpenIdConnectConstants.Destinations.AccessToken,
-                    OpenIdConnectConstants.Destinations.IdentityToken);
+                identity.AddClaim(Claims.Name, await _applicationManager.GetDisplayNameAsync(application),
+                    Destinations.AccessToken, Destinations.IdentityToken);
 
-                // Create a new authentication ticket holding the user identity.
-                var ticket = new AuthenticationTicket(
-                    new ClaimsPrincipal(identity),
-                    new AuthenticationProperties(),
-                    OpenIddictServerDefaults.AuthenticationScheme);
-
-                ticket.SetResources("resource_server");
-
-                return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
+                return SignIn(new ClaimsPrincipal(identity), OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }
 
             throw new NotImplementedException("The specified grant type is not implemented.");

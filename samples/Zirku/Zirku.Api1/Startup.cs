@@ -1,7 +1,6 @@
-using System;
-using AspNet.Security.OAuth.Introspection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using OpenIddict.Validation.AspNetCore;
 
 namespace Zirku.Api1
 {
@@ -11,44 +10,30 @@ namespace Zirku.Api1
         {
             services.AddAuthentication(options =>
             {
-                options.DefaultScheme = OAuthIntrospectionDefaults.AuthenticationScheme;
-            })
-
-            .AddOAuthIntrospection(options =>
-            {
-                options.Authority = new Uri("http://localhost:12345/");
-                options.Audiences.Add("resource_server_1");
-                options.ClientId = "resource_server_1";
-                options.ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342";
-                options.RequireHttpsMetadata = false;
-
-                // Note: you can override the default name and role claims:
-                // options.NameClaimType = "custom_name_claim";
-                // options.RoleClaimType = "custom_role_claim";
+                options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
             });
 
-            // If you prefer using JWT, don't forget to disable the automatic
-            // JWT -> WS-Federation claims mapping used by the JWT middleware:
-            //
-            // JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            // JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
-            //
-            // services.AddAuthentication(options =>
-            // {
-            //     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            // })
-            //
-            // .AddJwtBearer(options =>
-            // {
-            //     options.Authority = "http://localhost:12345/";
-            //     options.Audience = "resource_server_1";
-            //     options.RequireHttpsMetadata = false;
-            //     options.TokenValidationParameters = new TokenValidationParameters
-            //     {
-            //         NameClaimType = OpenIdConnectConstants.Claims.Subject,
-            //         RoleClaimType = OpenIdConnectConstants.Claims.Role
-            //     };
-            // });
+            // Register the OpenIddict validation components.
+            services.AddOpenIddict()
+                .AddValidation(options =>
+                {
+                    // Note: the validation handler uses OpenID Connect discovery
+                    // to retrieve the address of the introspection endpoint.
+                    options.SetIssuer("http://localhost:12345/");
+                    options.AddAudiences("resource_server_1");
+
+                    // Configure the validation handler to use introspection and register the client
+                    // credentials used when communicating with the remote introspection endpoint.
+                    options.UseIntrospection()
+                           .SetClientId("resource_server_1")
+                           .SetClientSecret("846B62D0-DEF9-4215-A99D-86E6B8DAB342");
+
+                    // Register the System.Net.Http integration.
+                    options.UseSystemNetHttp();
+
+                    // Register the ASP.NET Core host.
+                    options.UseAspNetCore();
+                });
 
             services.AddControllersWithViews();
         }

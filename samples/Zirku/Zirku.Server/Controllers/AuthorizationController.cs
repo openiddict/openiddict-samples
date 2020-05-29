@@ -4,33 +4,34 @@
  * the license and the contributors participating to this project.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AspNet.Security.OpenIdConnect.Extensions;
-using AspNet.Security.OpenIdConnect.Primitives;
-using Zirku.Server.Models;
-using Zirku.Server.ViewModels.Shared;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using OpenIddict.Abstractions;
 using OpenIddict.Core;
 using OpenIddict.EntityFrameworkCore.Models;
-using OpenIddict.Server;
+using OpenIddict.Server.AspNetCore;
+using Zirku.Server.Models;
+using Zirku.Server.ViewModels.Shared;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Zirku.Server.Controllers
 {
     public class AuthorizationController : Controller
     {
-        private readonly OpenIddictScopeManager<OpenIddictScope> _scopeManager;
+        private readonly OpenIddictScopeManager<OpenIddictEntityFrameworkCoreScope> _scopeManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public AuthorizationController(
-            OpenIddictScopeManager<OpenIddictScope> scopeManager,
+            OpenIddictScopeManager<OpenIddictEntityFrameworkCoreScope> scopeManager,
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager)
         {
@@ -42,60 +43,50 @@ namespace Zirku.Server.Controllers
         [HttpGet("~/connect/authorize")]
         public async Task<IActionResult> Authorize()
         {
-            var request = HttpContext.GetOpenIdConnectRequest();
+            var request = HttpContext.GetOpenIddictServerRequest() ??
+                throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
             if (!User.Identity.IsAuthenticated)
             {
                 // If the client application request promptless authentication,
                 // return an error indicating that the user is not logged in.
-                if (request.HasPrompt(OpenIdConnectConstants.Prompts.None))
+                if (request.HasPrompt(Prompts.None))
                 {
                     var properties = new AuthenticationProperties(new Dictionary<string, string>
                     {
-                        [OpenIdConnectConstants.Properties.Error] = OpenIdConnectConstants.Errors.LoginRequired,
-                        [OpenIdConnectConstants.Properties.ErrorDescription] = "The user is not logged in."
+                        [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.LoginRequired,
+                        [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
+                            "The user is not logged in."
                     });
 
                     // Ask OpenIddict to return a login_required error to the client application.
-                    return Forbid(properties, OpenIddictServerDefaults.AuthenticationScheme);
+                    return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
                 }
 
                 return Challenge();
             }
 
             // Retrieve the profile of the logged in user.
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return View("Error", new ErrorViewModel
-                {
-                    Error = OpenIdConnectConstants.Errors.ServerError,
-                    ErrorDescription = "An internal error has occurred"
-                });
-            }
+            var user = await _userManager.GetUserAsync(User) ??
+                throw new InvalidOperationException("The user details cannot be retrieved.");
 
             // Create a new ClaimsPrincipal containing the claims that
             // will be used to create an id_token, a token or a code.
             var principal = await _signInManager.CreateUserPrincipalAsync(user);
 
-            // Create a new authentication ticket holding the user identity.
-            var ticket = new AuthenticationTicket(principal,
-                new AuthenticationProperties(),
-                OpenIddictServerDefaults.AuthenticationScheme);
-
             // Set the list of scopes granted to the client application.
-            var scopes = request.GetScopes().ToImmutableArray();
+            var scopes = request.GetScopes();
 
-            ticket.SetScopes(scopes);
-            ticket.SetResources(await _scopeManager.ListResourcesAsync(scopes));
+            principal.SetScopes(request.GetScopes());
+            principal.SetResources(await _scopeManager.ListResourcesAsync(scopes).ToListAsync());
 
-            foreach (var claim in ticket.Principal.Claims)
+            foreach (var claim in principal.Claims)
             {
-                claim.SetDestinations(GetDestinations(claim, ticket));
+                claim.SetDestinations(GetDestinations(claim, principal));
             }
 
             // Returning a SignInResult will ask OpenIddict to issue the appropriate access/identity tokens.
-            return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
+            return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
 
         [HttpGet("~/connect/logout")]
@@ -108,10 +99,10 @@ namespace Zirku.Server.Controllers
 
             // Returning a SignOutResult will ask OpenIddict to redirect the user agent
             // to the post_logout_redirect_uri specified by the client application.
-            return SignOut(OpenIddictServerDefaults.AuthenticationScheme);
+            return SignOut(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
 
-        private IEnumerable<string> GetDestinations(Claim claim, AuthenticationTicket ticket)
+        private IEnumerable<string> GetDestinations(Claim claim, ClaimsPrincipal principal)
         {
             // Note: by default, claims are NOT automatically included in the access and identity tokens.
             // To allow OpenIddict to serialize them, you must attach them a destination, that specifies
@@ -119,27 +110,27 @@ namespace Zirku.Server.Controllers
 
             switch (claim.Type)
             {
-                case OpenIdConnectConstants.Claims.Name:
-                    yield return OpenIdConnectConstants.Destinations.AccessToken;
+                case Claims.Name:
+                    yield return Destinations.AccessToken;
 
-                    if (ticket.HasScope(OpenIdConnectConstants.Scopes.Profile))
-                        yield return OpenIdConnectConstants.Destinations.IdentityToken;
-
-                    yield break;
-
-                case OpenIdConnectConstants.Claims.Email:
-                    yield return OpenIdConnectConstants.Destinations.AccessToken;
-
-                    if (ticket.HasScope(OpenIdConnectConstants.Scopes.Email))
-                        yield return OpenIdConnectConstants.Destinations.IdentityToken;
+                    if (principal.HasScope(Scopes.Profile))
+                        yield return Destinations.IdentityToken;
 
                     yield break;
 
-                case OpenIdConnectConstants.Claims.Role:
-                    yield return OpenIdConnectConstants.Destinations.AccessToken;
+                case Claims.Email:
+                    yield return Destinations.AccessToken;
 
-                    if (ticket.HasScope(OpenIddictConstants.Scopes.Roles))
-                        yield return OpenIdConnectConstants.Destinations.IdentityToken;
+                    if (principal.HasScope(Scopes.Email))
+                        yield return Destinations.IdentityToken;
+
+                    yield break;
+
+                case Claims.Role:
+                    yield return Destinations.AccessToken;
+
+                    if (principal.HasScope(Scopes.Roles))
+                        yield return Destinations.IdentityToken;
 
                     yield break;
 
@@ -147,7 +138,7 @@ namespace Zirku.Server.Controllers
                 case "AspNet.Identity.SecurityStamp": yield break;
 
                 default:
-                    yield return OpenIdConnectConstants.Destinations.AccessToken;
+                    yield return Destinations.AccessToken;
                     yield break;
             }
         }

@@ -1,11 +1,10 @@
 <Project>
 
   <PropertyGroup>
-    <AspNetContribOpenIdExtensionsVersion>2.0.0</AspNetContribOpenIdExtensionsVersion>
     <AspNetCoreVersion>3.1.0</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>3.1.0</EntityFrameworkCoreVersion>
     <JsonNetVersion>10.0.2</JsonNetVersion>
-    <OpenIddictVersion>2.0.1</OpenIddictVersion>
+    <OpenIddictVersion>3.0.0-beta1.20278.69</OpenIddictVersion>
   </PropertyGroup>
 
 </Project>

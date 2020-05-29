@@ -9,15 +9,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AspNet.Security.OpenIdConnect.Extensions;
-using AspNet.Security.OpenIdConnect.Primitives;
 using Hollastin.Server.Models;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using OpenIddict.Abstractions;
-using OpenIddict.Server;
+using OpenIddict.Server.AspNetCore;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Hollastin.Server.Controllers
 {
@@ -37,7 +36,7 @@ namespace Hollastin.Server.Controllers
         [HttpPost("~/connect/token"), Produces("application/json")]
         public async Task<IActionResult> Exchange()
         {
-            var request = HttpContext.GetOpenIdConnectRequest();
+            var request = HttpContext.GetOpenIddictServerRequest();
             if (request.IsPasswordGrantType())
             {
                 var user = await _userManager.FindByNameAsync(request.Username);
@@ -45,11 +44,12 @@ namespace Hollastin.Server.Controllers
                 {
                     var properties = new AuthenticationProperties(new Dictionary<string, string>
                     {
-                        [OpenIdConnectConstants.Properties.Error] = OpenIdConnectConstants.Errors.InvalidGrant,
-                        [OpenIdConnectConstants.Properties.ErrorDescription] = "The username/password couple is invalid."
+                        [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
+                        [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
+                            "The username/password couple is invalid."
                     });
 
-                    return Forbid(properties, OpenIddictServerDefaults.AuthenticationScheme);
+                    return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
                 }
 
                 // Validate the username/password parameters and ensure the account is not locked out.
@@ -58,45 +58,39 @@ namespace Hollastin.Server.Controllers
                 {
                     var properties = new AuthenticationProperties(new Dictionary<string, string>
                     {
-                        [OpenIdConnectConstants.Properties.Error] = OpenIdConnectConstants.Errors.InvalidGrant,
-                        [OpenIdConnectConstants.Properties.ErrorDescription] = "The username/password couple is invalid."
+                        [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
+                        [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
+                            "The username/password couple is invalid."
                     });
 
-                    return Forbid(properties, OpenIddictServerDefaults.AuthenticationScheme);
+                    return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
                 }
 
                 // Create a new ClaimsPrincipal containing the claims that
                 // will be used to create an id_token, a token or a code.
                 var principal = await _signInManager.CreateUserPrincipalAsync(user);
 
-                // Create a new authentication ticket holding the user identity.
-                var ticket = new AuthenticationTicket(principal,
-                    new AuthenticationProperties(),
-                    OpenIddictServerDefaults.AuthenticationScheme);
-
                 // Set the list of scopes granted to the client application.
-                ticket.SetScopes(new[]
+                principal.SetScopes(new[]
                 {
-                    OpenIdConnectConstants.Scopes.OpenId,
-                    OpenIdConnectConstants.Scopes.Email,
-                    OpenIdConnectConstants.Scopes.Profile,
-                    OpenIddictConstants.Scopes.Roles
+                    Scopes.OpenId,
+                    Scopes.Email,
+                    Scopes.Profile,
+                    Scopes.Roles
                 }.Intersect(request.GetScopes()));
 
-                ticket.SetResources("resource_server");
-
-                foreach (var claim in ticket.Principal.Claims)
+                foreach (var claim in principal.Claims)
                 {
-                    claim.SetDestinations(GetDestinations(claim, ticket));
+                    claim.SetDestinations(GetDestinations(claim, principal));
                 }
 
-                return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
+                return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }
 
             throw new NotImplementedException("The specified grant type is not implemented.");
         }
 
-        private IEnumerable<string> GetDestinations(Claim claim, AuthenticationTicket ticket)
+        private IEnumerable<string> GetDestinations(Claim claim, ClaimsPrincipal principal)
         {
             // Note: by default, claims are NOT automatically included in the access and identity tokens.
             // To allow OpenIddict to serialize them, you must attach them a destination, that specifies
@@ -104,27 +98,27 @@ namespace Hollastin.Server.Controllers
 
             switch (claim.Type)
             {
-                case OpenIdConnectConstants.Claims.Name:
-                    yield return OpenIdConnectConstants.Destinations.AccessToken;
+                case Claims.Name:
+                    yield return Destinations.AccessToken;
 
-                    if (ticket.HasScope(OpenIdConnectConstants.Scopes.Profile))
-                        yield return OpenIdConnectConstants.Destinations.IdentityToken;
-
-                    yield break;
-
-                case OpenIdConnectConstants.Claims.Email:
-                    yield return OpenIdConnectConstants.Destinations.AccessToken;
-
-                    if (ticket.HasScope(OpenIdConnectConstants.Scopes.Email))
-                        yield return OpenIdConnectConstants.Destinations.IdentityToken;
+                    if (principal.HasScope(Scopes.Profile))
+                        yield return Destinations.IdentityToken;
 
                     yield break;
 
-                case OpenIdConnectConstants.Claims.Role:
-                    yield return OpenIdConnectConstants.Destinations.AccessToken;
+                case Claims.Email:
+                    yield return Destinations.AccessToken;
 
-                    if (ticket.HasScope(OpenIddictConstants.Scopes.Roles))
-                        yield return OpenIdConnectConstants.Destinations.IdentityToken;
+                    if (principal.HasScope(Scopes.Email))
+                        yield return Destinations.IdentityToken;
+
+                    yield break;
+
+                case Claims.Role:
+                    yield return Destinations.AccessToken;
+
+                    if (principal.HasScope(Scopes.Roles))
+                        yield return Destinations.IdentityToken;
 
                     yield break;
 
@@ -132,7 +126,7 @@ namespace Hollastin.Server.Controllers
                 case "AspNet.Identity.SecurityStamp": yield break;
 
                 default:
-                    yield return OpenIdConnectConstants.Destinations.AccessToken;
+                    yield return Destinations.AccessToken;
                     yield break;
             }
         }

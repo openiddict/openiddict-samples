@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNet.Security.OAuth.Introspection" Version="$(AspNetContribOpenIdExtensionsVersion)" />
+    <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="$(OpenIddictVersion)" />
+    <PackageReference Include="OpenIddict.Validation.SystemNetHttp" Version="$(OpenIddictVersion)" />
   </ItemGroup>
 
 </Project>

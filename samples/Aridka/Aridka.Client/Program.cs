@@ -10,9 +10,7 @@ namespace Aridka.Client
 {
     public class Program
     {
-        public static void Main(string[] args) => MainAsync(args).GetAwaiter().GetResult();
-
-        public static async Task MainAsync(string[] args)
+        public static async Task Main(string[] args)
         {
             var client = new HttpClient();
 
@@ -31,7 +29,7 @@ namespace Aridka.Client
                 var builder = new StringBuilder();
                 builder.AppendLine("+++++++++++++++++++++");
                 builder.AppendLine(exception.Message);
-                builder.AppendLine(exception.InnerException.Message);
+                builder.AppendLine(exception.InnerException?.Message);
                 builder.AppendLine("Make sure you started the authorization server.");
                 builder.AppendLine("+++++++++++++++++++++");
                 Console.WriteLine(builder.ToString());

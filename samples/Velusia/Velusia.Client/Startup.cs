@@ -59,7 +59,7 @@ namespace Velusia.Client
 
             services.AddControllersWithViews();
 
-            services.AddSingleton<HttpClient>();
+            services.AddHttpClient();
         }
 
         public void Configure(IApplicationBuilder app)

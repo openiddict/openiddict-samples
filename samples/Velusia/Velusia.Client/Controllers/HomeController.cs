@@ -7,38 +7,36 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Velusia.Client.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly HttpClient _client;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public HomeController(HttpClient client)
-        {
-            _client = client;
-        }
+        public HomeController(IHttpClientFactory httpClientFactory)
+            => _httpClientFactory = httpClientFactory;
 
         [HttpGet("~/")]
-        public ActionResult Index()
-        {
-            return View("Home");
-        }
+        public ActionResult Index() => View("Home");
 
         [Authorize, HttpPost("~/")]
         public async Task<ActionResult> Index(CancellationToken cancellationToken)
         {
-            var token = await HttpContext.GetTokenAsync(CookieAuthenticationDefaults.AuthenticationScheme, "access_token");
+            var token = await HttpContext.GetTokenAsync(CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectParameterNames.AccessToken);
             if (string.IsNullOrEmpty(token))
             {
                 throw new InvalidOperationException("The access token cannot be found in the authentication ticket. " +
                                                     "Make sure that SaveTokens is set to true in the OIDC options.");
             }
 
-            var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:54540/api/message");
+            using var client = _httpClientFactory.CreateClient();
+
+            using var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:54540/api/message");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var response = await _client.SendAsync(request, cancellationToken);
+            using var response = await client.SendAsync(request, cancellationToken);
             response.EnsureSuccessStatusCode();
 
             return View("Home", model: await response.Content.ReadAsStringAsync());
