@@ -4,7 +4,7 @@
     <AspNetCoreVersion>3.1.0</AspNetCoreVersion>
     <EntityFrameworkCoreVersion>3.1.0</EntityFrameworkCoreVersion>
     <JsonNetVersion>10.0.2</JsonNetVersion>
-    <OpenIddictVersion>3.0.0-beta1.20304.64</OpenIddictVersion>
+    <OpenIddictVersion>3.0.0-beta1.20311.67</OpenIddictVersion>
   </PropertyGroup>
 
 </Project>
