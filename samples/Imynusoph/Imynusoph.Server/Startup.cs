@@ -50,15 +50,16 @@ namespace Imynusoph.Server
 
             services.AddOpenIddict()
 
-                // Register the OpenIddict core services.
+                // Register the OpenIddict core components.
                 .AddCore(options =>
                 {
-                    // Register the Entity Framework stores and models.
+                    // Configure OpenIddict to use the Entity Framework Core stores and models.
+                    // Note: call ReplaceDefaultEntities() to replace the default OpenIddict entities.
                     options.UseEntityFrameworkCore()
                            .UseDbContext<ApplicationDbContext>();
                 })
 
-                // Register the OpenIddict server handler.
+                // Register the OpenIddict server components.
                 .AddServer(options =>
                 {
                     // Enable the token endpoint.
