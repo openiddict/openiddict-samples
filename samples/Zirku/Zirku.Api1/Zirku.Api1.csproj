@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="$(OpenIddictVersion)" />
-    <PackageReference Include="OpenIddict.Validation.SystemNetHttp" Version="$(OpenIddictVersion)" />
+    <PackageReference Include="OpenIddict.Validation.AspNetCore" />
+    <PackageReference Include="OpenIddict.Validation.SystemNetHttp" />
   </ItemGroup>
 
 </Project>

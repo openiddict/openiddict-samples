@@ -1,0 +1,15 @@
+<Project>
+
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
+    <PackageVersion Include="Newtonsoft.Json" Version="10.0.2" />
+    <PackageVersion Include="OpenIddict.AspNetCore" Version="3.0.0-beta1.20311.75" />
+    <PackageVersion Include="OpenIddict" Version="3.0.0-beta1.20311.75" />
+    <PackageVersion Include="OpenIddict.EntityFrameworkCore" Version="3.0.0-beta1.20311.75" />
+    <PackageVersion Include="OpenIddict.Validation.AspNetCore" Version="3.0.0-beta1.20311.75" />
+    <PackageVersion Include="OpenIddict.Validation.SystemNetHttp" Version="3.0.0-beta1.20311.75" />
+  </ItemGroup>
+
+</Project>
