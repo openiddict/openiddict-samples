@@ -31,29 +31,11 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
 
-    - name: Build, test and pack
+    - name: Build
       run: eng\common\CIBuild.cmd -configuration Release -prepareMachine -integrationTest
       if: ${{ runner.os == 'Windows' }}
 
-    - name: Build, test and pack
+    - name: Build
       shell: pwsh
       run: ./eng/common/cibuild.sh -configuration Release -prepareMachine -integrationTest
       if: ${{ runner.os != 'Windows' }}
-
-    - name: Publish logs
-      uses: actions/upload-artifact@v1
-      with:
-        name: logs-${{ matrix.os_name }}
-        path: ./artifacts/log/Release
-
-    - name: Publish NuGet packages
-      uses: actions/upload-artifact@v1
-      with:
-        name: packages-${{ matrix.os_name }}
-        path: ./artifacts/packages/Release/Shipping
-
-    - name: Publish test results
-      uses: actions/upload-artifact@v1
-      with:
-        name: testresults-${{ matrix.os_name }}
-        path: ./artifacts/TestResults/Release
