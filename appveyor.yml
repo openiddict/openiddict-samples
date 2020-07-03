@@ -1,7 +1,0 @@
-version: '{build}'
-image: Visual Studio 2017
-
-build_script:
-- cmd: eng\common\cibuild.cmd -configuration Release -prepareMachine -integrationTest
-
-test: off
