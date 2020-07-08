@@ -6,8 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
@@ -18,8 +16,8 @@ using OpenIddict.Abstractions;
 using OpenIddict.Core;
 using OpenIddict.EntityFrameworkCore.Models;
 using OpenIddict.Server.AspNetCore;
+using Zirku.Server.Helpers;
 using Zirku.Server.Models;
-using Zirku.Server.ViewModels.Shared;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Zirku.Server.Controllers
