@@ -1,16 +1,12 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Linq;
+using OpenIddict.Validation.AspNetCore;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 using Balosar.Server.Data;
 using Balosar.Server.Models;
 
@@ -30,20 +26,98 @@ namespace Balosar.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            {
+                // Configure the context to use Microsoft SQL Server.
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+
+                // Register the entity sets needed by OpenIddict.
+                // Note: use the generic overload if you need
+                // to replace the default OpenIddict entities.
+                options.UseOpenIddict();
+            });
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
-            services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+            // Configure Identity to use the same JWT claims as OpenIddict instead
+            // of the legacy WS-Federation claims it uses by default (ClaimTypes),
+            // which saves you from doing the mapping in your authorization controller.
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.ClaimsIdentity.UserNameClaimType = Claims.Name;
+                options.ClaimsIdentity.UserIdClaimType = Claims.Subject;
+                options.ClaimsIdentity.RoleClaimType = Claims.Role;
+            });
 
-            services.AddAuthentication()
-                .AddIdentityServerJwt();
+            // Replaces the default schemes to make default [Authorize] attribute work with Tokens.
+            // Alternatively you can use [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
+            // in your api methods.
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+                opt.DefaultForbidScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+            });
+
+            services.AddOpenIddict()
+
+                // Register the OpenIddict core components.
+                .AddCore(options =>
+                 {
+                     // Configure OpenIddict to use the Entity Framework Core stores and models.
+                     // Note: call ReplaceDefaultEntities() to replace the default OpenIddict entities.
+                     options.UseEntityFrameworkCore()
+                            .UseDbContext<ApplicationDbContext>();
+                 })
+
+                // Register the OpenIddict server components.
+                .AddServer(options =>
+                {
+                    options.SetAuthorizationEndpointUris("/connect/authorize");
+                    options.SetLogoutEndpointUris("/connect/logout");
+                    options.SetTokenEndpointUris("/connect/token");
+                    options.SetUserinfoEndpointUris("/connect/userinfo");
+
+                    // Mark the "email", "profile" and "roles" scopes as supported scopes.
+                    options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
+
+                    // Note: the sample uses authorization code flow but you can enable
+                    // the other flows if you need to support implicit, password or client credentials.                    
+                    options.AllowAuthorizationCodeFlow();
+                    options.AllowRefreshTokenFlow();
+
+                    // Register the signing and encryption credentials.
+                    options.AddDevelopmentEncryptionCertificate()
+                           .AddDevelopmentSigningCertificate();
+
+                    // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
+                    options.UseAspNetCore()
+                        .EnableAuthorizationEndpointPassthrough()
+                        .EnableLogoutEndpointPassthrough()
+                        .EnableStatusCodePagesIntegration()
+                        .EnableTokenEndpointPassthrough()
+                        .DisableTransportSecurityRequirement(); // During development, you can disable the HTTPS requirement.
+
+                })
+
+                // Register the OpenIddict validation components.
+                .AddValidation(options =>
+                {
+                    // Import the configuration from the local OpenIddict server instance.
+                    options.UseLocalServer();
+
+                    // Register the ASP.NET Core host.
+                    options.UseAspNetCore();
+                });
+
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            // Register the worker responsible of seeding the database with the sample clients.
+            // Note: in a real world application, this step should be part of a setup script.
+            services.AddHostedService<Worker>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,7 +142,6 @@ namespace Balosar.Server
 
             app.UseRouting();
 
-            app.UseIdentityServer();
             app.UseAuthentication();
             app.UseAuthorization();
 
