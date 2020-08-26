@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 
 namespace Aridka.Client
 {
@@ -49,13 +49,15 @@ namespace Aridka.Client
             var response = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead);
             response.EnsureSuccessStatusCode();
 
-            var payload = JObject.Parse(await response.Content.ReadAsStringAsync());
-            if (payload["error"] != null)
+
+            using var document = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+            var root = document.RootElement;
+            if (root.TryGetProperty("error", out var error) && error.GetString() != null)
             {
                 throw new InvalidOperationException("An error occurred while retrieving an access token.");
             }
 
-            return (string) payload["access_token"];
+            return root.GetProperty("access_token").GetString();
         }
 
         public static async Task<string> GetResourceAsync(HttpClient client, string token)
