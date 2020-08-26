@@ -96,9 +96,7 @@ namespace Balosar.Server
                         .EnableAuthorizationEndpointPassthrough()
                         .EnableLogoutEndpointPassthrough()
                         .EnableStatusCodePagesIntegration()
-                        .EnableTokenEndpointPassthrough()
-                        .DisableTransportSecurityRequirement(); // During development, you can disable the HTTPS requirement.
-
+                        .EnableTokenEndpointPassthrough();
                 })
 
                 // Register the OpenIddict validation components.
