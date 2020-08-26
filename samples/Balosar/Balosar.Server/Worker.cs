@@ -39,12 +39,10 @@ namespace Balosar.Server
                     Type = ClientTypes.Public,
                     PostLogoutRedirectUris =
                     {
-                        new Uri("http://localhost:51818/authentication/logout-callback"),
                         new Uri("https://localhost:44310/authentication/logout-callback")
                     },
                     RedirectUris =
                     {
-                        new Uri("http://localhost:51818/authentication/login-callback"),
                         new Uri("https://localhost:44310/authentication/login-callback")
                     },
                     Permissions =
@@ -67,9 +65,7 @@ namespace Balosar.Server
 
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+        
     }
 }
