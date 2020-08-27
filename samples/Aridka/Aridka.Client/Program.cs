@@ -1,10 +1,12 @@
-﻿using System;
+﻿using OpenIddict.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
+
 
 namespace Aridka.Client
 {
@@ -47,17 +49,15 @@ namespace Aridka.Client
             });
 
             var response = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead);
-            response.EnsureSuccessStatusCode();
 
+            var payload = await response.Content.ReadFromJsonAsync<OpenIddictResponse>();
 
-            using var document = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-            var root = document.RootElement;
-            if (root.TryGetProperty("error", out var error) && error.GetString() != null)
+            if (!string.IsNullOrEmpty(payload.Error))
             {
                 throw new InvalidOperationException("An error occurred while retrieving an access token.");
             }
 
-            return root.GetProperty("access_token").GetString();
+            return payload.AccessToken;
         }
 
         public static async Task<string> GetResourceAsync(HttpClient client, string token)
