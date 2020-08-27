@@ -4,9 +4,9 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Hollastin.Client
 {
@@ -34,7 +34,7 @@ namespace Hollastin.Client
         {
             var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58795/Account/Register")
             {
-                Content = new StringContent(JsonConvert.SerializeObject(new { email, password }), Encoding.UTF8, "application/json")
+                Content = new StringContent(JsonSerializer.Serialize(new { email, password }), Encoding.UTF8, "application/json")
             };
 
             // Ignore 409 responses, as they indicate that the account already exists.
@@ -60,13 +60,14 @@ namespace Hollastin.Client
             var response = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead);
             response.EnsureSuccessStatusCode();
 
-            var payload = JObject.Parse(await response.Content.ReadAsStringAsync());
-            if (payload["error"] != null)
+            using var document = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+            var root = document.RootElement;
+            if (root.TryGetProperty("error", out var error) && error.GetString() != null)
             {
                 throw new InvalidOperationException("An error occurred while retrieving an access token.");
             }
 
-            return (string) payload["access_token"];
+            return root.GetProperty("access_token").GetString();
         }
 
         public static async Task<string> GetResourceAsync(HttpClient client, string token)
