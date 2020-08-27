@@ -5,8 +5,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
+using OpenIddict.Abstractions;
 
 namespace Hollastin.Client
 {
@@ -32,13 +33,9 @@ namespace Hollastin.Client
 
         public static async Task CreateAccountAsync(HttpClient client, string email, string password)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58795/Account/Register")
-            {
-                Content = new StringContent(JsonSerializer.Serialize(new { email, password }), Encoding.UTF8, "application/json")
-            };
+            var response = await client.PostAsJsonAsync("http://localhost:58795/Account/Register", new { email, password });
 
             // Ignore 409 responses, as they indicate that the account already exists.
-            var response = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead);
             if (response.StatusCode == HttpStatusCode.Conflict)
             {
                 return;
@@ -58,16 +55,15 @@ namespace Hollastin.Client
             });
 
             var response = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead);
-            response.EnsureSuccessStatusCode();
 
-            using var document = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-            var root = document.RootElement;
-            if (root.TryGetProperty("error", out var error) && error.GetString() != null)
+            var payload = await response.Content.ReadFromJsonAsync<OpenIddictResponse>();
+
+            if (!string.IsNullOrEmpty(payload.Error))
             {
                 throw new InvalidOperationException("An error occurred while retrieving an access token.");
             }
 
-            return root.GetProperty("access_token").GetString();
+            return payload.AccessToken;
         }
 
         public static async Task<string> GetResourceAsync(HttpClient client, string token)
