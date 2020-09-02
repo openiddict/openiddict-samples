@@ -1,5 +1,7 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
 
 namespace Zirku.Api2
@@ -22,11 +24,14 @@ namespace Zirku.Api2
                     options.SetIssuer("http://localhost:12345/");
                     options.AddAudiences("resource_server_2");
 
-                    // Configure the validation handler to use introspection and register the client
-                    // credentials used when communicating with the remote introspection endpoint.
-                    options.UseIntrospection()
-                           .SetClientId("resource_server_2")
-                           .SetClientSecret("C744604A-CD05-4092-9CF8-ECB7DC3499A2");
+                    // Register the encryption credentials. This sample uses a symmetric
+                    // encryption key that is shared between the server and the Api2 sample
+                    // (that performs local token validation instead of using introspection).
+                    //
+                    // Note: in a real world application, this encryption key should be
+                    // stored in a safe place (e.g in Azure KeyVault, stored as a secret).
+                    options.AddEncryptionKey(new SymmetricSecurityKey(
+                        Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=")));
 
                     // Register the System.Net.Http integration.
                     options.UseSystemNetHttp();

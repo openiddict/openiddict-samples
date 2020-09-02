@@ -6,7 +6,7 @@ ASP.NET Core samples demonstrating **how to use [OpenIddict](https://github.com/
   - [Hollastin](samples/Hollastin): resource owner password credentials demo, with a .NET console acting as the client.
   - [Imynusoph](samples/Imynusoph): refresh token grant demo, with an Angular JS application acting as the client.
   - [Velusia](samples/Velusia): authorization code flow demo, with an ASP.NET Core application acting as the client.
-  - [Zirku](samples/Zirku): implicit flow demo, with an Aurelia JS application acting as the client and two API projects using introspection.
+  - [Zirku](samples/Zirku): implicit flow demo, with an Aurelia JS application acting as the client and two API projects using introspection (Api1) and local validation (Api2).
 
 ## Support
 
