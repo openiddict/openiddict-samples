@@ -6,7 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="OpenIddict.Abstractions" />
+    <PackageReference Include="System.Net.Http.Json" />
   </ItemGroup>
-
+  
 </Project>

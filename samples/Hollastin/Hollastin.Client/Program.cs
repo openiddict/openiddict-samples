@@ -4,9 +4,10 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using OpenIddict.Abstractions;
 
 namespace Hollastin.Client
 {
@@ -32,13 +33,9 @@ namespace Hollastin.Client
 
         public static async Task CreateAccountAsync(HttpClient client, string email, string password)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58795/Account/Register")
-            {
-                Content = new StringContent(JsonConvert.SerializeObject(new { email, password }), Encoding.UTF8, "application/json")
-            };
+            var response = await client.PostAsJsonAsync("http://localhost:58795/Account/Register", new { email, password });
 
             // Ignore 409 responses, as they indicate that the account already exists.
-            var response = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead);
             if (response.StatusCode == HttpStatusCode.Conflict)
             {
                 return;
@@ -58,15 +55,15 @@ namespace Hollastin.Client
             });
 
             var response = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead);
-            response.EnsureSuccessStatusCode();
 
-            var payload = JObject.Parse(await response.Content.ReadAsStringAsync());
-            if (payload["error"] != null)
+            var payload = await response.Content.ReadFromJsonAsync<OpenIddictResponse>();
+
+            if (!string.IsNullOrEmpty(payload.Error))
             {
                 throw new InvalidOperationException("An error occurred while retrieving an access token.");
             }
 
-            return (string) payload["access_token"];
+            return payload.AccessToken;
         }
 
         public static async Task<string> GetResourceAsync(HttpClient client, string token)
