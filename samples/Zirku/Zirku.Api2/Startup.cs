@@ -20,7 +20,7 @@ namespace Zirku.Api2
                 .AddValidation(options =>
                 {
                     // Note: the validation handler uses OpenID Connect discovery
-                    // to retrieve the address of the introspection endpoint.
+                    // to retrieve the issuer signing keys used to validate tokens.
                     options.SetIssuer("http://localhost:12345/");
                     options.AddAudiences("resource_server_2");
 
