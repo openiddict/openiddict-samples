@@ -20,6 +20,7 @@
     "@types/lodash": "^4.14.105",
     "@types/node": "^9.4.7",
     "@types/webpack": "^4.1.1",
+    "@types/bluebird": "^3.5.1",
     "aurelia-cli": "^0.34.0",
     "aurelia-loader-nodejs": "^1.0.1",
     "aurelia-pal-nodejs": "^1.0.0-beta.3.2.0",
@@ -62,12 +63,12 @@
     "ts-jest": "^22.4.1",
     "ts-loader": "^4.0.1",
     "ts-node": "^7.0.0",
-    "typescript": "^2.7.2",
+    "typescript": "^3.4.3",
     "url-loader": "^1.0.1",
     "vinyl-fs": "^3.0.2",
-    "webpack": "^4.1.1",
+    "webpack": "^4.44.2",
     "webpack-bundle-analyzer": "latest",
-    "webpack-cli": "^2.0.12",
+    "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.1.1"
   },
   "jest": {
