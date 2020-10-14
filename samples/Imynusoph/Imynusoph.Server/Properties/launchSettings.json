@@ -18,7 +18,8 @@
     },
     "Imynusoph.Server": {
       "commandName": "Project",
-      "launchUrl": "http://localhost:5000/api/values",
+      "launchUrl": "http://localhost:54895/api/values",
+      "applicationUrl": "http://localhost:54895/api/values",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

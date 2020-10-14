@@ -12,7 +12,8 @@
     "aurelia-bootstrapper": "^2.2.0",
     "aurelia-open-id-connect": "^1.1.0",
     "aurelia-polyfills": "^1.3.0",
-    "bluebird": "^3.5.1"
+    "bluebird": "^3.5.1",
+    "node-gyp": "^7.1.0"
   },
   "peerDependencies": {},
   "devDependencies": {

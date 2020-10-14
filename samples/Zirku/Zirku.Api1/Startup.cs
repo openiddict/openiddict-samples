@@ -20,6 +20,7 @@ namespace Zirku.Api1
                     // Note: the validation handler uses OpenID Connect discovery
                     // to retrieve the address of the introspection endpoint.
                     options.SetIssuer("http://localhost:12345/");
+                    // options.SetIssuer("http://localhost:5000/");
                     options.AddAudiences("resource_server_1");
 
                     // Configure the validation handler to use introspection and register the client
