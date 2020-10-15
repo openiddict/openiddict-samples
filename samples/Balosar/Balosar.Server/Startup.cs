@@ -1,3 +1,5 @@
+using Balosar.Server.Data;
+using Balosar.Server.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -5,24 +7,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using OpenIddict.Validation.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
-using Balosar.Server.Data;
-using Balosar.Server.Models;
 
 namespace Balosar.Server
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        public Startup(IConfiguration configuration) => Configuration = configuration;
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -64,18 +58,19 @@ namespace Balosar.Server
                 // Register the OpenIddict server components.
                 .AddServer(options =>
                 {
-                    options.SetAuthorizationEndpointUris("/connect/authorize");
-                    options.SetLogoutEndpointUris("/connect/logout");
-                    options.SetTokenEndpointUris("/connect/token");
-                    options.SetUserinfoEndpointUris("/connect/userinfo");
+                    // Enable the authorization, logout, token and userinfo endpoints.
+                    options.SetAuthorizationEndpointUris("/connect/authorize")
+                           .SetLogoutEndpointUris("/connect/logout")
+                           .SetTokenEndpointUris("/connect/token")
+                           .SetUserinfoEndpointUris("/connect/userinfo");
 
                     // Mark the "email", "profile" and "roles" scopes as supported scopes.
                     options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
 
-                    // Note: the sample uses authorization code flow but you can enable
-                    // the other flows if you need to support implicit, password or client credentials.                    
-                    options.AllowAuthorizationCodeFlow();
-                    options.AllowRefreshTokenFlow();
+                    // Note: the sample uses the code and refresh token flows but you can enable
+                    // the other flows if you need to support implicit, password or client credentials.
+                    options.AllowAuthorizationCodeFlow()
+                           .AllowRefreshTokenFlow();
 
                     // Register the signing and encryption credentials.
                     options.AddDevelopmentEncryptionCertificate()
@@ -83,10 +78,10 @@ namespace Balosar.Server
 
                     // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
                     options.UseAspNetCore()
-                        .EnableAuthorizationEndpointPassthrough()
-                        .EnableLogoutEndpointPassthrough()
-                        .EnableStatusCodePagesIntegration()
-                        .EnableTokenEndpointPassthrough();
+                           .EnableAuthorizationEndpointPassthrough()
+                           .EnableLogoutEndpointPassthrough()
+                           .EnableStatusCodePagesIntegration()
+                           .EnableTokenEndpointPassthrough();
                 })
 
                 // Register the OpenIddict validation components.
@@ -99,7 +94,6 @@ namespace Balosar.Server
                     options.UseAspNetCore();
                 });
 
-
             services.AddControllersWithViews();
             services.AddRazorPages();
 
@@ -108,7 +102,6 @@ namespace Balosar.Server
             services.AddHostedService<Worker>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -120,7 +113,6 @@ namespace Balosar.Server
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -133,11 +125,11 @@ namespace Balosar.Server
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+            app.UseEndpoints(options =>
             {
-                endpoints.MapRazorPages();
-                endpoints.MapControllers();
-                endpoints.MapFallbackToFile("index.html");
+                options.MapRazorPages();
+                options.MapControllers();
+                options.MapFallbackToFile("index.html");
             });
         }
     }

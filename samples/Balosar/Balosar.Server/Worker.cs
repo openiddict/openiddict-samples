@@ -1,32 +1,30 @@
-﻿using Balosar.Server.Data;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Balosar.Server.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenIddict.Abstractions;
 using OpenIddict.Core;
 using OpenIddict.EntityFrameworkCore.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Balosar.Server
 {
     public class Worker : IHostedService
     {
-        private readonly IServiceProvider serviceProvider;
+        private readonly IServiceProvider _serviceProvider;
 
-        public Worker(IServiceProvider serviceProvider) =>
-            this.serviceProvider = serviceProvider;
+        public Worker(IServiceProvider serviceProvider)
+            => _serviceProvider = serviceProvider;
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            using var scope = serviceProvider.CreateScope();
+            using var scope = _serviceProvider.CreateScope();
 
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             await context.Database.EnsureCreatedAsync();
-            
+
             var manager = scope.ServiceProvider.GetRequiredService<OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication>>();
 
             if (await manager.FindByClientIdAsync("balosar-blazor-client") is null)
@@ -66,6 +64,5 @@ namespace Balosar.Server
         }
 
         public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-        
     }
 }

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Balosar.Server.Helpers;
+using Balosar.Server.Models;
+using Balosar.Server.ViewModels.Authorization;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -11,13 +14,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using OpenIddict.Abstractions;
-using static OpenIddict.Abstractions.OpenIddictConstants;
 using OpenIddict.Core;
 using OpenIddict.EntityFrameworkCore.Models;
 using OpenIddict.Server.AspNetCore;
-using Balosar.Server.Models;
-using Balosar.Server.ViewModels.Authorization;
-using Balosar.Server.Helpers;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Balosar.Server.Controllers
 {
@@ -136,10 +136,10 @@ namespace Balosar.Server.Controllers
             // Retrieve the permanent authorizations associated with the user and the calling client application.
             var authorizations = await _authorizationManager.FindAsync(
                 subject: await _userManager.GetUserIdAsync(user),
-                client: await _applicationManager.GetIdAsync(application),
-                status: Statuses.Valid,
-                type: AuthorizationTypes.Permanent,
-                scopes: request.GetScopes()).ToListAsync();
+                client : await _applicationManager.GetIdAsync(application),
+                status : Statuses.Valid,
+                type   : AuthorizationTypes.Permanent,
+                scopes : request.GetScopes()).ToListAsync();
 
             switch (await _applicationManager.GetConsentTypeAsync(application))
             {
@@ -175,10 +175,10 @@ namespace Balosar.Server.Controllers
                     {
                         authorization = await _authorizationManager.CreateAsync(
                             principal: principal,
-                            subject: await _userManager.GetUserIdAsync(user),
-                            client: await _applicationManager.GetIdAsync(application),
-                            type: AuthorizationTypes.Permanent,
-                            scopes: principal.GetScopes());
+                            subject  : await _userManager.GetUserIdAsync(user),
+                            client   : await _applicationManager.GetIdAsync(application),
+                            type     : AuthorizationTypes.Permanent,
+                            scopes   : principal.GetScopes());
                     }
 
                     principal.SetAuthorizationId(await _authorizationManager.GetIdAsync(authorization));
@@ -192,7 +192,7 @@ namespace Balosar.Server.Controllers
 
                 // At this point, no authorization was found in the database and an error must be returned
                 // if the client application specified prompt=none in the authorization request.
-                case ConsentTypes.Explicit when request.HasPrompt(Prompts.None):
+                case ConsentTypes.Explicit   when request.HasPrompt(Prompts.None):
                 case ConsentTypes.Systematic when request.HasPrompt(Prompts.None):
                     return Forbid(
                         authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
@@ -231,10 +231,10 @@ namespace Balosar.Server.Controllers
             // Retrieve the permanent authorizations associated with the user and the calling client application.
             var authorizations = await _authorizationManager.FindAsync(
                 subject: await _userManager.GetUserIdAsync(user),
-                client: await _applicationManager.GetIdAsync(application),
-                status: Statuses.Valid,
-                type: AuthorizationTypes.Permanent,
-                scopes: request.GetScopes()).ToListAsync();
+                client : await _applicationManager.GetIdAsync(application),
+                status : Statuses.Valid,
+                type   : AuthorizationTypes.Permanent,
+                scopes : request.GetScopes()).ToListAsync();
 
             // Note: the same check is already made in the other action but is repeated
             // here to ensure a malicious user can't abuse this POST-only endpoint and
@@ -266,10 +266,10 @@ namespace Balosar.Server.Controllers
             {
                 authorization = await _authorizationManager.CreateAsync(
                     principal: principal,
-                    subject: await _userManager.GetUserIdAsync(user),
-                    client: await _applicationManager.GetIdAsync(application),
-                    type: AuthorizationTypes.Permanent,
-                    scopes: principal.GetScopes());
+                    subject  : await _userManager.GetUserIdAsync(user),
+                    client   : await _applicationManager.GetIdAsync(application),
+                    type     : AuthorizationTypes.Permanent,
+                    scopes   : principal.GetScopes());
             }
 
             principal.SetAuthorizationId(await _authorizationManager.GetIdAsync(authorization));
