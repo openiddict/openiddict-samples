@@ -5,7 +5,7 @@ $root = $PSScriptRoot;
 Push-Location "$root/Aridka.Server"
 dotnet restore
 dotnet build --no-incremental #rebuild
-Start-Process dotnet -ArgumentList "watch run server.urls=http://localhost:52698" -PassThru 
+Start-Process dotnet -ArgumentList "watch run urls=http://localhost:52698" -PassThru 
 Pop-Location
 
 # Client Application

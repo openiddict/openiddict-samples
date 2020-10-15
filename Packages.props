@@ -14,12 +14,12 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.7" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="3.1.7" />
     <PackageVersion Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageVersion Include="OpenIddict" Version="3.0.0-beta3.20403.69" />
-    <PackageVersion Include="OpenIddict.AspNetCore" Version="3.0.0-beta3.20403.69" />
-    <PackageVersion Include="OpenIddict.EntityFrameworkCore" Version="3.0.0-beta3.20403.69" />
-    <PackageVersion Include="OpenIddict.Validation.AspNetCore" Version="3.0.0-beta3.20403.69" />
-    <PackageVersion Include="OpenIddict.Validation.SystemNetHttp" Version="3.0.0-beta3.20403.69" />
-    <PackageVersion Include="System.Net.Http.Json" Version="3.2.1" />
+    <PackageReference Update="System.Net.Http.Json" Version="3.2.1" />
+    <PackageReference Update="OpenIddict.AspNetCore" Version="3.0.0-beta5.20503.76" />
+    <PackageReference Update="OpenIddict.Abstractions" Version="3.0.0-beta5.20503.76" />
+    <PackageReference Update="OpenIddict.EntityFrameworkCore" Version="3.0.0-beta5.20503.76" />
+    <PackageReference Update="OpenIddict.Validation.AspNetCore" Version="3.0.0-beta5.20503.76" />
+    <PackageReference Update="OpenIddict.Validation.SystemNetHttp" Version="3.0.0-beta5.20503.76" />
   </ItemGroup>
 
 </Project>

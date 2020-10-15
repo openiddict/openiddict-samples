@@ -7,7 +7,7 @@ $clientUrl = "http://localhost:5055";
 Push-Location "$root/Imynusoph.Server"
 dotnet restore
 dotnet build --no-incremental #rebuild
-Start-Process dotnet -ArgumentList "run server.urls=http://localhost:5056" -PassThru
+Start-Process dotnet -ArgumentList "run urls=http://localhost:5056" -PassThru
 Pop-Location
 
 # Angular Application

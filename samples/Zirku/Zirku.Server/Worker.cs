@@ -77,20 +77,8 @@ namespace Zirku.Server
                     await manager.CreateAsync(descriptor);
                 }
 
-                if (await manager.FindByClientIdAsync("resource_server_2") == null)
-                {
-                    var descriptor = new OpenIddictApplicationDescriptor
-                    {
-                        ClientId = "resource_server_2",
-                        ClientSecret = "C744604A-CD05-4092-9CF8-ECB7DC3499A2",
-                        Permissions =
-                        {
-                            Permissions.Endpoints.Introspection
-                        }
-                    };
-
-                    await manager.CreateAsync(descriptor);
-                }
+                // Note: no client registration is created for resource_server_2
+                // as it uses local token validation instead of introspection.
             }
 
             async Task CreateScopesAsync()
