@@ -1,10 +1,19 @@
 <Project>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.6" />
-    <PackageReference Update="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.6" />
-    <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
-    <PackageReference Update="Newtonsoft.Json" Version="10.0.2" />
+    <PackageReference Update="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.7" />
+    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.1" />
+    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="3.2.1" />
+    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.1" />
+    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.1" />
+    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="3.2.1" />
+    <PackageReference Update="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.7" />
+    <PackageReference Update="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.7" />
+    <PackageReference Update="Microsoft.AspNetCore.Identity.UI" Version="3.1.7" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.7" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Tools" Version="3.1.7" />
+    <PackageReference Update="Microsoft.Extensions.Http" Version="3.1.7" />
+    <PackageReference Update="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Update="System.Net.Http.Json" Version="3.2.1" />
     <PackageReference Update="OpenIddict.AspNetCore" Version="3.0.0-beta5.20503.76" />
     <PackageReference Update="OpenIddict.Abstractions" Version="3.0.0-beta5.20503.76" />
