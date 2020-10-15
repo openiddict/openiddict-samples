@@ -3,6 +3,7 @@
 ASP.NET Core samples demonstrating **how to use [OpenIddict](https://github.com/openiddict/openiddict-core) with the different OAuth2/OpenID Connect flows**:
 
   - [Aridka](samples/Aridka): client credentials demo, with a .NET console acting as the client.
+  - [Balosar](samples/Balosar): authorization code flow demo, with a Blazor WASM application acting as the client.
   - [Hollastin](samples/Hollastin): resource owner password credentials demo, with a .NET console acting as the client.
   - [Imynusoph](samples/Imynusoph): refresh token grant demo, with an Angular JS application acting as the client.
   - [Velusia](samples/Velusia): authorization code flow demo, with an ASP.NET Core application acting as the client.
