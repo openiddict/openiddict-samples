@@ -40,11 +40,11 @@ namespace Zirku.Server
                         DisplayName = "Aurelia client application",
                         PostLogoutRedirectUris =
                         {
-                            new Uri("http://localhost:9000/signout-oidc")
+                            new Uri("https://localhost:44398/signout-oidc")
                         },
                         RedirectUris =
                         {
-                            new Uri("http://localhost:9000/signin-oidc")
+                            new Uri("https://localhost:44398/signin-oidc")
                         },
                         Permissions =
                         {

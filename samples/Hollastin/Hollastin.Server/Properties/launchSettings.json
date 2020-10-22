@@ -4,7 +4,7 @@
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:58795/",
-      "sslPort": 0
+      "sslPort": 44360
     }
   },
   "profiles": {
@@ -18,7 +18,7 @@
     "Hollastin.Server": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:58795",
+      "applicationUrl": "https://localhost:44360/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

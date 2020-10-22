@@ -4,7 +4,7 @@
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:52698/",
-      "sslPort": 0
+      "sslPort": 44385
     }
   },
   "profiles": {
@@ -18,7 +18,7 @@
     "Aridka.Server": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:52698",
+      "applicationUrl": "https://localhost:44385/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

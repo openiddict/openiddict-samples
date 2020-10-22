@@ -1,13 +1,13 @@
 $root = $PSScriptRoot;
 . $root\..\Shared.ps1
 
-$clientUrl = "http://localhost:53507";
+$clientUrl = "https://localhost:44338";
 
 # Authorization Server
 Push-Location "$root/Velusia.Server"
 dotnet restore
 dotnet build --no-incremental #rebuild
-Start-Process dotnet -ArgumentList "watch run urls=http://localhost:54540" -PassThru 
+Start-Process dotnet -ArgumentList "watch run urls=https://localhost:44313" -PassThru 
 Pop-Location
 
 # Client Application

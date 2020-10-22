@@ -19,7 +19,7 @@ namespace Zirku.Api1
                 {
                     // Note: the validation handler uses OpenID Connect discovery
                     // to retrieve the address of the introspection endpoint.
-                    options.SetIssuer("http://localhost:12345/");
+                    options.SetIssuer("https://localhost:44319/");
                     options.AddAudiences("resource_server_1");
 
                     // Configure the validation handler to use introspection and register the client
@@ -44,7 +44,7 @@ namespace Zirku.Api1
 
             app.UseCors(builder =>
             {
-                builder.WithOrigins("http://localhost:9000");
+                builder.WithOrigins("https://localhost:44398");
                 builder.WithMethods("GET");
                 builder.WithHeaders("Authorization");
             });

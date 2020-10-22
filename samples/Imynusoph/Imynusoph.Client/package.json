@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 5055"
+    "start": "ng serve --ssl --port 44379"
   },
   "dependencies": {
     "@angular/common": "^2.3.1",
