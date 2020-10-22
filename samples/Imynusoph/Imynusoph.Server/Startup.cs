@@ -91,6 +91,10 @@ namespace Imynusoph.Server
                     // Register the ASP.NET Core host.
                     options.UseAspNetCore();
                 });
+
+            // Register the worker responsible of seeding the database with the sample clients.
+            // Note: in a real world application, this step should be part of a setup script.
+            services.AddHostedService<Worker>();
         }
 
         public void Configure(IApplicationBuilder app)
@@ -101,7 +105,7 @@ namespace Imynusoph.Server
 
             app.UseCors(builder =>
             {
-                builder.WithOrigins("http://localhost:5055");
+                builder.WithOrigins("https://localhost:44379");
                 builder.AllowAnyHeader();
                 builder.AllowAnyMethod();
             });

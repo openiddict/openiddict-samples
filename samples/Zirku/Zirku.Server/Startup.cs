@@ -118,7 +118,7 @@ namespace Zirku.Server
 
             app.UseCors(builder =>
             {
-                builder.WithOrigins("http://localhost:9000");
+                builder.WithOrigins("https://localhost:44398");
                 builder.WithMethods("GET");
                 builder.WithHeaders("Authorization");
             });

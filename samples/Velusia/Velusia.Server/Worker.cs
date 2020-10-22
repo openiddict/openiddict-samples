@@ -37,11 +37,11 @@ namespace Velusia.Server
                     DisplayName = "MVC client application",
                     PostLogoutRedirectUris =
                     {
-                        new Uri("http://localhost:53507/signout-callback-oidc")
+                        new Uri("https://localhost:44338/signout-callback-oidc")
                     },
                     RedirectUris =
                     {
-                        new Uri("http://localhost:53507/signin-oidc")
+                        new Uri("https://localhost:44338/signin-oidc")
                     },
                     Permissions =
                     {

@@ -4,7 +4,7 @@
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:5002",
-      "sslPort": 0
+      "sslPort": 44379
     }
   },
   "profiles": {
@@ -18,7 +18,7 @@
     "Zirku.Api2": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:5002",
+      "applicationUrl": "https://localhost:44379/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

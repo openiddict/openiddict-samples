@@ -40,7 +40,7 @@ namespace Aridka.Client
 
         public static async Task<string> GetTokenAsync(HttpClient client)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:52698/connect/token");
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://localhost:44385/connect/token");
             request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 ["grant_type"] = "client_credentials",
@@ -62,7 +62,7 @@ namespace Aridka.Client
 
         public static async Task<string> GetResourceAsync(HttpClient client, string token)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:52698/api/message");
+            var request = new HttpRequestMessage(HttpMethod.Get, "https://localhost:44385/api/message");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var response = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead);

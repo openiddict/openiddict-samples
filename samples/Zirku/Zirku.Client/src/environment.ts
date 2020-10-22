@@ -1,11 +1,11 @@
 export default {
   debug: true,
   urls: {
-    authority: "http://localhost:12345",
-    host: "http://localhost:9000",
-    resourceServer01: "http://localhost:5001",
-    resourceServer02: "http://localhost:5002",
+    authority: "https://localhost:44319",
+    host: "https://localhost:44398",
+    resourceServer01: "https://localhost:44342",
+    resourceServer02: "https://localhost:44379",
   },
-  useHttps: false,
+  useHttps: true,
   testing: true
 };

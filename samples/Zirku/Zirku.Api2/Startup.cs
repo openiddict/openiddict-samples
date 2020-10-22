@@ -21,7 +21,7 @@ namespace Zirku.Api2
                 {
                     // Note: the validation handler uses OpenID Connect discovery
                     // to retrieve the issuer signing keys used to validate tokens.
-                    options.SetIssuer("http://localhost:12345/");
+                    options.SetIssuer("https://localhost:44319/");
                     options.AddAudiences("resource_server_2");
 
                     // Register the encryption credentials. This sample uses a symmetric
@@ -49,7 +49,7 @@ namespace Zirku.Api2
 
             app.UseCors(builder =>
             {
-                builder.WithOrigins("http://localhost:9000");
+                builder.WithOrigins("https://localhost:44398");
                 builder.WithMethods("GET");
                 builder.WithHeaders("Authorization");
             });

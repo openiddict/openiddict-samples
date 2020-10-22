@@ -5,7 +5,7 @@ $root = $PSScriptRoot;
 Push-Location "$root/Hollastin.Server"
 dotnet restore
 dotnet build --no-incremental #rebuild
-Start-Process dotnet -ArgumentList "watch run urls=http://localhost:58795" -PassThru 
+Start-Process dotnet -ArgumentList "watch run urls=https://localhost:44360" -PassThru 
 Pop-Location
 
 # Client Application
