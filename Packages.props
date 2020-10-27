@@ -15,11 +15,11 @@
     <PackageReference Update="Microsoft.Extensions.Http" Version="3.1.7" />
     <PackageReference Update="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Update="System.Net.Http.Json" Version="3.2.1" />
-    <PackageReference Update="OpenIddict.AspNetCore" Version="3.0.0-beta5.20503.76" />
-    <PackageReference Update="OpenIddict.Abstractions" Version="3.0.0-beta5.20503.76" />
-    <PackageReference Update="OpenIddict.EntityFrameworkCore" Version="3.0.0-beta5.20503.76" />
-    <PackageReference Update="OpenIddict.Validation.AspNetCore" Version="3.0.0-beta5.20503.76" />
-    <PackageReference Update="OpenIddict.Validation.SystemNetHttp" Version="3.0.0-beta5.20503.76" />
+    <PackageReference Update="OpenIddict.AspNetCore" Version="3.0.0-beta6.20527.75" />
+    <PackageReference Update="OpenIddict.Abstractions" Version="3.0.0-beta6.20527.75" />
+    <PackageReference Update="OpenIddict.EntityFrameworkCore" Version="3.0.0-beta6.20527.75" />
+    <PackageReference Update="OpenIddict.Validation.AspNetCore" Version="3.0.0-beta6.20527.75" />
+    <PackageReference Update="OpenIddict.Validation.SystemNetHttp" Version="3.0.0-beta6.20527.75" />
   </ItemGroup>
 
 </Project>

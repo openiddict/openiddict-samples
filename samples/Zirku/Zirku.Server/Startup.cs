@@ -67,8 +67,8 @@ namespace Zirku.Server
                     // Mark the "email", "profile" and "roles" scopes as supported scopes.
                     options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
 
-                    // Note: the sample only uses the implicit code flow but you can enable
-                    // the other flows if you need to support implicit, password or client credentials.
+                    // Note: the sample only uses the implicit flow but you can enable the other
+                    // flows if you need to support code, password or client credentials.
                     options.AllowImplicitFlow();
 
                     // Register the encryption credentials. This sample uses a symmetric
