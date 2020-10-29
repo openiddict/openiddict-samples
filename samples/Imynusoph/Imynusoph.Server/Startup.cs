@@ -78,8 +78,7 @@ namespace Imynusoph.Server
 
                     // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
                     options.UseAspNetCore()
-                           .EnableTokenEndpointPassthrough()
-                           .DisableTransportSecurityRequirement(); // During development, you can disable the HTTPS requirement.
+                           .EnableTokenEndpointPassthrough();
                 })
 
                 // Register the OpenIddict validation components.

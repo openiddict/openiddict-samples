@@ -14,7 +14,7 @@ namespace Aridka.Client
     {
         public static async Task Main(string[] args)
         {
-            var client = new HttpClient();
+            using var client = new HttpClient();
 
             try
             {

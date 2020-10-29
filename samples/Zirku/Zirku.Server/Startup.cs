@@ -87,8 +87,7 @@ namespace Zirku.Server
                     options.UseAspNetCore()
                            .EnableAuthorizationEndpointPassthrough()
                            .EnableUserinfoEndpointPassthrough()
-                           .EnableStatusCodePagesIntegration()
-                           .DisableTransportSecurityRequirement(); // During development, you can disable the HTTPS requirement.
+                           .EnableStatusCodePagesIntegration();
                 })
 
                 // Register the OpenIddict validation components.

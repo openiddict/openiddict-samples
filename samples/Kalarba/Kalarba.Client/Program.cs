@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using OpenIddict.Abstractions;
 
-namespace Hollastin.Client
+namespace Kalarba.Client
 {
     public class Program
     {
@@ -15,11 +14,7 @@ namespace Hollastin.Client
         {
             using var client = new HttpClient();
 
-            const string email = "bob@le-magnifique.com", password = "}s>EWG@f4g;_v7nB";
-
-            await CreateAccountAsync(client, email, password);
-
-            var token = await GetTokenAsync(client, email, password);
+            var token = await GetTokenAsync(client, "alice@wonderland.com", "P@ssw0rd");
             Console.WriteLine("Access token: {0}", token);
             Console.WriteLine();
 
@@ -29,22 +24,9 @@ namespace Hollastin.Client
             Console.ReadLine();
         }
 
-        public static async Task CreateAccountAsync(HttpClient client, string email, string password)
-        {
-            var response = await client.PostAsJsonAsync("https://localhost:44360/Account/Register", new { email, password });
-
-            // Ignore 409 responses, as they indicate that the account already exists.
-            if (response.StatusCode == HttpStatusCode.Conflict)
-            {
-                return;
-            }
-
-            response.EnsureSuccessStatusCode();
-        }
-
         public static async Task<string> GetTokenAsync(HttpClient client, string email, string password)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "https://localhost:44360/connect/token");
+            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost:58779/connect/token");
             request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 ["grant_type"] = "password",
@@ -66,7 +48,7 @@ namespace Hollastin.Client
 
         public static async Task<string> GetResourceAsync(HttpClient client, string token)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, "https://localhost:44360/api/message");
+            var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:58779/api/message");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var response = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead);
