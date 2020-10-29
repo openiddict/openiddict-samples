@@ -18,6 +18,7 @@
     <PackageReference Update="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9" />
     <PackageReference Update="Microsoft.Extensions.DependencyInjection" Version="3.1.9" />
     <PackageReference Update="Microsoft.Extensions.Http" Version="3.1.9" />
+    <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
     <PackageReference Update="Microsoft.Owin.Diagnostics" Version="4.1.1" />
     <PackageReference Update="Microsoft.Owin.Host.HttpListener" Version="4.1.1" />
     <PackageReference Update="Microsoft.Owin.Hosting" Version="4.1.1" />
