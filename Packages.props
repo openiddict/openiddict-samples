@@ -5,31 +5,30 @@
     <PackageReference Update="Autofac.Owin" Version="6.0.0" />
     <PackageReference Update="Autofac.WebApi2.Owin" Version="6.0.0" />
     <PackageReference Update="Microsoft.AspNet.WebApi.Owin" Version="5.2.7" />
-    <PackageReference Update="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.9" />
-    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.1" />
-    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="3.2.1" />
-    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.1" />
-    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.1" />
-    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="3.2.1" />
-    <PackageReference Update="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.9" />
-    <PackageReference Update="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.9" />
-    <PackageReference Update="Microsoft.AspNetCore.Identity.UI" Version="3.1.9" />
-    <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
-    <PackageReference Update="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9" />
-    <PackageReference Update="Microsoft.Extensions.DependencyInjection" Version="3.1.9" />
-    <PackageReference Update="Microsoft.Extensions.Http" Version="3.1.9" />
+    <PackageReference Update="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.0" />
+    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0" />
+    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="5.0.0" />
+    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="5.0.0" />
+    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.0" />
+    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.0" />
+    <PackageReference Update="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.0" />
+    <PackageReference Update="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.0" />
+    <PackageReference Update="Microsoft.AspNetCore.Identity.UI" Version="5.0.0" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Tools" Version="5.0.0" />
+    <PackageReference Update="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
+    <PackageReference Update="Microsoft.Extensions.Http" Version="5.0.0" />
     <PackageReference Update="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
     <PackageReference Update="Microsoft.Owin.Diagnostics" Version="4.1.1" />
     <PackageReference Update="Microsoft.Owin.Host.HttpListener" Version="4.1.1" />
     <PackageReference Update="Microsoft.Owin.Hosting" Version="4.1.1" />
-    <PackageReference Update="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Update="OpenIddict.AspNetCore" Version="3.0.0-rc1.20567.82" />
     <PackageReference Update="OpenIddict.Abstractions" Version="3.0.0-rc1.20567.82" />
     <PackageReference Update="OpenIddict.EntityFrameworkCore" Version="3.0.0-rc1.20567.82" />
     <PackageReference Update="OpenIddict.Owin" Version="3.0.0-rc1.20567.82" />
     <PackageReference Update="OpenIddict.Validation.AspNetCore" Version="3.0.0-rc1.20567.82" />
     <PackageReference Update="OpenIddict.Validation.SystemNetHttp" Version="3.0.0-rc1.20567.82" />
-    <PackageReference Update="System.Net.Http.Json" Version="3.2.1" />
+    <PackageReference Update="System.Net.Http.Json" Version="5.0.0" />
   </ItemGroup>
 
 </Project>
