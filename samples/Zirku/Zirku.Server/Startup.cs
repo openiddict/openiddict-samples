@@ -86,6 +86,7 @@ namespace Zirku.Server
                     // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
                     options.UseAspNetCore()
                            .EnableAuthorizationEndpointPassthrough()
+                           .EnableLogoutEndpointPassthrough()
                            .EnableUserinfoEndpointPassthrough()
                            .EnableStatusCodePagesIntegration();
                 })
@@ -113,6 +114,8 @@ namespace Zirku.Server
 
         public void Configure(IApplicationBuilder app)
         {
+            app.UseStatusCodePagesWithReExecute("/error");
+
             app.UseRouting();
 
             app.UseCors(builder =>
