@@ -59,10 +59,10 @@ namespace Balosar.Server
                 .AddServer(options =>
                 {
                     // Enable the authorization, logout, token and userinfo endpoints.
-                    options.SetAuthorizationEndpointUris("/connect/authorize")
-                           .SetLogoutEndpointUris("/connect/logout")
-                           .SetTokenEndpointUris("/connect/token")
-                           .SetUserinfoEndpointUris("/connect/userinfo");
+                    options.EnableAuthorizationEndpoint("/connect/authorize")
+                           .EnableLogoutEndpoint("/connect/logout")
+                           .EnableTokenEndpoint("/connect/token")
+                           .EnableUserinfoEndpoint("/connect/userinfo");
 
                     // Mark the "email", "profile" and "roles" scopes as supported scopes.
                     options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
