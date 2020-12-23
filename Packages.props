@@ -22,12 +22,12 @@
     <PackageReference Update="Microsoft.Owin.Diagnostics" Version="4.1.1" />
     <PackageReference Update="Microsoft.Owin.Host.HttpListener" Version="4.1.1" />
     <PackageReference Update="Microsoft.Owin.Hosting" Version="4.1.1" />
-    <PackageReference Update="OpenIddict.AspNetCore" Version="3.0.0-rc2.20607.88" />
-    <PackageReference Update="OpenIddict.Abstractions" Version="3.0.0-rc2.20607.88" />
-    <PackageReference Update="OpenIddict.EntityFrameworkCore" Version="3.0.0-rc2.20607.88" />
-    <PackageReference Update="OpenIddict.Owin" Version="3.0.0-rc2.20607.88" />
-    <PackageReference Update="OpenIddict.Validation.AspNetCore" Version="3.0.0-rc2.20607.88" />
-    <PackageReference Update="OpenIddict.Validation.SystemNetHttp" Version="3.0.0-rc2.20607.88" />
+    <PackageReference Update="OpenIddict.AspNetCore" Version="3.0.0" />
+    <PackageReference Update="OpenIddict.Abstractions" Version="3.0.0" />
+    <PackageReference Update="OpenIddict.EntityFrameworkCore" Version="3.0.0" />
+    <PackageReference Update="OpenIddict.Owin" Version="3.0.0" />
+    <PackageReference Update="OpenIddict.Validation.AspNetCore" Version="3.0.0" />
+    <PackageReference Update="OpenIddict.Validation.SystemNetHttp" Version="3.0.0" />
     <PackageReference Update="System.Net.Http.Json" Version="5.0.0" />
   </ItemGroup>
 
