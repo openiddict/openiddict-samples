@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OpenIddict.Core;
-using OpenIddict.EntityFrameworkCore.Models;
+using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -11,12 +10,10 @@ namespace Aridka.Server.Controllers
     [Route("api")]
     public class ResourceController : Controller
     {
-        private readonly OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> _applicationManager;
+        private readonly IOpenIddictApplicationManager _applicationManager;
 
-        public ResourceController(OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> applicationManager)
-        {
-            _applicationManager = applicationManager;
-        }
+        public ResourceController(IOpenIddictApplicationManager applicationManager)
+            => _applicationManager = applicationManager;
 
         [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
         [HttpGet("message")]
@@ -34,7 +31,7 @@ namespace Aridka.Server.Controllers
                 return BadRequest();
             }
 
-            return Content($"{application.DisplayName} has been successfully authenticated.");
+            return Content($"{await _applicationManager.GetDisplayNameAsync(application)} has been successfully authenticated.");
         }
     }
 }

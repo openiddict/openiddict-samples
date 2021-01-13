@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenIddict.Abstractions;
-using OpenIddict.Core;
-using OpenIddict.EntityFrameworkCore.Models;
 using Zirku.Server.Models;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -30,7 +28,7 @@ namespace Zirku.Server
 
             async Task CreateApplicationsAsync()
             {
-                var manager = scope.ServiceProvider.GetRequiredService<OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication>>();
+                var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
                 if (await manager.FindByClientIdAsync("aurelia") == null)
                 {
@@ -86,7 +84,7 @@ namespace Zirku.Server
 
             async Task CreateScopesAsync()
             {
-                var manager = scope.ServiceProvider.GetRequiredService<OpenIddictScopeManager<OpenIddictEntityFrameworkCoreScope>>();
+                var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictScopeManager>();
 
                 if (await manager.FindByNameAsync("api1") == null)
                 {

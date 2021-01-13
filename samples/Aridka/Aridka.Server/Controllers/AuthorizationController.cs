@@ -11,8 +11,6 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
-using OpenIddict.Core;
-using OpenIddict.EntityFrameworkCore.Models;
 using OpenIddict.Server.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -20,9 +18,9 @@ namespace Aridka.Server.Controllers
 {
     public class AuthorizationController : Controller
     {
-        private readonly OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> _applicationManager;
+        private readonly IOpenIddictApplicationManager _applicationManager;
 
-        public AuthorizationController(OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication> applicationManager)
+        public AuthorizationController(IOpenIddictApplicationManager applicationManager)
             => _applicationManager = applicationManager;
 
         [HttpPost("~/connect/token"), Produces("application/json")]
