@@ -1,6 +1,6 @@
-# OpenIddict.Samples
+# OpenIddict samples
 
-ASP.NET Core samples demonstrating **how to use [OpenIddict](https://github.com/openiddict/openiddict-core) with the different OAuth2/OpenID Connect flows**:
+ASP.NET Core samples demonstrating **how to use [OpenIddict](https://github.com/openiddict/openiddict-core) with the different OAuth 2.0/OpenID Connect flows**:
 
   - [Aridka](samples/Aridka): client credentials demo, with a .NET console acting as the client.
   - [Balosar](samples/Balosar): authorization code flow demo, with a Blazor WASM application acting as the client.
