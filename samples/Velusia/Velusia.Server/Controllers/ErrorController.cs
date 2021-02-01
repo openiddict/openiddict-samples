@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0)
  * See https://github.com/openiddict/openiddict-core for more information concerning
  * the license and the contributors participating to this project.
@@ -12,7 +12,8 @@ namespace Velusia.Server.Controllers
 {
     public class ErrorController : Controller
     {
-        [HttpGet, HttpPost, Route("~/error")]
+        [Route("error")]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             // If the error was not caused by an invalid
