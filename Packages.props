@@ -4,7 +4,9 @@
     <PackageReference Update="Autofac.Extensions.DependencyInjection" Version="7.0.2" />
     <PackageReference Update="Autofac.Owin" Version="6.0.0" />
     <PackageReference Update="Autofac.WebApi2.Owin" Version="6.0.0" />
+    <PackageReference Update="IdentityModel.OidcClient.IdentityTokenValidator" Version="4.0.0-preview.4" />
     <PackageReference Update="Microsoft.AspNet.WebApi.Owin" Version="5.2.7" />
+    <PackageReference Update="Microsoft.AspNetCore.Authentication.Negotiate" Version="5.0.0" />
     <PackageReference Update="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.0" />
     <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0" />
     <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="5.0.0" />
@@ -14,6 +16,7 @@
     <PackageReference Update="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.0" />
     <PackageReference Update="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.0" />
     <PackageReference Update="Microsoft.AspNetCore.Identity.UI" Version="5.0.0" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.0" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.Tools" Version="5.0.0" />
     <PackageReference Update="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />

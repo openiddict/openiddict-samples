@@ -8,6 +8,7 @@ ASP.NET Core samples demonstrating **how to use [OpenIddict](https://github.com/
   - [Imynusoph](samples/Imynusoph): refresh token grant demo, with an Angular JS application acting as the client.
   - [Kalarba](samples/Kalarba): resource owner password credentials demo using OWIN/Katana, ASP.NET Web API and the OpenIddict degraded mode.
   - [Velusia](samples/Velusia): authorization code flow demo, with an ASP.NET Core application acting as the client.
+  - [Weytta](samples/Weytta): authorization code flow with Integrated Windows Authentication support and a .NET console acting as the client.
   - [Zirku](samples/Zirku): implicit flow demo, with an Aurelia JS application acting as the client and two API projects using introspection (Api1) and local validation (Api2).
 
 ## Security policy
