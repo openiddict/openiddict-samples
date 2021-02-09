@@ -75,9 +75,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Balosar", "Balosar", "{2775
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kalarba", "Kalarba", "{196EEDE4-CF84-44D5-905B-30F341F7617E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kalarba.Server", "samples\Kalarba\Kalarba.Server\Kalarba.Server.csproj", "{A5CEBB9D-01DE-489B-AED6-4417A773516D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalarba.Server", "samples\Kalarba\Kalarba.Server\Kalarba.Server.csproj", "{A5CEBB9D-01DE-489B-AED6-4417A773516D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kalarba.Client", "samples\Kalarba\Kalarba.Client\Kalarba.Client.csproj", "{839319BA-4C99-4620-BDFE-F9F114DC9979}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kalarba.Client", "samples\Kalarba\Kalarba.Client\Kalarba.Client.csproj", "{839319BA-4C99-4620-BDFE-F9F114DC9979}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Weytta", "Weytta", "{37448199-E002-4FA0-A712-B6DB22DA98EC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weytta.Client", "samples\Weytta\Weytta.Client\Weytta.Client.csproj", "{20C5B39E-CEBA-4CCD-979A-5499B4030043}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weytta.Server", "samples\Weytta\Weytta.Server\Weytta.Server.csproj", "{02D5D1C5-675D-482D-9F74-F06FC522D2CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -153,6 +159,14 @@ Global
 		{839319BA-4C99-4620-BDFE-F9F114DC9979}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{839319BA-4C99-4620-BDFE-F9F114DC9979}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{839319BA-4C99-4620-BDFE-F9F114DC9979}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20C5B39E-CEBA-4CCD-979A-5499B4030043}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20C5B39E-CEBA-4CCD-979A-5499B4030043}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20C5B39E-CEBA-4CCD-979A-5499B4030043}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20C5B39E-CEBA-4CCD-979A-5499B4030043}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02D5D1C5-675D-482D-9F74-F06FC522D2CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02D5D1C5-675D-482D-9F74-F06FC522D2CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02D5D1C5-675D-482D-9F74-F06FC522D2CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02D5D1C5-675D-482D-9F74-F06FC522D2CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -182,6 +196,9 @@ Global
 		{196EEDE4-CF84-44D5-905B-30F341F7617E} = {8B467944-153B-4C90-BAB1-8F1B34C3075A}
 		{A5CEBB9D-01DE-489B-AED6-4417A773516D} = {196EEDE4-CF84-44D5-905B-30F341F7617E}
 		{839319BA-4C99-4620-BDFE-F9F114DC9979} = {196EEDE4-CF84-44D5-905B-30F341F7617E}
+		{37448199-E002-4FA0-A712-B6DB22DA98EC} = {8B467944-153B-4C90-BAB1-8F1B34C3075A}
+		{20C5B39E-CEBA-4CCD-979A-5499B4030043} = {37448199-E002-4FA0-A712-B6DB22DA98EC}
+		{02D5D1C5-675D-482D-9F74-F06FC522D2CC} = {37448199-E002-4FA0-A712-B6DB22DA98EC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3ECDD26-F40D-4AB4-BC48-8DF143F98FAE}
