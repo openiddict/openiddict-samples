@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Velusia.Server.Models;
-using Velusia.Server.Services;
+using Microsoft.Extensions.Hosting;
+using Velusia.Server.Data;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Velusia.Server
@@ -21,6 +22,7 @@ namespace Velusia.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddRazorPages();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -32,11 +34,15 @@ namespace Velusia.Server
                 // to replace the default OpenIddict entities.
                 options.UseOpenIddict();
             });
+            services.AddDatabaseDeveloperPageExceptionFilter();
 
-            // Register the Identity services.
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+            // Note: Change options.SignIn.RequireConfirmedAccount to true and
+            // register an email sender to require account confirmation before login.
+            // For more details see this link https://aka.ms/aspaccountconf
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+                    .AddEntityFrameworkStores<ApplicationDbContext>()
+                    .AddDefaultTokenProviders()
+                    .AddDefaultUI();
 
             // Configure Identity to use the same JWT claims as OpenIddict instead
             // of the legacy WS-Federation claims it uses by default (ClaimTypes),
@@ -98,31 +104,39 @@ namespace Velusia.Server
                     options.UseAspNetCore();
                 });
 
-            services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
-
             // Register the worker responsible of seeding the database with the sample clients.
             // Note: in a real world application, this step should be part of a setup script.
             services.AddHostedService<Worker>();
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseDeveloperExceptionPage();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseMigrationsEndPoint();
+            }
+            else
+            {
+                app.UseStatusCodePagesWithReExecute("~/error");
+                //app.UseExceptionHandler("~/error");
 
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                //app.UseHsts();
+            }
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
-
-            app.UseStatusCodePagesWithReExecute("/error");
 
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(options =>
+            app.UseEndpoints(endpoints =>
             {
-                options.MapControllers();
-                options.MapDefaultControllerRoute();
+                endpoints.MapControllers();
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapRazorPages();
             });
         }
     }

@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{8B467944-153B-4C90-BAB1-8F1B34C3075A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Velusia", "Velusia", "{F47D1283-0EE9-4728-8026-58405C29B786}"
+	ProjectSection(SolutionItems) = preProject
+		samples\Velusia\RunDemo.ps1 = samples\Velusia\RunDemo.ps1
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Zirku", "Zirku", "{E0ADFFCA-A604-42D1-8F6D-DE888E061188}"
 EndProject
