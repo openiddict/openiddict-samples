@@ -13,9 +13,7 @@ namespace Velusia.Server
     public class Startup
     {
         public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+            => Configuration = configuration;
 
         public IConfiguration Configuration { get; }
 
@@ -34,24 +32,29 @@ namespace Velusia.Server
                 // to replace the default OpenIddict entities.
                 options.UseOpenIddict();
             });
+
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            // Note: Change options.SignIn.RequireConfirmedAccount to true and
-            // register an email sender to require account confirmation before login.
-            // For more details see this link https://aka.ms/aspaccountconf
-            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
-                    .AddEntityFrameworkStores<ApplicationDbContext>()
-                    .AddDefaultTokenProviders()
-                    .AddDefaultUI();
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders()
+                .AddDefaultUI();
 
-            // Configure Identity to use the same JWT claims as OpenIddict instead
-            // of the legacy WS-Federation claims it uses by default (ClaimTypes),
-            // which saves you from doing the mapping in your authorization controller.
             services.Configure<IdentityOptions>(options =>
             {
+                // Configure Identity to use the same JWT claims as OpenIddict instead
+                // of the legacy WS-Federation claims it uses by default (ClaimTypes),
+                // which saves you from doing the mapping in your authorization controller.
                 options.ClaimsIdentity.UserNameClaimType = Claims.Name;
                 options.ClaimsIdentity.UserIdClaimType = Claims.Subject;
                 options.ClaimsIdentity.RoleClaimType = Claims.Role;
+
+                // Note: to require account confirmation before login,
+                // register an email sender service (IEmailSender) and
+                // set options.SignIn.RequireConfirmedAccount to true.
+                //
+                // For more information, visit https://aka.ms/aspaccountconf.
+                options.SignIn.RequireConfirmedAccount = false;
             });
 
             services.AddOpenIddict()
