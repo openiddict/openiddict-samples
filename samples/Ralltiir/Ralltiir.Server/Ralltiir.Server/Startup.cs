@@ -32,15 +32,6 @@ namespace Ralltiir.Server
             });
 
             services.AddMvc();
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
-                options.DefaultAuthenticateScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
-                // options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            });
             
             services.AddCors(options =>
             {
