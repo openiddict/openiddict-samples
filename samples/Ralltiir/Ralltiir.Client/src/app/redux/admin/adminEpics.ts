@@ -17,8 +17,6 @@ import {
 const getUsersEpic = (action$: Observable<any>, state$: Observable<AppState>) =>
   action$.pipe(
     filter((action) => action.type === AdminActionTypes.GET_USERS),
-    // map(action => action as GetUsersAction),
-    // withLatestFrom(state$),
     switchMap(() => {
       return from(
         axios.get<GetUsersResponse[]>(`api/Admin/users`, {

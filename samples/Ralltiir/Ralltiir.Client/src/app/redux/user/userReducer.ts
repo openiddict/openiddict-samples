@@ -48,8 +48,7 @@ export const userReducer: Reducer<UserState, Action> = (
       })
     case UserActionTypes.REGISTER_USER_SUCCESS:
       return state.merge({
-        isLoading: false,
-        // modules: action.payload
+        isLoading: false
       })
     case UserActionTypes.REGISTER_USER_ERROR:
       return state.merge({

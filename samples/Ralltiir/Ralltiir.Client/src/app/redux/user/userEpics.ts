@@ -84,9 +84,6 @@ const loginEpic = (action$: Observable<any>, state$: Observable<AppState>) =>
             .getTime()
             .toString()
 
-          // const cookies = new Cookies()
-          // console.log('cookies', cookies.get('.AspNetCore.Identity.Application'));
-
           axios.defaults.headers.common[
             'Authorization'
           ] = `Bearer ${tokens.access_token}`
@@ -96,9 +93,7 @@ const loginEpic = (action$: Observable<any>, state$: Observable<AppState>) =>
           return { tokens, profile }
         }),
         switchMap((response) => [
-          createLoginSuccessAction(response.tokens, response.profile),
-          // createTestAuthAction(),
-          // createParentDispatchAction(push(response.redirectUrl.substring(response.redirectUrl.indexOf('/'))))
+          createLoginSuccessAction(response.tokens, response.profile)
         ]),
         catchError((err) =>
           err.response != undefined
