@@ -13,7 +13,10 @@ export enum UserActionTypes {
   LOGIN_ERROR = '[USER] LOGIN_ERROR',
   LOGOUT = '[USER] LOGOUT',
   LOGOUT_SUCCESS = '[USER] LOGOUT_SUCCESS',
-  LOGOUT_ERROR = '[USER] LOGOUT_ERROR'
+  LOGOUT_ERROR = '[USER] LOGOUT_ERROR',
+  REFRESH_TOKENS = '[USER] REFRESH_TOKENS',
+  REFRESH_TOKENS_SUCCESS = '[USER] REFRESH_TOKENS_SUCCESS',
+  REFRESH_TOKENS_ERROR = '[USER] REFRESH_TOKENS_ERROR',
 }
 
 export interface RegisterUserAction
@@ -36,6 +39,12 @@ export interface LogoutSuccessAction
   extends Action<UserActionTypes.LOGOUT_SUCCESS> {}
 export interface LogoutErrorAction
   extends Action<UserActionTypes.LOGOUT_ERROR, any> {}
+export interface RefreshTokensAction
+  extends Action<UserActionTypes.REFRESH_TOKENS> {}
+export interface RefreshTokensSuccessAction
+  extends Action<UserActionTypes.REFRESH_TOKENS_SUCCESS, TokenResponse> {}
+export interface RefreshTokensErrorAction
+  extends Action<UserActionTypes.REFRESH_TOKENS_ERROR, any> {}
 
 export const createRegisterUserAction = (
   email: string,
@@ -114,4 +123,26 @@ export const createLogoutErrorAction = (error: any): LogoutErrorAction => {
     type: UserActionTypes.LOGOUT_ERROR,
     payload: error,
   } as LogoutErrorAction
+}
+
+export const createRefreshTokensAction = (): RefreshTokensAction => {
+  return {
+    type: UserActionTypes.REFRESH_TOKENS,
+  } as RefreshTokensAction
+}
+
+export const createRefreshTokensSuccessAction = (tokens: TokenResponse): RefreshTokensSuccessAction => {
+  return {
+    type: UserActionTypes.REFRESH_TOKENS_SUCCESS,
+    payload: tokens
+  } as RefreshTokensSuccessAction
+}
+
+export const createRefreshTokensErrorAction = (
+  error: any
+): RefreshTokensErrorAction => {
+  return {
+    type: UserActionTypes.REFRESH_TOKENS_ERROR,
+    payload: error,
+  } as RefreshTokensErrorAction
 }

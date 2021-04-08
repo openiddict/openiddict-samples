@@ -83,6 +83,21 @@ export const userReducer: Reducer<UserState, Action> = (
         name: '',
         roles: [],
       })
+      case UserActionTypes.REFRESH_TOKENS:
+      return state.merge({
+        isLoading: true,
+        loginError: null,
+      })
+    case UserActionTypes.REFRESH_TOKENS_SUCCESS:
+      return state.merge({
+        isLoading: false,
+        tokens: action.payload.tokens
+      })
+    case UserActionTypes.REFRESH_TOKENS_ERROR:
+      return state.merge({
+        isLoading: false,
+        loginError: [action.payload],
+      })
 
     default:
       return state
