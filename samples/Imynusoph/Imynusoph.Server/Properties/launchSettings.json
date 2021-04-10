@@ -17,6 +17,7 @@
     },
     "Imynusoph.Server": {
       "commandName": "Project",
+      "launchBrowser": true,
       "applicationUrl": "https://localhost:44382/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

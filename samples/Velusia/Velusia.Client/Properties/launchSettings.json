@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:53507",
+      "applicationUrl": "http://localhost:53507/",
       "sslPort": 44338
     }
   },
@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "AuthorizationServer": {
+    "Velusia.Client": {
       "commandName": "Project",
       "launchBrowser": true,
       "applicationUrl": "https://localhost:44338/",

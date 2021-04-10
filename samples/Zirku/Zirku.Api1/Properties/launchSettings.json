@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:5001",
+      "applicationUrl": "http://localhost:5001/",
       "sslPort": 44342
     }
   },
@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Zirku.Api01": {
+    "Zirku.Api1": {
       "commandName": "Project",
       "launchBrowser": true,
       "applicationUrl": "https://localhost:44342/",
