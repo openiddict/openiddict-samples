@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option csharp_namespace = "Gonda.Api1";
+
+package greet;
+
+// The greeting service definition.
+service Greeter {
+  // Sends a greeting
+  rpc SayHello (HelloRequest) returns (SayReply);
+  rpc SaySecret (SecretRequest) returns (SayReply);
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+}
+
+// The request message containing the user's name.
+message SecretRequest {
+  string secret = 1;
+}
+
+// The response message containing the greetings.
+message SayReply {
+  string message = 1;
+}
