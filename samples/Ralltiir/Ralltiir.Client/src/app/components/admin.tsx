@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import _ from 'underscore';
 
 import {
@@ -9,7 +9,7 @@ import {
 } from '../redux/admin/adminActions';
 import { AppState } from '../redux/rootReducer';
 
-export function Admin() {
+function Admin() {
   const dispatch = useDispatch()
 
   useEffect((): void => {
@@ -91,4 +91,4 @@ export function Admin() {
   )
 }
 
-export default Admin
+export default withRouter(Admin)

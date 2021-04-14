@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import _ from 'underscore';
 
 import { AppState } from '../redux/rootReducer';
@@ -8,7 +8,7 @@ import {
     createTestAdminAction, createTestAuthAction, createTestModeratorAction
 } from '../redux/test/testActions';
 
-export function Home() {
+function Home() {
   const dispatch = useDispatch()
 
   const testState = useSelector((state: AppState) => state.test)
@@ -73,4 +73,4 @@ export function Home() {
   )
 }
 
-export default Home
+export default withRouter(Home)

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Alert, Button, Col, Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import _ from 'underscore';
 
 import { AppState } from '../redux/rootReducer';
 import { createLoginAction } from '../redux/user/userActions';
 
-export function Login() {
+function Login() {
   const dispatch = useDispatch()
 
   const usersState = useSelector((state: AppState) => state.user)
@@ -89,4 +89,4 @@ export function Login() {
   )
 }
 
-export default Login
+export default withRouter(Login)

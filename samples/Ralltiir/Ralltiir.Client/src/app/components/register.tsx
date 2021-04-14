@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Alert, Button, Col, Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import _ from 'underscore';
 
 import { AppState } from '../redux/rootReducer';
 import { createRegisterUserAction } from '../redux/user/userActions';
 
-export function Register() {
+function Register() {
   const dispatch = useDispatch()
 
   const usersState = useSelector((state: AppState) => state.user)
@@ -100,4 +100,4 @@ export function Register() {
   )
 }
 
-export default Register
+export default withRouter(Register)
