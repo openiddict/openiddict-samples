@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using OpenIddict.Abstractions;
-using OpenIddict.Validation.AspNetCore;
 using Ralltiir.Server.EF;
 using Ralltiir.Server.Models;
 
@@ -37,18 +36,9 @@ namespace Ralltiir.Server
             services.AddMvc();
             
             // In production, the React files will be served from this directory
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
-            
-            services.AddCors(options =>
+            services.AddSpaStaticFiles(configuration =>
             {
-                options.AddDefaultPolicy(
-                    builder =>
-                    {
-                        builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
-                            .AllowAnyHeader()
-                            .AllowAnyMethod()
-                            .AllowCredentials();
-                    });
+                configuration.RootPath = "ClientApp/build";
             });
             
             services.AddDbContext<ApplicationContext>(options =>
@@ -154,7 +144,6 @@ namespace Ralltiir.Server
             app.UseSpaStaticFiles();
 
             app.UseRouting();
-            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();

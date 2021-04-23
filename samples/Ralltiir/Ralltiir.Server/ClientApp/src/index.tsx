@@ -19,7 +19,8 @@ const oidcSettings: UserManagerSettings = {
     redirect_uri: 'https://localhost:5001/oidc',
     scope: 'openid offline_access profile roles',
     response_type: 'code',
-    automaticSilentRenew: true
+    automaticSilentRenew: true,
+    revokeAccessTokenOnSignout: true
   };
 
 const history = createBrowserHistory();
