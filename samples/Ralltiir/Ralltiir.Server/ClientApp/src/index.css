@@ -1,0 +1,32 @@
+
+.app {
+    max-width: 750px;
+    margin: 10px auto
+}
+
+.header {
+    margin-bottom: 56px;
+}
+
+.footer {
+    padding: 15px 5px;
+    margin-top: 30px;
+    border-top: 1px solid lightgray;
+}
+
+.home, .admin {
+    padding-top: 20px;
+}
+
+.register, .login, .authorize {
+    padding: 25px 20px;
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+}
+
+table {
+    width: 100%;
+}
