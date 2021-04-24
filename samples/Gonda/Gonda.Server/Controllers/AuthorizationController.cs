@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Gonda.Server.Helpers;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -24,13 +25,16 @@ namespace Gonda.Server.Controllers
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IOpenIddictScopeManager _scopeManager;
 
         public AuthorizationController(
             SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IOpenIddictScopeManager scopeManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _scopeManager = scopeManager;
         }
 
         [HttpPost("~/connect/token"), Produces("application/json")]
@@ -71,17 +75,10 @@ namespace Gonda.Server.Controllers
                 // will be used to create an id_token, a token or a code.
                 var principal = await _signInManager.CreateUserPrincipalAsync(user);
 
-                // Set the list of scopes granted to the client application.
-                // Note: the offline_access scope must be granted
-                // to allow OpenIddict to return a refresh token.
-                principal.SetScopes(new[]
-                {
-                    Scopes.OpenId,
-                    Scopes.Email,
-                    Scopes.Profile,
-                    Scopes.OfflineAccess,
-                    Scopes.Roles
-                }.Intersect(request.GetScopes()));
+                var scopes = request.GetScopes();
+                
+                principal.SetScopes(request.GetScopes());
+                principal.SetResources(await _scopeManager.ListResourcesAsync(scopes).ToListAsync());
 
                 foreach (var claim in principal.Claims)
                 {
