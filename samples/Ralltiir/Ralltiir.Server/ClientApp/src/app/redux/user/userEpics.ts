@@ -1,36 +1,20 @@
-import axios from "axios";
-import { push } from "connected-react-router/immutable";
-import { from, Observable, of } from "rxjs";
-import {
-  catchError,
-  filter,
-  map,
-  switchMap,
-  tap,
-  withLatestFrom,
-} from "rxjs/operators";
-import _ from "underscore";
+import axios from 'axios';
+import { push } from 'connected-react-router/immutable';
+import { from, Observable, of } from 'rxjs';
+import { catchError, filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import _ from 'underscore';
 
-import * as config from "../../environments/config";
-import { ProfileModel } from "../../models/profileModel";
-import { TokenResponse } from "../../models/tokenResponse";
-import { Action, AppState } from "../rootReducer";
+import * as config from '../../environments/config';
+import { ProfileModel } from '../../models/profileModel';
+import { TokenResponse } from '../../models/tokenResponse';
+import { Action, AppState } from '../rootReducer';
 import {
-  AuthorizeAction,
-  createAuthorizeAction,
-  createAuthorizeErrorAction,
-  createAuthorizeSuccessAction,
-  createLoginAction,
-  createLoginErrorAction,
-  createLoginSuccessAction,
-  createLogoutErrorAction,
-  createLogoutSuccessAction,
-  createRegisterUserErrorAction,
-  createRegisterUserSuccessAction,
-  LoginAction,
-  RegisterUserAction,
-  UserActionTypes,
-} from "./userActions";
+    AuthorizeAction, createAuthorizeAction, createAuthorizeErrorAction,
+    createAuthorizeSuccessAction, createLoginAction, createLoginErrorAction,
+    createLoginSuccessAction, createLogoutErrorAction, createLogoutSuccessAction,
+    createRegisterUserErrorAction, createRegisterUserSuccessAction, LoginAction, RegisterUserAction,
+    UserActionTypes
+} from './userActions';
 
 const registerUserEpic = (
   action$: Observable<any>,
@@ -130,25 +114,7 @@ const logoutEpic = (action$: Observable<any>, state$: Observable<AppState>) =>
     switchMap(([action, state]) => {
       const userManager = state.user.get("userManager");
 
-      userManager.stopSilentRenew();
-
-      var logout = new Promise((res, rej) => {
-        userManager
-          .createSignoutRequest()
-          .then((request) => {
-            document
-              .getElementById("auth_frame")
-              ?.setAttribute("src", request.url);
-
-            Promise.all([
-              userManager.removeUser(),
-              userManager.clearStaleState(),
-            ]).then(res, rej);
-          })
-          .catch(rej);
-      });
-
-      return from(logout).pipe(
+      return from(userManager.signoutRedirect()).pipe(
         tap(() => {
           axios.defaults.headers.common["Authorization"] = undefined;
         }),

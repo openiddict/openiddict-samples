@@ -12,6 +12,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,7 @@ using OpenIddict.Abstractions;
 using OpenIddict.Core;
 using OpenIddict.EntityFrameworkCore.Models;
 using OpenIddict.Server.AspNetCore;
+using OpenIddict.Validation.AspNetCore;
 using Ralltiir.Server.Extensions;
 using Ralltiir.Server.Helpers;
 using Ralltiir.Server.Models;
@@ -50,9 +52,14 @@ namespace Ralltiir.Server.Controllers
             _authorizationManager = authorizationManager;
             _scopeManager = scopeManager;
         }
+        
+        [IgnoreAntiforgeryToken]
+        [HttpGet("~/oidc")]
+        [HttpPost("~/oidc")]
+        public IActionResult OidcCallback() => Ok();
 
-        [HttpGet("~/connect/authorize")]
-        [HttpPost("~/connect/authorize")]
+        [IgnoreAntiforgeryToken]
+        [Authorize, HttpPost("~/connect/authorize")]
         public async Task<IActionResult> Authorize()
         {
             var request = HttpContext.GetOpenIddictServerRequest() ??
@@ -224,9 +231,8 @@ namespace Ralltiir.Server.Controllers
             }
         }
 
-        [QueryParamRequired("accept")]
-        [HttpGet("~/connect/authorize")]
-        [HttpPost("~/connect/authorize")]
+        [Authorize, FormValueRequired("accept")]
+        [HttpPost("~/connect/authorize"), IgnoreAntiforgeryToken]
         public async Task<IActionResult> AuthorizeAccept()
         {
             var request = HttpContext.GetOpenIddictServerRequest() ??
@@ -295,7 +301,8 @@ namespace Ralltiir.Server.Controllers
             return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
 
-        [HttpPost("~/connect/token"), Produces("application/json")]
+        [IgnoreAntiforgeryToken]
+        [Authorize, HttpPost("~/connect/token"), Produces("application/json")]
         public async Task<IActionResult> Exchange()
         {
             var request = HttpContext.GetOpenIddictServerRequest();
@@ -336,6 +343,8 @@ namespace Ralltiir.Server.Controllers
                 {
                     claim.SetDestinations(GetDestinations(claim, principal));
                 }
+                
+                Response.Cookies.Delete(".AspNetCore.Identity.Application");
 
                 // Returning a SignInResult will ask OpenIddict to issue the appropriate access/identity tokens.
                 return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);

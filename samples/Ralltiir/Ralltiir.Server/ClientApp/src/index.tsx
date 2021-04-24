@@ -17,6 +17,7 @@ const oidcSettings: UserManagerSettings = {
     authority: authUrl,
     client_id: 'ralltiir-client',
     redirect_uri: 'https://localhost:5001/oidc',
+    post_logout_redirect_uri: 'https://localhost:5001/oidc',
     scope: 'openid offline_access profile roles',
     response_type: 'code',
     automaticSilentRenew: true,

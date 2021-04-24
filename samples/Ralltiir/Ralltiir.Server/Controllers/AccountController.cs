@@ -45,8 +45,9 @@ namespace Ralltiir.Server.Controllers
             return BadRequest(ModelState);
         }
 
-        [HttpPost("~/connect/login")]
         [AllowAnonymous]
+        [IgnoreAntiforgeryToken]
+        [HttpPost("~/connect/login")]
         public async Task<IActionResult> Login(LoginRequest model)
         {
             // This doesn't count login failures towards account lockout
@@ -75,8 +76,7 @@ namespace Ralltiir.Server.Controllers
         
         //
         // POST: /Account/LogOff
-        [HttpGet("~/connect/logout")]
-        [HttpPost("~/connect/logout")]
+        [Authorize, HttpPost("~/connect/logout"), ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
         {
             await _signInManager.SignOutAsync();

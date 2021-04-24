@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +36,12 @@ namespace Ralltiir.Server
             });
 
             services.AddMvc();
+
+            services.AddAntiforgery(options =>
+            {
+                options.Cookie.Name = "XSRF-TOKEN";
+                options.HeaderName = "X-XSRF-TOKEN";
+            });
             
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -124,7 +132,7 @@ namespace Ralltiir.Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IAntiforgery antiforgery)
         {
             if (env.IsDevelopment())
             {
@@ -149,6 +157,24 @@ namespace Ralltiir.Server
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+            app.Use(next => context =>
+            {
+                var path = context.Request.Path.Value;
+
+                if (!string.Equals(path, "/", StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(path, "/index.html", StringComparison.OrdinalIgnoreCase))
+                {
+                    return next(context);
+                }
+                
+                var tokens = antiforgery.GetAndStoreTokens(context);
+                
+                context.Response.Cookies.Append("XSRF-TOKEN", tokens.RequestToken ?? "", 
+                    new CookieOptions { HttpOnly = false });
+
+                return next(context);
+            });
 
             app.UseSpa(spa =>
             {

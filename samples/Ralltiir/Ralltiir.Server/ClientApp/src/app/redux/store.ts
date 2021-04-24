@@ -5,10 +5,7 @@ import { applyMiddleware, createStore, Store } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { createEpicMiddleware } from "redux-observable-es6-compat";
 
-import {
-  createOidcUserManager,
-  registerOidcEvents,
-} from "../utilities/oidcManagerFactory";
+import { OidcUserManager } from "../utilities/oidcManagerFactory";
 import { rootEpic } from "./rootEpic";
 import { AppState, createAppReducer, getInitialAppState } from "./rootReducer";
 
@@ -25,15 +22,15 @@ export const configureStore = (
   const enhancers = [middlewareEnhancer];
   const composedEnhancers = composeWithDevTools(...enhancers);
 
-  const oidcManager = createOidcUserManager(oidcSettings);
+  const oidcManager = new OidcUserManager(oidcSettings);
 
   const store = createStore(
-    createAppReducer(history, oidcManager),
+    createAppReducer(history, oidcManager.userManager),
     getInitialAppState(),
     composedEnhancers
   );
 
-  registerOidcEvents(oidcManager, store);
+  oidcManager.registerOidcEvents(store);
 
   epicMiddleware.run(rootEpic);
 
