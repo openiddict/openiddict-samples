@@ -1,13 +1,5 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
-.yarn/*
-!.yarn/patches
-!.yarn/releases
-!.yarn/plugins
-!.yarn/sdks
-!.yarn/versions
-.pnp.*
-
 # dependencies
 /node_modules
 

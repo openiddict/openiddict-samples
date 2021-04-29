@@ -1,54 +1,50 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+    <PackageReference Include="OpenIddict.AspNetCore" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Content Remove="$(SpaRoot)**" />
+    <None Remove="$(SpaRoot)**" />
+    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+    <None Include="ClientApp\public\favicon.ico" />
+    <None Include="ClientApp\public\index.html" />
+  </ItemGroup>
+
+  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
+    <!-- Ensure Node.js is installed -->
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+  </Target>
+
+  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+    <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm build" />
+
+    <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.4" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.4" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.4" />
-        <PackageReference Include="OpenIddict.AspNetCore" Version="3.0.2" />
-        <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="3.0.2" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.1.1" />
-        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.3" />
+      <DistFiles Include="$(SpaRoot)build\**; $(SpaRoot)build-ssr\**" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ResolvedFileToPublish>
     </ItemGroup>
-
-    <ItemGroup>
-        <!-- Don't publish the SPA source files, but do show them in the project files list -->
-        <Content Remove="$(SpaRoot)**" />
-        <None Remove="$(SpaRoot)**" />
-        <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-        <None Include="ClientApp\public\favicon.ico" />
-        <None Include="ClientApp\public\index.html" />
-    </ItemGroup>
-
-    <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
-        <!-- Ensure Node.js is installed -->
-        <Exec Command="node --version" ContinueOnError="true">
-            <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
-        </Exec>
-        <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
-        <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
-        <Exec WorkingDirectory="$(SpaRoot)" Command="npx yarn" />
-    </Target>
-
-    <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
-        <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
-        <Exec WorkingDirectory="$(SpaRoot)" Command="npx yarn" />
-        <Exec WorkingDirectory="$(SpaRoot)" Command="npx yarn build" />
-
-        <!-- Include the newly-built files in the publish output -->
-        <ItemGroup>
-            <DistFiles Include="$(SpaRoot)build\**; $(SpaRoot)build-ssr\**" />
-            <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
-                <RelativePath>%(DistFiles.Identity)</RelativePath>
-                <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-                <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-            </ResolvedFileToPublish>
-        </ItemGroup>
-    </Target>
+  </Target>
 
 </Project>

@@ -52,11 +52,6 @@ namespace Ralltiir.Server.Controllers
             _authorizationManager = authorizationManager;
             _scopeManager = scopeManager;
         }
-        
-        [IgnoreAntiforgeryToken]
-        [HttpGet("~/oidc")]
-        [HttpPost("~/oidc")]
-        public IActionResult OidcCallback() => Ok();
 
         [IgnoreAntiforgeryToken]
         [Authorize, HttpPost("~/connect/authorize")]

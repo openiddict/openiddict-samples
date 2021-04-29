@@ -24,11 +24,7 @@ export function Header() {
         <Navbar.Brand as={Link} to="/">
           Your application (Ralltiir.Client)
         </Navbar.Brand>
-        <Nav className="mr-auto">
-          <Nav.Link href="/swagger">
-            API Definitions
-            </Nav.Link>
-          </Nav>
+        <Nav className="mr-auto" />
         <Nav>
           {_.intersection(roles, ['admin', 'moderator']).length > 0 && (
             <Nav.Link as={Link} to="/admin">

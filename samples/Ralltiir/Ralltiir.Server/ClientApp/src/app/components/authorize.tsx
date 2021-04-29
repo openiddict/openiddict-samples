@@ -14,7 +14,7 @@ function Authorize() {
   const isLoading = usersState.get("isLoading");
   const userManager = usersState.get("userManager");
   const scopes = userManager.settings.scope;
-  const clientId = userManager.settings.client_id;
+  const profile = usersState.get("profile");
 
   const accept = () => {
     dispatch(createAuthorizeAction(true));
@@ -29,7 +29,7 @@ function Authorize() {
       <h2>Authorization</h2>
       <br />
       <p className="lead text-left">
-        Do you want to grant <strong>{clientId}</strong> access to your data?
+        Do you want to grant <strong>{profile?.azp}</strong> access to your data?
         (scopes requested: {scopes})
       </p>
 

@@ -7,6 +7,7 @@ export interface ProfileModel {
   exp: number;
   iat: number;
   iss: string;
+  azp: string;
 
   unique_name: string;
   email_confirmed: boolean;

@@ -12,11 +12,11 @@ using Ralltiir.Server.Models;
 
 namespace Ralltiir.Server
 {
-    public class DataMigration : IHostedService
+    public class Worker : IHostedService
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public DataMigration(IServiceProvider serviceProvider)
+        public Worker(IServiceProvider serviceProvider)
             => _serviceProvider = serviceProvider;
 
         public async Task StartAsync(CancellationToken cancellationToken)
@@ -43,11 +43,11 @@ namespace Ralltiir.Server
                         ClientId = "ralltiir-client",
                         RedirectUris =
                         {
-                            new Uri("https://localhost:5001/oidc")
+                            new Uri("https://localhost:5001")
                         },
                         PostLogoutRedirectUris =
                         {
-                            new Uri("https://localhost:5001/oidc"),
+                            new Uri("https://localhost:5001"),
                         },
                         Permissions =
                         {

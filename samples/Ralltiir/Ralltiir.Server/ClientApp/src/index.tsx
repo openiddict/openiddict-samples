@@ -16,8 +16,8 @@ import reportWebVitals from './reportWebVitals';
 const oidcSettings: UserManagerSettings = {
     authority: authUrl,
     client_id: 'ralltiir-client',
-    redirect_uri: 'https://localhost:5001/oidc',
-    post_logout_redirect_uri: 'https://localhost:5001/oidc',
+    redirect_uri: 'https://localhost:5001',
+    post_logout_redirect_uri: 'https://localhost:5001',
     scope: 'openid offline_access profile roles',
     response_type: 'code',
     automaticSilentRenew: true,

@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using OpenIddict.Abstractions;
 using Ralltiir.Server.EF;
 using Ralltiir.Server.Models;
@@ -29,12 +28,6 @@ namespace Ralltiir.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Ralltiir.Server", Version = "v1"});
-                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-            });
-
             services.AddMvc();
 
             services.AddAntiforgery(options =>
@@ -128,24 +121,13 @@ namespace Ralltiir.Server
                     options.UseAspNetCore();
                 });
             
-            services.AddHostedService<DataMigration>();
+            services.AddHostedService<Worker>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IAntiforgery antiforgery)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Ralltiir.Server v1"));
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+            app.UseDeveloperExceptionPage();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -182,7 +164,7 @@ namespace Ralltiir.Server
 
                 if (env.IsDevelopment())
                 {
-                    spa.Options.PackageManagerCommand = "yarn";
+                    spa.Options.PackageManagerCommand = "npm";
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });

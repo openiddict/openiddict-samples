@@ -17,6 +17,7 @@
     <PackageReference Update="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.4" />
     <PackageReference Update="Microsoft.AspNetCore.Identity.UI" Version="5.0.4" />
     <PackageReference Update="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.4" />
+    <PackageReference Update="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.4" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.4" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.4" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.Tools" Version="5.0.4" />
