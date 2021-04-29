@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Gonda.Server
 {
@@ -18,6 +13,24 @@ namespace Gonda.Server
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.ConfigureKestrel(options =>
+                    {
+                        options.ListenLocalhost(5001, o =>
+                        {
+                            o.UseHttps();
+                            o.Protocols =
+                                HttpProtocols.Http1;
+                        });
+                        // Setup a HTTP/2 endpoint without TLS.
+                        options.ListenLocalhost(5002, o =>
+                        {
+                            o.Protocols =
+                                HttpProtocols.Http2;
+                        });
+                    });
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }

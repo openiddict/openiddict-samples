@@ -1,11 +1,9 @@
-using System;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Gonda.Server.Models;
 
 namespace Gonda.Server.EF
 {
-    public class ApplicationContext : IdentityDbContext<ApplicationUser, ApplicationUserRole, Guid>
+    public class ApplicationContext : IdentityDbContext
     {
         public ApplicationContext(DbContextOptions options)
             : base(options) { }

@@ -7,7 +7,6 @@ using OpenIddict.Abstractions;
 using OpenIddict.Core;
 using OpenIddict.EntityFrameworkCore.Models;
 using OpenIddict.Validation.AspNetCore;
-using Gonda.Server.Models;
 
 namespace Gonda.Server.Controllers
 {
@@ -16,11 +15,11 @@ namespace Gonda.Server.Controllers
     public class ResourceController : Controller
     {
         private readonly OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication<Guid>> _applicationManager;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<IdentityUser> _userManager;
 
         public ResourceController(
             OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication<Guid>> applicationManager,
-            UserManager<ApplicationUser> userManager)
+            UserManager<IdentityUser> userManager)
         {
             _applicationManager = applicationManager;
             _userManager = userManager;

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Gonda.Server.Models;
 using Gonda.Server.ViewModels;
 
 namespace Gonda.Server.Controllers
@@ -12,12 +11,12 @@ namespace Gonda.Server.Controllers
     [Route("[controller]")]
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
         public AccountController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -27,7 +26,7 @@ namespace Gonda.Server.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterUserRequest request)
         {
-            var user = new ApplicationUser {UserName = request.Email, Email = request.Email};
+            var user = new IdentityUser {UserName = request.Email, Email = request.Email};
             
             var result = await _userManager.CreateAsync(user, request.Password);
             

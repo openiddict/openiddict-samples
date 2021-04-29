@@ -15,25 +15,25 @@ namespace Gonda.Client
     public static class Program
     {
         private const string AuthUrl = "https://localhost:5001";
-        private const string Api1Url = "http://localhost:5002";
+        private const string ApiUrl = "http://localhost:5002";
         
         public static async Task Main(string[] args)
         {
-            Console.WriteLine("Attempting anonymous calls to Api1...\n");
+            // Console.WriteLine("Attempting anonymous calls to gRPC service...\n");
             
-            var anonymousClient = CreateAnonymousClient();
-
-            await SayHello(anonymousClient);
-            await SaySecret(anonymousClient);
+            // var anonymousClient = CreateAnonymousClient();
+            //
+            // await SayHello(anonymousClient);
+            // await SaySecret(anonymousClient);
             
-            Console.WriteLine("Attempting authenticated calls to Api1...\n");
+            Console.WriteLine("Attempting authenticated calls to gRPC service...\n");
             
             await CreateUser();
             var tokens = await GetTokens();
             
             var authenticatedClient = CreateAuthenticatedClient(tokens.AccessToken);
 
-            await SayHello(authenticatedClient);
+            // await SayHello(authenticatedClient);
             await SaySecret(authenticatedClient);
             
             // Console.WriteLine("Press any key to exit...");
@@ -42,7 +42,7 @@ namespace Gonda.Client
 
         private static Greeter.GreeterClient CreateAnonymousClient()
         {
-            var channel = GrpcChannel.ForAddress(Api1Url);
+            var channel = GrpcChannel.ForAddress(ApiUrl);
             
             return new Greeter.GreeterClient(channel);
         }
@@ -57,7 +57,7 @@ namespace Gonda.Client
                 HttpClient = httpClient, 
             };
             
-            var channel = GrpcChannel.ForAddress(Api1Url, opt);
+            var channel = GrpcChannel.ForAddress(ApiUrl, opt);
             
             return new Greeter.GreeterClient(channel);
         }
@@ -66,7 +66,7 @@ namespace Gonda.Client
         {
             try
             {
-                Console.WriteLine("Attempting to say hello to Api1...");
+                Console.WriteLine("Attempting to say hello to gRPC service...");
 
                 var reply = await client.SayHelloAsync(new HelloRequest {Name = "GreeterClient"});
 
@@ -84,7 +84,7 @@ namespace Gonda.Client
         {
             try
             {
-                Console.WriteLine("Attempting to tell a secret Api1...");
+                Console.WriteLine("Attempting to tell a secret to gRPC service...");
 
                 var reply = await client.SaySecretAsync(new SecretRequest {Secret = "Some thing"});
 
@@ -138,8 +138,7 @@ namespace Gonda.Client
                 ["username"] = "test@email.com",
                 ["password"] = "Gonda~1",
                 ["grant_type"] = "password",
-                ["scope"] = "openid profile roles api1",
-                ["client_id"] = "gonda-client"
+                ["scope"] = "openid profile roles"
             };
 
             var content = new FormUrlEncodedContent(requestData);

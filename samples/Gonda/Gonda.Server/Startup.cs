@@ -1,4 +1,4 @@
-using System;
+using Gonda.Api1;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -6,11 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using OpenIddict.Abstractions;
 using Gonda.Server.EF;
-using Gonda.Server.Models;
-using OpenIddict.Validation.AspNetCore;
+using Microsoft.AspNetCore.Http;
 
 namespace Gonda.Server
 {
@@ -26,23 +24,8 @@ namespace Gonda.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Gonda.Server", Version = "v1"});
-            });
-
             services.AddMvc();
-
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(
-                    builder =>
-                    {
-                        builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
-                    });
-            });
+            services.AddGrpc();
 
             services.AddDbContext<ApplicationContext>(options =>
             {
@@ -53,10 +36,10 @@ namespace Gonda.Server
                 // Register the entity sets needed by OpenIddict.
                 // Note: use the generic overload if you need
                 // to replace the default OpenIddict entities.
-                options.UseOpenIddict<Guid>();
+                options.UseOpenIddict();
             });
 
-            services.AddIdentity<ApplicationUser, ApplicationUserRole>()
+            services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationContext>()
                 .AddDefaultTokenProviders();
 
@@ -77,16 +60,14 @@ namespace Gonda.Server
                     // Configure OpenIddict to use the Entity Framework Core stores and models.
                     // Note: call ReplaceDefaultEntities() to replace the default OpenIddict entities.
                     options.UseEntityFrameworkCore()
-                        .UseDbContext<ApplicationContext>()
-                        .ReplaceDefaultEntities<Guid>();
+                        .UseDbContext<ApplicationContext>();
                 })
 
                 // Register the OpenIddict server components.
                 .AddServer(options =>
                 {
                     // Enable the token endpoint.
-                    options.SetTokenEndpointUris("/connect/token")
-                        .SetIntrospectionEndpointUris("/connect/introspect");
+                    options.SetTokenEndpointUris("/connect/token");
 
                     // Mark the "email", "profile" and "roles" scopes as supported scopes.
                     options.RegisterScopes(OpenIddictConstants.Scopes.Email, OpenIddictConstants.Scopes.Profile,
@@ -95,7 +76,8 @@ namespace Gonda.Server
                     // Note: this sample only uses the authorization code flow but you can enable
                     // the other flows if you need to support implicit, password or client credentials.
                     options.AllowPasswordFlow();
-                    options.AllowRefreshTokenFlow();
+                    
+                    options.AcceptAnonymousClients();
 
                     // Register the signing and encryption credentials.
                     options.AddDevelopmentEncryptionCertificate()
@@ -114,10 +96,6 @@ namespace Gonda.Server
                     // Register the ASP.NET Core host.
                     options.UseAspNetCore();
                 });
-
-            // Register the worker responsible of seeding the database with the sample clients.
-            // Note: in a real world application, this step should be part of a setup script.
-            services.AddHostedService<DataMigration>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -126,19 +104,26 @@ namespace Gonda.Server
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Gonda.Server v1"));
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
-            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapGrpcService<GreeterService>();
+                endpoints.MapGet("/",
+                    async context =>
+                    {
+                        await context.Response.WriteAsync(
+                            "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+                    });
+            });
         }
     }
 }

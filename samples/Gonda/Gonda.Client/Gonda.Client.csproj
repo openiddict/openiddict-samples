@@ -6,7 +6,7 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <Protobuf Include="..\Gonda.Api1\Protos\greet.proto" GrpcServices="Client" />
+        <Protobuf Include="..\Gonda.Server\Protos\greet.proto" GrpcServices="Client" />
     </ItemGroup>
 
     <ItemGroup>
