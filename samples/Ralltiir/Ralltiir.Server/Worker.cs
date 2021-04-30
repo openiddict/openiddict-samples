@@ -79,7 +79,7 @@ namespace Ralltiir.Server
                     {
                         Name = "admin",
                         NormalizedName = "Admin",
-                        RoleId = Guid.NewGuid(),
+                        Id = Guid.NewGuid(),
                         ConcurrencyStamp = Guid.NewGuid().ToString()
                     });
                 }
@@ -90,7 +90,7 @@ namespace Ralltiir.Server
                     {
                         Name = "moderator",
                         NormalizedName = "Moderator",
-                        RoleId = Guid.NewGuid(),
+                        Id = Guid.NewGuid(),
                         ConcurrencyStamp = Guid.NewGuid().ToString()
                     });
                 }

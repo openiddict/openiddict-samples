@@ -10,7 +10,7 @@ namespace Ralltiir.Server.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -25,7 +25,7 @@ namespace Ralltiir.Server.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("register")]
+        [HttpPost("register"), ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterUserRequest request)
         {
             var user = new ApplicationUser {UserName = request.Email, Email = request.Email};
@@ -46,8 +46,7 @@ namespace Ralltiir.Server.Controllers
         }
 
         [AllowAnonymous]
-        [IgnoreAntiforgeryToken]
-        [HttpPost("~/connect/login")]
+        [HttpPost("~/connect/login"), ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginRequest model)
         {
             // This doesn't count login failures towards account lockout

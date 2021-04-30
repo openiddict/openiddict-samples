@@ -12,7 +12,7 @@ using Ralltiir.Server.Models;
 namespace Ralltiir.Server.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ResourceController : Controller
     {
         private readonly OpenIddictApplicationManager<OpenIddictEntityFrameworkCoreApplication<Guid>> _applicationManager;

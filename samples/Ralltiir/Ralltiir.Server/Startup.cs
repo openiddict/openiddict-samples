@@ -30,9 +30,12 @@ namespace Ralltiir.Server
         {
             services.AddMvc();
 
+            //Axios will automatically create a header named X-XSRF-TOKEN when it receives a cookie
+            //named XSRF-TOKEN. We need to tell the antiforgery service about that header name.
+            //Note: The cookie should not be set to XSRF-TOKEN here but instead is the header used
+            //in the middleware
             services.AddAntiforgery(options =>
             {
-                options.Cookie.Name = "XSRF-TOKEN";
                 options.HeaderName = "X-XSRF-TOKEN";
             });
             
@@ -138,18 +141,26 @@ namespace Ralltiir.Server
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-
+            //We need to add a middleware to add a cookie containing the request token since we're not
+            //using a server-side form and are only consuming API calls from the react frontend. Axios
+            //will automatically know what to do with this cookie if it's named XSRF-TOKEN.
+            //Note: There isn't a need to do this for API calls or static resources for the SPA
             app.Use(next => context =>
             {
                 var path = context.Request.Path.Value;
 
-                if (!string.Equals(path, "/", StringComparison.OrdinalIgnoreCase) &&
-                    !string.Equals(path, "/index.html", StringComparison.OrdinalIgnoreCase))
+                var ignoredExtensions = new[] {".css", ".js", ".json", ".png", ".ico"};
+                var ignoredPaths = new[] {"/static", "/api", "/connect"};
+
+                if (path != null && (
+                    ignoredExtensions.Any(ext =>
+                        path.EndsWith(ext, StringComparison.InvariantCultureIgnoreCase))
+                    || ignoredPaths.Any(ext =>
+                        path.StartsWith(ext, StringComparison.InvariantCultureIgnoreCase))))
                 {
                     return next(context);
                 }
-                
+
                 var tokens = antiforgery.GetAndStoreTokens(context);
                 
                 context.Response.Cookies.Append("XSRF-TOKEN", tokens.RequestToken ?? "", 
@@ -157,6 +168,8 @@ namespace Ralltiir.Server
 
                 return next(context);
             });
+
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             app.UseSpa(spa =>
             {

@@ -25,7 +25,7 @@ const registerUserEpic = (
     map((action) => action as RegisterUserAction),
     switchMap((action) =>
       from(
-        axios.post(`Account/register`, action.payload, {
+        axios.post(`api/Account/register`, action.payload, {
           baseURL: config.authUrl,
         })
       ).pipe(

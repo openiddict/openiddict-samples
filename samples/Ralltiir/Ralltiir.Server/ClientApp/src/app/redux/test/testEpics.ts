@@ -1,26 +1,22 @@
-import axios, { AxiosResponse } from "axios";
-import { from, Observable, of } from "rxjs";
-import { catchError, filter, map, switchMap } from "rxjs/operators";
-import _ from "underscore";
+import axios, { AxiosResponse } from 'axios';
+import { from, Observable, of } from 'rxjs';
+import { catchError, filter, map, switchMap } from 'rxjs/operators';
+import _ from 'underscore';
 
-import * as config from "../../environments/config";
-import { AppState } from "../rootReducer";
+import * as config from '../../environments/config';
+import { AppState } from '../rootReducer';
 import {
-  createTestAdminErrorAction,
-  createTestAdminSuccessAction,
-  createTestAuthErrorAction,
-  createTestAuthSuccessAction,
-  createTestModeratorErrorAction,
-  createTestModeratorSuccessAction,
-  TestActionTypes,
-} from "./testActions";
+    createTestAdminErrorAction, createTestAdminSuccessAction, createTestAuthErrorAction,
+    createTestAuthSuccessAction, createTestModeratorErrorAction, createTestModeratorSuccessAction,
+    TestActionTypes
+} from './testActions';
 
 const testAuthEpic = (action$: Observable<any>, state$: Observable<AppState>) =>
   action$.pipe(
     filter((action) => action.type === TestActionTypes.TEST_AUTH),
     switchMap(() => {
       return from(
-        axios.get<string>(`Resource/message`, {
+        axios.get<string>(`api/Resource/message`, {
           baseURL: config.authUrl,
         })
       ).pipe(
@@ -49,7 +45,7 @@ const testModeratorEpic = (
     filter((action) => action.type === TestActionTypes.TEST_MODERATOR),
     switchMap(() => {
       return from(
-        axios.get<string>(`Resource/message/moderator`, {
+        axios.get<string>(`api/Resource/message/moderator`, {
           baseURL: config.authUrl,
         })
       ).pipe(
@@ -78,7 +74,7 @@ const testAdminEpic = (
     filter((action) => action.type === TestActionTypes.TEST_ADMIN),
     switchMap(() => {
       return from(
-        axios.get<string>(`Resource/message/admin`, {
+        axios.get<string>(`api/Resource/message/admin`, {
           baseURL: config.authUrl,
         })
       ).pipe(
