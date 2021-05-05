@@ -95,6 +95,8 @@ namespace Gonda.Server
 
                     // Register the ASP.NET Core host.
                     options.UseAspNetCore();
+
+                    options.SetIssuer("https://localhost:5001");
                 });
         }
 

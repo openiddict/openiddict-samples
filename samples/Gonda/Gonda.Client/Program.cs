@@ -19,12 +19,12 @@ namespace Gonda.Client
         
         public static async Task Main(string[] args)
         {
-            // Console.WriteLine("Attempting anonymous calls to gRPC service...\n");
+            Console.WriteLine("Attempting anonymous calls to gRPC service...\n");
             
-            // var anonymousClient = CreateAnonymousClient();
-            //
-            // await SayHello(anonymousClient);
-            // await SaySecret(anonymousClient);
+            var anonymousClient = CreateAnonymousClient();
+            
+            await SayHello(anonymousClient);
+            await SaySecret(anonymousClient);
             
             Console.WriteLine("Attempting authenticated calls to gRPC service...\n");
             
@@ -33,11 +33,11 @@ namespace Gonda.Client
             
             var authenticatedClient = CreateAuthenticatedClient(tokens.AccessToken);
 
-            // await SayHello(authenticatedClient);
+            await SayHello(authenticatedClient);
             await SaySecret(authenticatedClient);
             
-            // Console.WriteLine("Press any key to exit...");
-            // Console.ReadKey();
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
         }
 
         private static Greeter.GreeterClient CreateAnonymousClient()
