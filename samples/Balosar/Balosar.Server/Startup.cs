@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Quartz;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Balosar.Server
@@ -44,6 +45,18 @@ namespace Balosar.Server
                 options.ClaimsIdentity.RoleClaimType = Claims.Role;
             });
 
+            // OpenIddict offers native integration with Quartz.NET to perform scheduled tasks
+            // (like pruning orphaned authorizations/tokens from the database) at regular intervals.
+            services.AddQuartz(options =>
+            {
+                options.UseMicrosoftDependencyInjectionJobFactory();
+                options.UseSimpleTypeLoader();
+                options.UseInMemoryStore();
+            });
+
+            // Register the Quartz.NET service and configure it to block shutdown until jobs are complete.
+            services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
+
             services.AddOpenIddict()
 
                 // Register the OpenIddict core components.
@@ -53,6 +66,9 @@ namespace Balosar.Server
                      // Note: call ReplaceDefaultEntities() to replace the default OpenIddict entities.
                      options.UseEntityFrameworkCore()
                             .UseDbContext<ApplicationDbContext>();
+
+                     // Enable Quartz.NET integration.
+                     options.UseQuartz();
                  })
 
                 // Register the OpenIddict server components.

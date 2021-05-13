@@ -31,8 +31,10 @@
     <PackageReference Update="OpenIddict.Abstractions" Version="3.0.4" />
     <PackageReference Update="OpenIddict.EntityFrameworkCore" Version="3.0.4" />
     <PackageReference Update="OpenIddict.Owin" Version="3.0.4" />
+    <PackageReference Update="OpenIddict.Quartz" Version="3.0.4" />
     <PackageReference Update="OpenIddict.Validation.AspNetCore" Version="3.0.4" />
     <PackageReference Update="OpenIddict.Validation.SystemNetHttp" Version="3.0.4" />
+    <PackageReference Update="Quartz.Extensions.Hosting" Version="3.2.4" />
     <PackageReference Update="System.Net.Http.Json" Version="5.0.0" />
   </ItemGroup>
 
