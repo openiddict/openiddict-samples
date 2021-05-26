@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -20,6 +21,8 @@ namespace Velusia.Client
             .AddCookie(options =>
             {
                 options.LoginPath = "/login";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(50);
+                options.SlidingExpiration = false;
             })
 
             .AddOpenIdConnect(options =>
