@@ -25,7 +25,7 @@ export interface Action<TAction = any, TPayload = any>
 }
 
 export interface AppState {
-  router: ConnectedRouterState;
+  router: ConnectedRouterState<any>;
   user: UserState;
   admin: AdminState;
   test: TestState;
@@ -33,7 +33,7 @@ export interface AppState {
 
 export function getInitialAppState(): AppState {
   return {
-    router: (undefined as any) as ConnectedRouterState,
+    router: (undefined as any) as ConnectedRouterState<any>,
     user: (undefined as any) as UserState,
     admin: getInitialAdminState(),
     test: getInitialTestState(),
@@ -45,7 +45,7 @@ export function createAppReducer(
   oidcUserManager: UserManager
 ): Reducer<AppState, any> {
   var reducers = {
-    router: connectRouter(history),
+    router: connectRouter<any>(history),
     user: createUserReducer(oidcUserManager),
     admin: adminReducer,
     test: testReducer,

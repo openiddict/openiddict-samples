@@ -1,8 +1,6 @@
 import axios from 'axios';
-import { settings } from 'node:cluster';
 import Oidc, { UserManager, UserManagerSettings } from 'oidc-client';
 import { Store } from 'redux';
-import _ from 'underscore';
 
 import { createAuthorizeSuccessAction, createLogoutAction } from '../redux/user/userActions';
 

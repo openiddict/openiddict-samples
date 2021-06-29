@@ -60,78 +60,38 @@ namespace Ralltiir.Server.Controllers
             var request = HttpContext.GetOpenIddictServerRequest() ??
                 throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
+            // Return an error for any request not specifying prompt=none since we only support promptless responses.
+            if (!request.HasPrompt(Prompts.None))
+            {
+                throw new InvalidOperationException("This server only accepts requests with prompt=None.");
+            }
+
             // Retrieve the user principal stored in the authentication cookie.
-            // If it can't be extracted, redirect the user to the login page.
+            // If an error occurs, return a forbid response as there's no path forward.
             var result = await HttpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
             if (result == null || !result.Succeeded)
             {
-                // If the client application requested promptless authentication,
-                // return an error indicating that the user is not logged in.
-                if (request.HasPrompt(Prompts.None))
-                {
                     return Forbid(
-                        authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                        properties: new AuthenticationProperties(new Dictionary<string, string>
-                        {
-                            [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.LoginRequired,
-                            [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The user is not logged in."
-                        }));
-                }
-
-                return Challenge(
-                    authenticationSchemes: IdentityConstants.ApplicationScheme,
-                    properties: new AuthenticationProperties
+                    authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
+                    properties: new AuthenticationProperties(new Dictionary<string, string>
                     {
-                        RedirectUri = Request.PathBase + Request.Path + QueryString.Create(
-                            Request.HasFormContentType ? Request.Form.ToList() : Request.Query.ToList())
-                    });
-            }
-
-            // If prompt=login was specified by the client application,
-            // immediately return the user agent to the login page.
-            if (request.HasPrompt(Prompts.Login))
-            {
-                // To avoid endless login -> authorization redirects, the prompt=login flag
-                // is removed from the authorization request payload before redirecting the user.
-                var prompt = string.Join(" ", request.GetPrompts().Remove(Prompts.Login));
-
-                var parameters = Request.HasFormContentType ?
-                    Request.Form.Where(parameter => parameter.Key != Parameters.Prompt).ToList() :
-                    Request.Query.Where(parameter => parameter.Key != Parameters.Prompt).ToList();
-
-                parameters.Add(KeyValuePair.Create(Parameters.Prompt, new StringValues(prompt)));
-
-                return Challenge(
-                    authenticationSchemes: IdentityConstants.ApplicationScheme,
-                    properties: new AuthenticationProperties
-                    {
-                        RedirectUri = Request.PathBase + Request.Path + QueryString.Create(parameters)
-                    });
+                        [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.LoginRequired,
+                        [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The user is not logged in."
+                    }));
             }
 
             // If a max_age parameter was provided, ensure that the cookie is not too old.
-            // If it's too old, automatically redirect the user agent to the login page.
+            // If it's too old, return a forbid response as there's no path forward.
             if (request.MaxAge != null && result.Properties?.IssuedUtc != null &&
                 DateTimeOffset.UtcNow - result.Properties.IssuedUtc > TimeSpan.FromSeconds(request.MaxAge.Value))
             {
-                if (request.HasPrompt(Prompts.None))
-                {
-                    return Forbid(
-                        authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                        properties: new AuthenticationProperties(new Dictionary<string, string>
-                        {
-                            [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.LoginRequired,
-                            [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The user is not logged in."
-                        }));
-                }
-
-                return Challenge(
-                    authenticationSchemes: IdentityConstants.ApplicationScheme,
-                    properties: new AuthenticationProperties
+                return Forbid(
+                    authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
+                    properties: new AuthenticationProperties(new Dictionary<string, string>
                     {
-                        RedirectUri = Request.PathBase + Request.Path + QueryString.Create(
-                            Request.HasFormContentType ? Request.Form.ToList() : Request.Query.ToList())
-                    });
+                        [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.LoginRequired,
+                        [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The user is not logged in."
+                    }));
             }
 
             // Retrieve the profile of the logged in user.
@@ -200,9 +160,9 @@ namespace Ralltiir.Server.Controllers
                     return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 
                 // At this point, no authorization was found in the database and an error must be returned
-                // if the client application specified prompt=none in the authorization request.
-                case ConsentTypes.Explicit   when request.HasPrompt(Prompts.None):
-                case ConsentTypes.Systematic when request.HasPrompt(Prompts.None):
+                // because the client application specified prompt=none in the authorization request.
+                case ConsentTypes.Explicit:
+                case ConsentTypes.Systematic:
                     return Forbid(
                         authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
                         properties: new AuthenticationProperties(new Dictionary<string, string>
@@ -212,17 +172,8 @@ namespace Ralltiir.Server.Controllers
                                 "Interactive user consent is required."
                         }));
 
-                // In every other case, render the consent form.
-                default: return Json(new AuthorizeViewModel
-                {
-                    ApplicationName = await _applicationManager.GetDisplayNameAsync(application),
-                    Scope = request.Scope,
-                    Code = request.Code,
-                    CodeChallenge = request.CodeChallenge,
-                    CodeChallengeMethod = request.CodeChallengeMethod,
-                    State = request.State,
-                    Nonce = request.Nonce
-                });
+                // In every other case, return an error since we only support promptless responses
+                default: throw new NotImplementedException("The specified grant type is not implemented.");
             }
         }
 
