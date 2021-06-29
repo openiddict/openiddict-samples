@@ -4,6 +4,7 @@ ASP.NET Core samples demonstrating **how to use [OpenIddict](https://github.com/
 
   - [Aridka](samples/Aridka): client credentials demo, with a .NET console acting as the client.
   - [Balosar](samples/Balosar): authorization code flow demo, with a Blazor WASM application acting as the client.
+  - [Gonda](samples/Gonda): password flow but with introspection on a gRPC service (Api1) that's being consumed by a console application as the client
   - [Hollastin](samples/Hollastin): resource owner password credentials demo, with a .NET console acting as the client.
   - [Imynusoph](samples/Imynusoph): refresh token grant demo, with an Angular JS application acting as the client.
   - [Kalarba](samples/Kalarba): resource owner password credentials demo using OWIN/Katana, ASP.NET Web API and the OpenIddict degraded mode.
