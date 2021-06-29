@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Gonda.Api1;
+using Gonda.Server.Spec;
 using Gonda.Client.Models;
 using Grpc.Core;
 using Grpc.Net.Client;

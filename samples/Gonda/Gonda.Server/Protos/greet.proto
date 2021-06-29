@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "Gonda.Api1";
+option csharp_namespace = "Gonda.Server.Spec";
 
 package greet;
 

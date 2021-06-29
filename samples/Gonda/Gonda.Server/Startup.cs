@@ -1,4 +1,3 @@
-using Gonda.Api1;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -8,7 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenIddict.Abstractions;
 using Gonda.Server.EF;
+using Gonda.Server.Services;
 using Microsoft.AspNetCore.Http;
+using Gonda.Server.Spec;
 
 namespace Gonda.Server
 {

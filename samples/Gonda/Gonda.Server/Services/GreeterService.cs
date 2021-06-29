@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using OpenIddict.Validation.AspNetCore;
+using Gonda.Server.Spec;
 
-namespace Gonda.Api1
+namespace Gonda.Server.Services
 {
     public class GreeterService : Greeter.GreeterBase
     {
