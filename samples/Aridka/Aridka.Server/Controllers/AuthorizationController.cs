@@ -57,6 +57,14 @@ namespace Aridka.Server.Controllers
 
                 identity.AddClaim(Claims.Name, await _applicationManager.GetDisplayNameAsync(application),
                     Destinations.AccessToken, Destinations.IdentityToken);
+                
+                // Note: In the original OAuth 2.0 specification, the client credentials grant
+                // doesn't return an identity token, which is an OpenID Connect concept.
+                //
+                // As a non-standardized extension, OpenIddict allows returning an id_token
+                // to convey information about the client application when the "openid" scope
+                // is granted (i.e specified when calling principal.SetScopes()). When the "openid"
+                // scope is not explicitly set, no identity token is returned to the client application.
 
                 // Set the list of scopes granted to the client application in access_token.
                 var principal = new ClaimsPrincipal(identity);
