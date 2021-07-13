@@ -86,10 +86,6 @@ namespace Aridka.Server.Controllers
                 Claims.Subject 
                     => ImmutableArray.Create(Destinations.AccessToken, Destinations.IdentityToken),
 
-                // Never include the security stamp in the access and identity tokens, as it's a secret value.
-                "AspNet.Identity.SecurityStamp" 
-                    => ImmutableArray.Create<string>(),
-
                 _ => ImmutableArray.Create(Destinations.AccessToken),
             };
         }
