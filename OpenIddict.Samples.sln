@@ -86,7 +86,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Weytta", "Weytta", "{374481
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weytta.Client", "samples\Weytta\Weytta.Client\Weytta.Client.csproj", "{20C5B39E-CEBA-4CCD-979A-5499B4030043}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weytta.Server", "samples\Weytta\Weytta.Server\Weytta.Server.csproj", "{02D5D1C5-675D-482D-9F74-F06FC522D2CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weytta.Server", "samples\Weytta\Weytta.Server\Weytta.Server.csproj", "{02D5D1C5-675D-482D-9F74-F06FC522D2CC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KalarbaMSDI.Server", "samples\Kalarba\KalarbaMSDI.Server\KalarbaMSDI.Server.csproj", "{193B7187-D1E0-45B0-A659-DF38702CF3ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -170,6 +172,10 @@ Global
 		{02D5D1C5-675D-482D-9F74-F06FC522D2CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02D5D1C5-675D-482D-9F74-F06FC522D2CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02D5D1C5-675D-482D-9F74-F06FC522D2CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{193B7187-D1E0-45B0-A659-DF38702CF3ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{193B7187-D1E0-45B0-A659-DF38702CF3ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{193B7187-D1E0-45B0-A659-DF38702CF3ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{193B7187-D1E0-45B0-A659-DF38702CF3ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -202,6 +208,7 @@ Global
 		{37448199-E002-4FA0-A712-B6DB22DA98EC} = {8B467944-153B-4C90-BAB1-8F1B34C3075A}
 		{20C5B39E-CEBA-4CCD-979A-5499B4030043} = {37448199-E002-4FA0-A712-B6DB22DA98EC}
 		{02D5D1C5-675D-482D-9F74-F06FC522D2CC} = {37448199-E002-4FA0-A712-B6DB22DA98EC}
+		{193B7187-D1E0-45B0-A659-DF38702CF3ED} = {196EEDE4-CF84-44D5-905B-30F341F7617E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3ECDD26-F40D-4AB4-BC48-8DF143F98FAE}
