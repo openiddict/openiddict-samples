@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Owin" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Owin.Diagnostics" />
+    <PackageReference Include="Microsoft.Owin.Host.HttpListener" />
+    <PackageReference Include="Microsoft.Owin.Hosting" />
+    <PackageReference Include="OpenIddict.Owin" />
+  </ItemGroup>
+
+</Project>
