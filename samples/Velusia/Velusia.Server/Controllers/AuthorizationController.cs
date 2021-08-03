@@ -79,7 +79,7 @@ namespace Velusia.Server.Controllers
 
             // Retrieve the user principal stored in the authentication cookie.
             // If a max_age parameter was provided, ensure that the cookie is not too old.
-            // If the user principle can't be extracted or the cookie is too old, redirect the user to the login page.
+            // If the user principal can't be extracted or the cookie is too old, redirect the user to the login page.
             var result = await HttpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
             if (result == null || !result.Succeeded || HasCookieExpired(request, result))
             {
