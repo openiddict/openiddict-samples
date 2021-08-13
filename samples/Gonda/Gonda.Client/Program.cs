@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Gonda.Server.Spec;
-using Gonda.Client.Models;
 using Grpc.Core;
 using Grpc.Net.Client;
+using IdentityModel.Client;
 
 namespace Gonda.Client
 {
@@ -15,26 +14,26 @@ namespace Gonda.Client
     {
         private const string AuthUrl = "https://localhost:5001";
         private const string ApiUrl = "http://localhost:5002";
-        
+
         public static async Task Main(string[] args)
         {
             Console.WriteLine("Attempting anonymous calls to gRPC service...\n");
-            
+
             var anonymousClient = CreateAnonymousClient();
-            
+
             await SayHello(anonymousClient);
             await SaySecret(anonymousClient);
-            
+
             Console.WriteLine("Attempting authenticated calls to gRPC service...\n");
-            
+
             await CreateUser();
             var tokens = await GetTokens();
-            
+
             var authenticatedClient = CreateAuthenticatedClient(tokens.AccessToken);
 
             await SayHello(authenticatedClient);
             await SaySecret(authenticatedClient);
-            
+
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
         }
@@ -42,7 +41,7 @@ namespace Gonda.Client
         private static Greeter.GreeterClient CreateAnonymousClient()
         {
             var channel = GrpcChannel.ForAddress(ApiUrl);
-            
+
             return new Greeter.GreeterClient(channel);
         }
 
@@ -50,14 +49,14 @@ namespace Gonda.Client
         {
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            
+
             var opt = new GrpcChannelOptions()
             {
-                HttpClient = httpClient, 
+                HttpClient = httpClient,
             };
-            
+
             var channel = GrpcChannel.ForAddress(ApiUrl, opt);
-            
+
             return new Greeter.GreeterClient(channel);
         }
 
@@ -75,10 +74,10 @@ namespace Gonda.Client
             {
                 Console.WriteLine("Response: " + ex.Status);
             }
-            
+
             Console.WriteLine();
         }
-        
+
         private static async Task SaySecret(Greeter.GreeterClient client)
         {
             try
@@ -93,14 +92,14 @@ namespace Gonda.Client
             {
                 Console.WriteLine("Response: " + ex.Status);
             }
-            
+
             Console.WriteLine();
         }
-        
+
         private static async Task CreateUser()
         {
             Console.WriteLine("Creating user...");
-            
+
             var authClient = new HttpClient()
             {
                 BaseAddress = new Uri(AuthUrl)
@@ -114,44 +113,32 @@ namespace Gonda.Client
             };
 
             var response = await authClient.PostAsJsonAsync("Account/register", request);
-            
+
             var responseBody = await response.Content.ReadAsStringAsync();
-            
-            Console.WriteLine($"Create user response... {(int)response.StatusCode} {response.ReasonPhrase} {responseBody}\n");
+
+            Console.WriteLine(
+                $"Create user response... {(int) response.StatusCode} {response.ReasonPhrase} {responseBody}\n");
         }
 
-        private static async Task<TokensResponse> GetTokens()
+        private static async Task<TokenResponse> GetTokens()
         {
             Console.WriteLine("Fetching auth token...");
-            
-            var authClient = new HttpClient()
+
+            var authClient = new HttpClient();
+
+            var tokenClient = new TokenClient(authClient, new TokenClientOptions()
             {
-                BaseAddress = new Uri(AuthUrl)
-            };
+                ClientCredentialStyle = ClientCredentialStyle.PostBody,
+                Address = $"{AuthUrl}/connect/token"
+            });
 
-            var requestData = new Dictionary<string, string>()
-            {
-                ["username"] = "test@email.com",
-                ["password"] = "Gonda~1",
-                ["grant_type"] = "password",
-                ["scope"] = "openid profile roles"
-            };
+            var response = await tokenClient.RequestPasswordTokenAsync(
+                "test@email.com", "Gonda~1", "openid profile roles");
 
-            var content = new FormUrlEncodedContent(requestData);
-            
-            var response = await authClient.PostAsync("connect/token", content);
-            
-            var error = response.IsSuccessStatusCode 
-                ? string.Empty 
-                : await response.Content.ReadAsStringAsync();
-            
-            var tokens = response.IsSuccessStatusCode 
-                ? await response.Content.ReadFromJsonAsync<TokensResponse>()
-                : null;
+            Console.WriteLine(
+                $"Token response... {(int) response.HttpResponse.StatusCode} {response.HttpResponse.ReasonPhrase} {response.Error}\n");
 
-            Console.WriteLine($"Token response... {(int)response.StatusCode} {response.ReasonPhrase} {error}\n");
-            
-            return tokens;
+            return response;
         }
     }
 }
