@@ -49,33 +49,6 @@ namespace Balosar.Server.Controllers
             var request = HttpContext.GetOpenIddictServerRequest() ??
                 throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
-            // Retrieve the user principal stored in the authentication cookie.
-            // If it can't be extracted, redirect the user to the login page.
-            var result = await HttpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
-            if (result == null || !result.Succeeded)
-            {
-                // If the client application requested promptless authentication,
-                // return an error indicating that the user is not logged in.
-                if (request.HasPrompt(Prompts.None))
-                {
-                    return Forbid(
-                        authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                        properties: new AuthenticationProperties(new Dictionary<string, string>
-                        {
-                            [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.LoginRequired,
-                            [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The user is not logged in."
-                        }));
-                }
-
-                return Challenge(
-                    authenticationSchemes: IdentityConstants.ApplicationScheme,
-                    properties: new AuthenticationProperties
-                    {
-                        RedirectUri = Request.PathBase + Request.Path + QueryString.Create(
-                            Request.HasFormContentType ? Request.Form.ToList() : Request.Query.ToList())
-                    });
-            }
-
             // If prompt=login was specified by the client application,
             // immediately return the user agent to the login page.
             if (request.HasPrompt(Prompts.Login))
@@ -98,11 +71,14 @@ namespace Balosar.Server.Controllers
                     });
             }
 
+            // Retrieve the user principal stored in the authentication cookie.
             // If a max_age parameter was provided, ensure that the cookie is not too old.
-            // If it's too old, automatically redirect the user agent to the login page.
-            if (request.MaxAge != null && result.Properties?.IssuedUtc != null &&
-                DateTimeOffset.UtcNow - result.Properties.IssuedUtc > TimeSpan.FromSeconds(request.MaxAge.Value))
+            // If the user principal can't be extracted or the cookie is too old, redirect the user to the login page.
+            var result = await HttpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
+            if (result == null || !result.Succeeded || HasCookieExpired(request, result))
             {
+                // If the client application requested promptless authentication,
+                // return an error indicating that the user is not logged in.
                 if (request.HasPrompt(Prompts.None))
                 {
                     return Forbid(
@@ -358,6 +334,12 @@ namespace Balosar.Server.Controllers
             }
 
             throw new InvalidOperationException("The specified grant type is not supported.");
+        }
+
+        private bool HasCookieExpired(OpenIddictRequest request, AuthenticateResult result)
+        {
+            return request.MaxAge != null && result.Properties?.IssuedUtc != null &&
+                DateTimeOffset.UtcNow - result.Properties.IssuedUtc > TimeSpan.FromSeconds(request.MaxAge.Value);
         }
 
         private IEnumerable<string> GetDestinations(Claim claim, ClaimsPrincipal principal)
