@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Gonda.Server.Spec;
 using Gonda.Client.Models;
 using Grpc.Core;
 using Grpc.Net.Client;
-using Newtonsoft.Json;
 
 namespace Gonda.Client
 {
@@ -113,11 +112,8 @@ namespace Gonda.Client
                 Password = "Gonda~1",
                 ConfirmPassword = "Gonda~1"
             };
-            
-            var content = JsonConvert.SerializeObject(request);
 
-            var response = await authClient.PostAsync("Account/register", 
-                new StringContent(content, Encoding.Default, "application/json"));
+            var response = await authClient.PostAsJsonAsync("Account/register", request);
             
             var responseBody = await response.Content.ReadAsStringAsync();
             
@@ -142,16 +138,19 @@ namespace Gonda.Client
             };
 
             var content = new FormUrlEncodedContent(requestData);
-
-            var response = await authClient.PostAsync("connect/token", content);
-
-            var responseBody = await response.Content.ReadAsStringAsync();
-            var error = response.IsSuccessStatusCode ? string.Empty : $" {responseBody}";
             
-            Console.WriteLine($"Token response... {(int)response.StatusCode} {response.ReasonPhrase}{error}\n");
+            var response = await authClient.PostAsync("connect/token", content);
+            
+            var error = response.IsSuccessStatusCode 
+                ? string.Empty 
+                : await response.Content.ReadAsStringAsync();
+            
+            var tokens = response.IsSuccessStatusCode 
+                ? await response.Content.ReadFromJsonAsync<TokensResponse>()
+                : null;
 
-            var tokens = JsonConvert.DeserializeObject<TokensResponse>(responseBody);
-
+            Console.WriteLine($"Token response... {(int)response.StatusCode} {response.ReasonPhrase} {error}\n");
+            
             return tokens;
         }
     }

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Gonda.Server.Helpers;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -75,7 +76,7 @@ namespace Gonda.Server.Controllers
                 var scopes = request.GetScopes();
                 
                 principal.SetScopes(request.GetScopes());
-                // principal.SetResources(await _scopeManager.ListResourcesAsync(scopes).ToListAsync());
+                principal.SetResources(await _scopeManager.ListResourcesAsync(scopes).ToListAsync());
 
                 foreach (var claim in principal.Claims)
                 {

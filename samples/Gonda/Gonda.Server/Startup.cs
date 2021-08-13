@@ -97,6 +97,7 @@ namespace Gonda.Server
                     // Register the ASP.NET Core host.
                     options.UseAspNetCore();
 
+                    // Since this server is listening on 2 ports, we need to specify which to use for the issuer
                     options.SetIssuer("https://localhost:5001");
                 });
         }

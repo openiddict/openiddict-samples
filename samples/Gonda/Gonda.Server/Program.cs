@@ -23,7 +23,7 @@ namespace Gonda.Server
                             o.Protocols =
                                 HttpProtocols.Http1;
                         });
-                        // Setup a HTTP/2 endpoint without TLS.
+                        // Setup a HTTP/2 endpoint without TLS (needed for Mac users).
                         options.ListenLocalhost(5002, o =>
                         {
                             o.Protocols =

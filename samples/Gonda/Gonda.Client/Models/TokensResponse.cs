@@ -1,19 +1,19 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Gonda.Client.Models
 {
     public class TokensResponse
     {
-        [JsonProperty(PropertyName = "access_token")]
+        [JsonPropertyName("access_token")]
         public string AccessToken { get; set; }
         
-        [JsonProperty(PropertyName = "id_token")]
+        [JsonPropertyName("id_token")]
         public string IdToken { get; set; }
         
-        [JsonProperty(PropertyName = "expires_in")]
-        public string ExpiresIn { get; set; }
+        [JsonPropertyName("expires_in")]
+        public long ExpiresIn { get; set; }
         
-        [JsonProperty(PropertyName = "token_type")]
+        [JsonPropertyName("token_type")]
         public string TokenType { get; set; }
     }
 }
