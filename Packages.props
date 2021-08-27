@@ -27,13 +27,13 @@
     <PackageReference Update="Microsoft.Owin.Host.HttpListener" Version="4.2.0" />
     <PackageReference Update="Microsoft.Owin.Hosting" Version="4.2.0" />
     <PackageReference Update="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
-    <PackageReference Update="OpenIddict.AspNetCore" Version="3.1.0" />
-    <PackageReference Update="OpenIddict.Abstractions" Version="3.1.0" />
-    <PackageReference Update="OpenIddict.EntityFrameworkCore" Version="3.1.0" />
-    <PackageReference Update="OpenIddict.Owin" Version="3.1.0" />
-    <PackageReference Update="OpenIddict.Quartz" Version="3.1.0" />
-    <PackageReference Update="OpenIddict.Validation.AspNetCore" Version="3.1.0" />
-    <PackageReference Update="OpenIddict.Validation.SystemNetHttp" Version="3.1.0" />
+    <PackageReference Update="OpenIddict.AspNetCore" Version="3.1.1" />
+    <PackageReference Update="OpenIddict.Abstractions" Version="3.1.1" />
+    <PackageReference Update="OpenIddict.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Update="OpenIddict.Owin" Version="3.1.1" />
+    <PackageReference Update="OpenIddict.Quartz" Version="3.1.1" />
+    <PackageReference Update="OpenIddict.Validation.AspNetCore" Version="3.1.1" />
+    <PackageReference Update="OpenIddict.Validation.SystemNetHttp" Version="3.1.1" />
     <PackageReference Update="Quartz.Extensions.Hosting" Version="3.2.4" />
     <PackageReference Update="System.Net.Http.Json" Version="5.0.0" />
   </ItemGroup>
