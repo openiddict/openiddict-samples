@@ -69,8 +69,8 @@ namespace Matty.Client
 
                         // Note: `deviceResponse.Interval` is the minimum number of seconds
                         // the client should wait between polling requests.
-                        // In this sample the client will retry every 60 seconds at least.
-                        await Task.Delay(Math.Max(deviceResponse.Interval, 60) * 1000);
+                        // In this sample the client will retry every 60 seconds at most.
+                        await Task.Delay(Math.Min(deviceResponse.Interval, 60) * 1000);
                     }
                     else if (tokenResponse.IsError)
                     {
