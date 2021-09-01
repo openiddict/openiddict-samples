@@ -1,15 +1,35 @@
 # OpenIddict samples
 
-ASP.NET Core samples demonstrating **how to use [OpenIddict](https://github.com/openiddict/openiddict-core) with the different OAuth 2.0/OpenID Connect flows**:
+This repository contains samples demonstrating **how to use [OpenIddict](https://github.com/openiddict/openiddict-core) with the different OAuth 2.0/OpenID Connect flows**.
+
+## ASP.NET Core samples
 
   - [Aridka](samples/Aridka): client credentials demo, with a .NET console acting as the client.
   - [Balosar](samples/Balosar): authorization code flow demo, with a Blazor WASM application acting as the client.
+  - [Contruum](samples/Contruum): conformance tests project using 2 hardcoded user identities, meant to be used with [the OIDC certification suite](https://www.certification.openid.net/).
   - [Hollastin](samples/Hollastin): resource owner password credentials demo, with a .NET console acting as the client.
   - [Imynusoph](samples/Imynusoph): refresh token grant demo, with an Angular JS application acting as the client.
-  - [Kalarba](samples/Kalarba): resource owner password credentials demo using OWIN/Katana, ASP.NET Web API and the OpenIddict degraded mode.
+  - [Matty](samples/Matty): device authorization code flow demo, with a .NET console acting as the client.
   - [Velusia](samples/Velusia): authorization code flow demo, with an ASP.NET Core application acting as the client.
   - [Weytta](samples/Weytta): authorization code flow with Integrated Windows Authentication support and a .NET console acting as the client.
   - [Zirku](samples/Zirku): implicit flow demo, with an Aurelia JS application acting as the client and two API projects using introspection (Api1) and local validation (Api2).
+
+## OWIN/ASP.NET 4.8 samples
+  - [Fornax](samples/Fornax): authorization code flow demo using ASP.NET Web Forms 4.8 and OWIN/Katana, with a .NET console acting as the client.
+  - [Kalarba](samples/Kalarba): resource owner password credentials demo using OWIN/Katana, ASP.NET Web API and the OpenIddict degraded mode.
+
+## Certification
+
+Unlike many other identity providers, **OpenIddict is not a turnkey solution but a framework that requires writing custom code**
+to be operational (typically, at least an authorization controller), making it a poor candidate for the certification program.
+
+While a reference implementation could be submitted as-is, **this wouldn't guarantee that implementations deployed by OpenIddict users would be standard-compliant.**
+
+Instead, **developers are encouraged to execute the conformance tests against their own deployment** once they've implemented their own logic.
+
+> This repository contains [a dedicated sample](https://github.com/openiddict/openiddict-samples/tree/dev/samples/Contruum/Contruum.Server) specially designed to be used
+> with the OpenID Connect Provider Certification tool and demonstrate that OpenIddict can be easily used in a certified implementation. To allow executing the certification tests
+> as fast as possible, that sample doesn't include any membership or consent feature (two hardcoded identities are proposed for tests that require switching between identities).
 
 ## Security policy
 
