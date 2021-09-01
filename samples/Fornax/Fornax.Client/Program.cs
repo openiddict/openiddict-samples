@@ -10,15 +10,15 @@ Console.ReadKey();
 
 // Create a local web server used to receive the authorization response.
 using var listener = new HttpListener();
-listener.Prefixes.Add("http://localhost:7890/");
+listener.Prefixes.Add("http://localhost:7891/");
 listener.Start();
 
 var options = new OidcClientOptions
 {
-    Authority = "https://localhost:44319/",
+    Authority = "https://localhost:44387/",
     ClientId = "console_app",
     LoadProfile = false,
-    RedirectUri = "http://localhost:7890/",
+    RedirectUri = "http://localhost:7891/",
     Scope = StandardScopes.OpenId,
     IdentityTokenValidator = new JwtHandlerIdentityTokenValidator()
 };
