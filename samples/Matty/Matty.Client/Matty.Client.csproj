@@ -6,10 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="IdentityModel.OidcClient.IdentityTokenValidator" />
     <PackageReference Include="OpenIddict.Abstractions" />
     <PackageReference Include="System.Net.Http.Json" />
-    <PackageReference Include="IdentityModel.OidcClient.IdentityTokenValidator" />
   </ItemGroup>
-  
 
 </Project>

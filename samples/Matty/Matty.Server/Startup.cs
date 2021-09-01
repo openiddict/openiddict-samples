@@ -102,9 +102,6 @@ namespace Matty.Server
                     options.AllowDeviceCodeFlow();
                     options.AllowRefreshTokenFlow();
 
-                    // Note: All device codes have a default lifetime of 10 minutes.
-                    options.SetDeviceCodeLifetime(TimeSpan.FromMinutes(5));
-
                     // Register the signing and encryption credentials.
                     options.AddDevelopmentEncryptionCertificate()
                            .AddDevelopmentSigningCertificate();

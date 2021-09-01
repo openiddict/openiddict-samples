@@ -33,7 +33,7 @@ namespace Matty.Client
                 { 
                     Address = discovery.DeviceAuthorizationEndpoint,
                     Scope = "openid offline_access profile email",
-                    ClientId = "device",
+                    ClientId = "device"
                 });
                 if (deviceResponse.IsError)
                 {
@@ -51,8 +51,7 @@ namespace Matty.Client
                 Console.WriteLine(" - Please open the verification uri in the browser");
                 Console.WriteLine(" and enter the user code to authorize this device ");
                 Console.WriteLine("+-------------------------------------------------------------------+");
-                Console.Write(" - Please press Enter to proceed...");
-                Console.ReadLine();
+                
                 TokenResponse tokenResponse;
                 do
                 {
@@ -70,7 +69,7 @@ namespace Matty.Client
                         // Note: `deviceResponse.Interval` is the minimum number of seconds
                         // the client should wait between polling requests.
                         // In this sample the client will retry every 60 seconds at most.
-                        await Task.Delay(Math.Min(deviceResponse.Interval, 60) * 1000);
+                        await Task.Delay(Math.Clamp(deviceResponse.Interval, 1, 60) * 1000);
                     }
                     else if (tokenResponse.IsError)
                     {
@@ -88,8 +87,8 @@ namespace Matty.Client
                         Console.WriteLine();
                         break;
                     }
-                    
-                } while (true);
+                }
+                while (true);
 
                 Console.WriteLine("+-------------------------------------------------------------------+");
                 var resource = await GetResourceAsync(client, tokenResponse.AccessToken);
