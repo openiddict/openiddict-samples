@@ -101,6 +101,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fornax.Server", "samples\Fo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fornax.Client", "samples\Fornax\Fornax.Client\Fornax.Client.csproj", "{639D957B-F9AB-4809-A4B6-F4ADEB2E0163}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contruum", "Contruum", "{C1A7C9CE-10A0-42E7-9EF8-6001DE59CBFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contruum.Server", "samples\Contruum\Contruum.Server\Contruum.Server.csproj", "{9343354C-A9AA-4BB5-BD86-9901716CA0A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -199,6 +203,10 @@ Global
 		{639D957B-F9AB-4809-A4B6-F4ADEB2E0163}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{639D957B-F9AB-4809-A4B6-F4ADEB2E0163}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{639D957B-F9AB-4809-A4B6-F4ADEB2E0163}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9343354C-A9AA-4BB5-BD86-9901716CA0A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9343354C-A9AA-4BB5-BD86-9901716CA0A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9343354C-A9AA-4BB5-BD86-9901716CA0A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9343354C-A9AA-4BB5-BD86-9901716CA0A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -237,6 +245,8 @@ Global
 		{4BEBB450-228D-4376-A287-ECF9DC15FA8B} = {8B467944-153B-4C90-BAB1-8F1B34C3075A}
 		{A323CAED-4D94-4AB1-B153-3C477A1DEF50} = {4BEBB450-228D-4376-A287-ECF9DC15FA8B}
 		{639D957B-F9AB-4809-A4B6-F4ADEB2E0163} = {4BEBB450-228D-4376-A287-ECF9DC15FA8B}
+		{C1A7C9CE-10A0-42E7-9EF8-6001DE59CBFA} = {8B467944-153B-4C90-BAB1-8F1B34C3075A}
+		{9343354C-A9AA-4BB5-BD86-9901716CA0A0} = {C1A7C9CE-10A0-42E7-9EF8-6001DE59CBFA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3ECDD26-F40D-4AB4-BC48-8DF143F98FAE}
