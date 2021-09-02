@@ -81,7 +81,8 @@ namespace Velusia.Server.Controllers
             // If a max_age parameter was provided, ensure that the cookie is not too old.
             // If the user principal can't be extracted or the cookie is too old, redirect the user to the login page.
             var result = await HttpContext.AuthenticateAsync(IdentityConstants.ApplicationScheme);
-            if (result == null || !result.Succeeded || HasCookieExpired(request, result))
+            if (result == null || !result.Succeeded || (request.MaxAge != null && result.Properties?.IssuedUtc != null &&
+                DateTimeOffset.UtcNow - result.Properties.IssuedUtc > TimeSpan.FromSeconds(request.MaxAge.Value)))
             {
                 // If the client application requested promptless authentication,
                 // return an error indicating that the user is not logged in.
@@ -339,12 +340,6 @@ namespace Velusia.Server.Controllers
             }
 
             throw new InvalidOperationException("The specified grant type is not supported.");
-        }
-
-        private bool HasCookieExpired(OpenIddictRequest request, AuthenticateResult result)
-        {
-            return request.MaxAge != null && result.Properties?.IssuedUtc != null &&
-                DateTimeOffset.UtcNow - result.Properties.IssuedUtc > TimeSpan.FromSeconds(request.MaxAge.Value);
         }
 
         private IEnumerable<string> GetDestinations(Claim claim, ClaimsPrincipal principal)

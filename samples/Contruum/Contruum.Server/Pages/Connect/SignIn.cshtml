@@ -1,0 +1,43 @@
+﻿@page
+@model Contruum.Server.Pages.Connect.SignInModel
+
+<div class="jumbotron">
+    @if (User.Identity is { IsAuthenticated: true })
+    {
+        <h2>Welcome, @User.Identity.Name</h2>
+
+        <table style="table-layout: fixed; width: 100%; font-size: 0.7em">
+            <tr>
+                <th>Claim name</th>
+                <th>Claim value</th>
+            </tr>
+
+            @foreach (var claim in User.Claims)
+            {
+                <tr>
+                    <td style="word-wrap: break-word">@claim.Type</td>
+                    <td style="word-wrap: break-word">@claim.Value</td>
+                </tr>
+            }
+        </table>
+
+        <form asp-antiforgery="true" method="post">
+            <button name="username" value="John" type="submit" class="btn btn-lg btn-success">Sign in as <i>JFK</i></button>
+            <button name="username" value="Donald" type="submit" class="btn btn-lg btn-success">Sign in as <i>The Donald</i></button>
+        </form>
+
+        <form asp-page="SignOut" asp-route-returnUrl="@Model.ReturnUrl" asp-antiforgery="true" method="post">
+            <button type="submit" class="btn btn-lg btn-warning">Sign out</button>
+        </form>
+    }
+
+    else
+    {
+        <h1>Welcome, anonymous</h1>
+
+        <form asp-antiforgery="true" method="post">
+            <button name="username" value="John" type="submit" class="btn btn-lg btn-success">Sign in as <i>JFK</i></button>
+            <button name="username" value="Donald" type="submit" class="btn btn-lg btn-success">Sign in as <i>The Donald</i></button>
+        </form>
+    }
+</div>

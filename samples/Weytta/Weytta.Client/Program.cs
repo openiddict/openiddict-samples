@@ -55,7 +55,9 @@ while (true)
 
     else
     {
-        Console.WriteLine("\n\nClaims:");
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("Claims:");
 
         foreach (var claim in result.User.Claims)
         {
@@ -63,7 +65,9 @@ while (true)
         }
 
         Console.WriteLine();
-        Console.WriteLine("Access token:\n{0}", result.AccessToken);
+        Console.WriteLine("Access token:");
+        Console.WriteLine();
+        Console.WriteLine(result.AccessToken);
         break;
     }
 }
