@@ -43,11 +43,11 @@ namespace Ralltiir.Server
                         ClientId = "ralltiir-client",
                         RedirectUris =
                         {
-                            new Uri("https://localhost:5001")
+                            new Uri("https://localhost:44344")
                         },
                         PostLogoutRedirectUris =
                         {
-                            new Uri("https://localhost:5001"),
+                            new Uri("https://localhost:44344"),
                         },
                         Permissions =
                         {
