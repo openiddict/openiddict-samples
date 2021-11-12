@@ -3969,6 +3969,12 @@ glob-parent@~5.1.2:
   dependencies:
     is-glob "^4.0.1"
 
+glob-parent@~5.1.2:
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.2.tgz#869832c58034fe68a4093c17dc15e8340d8401c4"
+  dependencies:
+    is-glob "^4.0.1"
+
 glob-stream@^6.1.0:
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/glob-stream/-/glob-stream-6.1.0.tgz#7045c99413b3eb94888d83ab46d0b404cc7bdde4"
@@ -7886,6 +7892,12 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
+pkg-dir@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/pkg-dir/-/pkg-dir-3.0.0.tgz#2749020f239ed990881b1f71210d51eb6523bea3"
+  dependencies:
+    find-up "^3.0.0"
+
 plugin-error@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/plugin-error/-/plugin-error-1.0.1.tgz#77016bd8919d0ac377fdcdd0322328953ca5781c"
@@ -9954,8 +9966,8 @@ tmp@0.0.33, tmp@0.0.x:
     os-tmpdir "~1.0.2"
 
 tmpl@1.0.x:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/tmpl/-/tmpl-1.0.4.tgz#23640dd7b42d00433911140820e5cf440e521dd1"
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/tmpl/-/tmpl-1.0.5.tgz#8683e0b902bb9c20c4f726e3c0b69f36518c07cc"
 
 to-absolute-glob@^2.0.0:
   version "2.0.2"
