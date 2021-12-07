@@ -83,7 +83,7 @@ namespace Aridka.Server
                     options.UseAspNetCore();
                 });
 
-            // Register the worker responsible of seeding the database with the sample clients.
+            // Register the worker responsible of seeding the database.
             // Note: in a real world application, this step should be part of a setup script.
             services.AddHostedService<Worker>();
         }
