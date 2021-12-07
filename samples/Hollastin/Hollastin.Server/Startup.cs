@@ -103,6 +103,10 @@ namespace Hollastin.Server
                     // Register the ASP.NET Core host.
                     options.UseAspNetCore();
                 });
+
+            // Register the worker responsible of creating and seeding the SQL database.
+            // Note: in a real world application, this step should be part of a setup script.
+            services.AddHostedService<Worker>();
         }
 
         public void Configure(IApplicationBuilder app)
