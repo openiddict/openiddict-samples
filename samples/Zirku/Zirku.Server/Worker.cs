@@ -7,115 +7,114 @@ using OpenIddict.Abstractions;
 using Zirku.Server.Models;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
-namespace Zirku.Server
+namespace Zirku.Server;
+
+public class Worker : IHostedService
 {
-    public class Worker : IHostedService
+    private readonly IServiceProvider _serviceProvider;
+
+    public Worker(IServiceProvider serviceProvider)
+        => _serviceProvider = serviceProvider;
+
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
-        private readonly IServiceProvider _serviceProvider;
+        using var scope = _serviceProvider.CreateScope();
 
-        public Worker(IServiceProvider serviceProvider)
-            => _serviceProvider = serviceProvider;
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        await context.Database.EnsureCreatedAsync();
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        await CreateApplicationsAsync();
+        await CreateScopesAsync();
+
+        async Task CreateApplicationsAsync()
         {
-            using var scope = _serviceProvider.CreateScope();
+            var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            await context.Database.EnsureCreatedAsync();
-
-            await CreateApplicationsAsync();
-            await CreateScopesAsync();
-
-            async Task CreateApplicationsAsync()
+            if (await manager.FindByClientIdAsync("aurelia") == null)
             {
-                var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
-
-                if (await manager.FindByClientIdAsync("aurelia") == null)
+                var descriptor = new OpenIddictApplicationDescriptor
                 {
-                    var descriptor = new OpenIddictApplicationDescriptor
+                    ClientId = "aurelia",
+                    DisplayName = "Aurelia client application",
+                    PostLogoutRedirectUris =
                     {
-                        ClientId = "aurelia",
-                        DisplayName = "Aurelia client application",
-                        PostLogoutRedirectUris =
-                        {
-                            new Uri("https://localhost:44398/signout-oidc")
-                        },
-                        RedirectUris =
-                        {
-                            new Uri("https://localhost:44398/signin-oidc")
-                        },
-                        Permissions =
-                        {
-                            Permissions.Endpoints.Authorization,
-                            Permissions.Endpoints.Logout,
-                            Permissions.GrantTypes.Implicit,
-                            Permissions.ResponseTypes.IdToken,
-                            Permissions.ResponseTypes.IdTokenToken,
-                            Permissions.ResponseTypes.Token,
-                            Permissions.Scopes.Email,
-                            Permissions.Scopes.Profile,
-                            Permissions.Scopes.Roles,
-                            Permissions.Prefixes.Scope + "api1",
-                            Permissions.Prefixes.Scope + "api2"
-                        }
-                    };
-
-                    await manager.CreateAsync(descriptor);
-                }
-
-                if (await manager.FindByClientIdAsync("resource_server_1") == null)
-                {
-                    var descriptor = new OpenIddictApplicationDescriptor
+                        new Uri("https://localhost:44398/signout-oidc")
+                    },
+                    RedirectUris =
                     {
-                        ClientId = "resource_server_1",
-                        ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342",
-                        Permissions =
-                        {
-                            Permissions.Endpoints.Introspection
-                        }
-                    };
+                        new Uri("https://localhost:44398/signin-oidc")
+                    },
+                    Permissions =
+                    {
+                        Permissions.Endpoints.Authorization,
+                        Permissions.Endpoints.Logout,
+                        Permissions.GrantTypes.Implicit,
+                        Permissions.ResponseTypes.IdToken,
+                        Permissions.ResponseTypes.IdTokenToken,
+                        Permissions.ResponseTypes.Token,
+                        Permissions.Scopes.Email,
+                        Permissions.Scopes.Profile,
+                        Permissions.Scopes.Roles,
+                        Permissions.Prefixes.Scope + "api1",
+                        Permissions.Prefixes.Scope + "api2"
+                    }
+                };
 
-                    await manager.CreateAsync(descriptor);
-                }
-
-                // Note: no client registration is created for resource_server_2
-                // as it uses local token validation instead of introspection.
+                await manager.CreateAsync(descriptor);
             }
 
-            async Task CreateScopesAsync()
+            if (await manager.FindByClientIdAsync("resource_server_1") == null)
             {
-                var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictScopeManager>();
-
-                if (await manager.FindByNameAsync("api1") == null)
+                var descriptor = new OpenIddictApplicationDescriptor
                 {
-                    var descriptor = new OpenIddictScopeDescriptor
+                    ClientId = "resource_server_1",
+                    ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342",
+                    Permissions =
                     {
-                        Name = "api1",
-                        Resources =
-                        {
-                            "resource_server_1"
-                        }
-                    };
+                        Permissions.Endpoints.Introspection
+                    }
+                };
 
-                    await manager.CreateAsync(descriptor);
-                }
-
-                if (await manager.FindByNameAsync("api2") == null)
-                {
-                    var descriptor = new OpenIddictScopeDescriptor
-                    {
-                        Name = "api2",
-                        Resources =
-                        {
-                            "resource_server_2"
-                        }
-                    };
-
-                    await manager.CreateAsync(descriptor);
-                }
+                await manager.CreateAsync(descriptor);
             }
+
+            // Note: no client registration is created for resource_server_2
+            // as it uses local token validation instead of introspection.
         }
 
-        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+        async Task CreateScopesAsync()
+        {
+            var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictScopeManager>();
+
+            if (await manager.FindByNameAsync("api1") == null)
+            {
+                var descriptor = new OpenIddictScopeDescriptor
+                {
+                    Name = "api1",
+                    Resources =
+                    {
+                        "resource_server_1"
+                    }
+                };
+
+                await manager.CreateAsync(descriptor);
+            }
+
+            if (await manager.FindByNameAsync("api2") == null)
+            {
+                var descriptor = new OpenIddictScopeDescriptor
+                {
+                    Name = "api2",
+                    Resources =
+                    {
+                        "resource_server_2"
+                    }
+                };
+
+                await manager.CreateAsync(descriptor);
+            }
+        }
     }
+
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }

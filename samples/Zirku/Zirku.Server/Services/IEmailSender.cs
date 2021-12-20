@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace Zirku.Server.Services
+namespace Zirku.Server.Services;
+
+public interface IEmailSender
 {
-    public interface IEmailSender
-    {
-        Task SendEmailAsync(string email, string subject, string message);
-    }
+    Task SendEmailAsync(string email, string subject, string message);
 }

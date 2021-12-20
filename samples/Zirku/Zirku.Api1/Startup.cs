@@ -2,69 +2,68 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using OpenIddict.Validation.AspNetCore;
 
-namespace Zirku.Api1
+namespace Zirku.Api1;
+
+public class Startup
 {
-    public class Startup
+    public void ConfigureServices(IServiceCollection services)
     {
-        public void ConfigureServices(IServiceCollection services)
+        services.AddAuthentication(options =>
         {
-            services.AddAuthentication(options =>
+            options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+        });
+
+        // Register the OpenIddict validation components.
+        services.AddOpenIddict()
+            .AddValidation(options =>
             {
-                options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+                // Note: the validation handler uses OpenID Connect discovery
+                // to retrieve the address of the introspection endpoint.
+                options.SetIssuer("https://localhost:44319/");
+                options.AddAudiences("resource_server_1");
+
+                // Configure the validation handler to use introspection and register the client
+                // credentials used when communicating with the remote introspection endpoint.
+                options.UseIntrospection()
+                       .SetClientId("resource_server_1")
+                       .SetClientSecret("846B62D0-DEF9-4215-A99D-86E6B8DAB342");
+
+                // Register the System.Net.Http integration.
+                options.UseSystemNetHttp();
+
+                // Register the ASP.NET Core host.
+                options.UseAspNetCore();
             });
 
-            // Register the OpenIddict validation components.
-            services.AddOpenIddict()
-                .AddValidation(options =>
-                {
-                    // Note: the validation handler uses OpenID Connect discovery
-                    // to retrieve the address of the introspection endpoint.
-                    options.SetIssuer("https://localhost:44319/");
-                    options.AddAudiences("resource_server_1");
+        services.AddControllersWithViews();
+    }
 
-                    // Configure the validation handler to use introspection and register the client
-                    // credentials used when communicating with the remote introspection endpoint.
-                    options.UseIntrospection()
-                           .SetClientId("resource_server_1")
-                           .SetClientSecret("846B62D0-DEF9-4215-A99D-86E6B8DAB342");
+    public void Configure(IApplicationBuilder app)
+    {
+        app.UseRouting();
 
-                    // Register the System.Net.Http integration.
-                    options.UseSystemNetHttp();
-
-                    // Register the ASP.NET Core host.
-                    options.UseAspNetCore();
-                });
-
-            services.AddControllersWithViews();
-        }
-
-        public void Configure(IApplicationBuilder app)
+        app.UseCors(builder =>
         {
-            app.UseRouting();
+            builder.WithOrigins("https://localhost:44398");
+            builder.WithMethods("GET");
+            builder.WithHeaders("Authorization");
+        });
 
-            app.UseCors(builder =>
-            {
-                builder.WithOrigins("https://localhost:44398");
-                builder.WithMethods("GET");
-                builder.WithHeaders("Authorization");
-            });
+        app.UseAuthentication();
+        app.UseAuthorization();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+        app.UseEndpoints(options =>
+        {
+            options.MapControllerRoute(
+                name: "empty",
+                pattern: "{controller=Resource}/{action=Public}"
+            );
 
-            app.UseEndpoints(options =>
-            {
-                options.MapControllerRoute(
-                    name: "empty",
-                    pattern: "{controller=Resource}/{action=Public}"
-                );
-
-                options.MapControllerRoute(
-                    name: "api",
-                    pattern: "api/{action=Public}",
-                    defaults: new { controller = "Resource" }
-                );
-            });
-        }
+            options.MapControllerRoute(
+                name: "api",
+                pattern: "api/{action=Public}",
+                defaults: new { controller = "Resource" }
+            );
+        });
     }
 }
