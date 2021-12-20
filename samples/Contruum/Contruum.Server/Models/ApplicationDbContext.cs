@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Contruum.Server.Models
+namespace Contruum.Server.Models;
+
+public class ApplicationDbContext : DbContext
 {
-    public class ApplicationDbContext : DbContext
+    public ApplicationDbContext(DbContextOptions options)
+        : base(options)
     {
-        public ApplicationDbContext(DbContextOptions options)
-            : base(options)
-        {
-        }
     }
 }

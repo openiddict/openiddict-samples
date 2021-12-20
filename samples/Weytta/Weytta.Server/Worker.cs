@@ -7,50 +7,49 @@ using Microsoft.Extensions.Hosting;
 using OpenIddict.Abstractions;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
-namespace Weytta.Server
+namespace Weytta.Server;
+
+public class Worker : IHostedService
 {
-    public class Worker : IHostedService
+    private readonly IServiceProvider _serviceProvider;
+
+    public Worker(IServiceProvider serviceProvider)
+        => _serviceProvider = serviceProvider;
+
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
-        private readonly IServiceProvider _serviceProvider;
+        using var scope = _serviceProvider.CreateScope();
 
-        public Worker(IServiceProvider serviceProvider)
-            => _serviceProvider = serviceProvider;
+        var context = scope.ServiceProvider.GetRequiredService<DbContext>();
+        await context.Database.EnsureCreatedAsync();
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
+
+        if (await manager.FindByClientIdAsync("console_app") == null)
         {
-            using var scope = _serviceProvider.CreateScope();
-
-            var context = scope.ServiceProvider.GetRequiredService<DbContext>();
-            await context.Database.EnsureCreatedAsync();
-
-            var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
-
-            if (await manager.FindByClientIdAsync("console_app") == null)
+            await manager.CreateAsync(new OpenIddictApplicationDescriptor
             {
-                await manager.CreateAsync(new OpenIddictApplicationDescriptor
+                ClientId = "console_app",
+                ConsentType = ConsentTypes.Implicit,
+                DisplayName = "Console application",
+                RedirectUris =
                 {
-                    ClientId = "console_app",
-                    ConsentType = ConsentTypes.Implicit,
-                    DisplayName = "Console application",
-                    RedirectUris =
-                    {
-                        new Uri("http://localhost:7890/")
-                    },
-                    Permissions =
-                    {
-                        Permissions.Endpoints.Authorization,
-                        Permissions.Endpoints.Token,
-                        Permissions.GrantTypes.AuthorizationCode,
-                        Permissions.ResponseTypes.Code
-                    },
-                    Requirements =
-                    {
-                        Requirements.Features.ProofKeyForCodeExchange
-                    }
-                });
-            }
+                    new Uri("http://localhost:7890/")
+                },
+                Permissions =
+                {
+                    Permissions.Endpoints.Authorization,
+                    Permissions.Endpoints.Token,
+                    Permissions.GrantTypes.AuthorizationCode,
+                    Permissions.ResponseTypes.Code
+                },
+                Requirements =
+                {
+                    Requirements.Features.ProofKeyForCodeExchange
+                }
+            });
         }
-
-        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
+
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }

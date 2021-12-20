@@ -5,23 +5,22 @@ using Hollastin.Server.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Hollastin.Server
+namespace Hollastin.Server;
+
+public class Worker : IHostedService
 {
-    public class Worker : IHostedService
+    private readonly IServiceProvider _serviceProvider;
+
+    public Worker(IServiceProvider serviceProvider)
+        => _serviceProvider = serviceProvider;
+
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
-        private readonly IServiceProvider _serviceProvider;
+        using var scope = _serviceProvider.CreateScope();
 
-        public Worker(IServiceProvider serviceProvider)
-            => _serviceProvider = serviceProvider;
-
-        public async Task StartAsync(CancellationToken cancellationToken)
-        {
-            using var scope = _serviceProvider.CreateScope();
-
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            await context.Database.EnsureCreatedAsync();
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        await context.Database.EnsureCreatedAsync();
     }
+
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }

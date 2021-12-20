@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace Zirku.Server.Services
+namespace Zirku.Server.Services;
+
+public interface ISmsSender
 {
-    public interface ISmsSender
-    {
-        Task SendSmsAsync(string number, string message);
-    }
+    Task SendSmsAsync(string number, string message);
 }

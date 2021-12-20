@@ -7,46 +7,45 @@ using OpenIddict.Abstractions;
 using Matty.Server.Data;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
-namespace Matty.Server
+namespace Matty.Server;
+
+public class Worker : IHostedService
 {
-    public class Worker : IHostedService
+    private readonly IServiceProvider _serviceProvider;
+
+    public Worker(IServiceProvider serviceProvider)
+        => _serviceProvider = serviceProvider;
+
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
-        private readonly IServiceProvider _serviceProvider;
+        using var scope = _serviceProvider.CreateScope();
 
-        public Worker(IServiceProvider serviceProvider)
-            => _serviceProvider = serviceProvider;
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        await context.Database.EnsureCreatedAsync();
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
+
+        if (await manager.FindByClientIdAsync("device") == null)
         {
-            using var scope = _serviceProvider.CreateScope();
-
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            await context.Database.EnsureCreatedAsync();
-
-            var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
-
-            if (await manager.FindByClientIdAsync("device") == null)
+            await manager.CreateAsync(new OpenIddictApplicationDescriptor
             {
-                await manager.CreateAsync(new OpenIddictApplicationDescriptor
+                ClientId = "device",
+                Type = ClientTypes.Public,
+                ConsentType = ConsentTypes.Explicit,
+                DisplayName = "Device client",
+                Permissions =
                 {
-                    ClientId = "device",
-                    Type = ClientTypes.Public,
-                    ConsentType = ConsentTypes.Explicit,
-                    DisplayName = "Device client",
-                    Permissions =
-                    {
-                        Permissions.GrantTypes.DeviceCode,
-                        Permissions.GrantTypes.RefreshToken,
-                        Permissions.Endpoints.Device,
-                        Permissions.Endpoints.Token,
-                        Permissions.Scopes.Email,
-                        Permissions.Scopes.Profile,
-                        Permissions.Scopes.Roles,
-                    }
-                });
-            }
+                    Permissions.GrantTypes.DeviceCode,
+                    Permissions.GrantTypes.RefreshToken,
+                    Permissions.Endpoints.Device,
+                    Permissions.Endpoints.Token,
+                    Permissions.Scopes.Email,
+                    Permissions.Scopes.Profile,
+                    Permissions.Scopes.Roles,
+                }
+            });
         }
-
-        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
+
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }
