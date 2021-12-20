@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenIddict.Abstractions" />
+    <PackageReference Include="IdentityModel" />
     <PackageReference Include="System.Net.Http.Json" />
   </ItemGroup>
 

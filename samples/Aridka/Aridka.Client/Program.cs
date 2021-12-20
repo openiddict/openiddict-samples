@@ -1,11 +1,9 @@
-﻿using OpenIddict.Abstractions;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using IdentityModel.Client;
 
 using var client = new HttpClient();
 
@@ -32,24 +30,26 @@ catch (HttpRequestException exception)
 
 static async Task<string> GetTokenAsync(HttpClient client)
 {
-    var request = new HttpRequestMessage(HttpMethod.Post, "https://localhost:44385/connect/token");
-    request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
+    // Retrieve the OpenIddict server configuration document containing the endpoint URLs.
+    var configuration = await client.GetDiscoveryDocumentAsync("https://localhost:44385/");
+    if (configuration.IsError)
     {
-        ["grant_type"] = "client_credentials",
-        ["client_id"] = "console",
-        ["client_secret"] = "388D45FA-B36B-4988-BA59-B187D329C207"
-    });
-
-    var response = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead);
-
-    var payload = await response.Content.ReadFromJsonAsync<OpenIddictResponse>();
-
-    if (!string.IsNullOrEmpty(payload.Error))
-    {
-        throw new InvalidOperationException("An error occurred while retrieving an access token.");
+        throw new Exception($"An error occurred while retrieving the configuration document: {configuration.Error}");
     }
 
-    return payload.AccessToken;
+    var response = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+    {
+        Address = configuration.TokenEndpoint,
+        ClientId = "console",
+        ClientSecret = "388D45FA-B36B-4988-BA59-B187D329C207"
+    });
+
+    if (response.IsError)
+    {
+        throw new Exception($"An error occurred while retrieving an access token: {response.Error}");
+    }
+
+    return response.AccessToken;
 }
 
 static async Task<string> GetResourceAsync(HttpClient client, string token)
