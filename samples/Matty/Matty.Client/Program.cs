@@ -2,8 +2,8 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using IdentityModel;
 using IdentityModel.Client;
-using static OpenIddict.Abstractions.OpenIddictConstants;
 
 Console.WriteLine("+-------------------------------------------------------------------+");
 Console.WriteLine("             Welcome to Matty a device code flow sample");
@@ -15,22 +15,22 @@ using var client = new HttpClient();
 
 try
 {
-    // Make call to "/.well-known/openid-configuration" endpoint
-    // to discover identity server configuration document
-    var discovery = await client.GetDiscoveryDocumentAsync("https://localhost:44321");
-    if (discovery.IsError)
+    // Retrieve the OpenIddict server configuration document containing the endpoint URLs.
+    var configuration = await client.GetDiscoveryDocumentAsync("https://localhost:44321/");
+    if (configuration.IsError)
     {
-        throw new Exception(discovery.Error);
+        throw new Exception($"An error occurred while retrieving the configuration document: {configuration.Error}");
     }
 
     var deviceResponse = await client.RequestDeviceAuthorizationAsync(new DeviceAuthorizationRequest
     { 
-        Address = discovery.DeviceAuthorizationEndpoint,
+        Address = configuration.DeviceAuthorizationEndpoint,
         Scope = "openid offline_access profile email",
         ClientId = "device"
     });
     if (deviceResponse.IsError)
     {
+        throw new Exception($"An error occurred while retrieving a device code: {deviceResponse.Error}");
         throw new Exception(deviceResponse.Error);
     }
 
@@ -51,12 +51,12 @@ try
     {
         tokenResponse = await client.RequestDeviceTokenAsync(new DeviceTokenRequest
         {
-            Address = discovery.TokenEndpoint,
+            Address = configuration.TokenEndpoint,
             ClientId = "device",
             DeviceCode = deviceResponse.DeviceCode
         });
 
-        if (tokenResponse is { IsError: true, Error: Errors.AuthorizationPending })
+        if (tokenResponse is { IsError: true, Error: OidcConstants.TokenErrors.AuthorizationPending })
         {
             Console.WriteLine(" - authorization pending...");
 
@@ -65,10 +65,12 @@ try
             // In this sample the client will retry every 60 seconds at most.
             await Task.Delay(Math.Clamp(deviceResponse.Interval, 1, 60) * 1000);
         }
+
         else if (tokenResponse.IsError)
         {
-            throw new Exception(tokenResponse.Error);
+            throw new Exception($"An error occurred while retrieving an access token: {tokenResponse.Error}");
         }
+
         else
         {
             Console.WriteLine("+-------------------------------------------------------------------+");
@@ -89,6 +91,7 @@ try
     Console.WriteLine($" - API response: {resource}");
     Console.ReadLine();
 }
+
 catch (Exception exception)
 {
     Console.WriteLine("+-------------------------------------------------------------------+");

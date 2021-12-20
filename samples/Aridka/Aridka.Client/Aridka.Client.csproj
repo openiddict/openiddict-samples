@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenIddict.Abstractions" />
+    <PackageReference Include="IdentityModel" />
     <PackageReference Include="System.Net.Http.Json" />
   </ItemGroup>
   
