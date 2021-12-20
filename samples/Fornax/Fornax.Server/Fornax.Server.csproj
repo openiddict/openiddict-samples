@@ -32,7 +32,6 @@
     <PackageReference Include="Microsoft.Owin.Security.OAuth" />
     <PackageReference Include="Microsoft.Owin.Security.Twitter" />
     <PackageReference Include="Microsoft.Web.Infrastructure" PrivateAssets="all" />
-    <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="OpenIddict.EntityFramework" />
     <PackageReference Include="OpenIddict.Owin" />
     <PackageReference Include="WebGrease" />
