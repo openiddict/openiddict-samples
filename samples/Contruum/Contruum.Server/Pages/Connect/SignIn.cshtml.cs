@@ -1,13 +1,12 @@
 using System;
 using System.Globalization;
 using System.Security.Claims;
+using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.IdentityModel.JsonWebTokens;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Contruum.Server.Pages.Connect;
@@ -61,7 +60,7 @@ public class SignInModel : PageModel
             identity.AddClaim(new Claim(Claims.PhoneNumber, "+1 202-456-1111"));
 
             // Address claim:
-            var address = new JObject
+            var address = new JsonObject
             {
                 [Claims.Country] = "United States of America",
                 [Claims.Locality] = "Washington",
@@ -69,7 +68,7 @@ public class SignInModel : PageModel
                 [Claims.StreetAddress] = "1600 Pennsylvania Ave NW"
             };
 
-            identity.AddClaim(new Claim(Claims.Address, address.ToString(Formatting.None), JsonClaimValueTypes.Json));
+            identity.AddClaim(new Claim(Claims.Address, address.ToJsonString(), JsonClaimValueTypes.Json));
         }
 
         else if (string.Equals(Username, "Donald", StringComparison.OrdinalIgnoreCase))
@@ -100,7 +99,7 @@ public class SignInModel : PageModel
             identity.AddClaim(new Claim(Claims.PhoneNumber, "+1 202-456-1111"));
 
             // Address claim:
-            var address = new JObject
+            var address = new JsonObject
             {
                 [Claims.Country] = "United States of America",
                 [Claims.Locality] = "Washington",
@@ -108,7 +107,7 @@ public class SignInModel : PageModel
                 [Claims.StreetAddress] = "1600 Pennsylvania Ave NW"
             };
 
-            identity.AddClaim(new Claim(Claims.Address, address.ToString(Formatting.None), JsonClaimValueTypes.Json));
+            identity.AddClaim(new Claim(Claims.Address, address.ToJsonString(), JsonClaimValueTypes.Json));
         }
 
         else
