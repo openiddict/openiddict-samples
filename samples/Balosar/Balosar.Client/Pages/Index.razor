@@ -1,7 +1,12 @@
 ﻿@page "/"
+<h5>Claims summary</h5>
+<ShowClaims></ShowClaims>
 
-<h1>Hello, world!</h1>
+<h5>Client side check</h5>
+<HasClaim ClaimSide="ClaimSide.Client" ClaimType="ENTITY_TYPE_1" ClaimValue="VIEW" Expected="true"></HasClaim>
+<HasClaim ClaimSide="ClaimSide.Client" ClaimType="ENTITY_TYPE_2" ClaimValue="VIEW" Expected="true"></HasClaim>
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+<h5>Server side check</h5>
+<HasClaim ClaimSide="ClaimSide.Server" ClaimType="ENTITY_TYPE_1" ClaimValue="VIEW" Expected="true"></HasClaim>
+<HasClaim ClaimSide="ClaimSide.Server" ClaimType="ENTITY_TYPE_2" ClaimValue="VIEW" Expected="true"></HasClaim>
+<HasClaim ClaimSide="ClaimSide.Server" ClaimType="ENTITY_TYPE_3" ClaimValue="XXXX" Expected="false"></HasClaim>

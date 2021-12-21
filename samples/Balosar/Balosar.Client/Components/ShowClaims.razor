@@ -1,0 +1,34 @@
+﻿<span>@AuthenticatedMessage</span>
+@if (Claims != null && IsAuthenticated)
+{
+    <table class="table">
+        <tr>
+            <th scope="col">Type</th>
+            <th scope="col">Value</th>
+            <th scope="col">Issuer</th>
+        </tr>
+
+        @foreach (var claim in Claims)
+        {
+            if (claim != null)
+            {
+                <tr>
+                    <td>@claim.Type</td>
+                    <td>@claim.Value</td>
+                    <td>@claim.Issuer</td>
+                </tr>
+            }
+        }
+    </table>
+
+    
+    @if (ShowAddClaims)
+    {
+        <span>The samples claims are not added to the user's profile yet, click on the button to add them</span><br/>
+        <button type="button" class="btn btn-warning" @onclick="AddClaims">Add test claims to user</button>
+    }
+    @if (ShowLogoutLoginMessage)
+    {
+        <span><a href="/connect/logout">Logout</a> and log back in to reload the user claims</span>
+    }
+}

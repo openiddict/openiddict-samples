@@ -1,0 +1,32 @@
+﻿@if (UserAuthenticated)
+{
+    var asExpected = UserHasClaim == Expected ? "OK" : "NOT OK";
+    var asExpectedColor = UserHasClaim == Expected ? "#B4E4A4" : "#ECBFBF";
+
+    <table class="table">
+        <thead>
+        <tr style="background-color: azure">
+            <th scope="col">Side</th>
+            <th scope="col">Claim Type</th>
+            <th scope="col">Value</th>
+            <th scope="col" style="background-color: @ResultBackgrounColor">User Has Claim</th>
+            <th scope="col">As expected</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <b>@ClaimSide</b>
+            </td>
+            <td>@ClaimType</td>
+            <td>@ClaimValue</td>
+            <td style="background-color: @ResultBackgrounColor">
+                @HasClaimMessage
+            </td>
+            <td style="background-color: @asExpectedColor">
+                @asExpected
+            </td>
+        </tr>
+        </tbody>
+    </table>
+}
