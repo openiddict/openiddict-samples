@@ -18,7 +18,7 @@ public class Worker : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        using var scope = _serviceProvider.CreateScope();
+        await using var scope = _serviceProvider.CreateAsyncScope();
 
         var context = scope.ServiceProvider.GetRequiredService<DbContext>();
         await context.Database.EnsureCreatedAsync();
