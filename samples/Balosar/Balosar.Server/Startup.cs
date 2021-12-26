@@ -43,6 +43,7 @@ public class Startup
             options.ClaimsIdentity.UserNameClaimType = Claims.Name;
             options.ClaimsIdentity.UserIdClaimType = Claims.Subject;
             options.ClaimsIdentity.RoleClaimType = Claims.Role;
+            options.ClaimsIdentity.EmailClaimType = Claims.Email;
         });
 
         // OpenIddict offers native integration with Quartz.NET to perform scheduled tasks
