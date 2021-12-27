@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30002.166
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{8B467944-153B-4C90-BAB1-8F1B34C3075A}"
 EndProject
@@ -103,7 +103,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fornax.Client", "samples\Fo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contruum", "Contruum", "{C1A7C9CE-10A0-42E7-9EF8-6001DE59CBFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contruum.Server", "samples\Contruum\Contruum.Server\Contruum.Server.csproj", "{9343354C-A9AA-4BB5-BD86-9901716CA0A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contruum.Server", "samples\Contruum\Contruum.Server\Contruum.Server.csproj", "{9343354C-A9AA-4BB5-BD86-9901716CA0A0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mimban", "Mimban", "{E61EDAE1-AFBE-4B53-9A4B-E4BE2A609C45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mimban.Server", "samples\Mimban\Mimban.Server\Mimban.Server.csproj", "{A8C89A01-7B24-4636-B54F-80258F2E1455}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mimban.Client", "samples\Mimban\Mimban.Client\Mimban.Client.csproj", "{33DC048A-3650-4A22-8B13-415403DCA584}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -207,6 +213,14 @@ Global
 		{9343354C-A9AA-4BB5-BD86-9901716CA0A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9343354C-A9AA-4BB5-BD86-9901716CA0A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9343354C-A9AA-4BB5-BD86-9901716CA0A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8C89A01-7B24-4636-B54F-80258F2E1455}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8C89A01-7B24-4636-B54F-80258F2E1455}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8C89A01-7B24-4636-B54F-80258F2E1455}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8C89A01-7B24-4636-B54F-80258F2E1455}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33DC048A-3650-4A22-8B13-415403DCA584}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33DC048A-3650-4A22-8B13-415403DCA584}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33DC048A-3650-4A22-8B13-415403DCA584}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33DC048A-3650-4A22-8B13-415403DCA584}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -247,6 +261,9 @@ Global
 		{639D957B-F9AB-4809-A4B6-F4ADEB2E0163} = {4BEBB450-228D-4376-A287-ECF9DC15FA8B}
 		{C1A7C9CE-10A0-42E7-9EF8-6001DE59CBFA} = {8B467944-153B-4C90-BAB1-8F1B34C3075A}
 		{9343354C-A9AA-4BB5-BD86-9901716CA0A0} = {C1A7C9CE-10A0-42E7-9EF8-6001DE59CBFA}
+		{E61EDAE1-AFBE-4B53-9A4B-E4BE2A609C45} = {8B467944-153B-4C90-BAB1-8F1B34C3075A}
+		{A8C89A01-7B24-4636-B54F-80258F2E1455} = {E61EDAE1-AFBE-4B53-9A4B-E4BE2A609C45}
+		{33DC048A-3650-4A22-8B13-415403DCA584} = {E61EDAE1-AFBE-4B53-9A4B-E4BE2A609C45}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3ECDD26-F40D-4AB4-BC48-8DF143F98FAE}
