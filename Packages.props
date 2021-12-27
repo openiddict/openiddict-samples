@@ -4,6 +4,7 @@
     <PackageReference Update="Antlr" Version="3.5.0.2" />
     <PackageReference Update="AspNet.ScriptManager.bootstrap" Version="3.4.1" />
     <PackageReference Update="AspNet.ScriptManager.jQuery" Version="3.4.1" />
+    <PackageReference Update="AspNet.Security.OpenId.Steam" Version="6.0.0" />
     <PackageReference Update="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
     <PackageReference Update="Autofac.Owin" Version="6.0.1" />
     <PackageReference Update="Autofac.Web" Version="6.0.0" />
