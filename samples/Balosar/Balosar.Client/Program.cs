@@ -32,6 +32,12 @@ builder.Services.AddOidcAuthentication(options =>
     //
     options.ProviderOptions.ResponseMode = "query";
     options.AuthenticationPaths.RemoteRegisterPath = "https://localhost:44310/Identity/Account/Register";
+    
+    // Add the "roles" (OpenIddictConstants.Scopes.Roles) scope and the "role" (OpenIddictConstants.Claims.Role) claim
+    // (the same ones used in the Startup class of the Server) in order for the roles to be validated.
+    // See the Counter component for an example of how to use the Authorize attribute with roles
+    options.ProviderOptions.DefaultScopes.Add("roles");
+    options.UserOptions.RoleClaim = "role";
 });
 
 var host = builder.Build();
