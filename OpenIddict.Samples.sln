@@ -6,9 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{8B467944-153B-4C90-BAB1-8F1B34C3075A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Velusia", "Velusia", "{F47D1283-0EE9-4728-8026-58405C29B786}"
-	ProjectSection(SolutionItems) = preProject
-		samples\Velusia\RunDemo.ps1 = samples\Velusia\RunDemo.ps1
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Zirku", "Zirku", "{E0ADFFCA-A604-42D1-8F6D-DE888E061188}"
 EndProject
@@ -107,9 +104,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contruum.Server", "samples\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mimban", "Mimban", "{E61EDAE1-AFBE-4B53-9A4B-E4BE2A609C45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mimban.Server", "samples\Mimban\Mimban.Server\Mimban.Server.csproj", "{A8C89A01-7B24-4636-B54F-80258F2E1455}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mimban.Server", "samples\Mimban\Mimban.Server\Mimban.Server.csproj", "{A8C89A01-7B24-4636-B54F-80258F2E1455}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mimban.Client", "samples\Mimban\Mimban.Client\Mimban.Client.csproj", "{33DC048A-3650-4A22-8B13-415403DCA584}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mimban.Client", "samples\Mimban\Mimban.Client\Mimban.Client.csproj", "{33DC048A-3650-4A22-8B13-415403DCA584}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

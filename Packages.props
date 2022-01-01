@@ -30,6 +30,7 @@
     <PackageReference Update="Microsoft.AspNetCore.Identity.UI" Version="6.0.0" />
     <PackageReference Update="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0" />
     <PackageReference Update="Microsoft.Owin.Diagnostics" Version="4.2.0" />
@@ -51,6 +52,7 @@
     <PackageReference Update="OpenIddict.Validation.AspNetCore" Version="3.1.1" />
     <PackageReference Update="OpenIddict.Validation.SystemNetHttp" Version="3.1.1" />
     <PackageReference Update="Quartz.Extensions.Hosting" Version="3.2.4" />
+    <PackageReference Update="System.Linq.Async" Version="5.1.0" />
     <PackageReference Update="System.Net.Http.Json" Version="6.0.0" />
     <PackageReference Update="WebGrease" Version="1.6.0" />
   </ItemGroup>
