@@ -41,10 +41,10 @@ static async Task<string> GetTokenAsync(HttpClient client, string email, string 
 
 static async Task<string> GetResourceAsync(HttpClient client, string token)
 {
-    var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:58779/api/message");
+    using var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:58779/api/message");
     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-    var response = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead);
+    using var response = await client.SendAsync(request);
     response.EnsureSuccessStatusCode();
 
     return await response.Content.ReadAsStringAsync();

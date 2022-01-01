@@ -69,10 +69,10 @@ static async Task<string> GetResourceAsync(string token)
 {
     using var client = new HttpClient();
 
-    var request = new HttpRequestMessage(HttpMethod.Get, "https://localhost:44383/api");
+    using var request = new HttpRequestMessage(HttpMethod.Get, "https://localhost:44383/api");
     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-    var response = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead);
+    using var response = await client.SendAsync(request);
     response.EnsureSuccessStatusCode();
 
     return await response.Content.ReadAsStringAsync();

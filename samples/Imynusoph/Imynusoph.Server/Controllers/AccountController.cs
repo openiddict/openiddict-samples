@@ -1,14 +1,14 @@
 ﻿using System.Threading.Tasks;
 using Imynusoph.Server.Models;
-using Imynusoph.Server.ViewModels;
+using Imynusoph.Server.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Imynusoph.Server.Controllers;
 
 [Authorize]
-[Route("[controller]")]
 public class AccountController : Controller
 {
     private readonly UserManager<ApplicationUser> _userManager;
@@ -25,14 +25,20 @@ public class AccountController : Controller
 
     //
     // POST: /Account/Register
-    [HttpPost("register")]
+    [HttpPost]
     [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
     {
         EnsureDatabaseCreated(_applicationDbContext);
         if (ModelState.IsValid)
         {
-            var user = new ApplicationUser { UserName = model.UserName, Email = model.UserName };
+            var user = await _userManager.FindByNameAsync(model.Email);
+            if (user != null)
+            {
+                return StatusCode(StatusCodes.Status409Conflict);
+            }
+
+            user = new ApplicationUser { UserName = model.Email, Email = model.Email };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {

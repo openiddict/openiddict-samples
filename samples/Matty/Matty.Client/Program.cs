@@ -104,10 +104,10 @@ catch (Exception exception)
 
 static async Task<string> GetResourceAsync(HttpClient client, string token)
 {
-    var request = new HttpRequestMessage(HttpMethod.Get, "https://localhost:44321/api/message");
+    using var request = new HttpRequestMessage(HttpMethod.Get, "https://localhost:44321/api/message");
     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-    var response = await client.SendAsync(request, HttpCompletionOption.ResponseContentRead);
+    using var response = await client.SendAsync(request);
     response.EnsureSuccessStatusCode();
 
     return await response.Content.ReadAsStringAsync();
