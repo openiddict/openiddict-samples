@@ -2,13 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <TypeScriptEnabled>false</TypeScriptEnabled>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="node_modules\**" />
-    <EmbeddedResource Remove="node_modules\**" />
-    <None Remove="node_modules\**" />
+    <PackageReference Include="IdentityModel" />
+    <PackageReference Include="System.Net.Http.Json" />
   </ItemGroup>
 
 </Project>

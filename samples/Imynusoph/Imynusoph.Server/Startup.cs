@@ -119,13 +119,6 @@ public class Startup
 
         app.UseRouting();
 
-        app.UseCors(builder =>
-        {
-            builder.WithOrigins("https://localhost:44379");
-            builder.AllowAnyHeader();
-            builder.AllowAnyMethod();
-        });
-
         app.UseAuthentication();
         app.UseAuthorization();
 
@@ -134,5 +127,7 @@ public class Startup
             options.MapControllers();
             options.MapDefaultControllerRoute();
         });
+
+        app.UseWelcomePage();
     }
 }

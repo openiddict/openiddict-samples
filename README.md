@@ -8,7 +8,7 @@ This repository contains samples demonstrating **how to use [OpenIddict](https:/
   - [Balosar](samples/Balosar): authorization code flow demo, with a Blazor WASM application acting as the client.
   - [Contruum](samples/Contruum): conformance tests project using Razor Pages and 2 hardcoded user identities, meant to be used with [the OIDC certification suite](https://www.certification.openid.net/).
   - [Hollastin](samples/Hollastin): resource owner password credentials demo, with a .NET console acting as the client.
-  - [Imynusoph](samples/Imynusoph): refresh token grant demo, with an Angular application acting as the client.
+  - [Imynusoph](samples/Imynusoph): refresh token grant demo, with a .NET console acting as the client.
   - [Matty](samples/Matty): device authorization flow demo, with a .NET console acting as the client.
   - [Mimban](samples/Mimban): authorization code flow demo using minimal APIs and Steam delegation for user authentication, with a .NET console acting as the client.
   - [Velusia](samples/Velusia): authorization code flow demo, with an ASP.NET Core application acting as the client.
