@@ -1,14 +1,233 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using OpenIddict.Abstractions;
+using OpenIddict.Server.AspNetCore;
+using OpenIddict.Validation.AspNetCore;
+using Quartz;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
-namespace Zirku.Server;
+var builder = WebApplication.CreateBuilder(args);
 
-public static class Program
+// OpenIddict offers native integration with Quartz.NET to perform scheduled tasks
+// (like pruning orphaned authorizations/tokens from the database) at regular intervals.
+builder.Services.AddQuartz(options =>
 {
-    public static void Main(string[] args) =>
-        CreateHostBuilder(args).Build().Run();
+    options.UseMicrosoftDependencyInjectionJobFactory();
+    options.UseSimpleTypeLoader();
+    options.UseInMemoryStore();
+});
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(builder => builder.UseStartup<Startup>());
+// Register the Quartz.NET service and configure it to block shutdown until jobs are complete.
+builder.Services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
+
+builder.Services.AddDbContext<DbContext>(options => options.UseSqlite("Data Source=database.db").UseOpenIddict());
+
+builder.Services.AddOpenIddict()
+
+    // Register the OpenIddict core components.
+    .AddCore(options =>
+    {
+        options.UseEntityFrameworkCore()
+               .UseDbContext<DbContext>();
+    })
+
+    // Register the OpenIddict server components.
+    .AddServer(options =>
+    {
+        // Enable the authorization, introspection and token endpoints.
+        options.SetAuthorizationEndpointUris("/authorize")
+               .SetIntrospectionEndpointUris("/introspect")
+               .SetTokenEndpointUris("/token");
+
+        // Note: this sample only uses the authorization code flow but you can enable
+        // the other flows if you need to support implicit, password or client credentials.
+        options.AllowAuthorizationCodeFlow();
+
+        // Register the encryption credentials. This sample uses a symmetric
+        // encryption key that is shared between the server and the Api2 sample
+        // (that performs local token validation instead of using introspection).
+        //
+        // Note: in a real world application, this encryption key should be
+        // stored in a safe place (e.g in Azure KeyVault, stored as a secret).
+        options.AddEncryptionKey(new SymmetricSecurityKey(
+            Convert.FromBase64String("DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=")));
+
+        // Register the signing credentials.
+        options.AddDevelopmentSigningCertificate();
+
+        // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
+        //
+        // Note: unlike other samples, this sample doesn't use token endpoint pass-through
+        // to handle token requests in a custom MVC action. As such, the token requests
+        // will be automatically handled by OpenIddict, that will reuse the identity
+        // resolved from the authorization code to produce access and identity tokens.
+        //
+        options.UseAspNetCore()
+               .EnableAuthorizationEndpointPassthrough();
+    })
+
+    // Register the OpenIddict validation components.
+    .AddValidation(options =>
+    {
+        // Import the configuration from the local OpenIddict server instance.
+        options.UseLocalServer();
+
+        // Register the ASP.NET Core host.
+        options.UseAspNetCore();
+    });
+
+builder.Services.AddAuthorization();
+
+var app = builder.Build();
+
+app.UseHttpsRedirection();
+
+// Create new application registrations matching the values configured in Zirku.Client and Zirku.Api1.
+// Note: in a real world application, this step should be part of a setup script.
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<DbContext>();
+    await context.Database.EnsureCreatedAsync();
+
+    await CreateApplicationsAsync();
+    await CreateScopesAsync();
+
+    async Task CreateApplicationsAsync()
+    {
+        var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
+
+        if (await manager.FindByClientIdAsync("console_app") is null)
+        {
+            await manager.CreateAsync(new OpenIddictApplicationDescriptor
+            {
+                ClientId = "console_app",
+                RedirectUris =
+                {
+                    new Uri("http://localhost:8739/")
+                },
+                Permissions =
+                {
+                    Permissions.Endpoints.Authorization,
+                    Permissions.Endpoints.Token,
+                    Permissions.GrantTypes.AuthorizationCode,
+                    Permissions.ResponseTypes.Code,
+                    Permissions.Scopes.Email,
+                    Permissions.Scopes.Profile,
+                    Permissions.Scopes.Roles,
+                    Permissions.Prefixes.Scope + "api1",
+                    Permissions.Prefixes.Scope + "api2"
+                }
+            });
+        }
+
+        if (await manager.FindByClientIdAsync("resource_server_1") is null)
+        {
+            await manager.CreateAsync(new OpenIddictApplicationDescriptor
+            {
+                ClientId = "resource_server_1",
+                ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342",
+                Permissions =
+                {
+                    Permissions.Endpoints.Introspection
+                }
+            });
+        }
+
+        // Note: no client registration is created for resource_server_2
+        // as it uses local token validation instead of introspection.
+    }
+
+    async Task CreateScopesAsync()
+    {
+        var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictScopeManager>();
+
+        if (await manager.FindByNameAsync("api1") is null)
+        {
+            await manager.CreateAsync(new OpenIddictScopeDescriptor
+            {
+                Name = "api1",
+                Resources =
+                {
+                    "resource_server_1"
+                }
+            });
+        }
+
+        if (await manager.FindByNameAsync("api2") is null)
+        {
+            await manager.CreateAsync(new OpenIddictScopeDescriptor
+            {
+                Name = "api2",
+                Resources =
+                {
+                    "resource_server_2"
+                }
+            });
+        }
+    }
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapGet("/api", [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
+(ClaimsPrincipal user) => user.Identity!.Name);
+
+app.MapGet("/authorize", async (HttpContext context, IOpenIddictScopeManager manager) =>
+{
+    // Retrieve the OpenIddict server request from the HTTP context.
+    var request = context.GetOpenIddictServerRequest();
+
+    var identifier = (int?) request["hardcoded_identity_id"];
+    if (identifier is not (1 or 2))
+    {
+        return Results.Challenge(
+            authenticationSchemes: new[] { OpenIddictServerAspNetCoreDefaults.AuthenticationScheme },
+            properties: new AuthenticationProperties(new Dictionary<string, string>
+            {
+                [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidRequest,
+                [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The specified hardcoded identity is invalid."
+            }));
+    }
+
+    // Create a new identity and populate it based on the specified hardcoded identity identifier.
+    var identity = new ClaimsIdentity(TokenValidationParameters.DefaultAuthenticationType);
+    identity.AddClaim(new Claim(Claims.Subject, identifier.Value.ToString(CultureInfo.InvariantCulture)));
+    identity.AddClaim(new Claim(Claims.Name, identifier switch
+    {
+        1 => "Alice",
+        2 => "Bob",
+        _ => throw new InvalidOperationException()
+    }).SetDestinations(Destinations.AccessToken));
+
+    // Note: in this sample, the client is granted all the requested scopes for the first identity (Alice)
+    // but for the second one (Bob), only the Api1 scope can be granted, which will cause requests sent
+    // to Zirku.Api2 on behalf of Bob to be automatically rejected by the OpenIddict validation handler,
+    // as the access token representing Bob won't contain the "resource_server_2" audience required by Api2.
+    var principal = new ClaimsPrincipal(identity);
+
+    principal.SetScopes(identifier switch
+    {
+        1 => request.GetScopes(),
+        2 => new[] { "api1" }.Intersect(request.GetScopes()),
+        _ => throw new InvalidOperationException()
+    });
+
+    principal.SetResources(await manager.ListResourcesAsync(principal.GetScopes()).ToListAsync());
+
+    return Results.SignIn(principal, properties: null, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+});
+
+app.Run();
