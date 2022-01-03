@@ -68,6 +68,8 @@ namespace Blazor.BFF.OpenIddict.Server
                 //    .Build();
                 //options.Filters.Add(new AuthorizeFilter(policy));
             });
+
+            services.AddReverseProxy();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -99,6 +101,7 @@ namespace Blazor.BFF.OpenIddict.Server
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapReverseProxy();
             });
         }
     }

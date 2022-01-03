@@ -50,3 +50,9 @@ dotnet new -u Blazor.BFF.OpenIDConnect.Template
 
 - NetEscapades.AspNetCore.SecurityHeaders
 - IdentityModel
+
+Links
+
+https://microsoft.github.io/reverse-proxy/articles/getting-started.html
+
+https://github.com/microsoft/reverse-proxy
