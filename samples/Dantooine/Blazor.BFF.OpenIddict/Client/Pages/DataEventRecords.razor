@@ -1,8 +1,8 @@
-﻿@page "/downstreamapi"
+﻿@page "/dataeventrecords"
 @inject HttpClient Http
 @inject IJSRuntime JSRuntime
 
-<h1>Data from Direct API</h1>
+<h1>Data from dataeventrecords API using proxy</h1>
 
 @if (apiData == null)
 {
@@ -28,7 +28,7 @@ else
 }
 
 @code {
-    private string[] apiData;
+    private string apiData;
 
     protected override async Task OnInitializedAsync()
     {
@@ -36,7 +36,7 @@ else
 
         Http.DefaultRequestHeaders.Add("X-XSRF-TOKEN", token);
 
-        apiData = await Http.GetFromJsonAsync<string[]>("api/DownstreamApi");
+        apiData = await Http.GetStringAsync("api/DataEventRecords");
     }
 
 }

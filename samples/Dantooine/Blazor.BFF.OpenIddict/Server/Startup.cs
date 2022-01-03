@@ -4,11 +4,18 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Yarp.ReverseProxy.Forwarder;
+using Yarp.ReverseProxy.Transforms;
 
 namespace Blazor.BFF.OpenIddict.Server
 {
@@ -53,6 +60,7 @@ namespace Blazor.BFF.OpenIddict.Server
                options.UsePkce = true;
                options.Scope.Add("profile");
                options.Scope.Add("offline_access");
+               options.Scope.Add("dataEventRecords");
                options.SaveTokens = true;
                options.GetClaimsFromUserInfoEndpoint = true;
                //options.ClaimActions.MapUniqueJsonKey("preferred_username", "preferred_username");
@@ -69,10 +77,11 @@ namespace Blazor.BFF.OpenIddict.Server
                 //options.Filters.Add(new AuthorizeFilter(policy));
             });
 
-            services.AddReverseProxy();
+
+            services.AddHttpForwarder();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHttpForwarder forwarder)
         {
             if (env.IsDevelopment())
             {
@@ -96,12 +105,34 @@ namespace Blazor.BFF.OpenIddict.Server
             app.UseAuthentication();
             app.UseAuthorization();
 
+            var httpClient = new HttpMessageInvoker(new SocketsHttpHandler()
+            {
+                UseProxy = false,
+                AllowAutoRedirect = false,
+                AutomaticDecompression = DecompressionMethods.None,
+                UseCookies = false
+            });
+            var transformer = new CookieTokenTransformer(); // or HttpTransformer.Default;
+            var requestConfig = new ForwarderRequestConfig { ActivityTimeout = TimeSpan.FromSeconds(100) };
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
+                endpoints.Map("/api/DataEventRecords", async httpContext =>
+                {
+                    var error = await forwarder.SendAsync(httpContext, "https://localhost:44390/",
+                        httpClient, requestConfig, transformer);
+                    // Check if the operation was successful
+                    if (error != ForwarderError.None)
+                    {
+                        var errorFeature = httpContext.GetForwarderErrorFeature();
+                        var exception = errorFeature.Exception;
+                    }
+                });
+               
                 endpoints.MapFallbackToPage("/_Host");
-                endpoints.MapReverseProxy();
+                
             });
         }
     }
