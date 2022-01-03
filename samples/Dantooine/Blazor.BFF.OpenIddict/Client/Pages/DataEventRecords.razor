@@ -1,4 +1,5 @@
 ﻿@page "/dataeventrecords"
+@using Blazor.BFF.OpenIddict.Shared
 @inject HttpClient Http
 @inject IJSRuntime JSRuntime
 
@@ -13,14 +14,16 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Data</th>
+                <th>Name</th>
+                <th>Description</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var data in apiData)
             {
                 <tr>
-                    <td>@data</td>
+                    <td>@data.Name</td>
+                    <td>@data.Description</td>
                 </tr>
             }
         </tbody>
@@ -28,7 +31,7 @@ else
 }
 
 @code {
-    private string apiData;
+    private DataEventRecord[] apiData;
 
     protected override async Task OnInitializedAsync()
     {
@@ -36,7 +39,7 @@ else
 
         Http.DefaultRequestHeaders.Add("X-XSRF-TOKEN", token);
 
-        apiData = await Http.GetStringAsync("api/DataEventRecords");
+        apiData = await Http.GetFromJsonAsync<DataEventRecord[]>("api/DataEventRecords");
     }
 
 }

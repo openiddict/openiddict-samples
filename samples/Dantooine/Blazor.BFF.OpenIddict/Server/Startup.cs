@@ -129,7 +129,7 @@ namespace Blazor.BFF.OpenIddict.Server
                         var errorFeature = httpContext.GetForwarderErrorFeature();
                         var exception = errorFeature.Exception;
                     }
-                });
+                }).RequireAuthorization();
                
                 endpoints.MapFallbackToPage("/_Host");
                 
