@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32002.185
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpeniddictServer", "OpeniddictServer\OpeniddictServer.csproj", "{D12043A7-436F-4C60-AE8D-4A4D8EB6076C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceServer", "ResourceServer\ResourceServer.csproj", "{8206AB4E-E954-4A70-B85E-EE956A42A34E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Blazor.BFF.OpenIddict", "Blazor.BFF.OpenIddict", "{E7C9EF07-C69D-4016-A44E-78DEFFE1CC3A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.BFF.OpenIddict.Shared", "Blazor.BFF.OpenIddict\Shared\Blazor.BFF.OpenIddict.Shared.csproj", "{079503F6-C36F-47FF-AB5B-710D6FB432E9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.BFF.OpenIddict.Client", "Blazor.BFF.OpenIddict\Client\Blazor.BFF.OpenIddict.Client.csproj", "{084E9D07-0B9F-4BBD-9F44-731136621292}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.BFF.OpenIddict.Server", "Blazor.BFF.OpenIddict\Server\Blazor.BFF.OpenIddict.Server.csproj", "{FE8FEE2E-8156-4B37-B4A6-0316B4C7DC00}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D12043A7-436F-4C60-AE8D-4A4D8EB6076C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D12043A7-436F-4C60-AE8D-4A4D8EB6076C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D12043A7-436F-4C60-AE8D-4A4D8EB6076C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D12043A7-436F-4C60-AE8D-4A4D8EB6076C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8206AB4E-E954-4A70-B85E-EE956A42A34E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8206AB4E-E954-4A70-B85E-EE956A42A34E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8206AB4E-E954-4A70-B85E-EE956A42A34E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8206AB4E-E954-4A70-B85E-EE956A42A34E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{079503F6-C36F-47FF-AB5B-710D6FB432E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{079503F6-C36F-47FF-AB5B-710D6FB432E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{079503F6-C36F-47FF-AB5B-710D6FB432E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{079503F6-C36F-47FF-AB5B-710D6FB432E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{084E9D07-0B9F-4BBD-9F44-731136621292}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{084E9D07-0B9F-4BBD-9F44-731136621292}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{084E9D07-0B9F-4BBD-9F44-731136621292}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{084E9D07-0B9F-4BBD-9F44-731136621292}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE8FEE2E-8156-4B37-B4A6-0316B4C7DC00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE8FEE2E-8156-4B37-B4A6-0316B4C7DC00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE8FEE2E-8156-4B37-B4A6-0316B4C7DC00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE8FEE2E-8156-4B37-B4A6-0316B4C7DC00}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{079503F6-C36F-47FF-AB5B-710D6FB432E9} = {E7C9EF07-C69D-4016-A44E-78DEFFE1CC3A}
+		{084E9D07-0B9F-4BBD-9F44-731136621292} = {E7C9EF07-C69D-4016-A44E-78DEFFE1CC3A}
+		{FE8FEE2E-8156-4B37-B4A6-0316B4C7DC00} = {E7C9EF07-C69D-4016-A44E-78DEFFE1CC3A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B5B55BBC-1EEA-47D2-A4D5-0DBA4EE78F99}
+	EndGlobalSection
+EndGlobal

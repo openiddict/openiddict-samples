@@ -1,0 +1,42 @@
+﻿@page "/directapi"
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+<h1>Data from Direct API</h1>
+
+@if (apiData == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var data in apiData)
+            {
+                <tr>
+                    <td>@data</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private string[] apiData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await JSRuntime.InvokeAsync<string>("getAntiForgeryToken");
+
+        Http.DefaultRequestHeaders.Add("X-XSRF-TOKEN", token);
+
+        apiData = await Http.GetFromJsonAsync<string[]>("api/DirectApi");
+    }
+
+}
