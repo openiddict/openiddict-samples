@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
@@ -32,7 +33,16 @@ builder.Services.AddQuartz(options =>
 // Register the Quartz.NET service and configure it to block shutdown until jobs are complete.
 builder.Services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
-builder.Services.AddDbContext<DbContext>(options => options.UseSqlite("Data Source=database.db").UseOpenIddict());
+builder.Services.AddDbContext<DbContext>(options =>
+{
+    // Configure the context to use Microsoft SQL Server.
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+
+    // Register the entity sets needed by OpenIddict.
+    // Note: use the generic overload if you need
+    // to replace the default OpenIddict entities.
+    options.UseOpenIddict();
+});
 
 builder.Services.AddOpenIddict()
 
@@ -213,7 +223,7 @@ app.MapGet("/authorize", async (HttpContext context, IOpenIddictScopeManager man
     }).SetDestinations(Destinations.AccessToken));
 
     // Note: in this sample, the client is granted all the requested scopes for the first identity (Alice)
-    // but for the second one (Bob), only the Api1 scope can be granted, which will cause requests sent
+    // but for the second one (Bob), only the "api1" scope can be granted, which will cause requests sent
     // to Zirku.Api2 on behalf of Bob to be automatically rejected by the OpenIddict validation handler,
     // as the access token representing Bob won't contain the "resource_server_2" audience required by Api2.
     var principal = new ClaimsPrincipal(identity);
