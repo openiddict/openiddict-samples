@@ -30,7 +30,6 @@
     <PackageReference Update="Microsoft.AspNetCore.Identity.UI" Version="6.0.0" />
     <PackageReference Update="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0" />
-    <PackageReference Update="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
     <PackageReference Update="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0" />
     <PackageReference Update="Microsoft.Owin.Diagnostics" Version="4.2.0" />
