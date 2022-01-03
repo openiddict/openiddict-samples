@@ -7,6 +7,7 @@ This repository contains samples demonstrating **how to use [OpenIddict](https:/
   - [Aridka](samples/Aridka): client credentials demo, with a .NET console acting as the client.
   - [Balosar](samples/Balosar): authorization code flow demo, with a Blazor WASM application acting as the client.
   - [Contruum](samples/Contruum): conformance tests project using Razor Pages and 2 hardcoded user identities, meant to be used with [the OIDC certification suite](https://www.certification.openid.net/).
+  - [Dantooine](samples/Dantooine): BFF Blazor WASM hosted in ASP:NET Core with YARP proxy for downstream API
   - [Hollastin](samples/Hollastin): resource owner password credentials demo, with a .NET console acting as the client.
   - [Imynusoph](samples/Imynusoph): refresh token grant demo, with a .NET console acting as the client.
   - [Matty](samples/Matty): device authorization flow demo, with a .NET console acting as the client.
