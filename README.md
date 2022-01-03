@@ -19,6 +19,12 @@ This repository contains samples demonstrating **how to use [OpenIddict](https:/
   - [Fornax](samples/Fornax): authorization code flow demo using ASP.NET Web Forms 4.8 and OWIN/Katana, with a .NET console acting as the client.
   - [Kalarba](samples/Kalarba): resource owner password credentials demo using OWIN/Katana, ASP.NET Web API and the OpenIddict degraded mode.
 
+## External samples
+
+**Looking for additional samples to help you get started with OpenIddict?** Don't miss these interesting samples maintained by the community:
+
+  - **[Angular and Blazor samples](https://github.com/damienbod/AspNetCoreOpeniddict)** by [Damien Bowden](https://github.com/damienbod)
+
 ## Certification
 
 Unlike many other identity providers, **OpenIddict is not a turnkey solution but a framework that requires writing custom code**
