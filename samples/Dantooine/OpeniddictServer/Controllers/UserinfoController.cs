@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using OpeniddictServer.Models;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
+using OpeniddictServer.Models;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace OpeniddictServer.Controllers

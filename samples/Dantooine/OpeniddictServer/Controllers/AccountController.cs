@@ -1,13 +1,13 @@
-﻿using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using OpeniddictServer.Models;
 using OpeniddictServer.Services;
 using OpeniddictServer.ViewModels.Account;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace OpeniddictServer.Controllers
 {

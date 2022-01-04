@@ -1,13 +1,13 @@
-using ResourceServer.Model;
-using ResourceServer.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
-using System;
 using Microsoft.OpenApi.Models;
 using OpenIddict.Validation.AspNetCore;
+using ResourceServer.Model;
+using ResourceServer.Repositories;
+using System;
 
 namespace ResourceServer
 {
@@ -143,7 +143,7 @@ namespace ResourceServer
             app.UseStaticFiles();
 
             app.UseRouting();
-			
+
             app.UseAuthentication();
             app.UseAuthorization();
 

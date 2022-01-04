@@ -35,7 +35,7 @@ namespace Blazor.BFF.OpenIddict.Server
 
             services.AddHttpClient();
             services.AddOptions();
-;
+            ;
             var openIDConnectSettings = Configuration.GetSection("OpenIDConnectSettings");
 
             services.AddAuthentication(options =>
@@ -61,8 +61,8 @@ namespace Blazor.BFF.OpenIddict.Server
                //options.ClaimActions.MapUniqueJsonKey("preferred_username", "preferred_username");
            });
 
-           services.AddControllersWithViews(options =>
-                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+            services.AddControllersWithViews(options =>
+                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
 
             services.AddRazorPages().AddMvcOptions(options =>
             {
@@ -125,9 +125,9 @@ namespace Blazor.BFF.OpenIddict.Server
                         var exception = errorFeature.Exception;
                     }
                 }).RequireAuthorization();
-               
+
                 endpoints.MapFallbackToPage("/_Host");
-                
+
             });
         }
     }

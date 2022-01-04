@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
- 
+
 namespace ResourceServer
 {
-    public class RequireScope : IAuthorizationRequirement{}
+    public class RequireScope : IAuthorizationRequirement { }
 }

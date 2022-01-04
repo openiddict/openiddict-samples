@@ -1,7 +1,7 @@
-using ResourceServer.Model;
-using ResourceServer.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ResourceServer.Model;
+using ResourceServer.Repositories;
 
 namespace ResourceServer.Controllers
 {
@@ -29,13 +29,13 @@ namespace ResourceServer.Controllers
         }
 
         [HttpPost]
-        public void Post([FromBody]DataEventRecord value)
+        public void Post([FromBody] DataEventRecord value)
         {
             _dataEventRecordRepository.Post(value);
         }
 
         [HttpPut("{id}")]
-        public void Put(long id, [FromBody]DataEventRecord value)
+        public void Put(long id, [FromBody] DataEventRecord value)
         {
             _dataEventRecordRepository.Put(id, value);
         }

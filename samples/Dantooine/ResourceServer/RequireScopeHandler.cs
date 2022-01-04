@@ -10,15 +10,16 @@ namespace ResourceServer
     {
 
         protected override Task HandleRequirementAsync(
-            AuthorizationHandlerContext context, 
+            AuthorizationHandlerContext context,
             RequireScope requirement
-        ){
+        )
+        {
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
             if (requirement == null)
                 throw new ArgumentNullException(nameof(requirement));
 
-            var scopeClaim =  context.User.Claims.FirstOrDefault(t => t.Type == "scope");
+            var scopeClaim = context.User.Claims.FirstOrDefault(t => t.Type == "scope");
 
 
             if (scopeClaim != null && (context.User.HasScope("dataEventRecords")))
