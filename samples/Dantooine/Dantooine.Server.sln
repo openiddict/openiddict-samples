@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dantooine.Server", "Dantooine.Server\Dantooine.Server.csproj", "{27131D27-1D16-4B3E-9C80-0347CECD6BF9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dantooine.Api1", "Dantooine.Api1\Dantooine.Api1.csproj", "{C0E73E3F-E1DF-4220-BE30-922EAF8C87E4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dantooine.Client", "Dantooine.Client", "{3803F11F-0667-4FB0-BDD3-3C8711E1ED67}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.BFF.OpenIddict.Shared", "Dantooine.Client\Shared\Blazor.BFF.OpenIddict.Shared.csproj", "{46BBC911-8B9D-4185-A427-9739E042A47C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.BFF.OpenIddict.Client", "Dantooine.Client\Client\Blazor.BFF.OpenIddict.Client.csproj", "{9478B440-16D2-4736-A5C5-8337A9195159}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.BFF.OpenIddict.Server", "Dantooine.Client\Server\Blazor.BFF.OpenIddict.Server.csproj", "{CB083FC3-0146-47BA-A06E-46726B51C081}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{27131D27-1D16-4B3E-9C80-0347CECD6BF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27131D27-1D16-4B3E-9C80-0347CECD6BF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27131D27-1D16-4B3E-9C80-0347CECD6BF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27131D27-1D16-4B3E-9C80-0347CECD6BF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0E73E3F-E1DF-4220-BE30-922EAF8C87E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0E73E3F-E1DF-4220-BE30-922EAF8C87E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0E73E3F-E1DF-4220-BE30-922EAF8C87E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0E73E3F-E1DF-4220-BE30-922EAF8C87E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46BBC911-8B9D-4185-A427-9739E042A47C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46BBC911-8B9D-4185-A427-9739E042A47C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46BBC911-8B9D-4185-A427-9739E042A47C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46BBC911-8B9D-4185-A427-9739E042A47C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9478B440-16D2-4736-A5C5-8337A9195159}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9478B440-16D2-4736-A5C5-8337A9195159}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9478B440-16D2-4736-A5C5-8337A9195159}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9478B440-16D2-4736-A5C5-8337A9195159}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB083FC3-0146-47BA-A06E-46726B51C081}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB083FC3-0146-47BA-A06E-46726B51C081}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB083FC3-0146-47BA-A06E-46726B51C081}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB083FC3-0146-47BA-A06E-46726B51C081}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{46BBC911-8B9D-4185-A427-9739E042A47C} = {3803F11F-0667-4FB0-BDD3-3C8711E1ED67}
+		{9478B440-16D2-4736-A5C5-8337A9195159} = {3803F11F-0667-4FB0-BDD3-3C8711E1ED67}
+		{CB083FC3-0146-47BA-A06E-46726B51C081} = {3803F11F-0667-4FB0-BDD3-3C8711E1ED67}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F4C16710-1047-42E1-99CD-9DAEE38410D1}
+	EndGlobalSection
+EndGlobal
