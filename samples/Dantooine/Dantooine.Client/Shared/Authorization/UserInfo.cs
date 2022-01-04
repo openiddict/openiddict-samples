@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Blazor.BFF.Shared.Authorization
+namespace Dantooine.BFF.Shared.Authorization
 {
     public class UserInfo
     {

@@ -5,7 +5,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Yarp.ReverseProxy.Forwarder;
 
-namespace Blazor.BFF.Server
+namespace Dantooine.BFF.Server
 {
     internal class CookieTokenTransformer : HttpTransformer
     {

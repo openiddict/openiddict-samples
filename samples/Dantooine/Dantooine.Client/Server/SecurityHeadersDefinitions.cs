@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace Blazor.BFF.Server
+namespace Dantooine.BFF.Server
 {
     public static class SecurityHeadersDefinitions
     {

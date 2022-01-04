@@ -14,8 +14,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Client\Blazor.BFF.Client.csproj" />
-	  <ProjectReference Include="..\Shared\Blazor.BFF.Shared.csproj" />
+	  <ProjectReference Include="..\Client\Dantooine.BFF.Client.csproj" />
+	  <ProjectReference Include="..\Shared\Dantooine.BFF.Shared.csproj" />
 	</ItemGroup>
 
 </Project>

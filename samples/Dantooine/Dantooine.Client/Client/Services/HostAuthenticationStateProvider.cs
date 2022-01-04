@@ -1,4 +1,4 @@
-﻿using Blazor.BFF.Shared.Authorization;
+﻿using Dantooine.BFF.Shared.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
@@ -8,7 +8,7 @@ using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Blazor.BFF.Client.Services
+namespace Dantooine.BFF.Client.Services
 {
     // orig src https://github.com/berhir/BlazorWebAssemblyCookieAuth
     public class HostAuthenticationStateProvider : AuthenticationStateProvider

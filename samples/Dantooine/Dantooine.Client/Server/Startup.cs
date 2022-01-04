@@ -12,7 +12,7 @@ using System.Net;
 using System.Net.Http;
 using Yarp.ReverseProxy.Forwarder;
 
-namespace Blazor.BFF.Server
+namespace Dantooine.BFF.Server
 {
     public class Startup
     {

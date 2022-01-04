@@ -1,4 +1,4 @@
-﻿namespace Blazor.BFF.Shared.Authorization
+﻿namespace Dantooine.BFF.Shared.Authorization
 {
     public class ClaimValue
     {

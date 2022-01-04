@@ -1,4 +1,4 @@
-﻿using Blazor.BFF.Shared.Authorization;
+﻿using Dantooine.BFF.Shared.Authorization;
 using IdentityModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 
-namespace Blazor.BFF.Server.Controllers
+namespace Dantooine.BFF.Server.Controllers
 {
     // orig src https://github.com/berhir/BlazorWebAssemblyCookieAuth
     [Route("api/[controller]")]
