@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace Blazor.BFF.OpenIddict.Server
+namespace Blazor.BFF.Server
 {
     public class Program
     {

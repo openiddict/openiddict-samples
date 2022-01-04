@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dantooine.Api1", "Dantooine
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dantooine.Client", "Dantooine.Client", "{3803F11F-0667-4FB0-BDD3-3C8711E1ED67}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.BFF.OpenIddict.Shared", "Dantooine.Client\Shared\Blazor.BFF.OpenIddict.Shared.csproj", "{46BBC911-8B9D-4185-A427-9739E042A47C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.BFF.Shared", "Dantooine.Client\Shared\Blazor.BFF.Shared.csproj", "{46BBC911-8B9D-4185-A427-9739E042A47C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.BFF.OpenIddict.Client", "Dantooine.Client\Client\Blazor.BFF.OpenIddict.Client.csproj", "{9478B440-16D2-4736-A5C5-8337A9195159}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.BFF.Client", "Dantooine.Client\Client\Blazor.BFF.Client.csproj", "{9478B440-16D2-4736-A5C5-8337A9195159}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.BFF.OpenIddict.Server", "Dantooine.Client\Server\Blazor.BFF.OpenIddict.Server.csproj", "{CB083FC3-0146-47BA-A06E-46726B51C081}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.BFF.Server", "Dantooine.Client\Server\Blazor.BFF.Server.csproj", "{CB083FC3-0146-47BA-A06E-46726B51C081}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

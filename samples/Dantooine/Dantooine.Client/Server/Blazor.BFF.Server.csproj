@@ -14,8 +14,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Client\Blazor.BFF.OpenIddict.Client.csproj" />
-	  <ProjectReference Include="..\Shared\Blazor.BFF.OpenIddict.Shared.csproj" />
+	  <ProjectReference Include="..\Client\Blazor.BFF.Client.csproj" />
+	  <ProjectReference Include="..\Shared\Blazor.BFF.Shared.csproj" />
 	</ItemGroup>
 
 </Project>

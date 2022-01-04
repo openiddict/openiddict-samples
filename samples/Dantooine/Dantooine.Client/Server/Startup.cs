@@ -12,7 +12,7 @@ using System.Net;
 using System.Net.Http;
 using Yarp.ReverseProxy.Forwarder;
 
-namespace Blazor.BFF.OpenIddict.Server
+namespace Blazor.BFF.Server
 {
     public class Startup
     {

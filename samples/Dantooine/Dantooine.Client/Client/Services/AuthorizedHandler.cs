@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Blazor.BFF.OpenIddict.Client.Services
+namespace Blazor.BFF.Client.Services
 {
     // orig src https://github.com/berhir/BlazorWebAssemblyCookieAuth
     public class AuthorizedHandler : DelegatingHandler

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace Blazor.BFF.OpenIddict.Server
+namespace Blazor.BFF.Server
 {
     public static class SecurityHeadersDefinitions
     {
