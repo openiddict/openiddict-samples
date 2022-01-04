@@ -1,10 +1,10 @@
-﻿using Dantooine.BFF.Shared.Authorization;
-using IdentityModel;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Dantooine.BFF.Shared.Authorization;
+using IdentityModel;
 
 namespace Dantooine.BFF.Server.Controllers
 {

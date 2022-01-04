@@ -117,10 +117,10 @@ public class AuthorizationController : Controller
         // Retrieve the permanent authorizations associated with the user and the calling client application.
         var authorizations = await _authorizationManager.FindAsync(
             subject: await _userManager.GetUserIdAsync(user),
-            client : await _applicationManager.GetIdAsync(application),
-            status : Statuses.Valid,
-            type   : AuthorizationTypes.Permanent,
-            scopes : request.GetScopes()).ToListAsync();
+            client: await _applicationManager.GetIdAsync(application),
+            status: Statuses.Valid,
+            type: AuthorizationTypes.Permanent,
+            scopes: request.GetScopes()).ToListAsync();
 
         switch (await _applicationManager.GetConsentTypeAsync(application))
         {
@@ -156,10 +156,10 @@ public class AuthorizationController : Controller
                 {
                     authorization = await _authorizationManager.CreateAsync(
                         principal: principal,
-                        subject  : await _userManager.GetUserIdAsync(user),
-                        client   : await _applicationManager.GetIdAsync(application),
-                        type     : AuthorizationTypes.Permanent,
-                        scopes   : principal.GetScopes());
+                        subject: await _userManager.GetUserIdAsync(user),
+                        client: await _applicationManager.GetIdAsync(application),
+                        type: AuthorizationTypes.Permanent,
+                        scopes: principal.GetScopes());
                 }
 
                 principal.SetAuthorizationId(await _authorizationManager.GetIdAsync(authorization));
@@ -173,7 +173,7 @@ public class AuthorizationController : Controller
 
             // At this point, no authorization was found in the database and an error must be returned
             // if the client application specified prompt=none in the authorization request.
-            case ConsentTypes.Explicit   when request.HasPrompt(Prompts.None):
+            case ConsentTypes.Explicit when request.HasPrompt(Prompts.None):
             case ConsentTypes.Systematic when request.HasPrompt(Prompts.None):
                 return Forbid(
                     authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
@@ -185,11 +185,12 @@ public class AuthorizationController : Controller
                     }));
 
             // In every other case, render the consent form.
-            default: return View(new AuthorizeViewModel
-            {
-                ApplicationName = await _applicationManager.GetDisplayNameAsync(application),
-                Scope = request.Scope
-            });
+            default:
+                return View(new AuthorizeViewModel
+                {
+                    ApplicationName = await _applicationManager.GetDisplayNameAsync(application),
+                    Scope = request.Scope
+                });
         }
     }
 
@@ -211,10 +212,10 @@ public class AuthorizationController : Controller
         // Retrieve the permanent authorizations associated with the user and the calling client application.
         var authorizations = await _authorizationManager.FindAsync(
             subject: await _userManager.GetUserIdAsync(user),
-            client : await _applicationManager.GetIdAsync(application),
-            status : Statuses.Valid,
-            type   : AuthorizationTypes.Permanent,
-            scopes : request.GetScopes()).ToListAsync();
+            client: await _applicationManager.GetIdAsync(application),
+            status: Statuses.Valid,
+            type: AuthorizationTypes.Permanent,
+            scopes: request.GetScopes()).ToListAsync();
 
         // Note: the same check is already made in the other action but is repeated
         // here to ensure a malicious user can't abuse this POST-only endpoint and
@@ -246,10 +247,10 @@ public class AuthorizationController : Controller
         {
             authorization = await _authorizationManager.CreateAsync(
                 principal: principal,
-                subject  : await _userManager.GetUserIdAsync(user),
-                client   : await _applicationManager.GetIdAsync(application),
-                type     : AuthorizationTypes.Permanent,
-                scopes   : principal.GetScopes());
+                subject: await _userManager.GetUserIdAsync(user),
+                client: await _applicationManager.GetIdAsync(application),
+                type: AuthorizationTypes.Permanent,
+                scopes: principal.GetScopes());
         }
 
         principal.SetAuthorizationId(await _authorizationManager.GetIdAsync(authorization));
