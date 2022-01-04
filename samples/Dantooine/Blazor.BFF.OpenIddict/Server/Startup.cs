@@ -35,7 +35,7 @@ namespace Blazor.BFF.OpenIddict.Server
 
             services.AddHttpClient();
             services.AddOptions();
-            ;
+
             var openIDConnectSettings = Configuration.GetSection("OpenIDConnectSettings");
 
             services.AddAuthentication(options =>
