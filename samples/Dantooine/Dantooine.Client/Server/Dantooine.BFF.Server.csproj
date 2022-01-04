@@ -5,12 +5,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.1" />
-	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" NoWarn="NU1605" />
-	  <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.1" NoWarn="NU1605" />
-	  <PackageReference Include="IdentityModel.AspNetCore" Version="4.1.2" />
-	  <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.16.1" />
-	  <PackageReference Include="Yarp.ReverseProxy" Version="1.0.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"  NoWarn="NU1605" />
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect"  NoWarn="NU1605" />
+	  <PackageReference Include="IdentityModel.AspNetCore"  />
+	  <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" />
+	  <PackageReference Include="Yarp.ReverseProxy" />
 	</ItemGroup>
 
 	<ItemGroup>
