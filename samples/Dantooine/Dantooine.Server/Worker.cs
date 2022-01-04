@@ -100,7 +100,7 @@ namespace Dantooine.Server
                 {
                     await manager.CreateAsync(new OpenIddictScopeDescriptor
                     {
-                        DisplayName = "dataEventRecords API access",
+                        DisplayName = "Dantooine API access",
                         DisplayNames =
                         {
                             [CultureInfo.GetCultureInfo("fr-FR")] = "Accès à l'API de démo"
