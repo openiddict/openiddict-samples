@@ -40,7 +40,7 @@ namespace Dantooine.BFF.Server
                         .WithHash256("v8v3RKRPmN4odZ1CWM5gw80QKPCCWMcpNeOmimNL2AA=")
                         .UnsafeEval();
 
-                    // due to Blazor hot reload requires you to disable script and style CSP protection
+                    // disable script and style CSP protection if using Blazor hot reload
                     // if using hot reload, DO NOT deploy an with an insecure CSP
                 })
                 .RemoveServerHeader()
