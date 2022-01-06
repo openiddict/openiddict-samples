@@ -78,7 +78,7 @@ namespace Dantooine.BFF.Server
 
             app.UseSecurityHeaders(
                 SecurityHeadersDefinitions.GetHeaderPolicyCollection(env.IsDevelopment(),
-                    Configuration["OpenIDConnectSettings:Authority"]));
+                    "https://localhost:44319"));
 
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
