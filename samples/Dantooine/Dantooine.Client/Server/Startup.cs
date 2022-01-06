@@ -53,7 +53,6 @@ namespace Dantooine.BFF.Server
                options.ClientSecret = openIDConnectSettings["ClientSecret"];
                options.RequireHttpsMetadata = true;
                options.ResponseType = OpenIdConnectResponseType.Code;
-               options.UsePkce = true;
                options.Scope.Add("profile");
                options.Scope.Add("api1");
                options.SaveTokens = true;
