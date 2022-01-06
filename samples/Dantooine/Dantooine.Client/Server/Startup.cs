@@ -37,8 +37,6 @@ namespace Dantooine.BFF.Server
             services.AddHttpClient();
             services.AddOptions();
 
-            var openIDConnectSettings = Configuration.GetSection("OpenIDConnectSettings");
-
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -48,9 +46,9 @@ namespace Dantooine.BFF.Server
            .AddOpenIdConnect(options =>
            {
                options.SignInScheme = "Cookies";
-               options.Authority = openIDConnectSettings["Authority"];
-               options.ClientId = openIDConnectSettings["ClientId"];
-               options.ClientSecret = openIDConnectSettings["ClientSecret"];
+               options.Authority = "https://localhost:44319";
+               options.ClientId = "blazorcodeflowpkceclient";
+               options.ClientSecret = "codeflow_pkce_client_secret";
                options.RequireHttpsMetadata = true;
                options.ResponseType = OpenIdConnectResponseType.Code;
                options.Scope.Add("profile");
