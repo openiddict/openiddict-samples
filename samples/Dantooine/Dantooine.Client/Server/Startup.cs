@@ -106,18 +106,10 @@ namespace Dantooine.BFF.Server
                 endpoints.MapControllers();
                 endpoints.Map("/api/DantooineApi1", async httpContext =>
                 {
-                    var error = await forwarder.SendAsync(httpContext, "https://localhost:44343/",
-                        httpClient, requestConfig, transformer);
-                    // Check if the operation was successful
-                    if (error != ForwarderError.None)
-                    {
-                        var errorFeature = httpContext.GetForwarderErrorFeature();
-                        var exception = errorFeature.Exception;
-                    }
+                    await forwarder.SendAsync(httpContext, "https://localhost:44343/", httpClient, requestConfig, transformer);
                 }).RequireAuthorization();
 
                 endpoints.MapFallbackToPage("/_Host");
-
             });
         }
     }
