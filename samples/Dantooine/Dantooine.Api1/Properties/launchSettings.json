@@ -3,8 +3,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "https://localhost:44342/",
-      "sslPort": 44342
+      "applicationUrl": "https://localhost:44343/",
+      "sslPort": 44343
     }
   },
   "profiles": {
@@ -18,7 +18,7 @@
     "Dantooine.Api1": {
       "commandName": "Project",
       "launchBrowser": false,
-      "applicationUrl": "https://localhost:44342/",
+      "applicationUrl": "https://localhost:44343/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
