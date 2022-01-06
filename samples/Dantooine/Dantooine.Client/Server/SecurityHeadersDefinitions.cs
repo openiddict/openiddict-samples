@@ -19,7 +19,7 @@ namespace Dantooine.BFF.Server
                 {
                     builder.SameOrigin();
                 })
-                .AddCrossOriginEmbedderPolicy(builder => // remove for dev if using hot reload
+                .AddCrossOriginEmbedderPolicy(builder =>
                 {
                     builder.RequireCorp();
                 })
@@ -34,14 +34,10 @@ namespace Dantooine.BFF.Server
                     builder.AddBaseUri().Self();
                     builder.AddFrameAncestors().None();
 
-                    // due to Blazor
                     builder.AddScriptSrc()
                         .Self()
                         .WithHash256("v8v3RKRPmN4odZ1CWM5gw80QKPCCWMcpNeOmimNL2AA=")
                         .UnsafeEval();
-
-                    // disable script and style CSP protection if using Blazor hot reload
-                    // if using hot reload, DO NOT deploy an with an insecure CSP
                 })
                 .RemoveServerHeader()
                 .AddPermissionsPolicy(builder =>
@@ -64,7 +60,6 @@ namespace Dantooine.BFF.Server
 
             if (!isDev)
             {
-                // maxage = one year in seconds
                 policy.AddStrictTransportSecurityMaxAgeIncludeSubDomains(maxAgeInSeconds: 60 * 60 * 24 * 365);
             }
 
