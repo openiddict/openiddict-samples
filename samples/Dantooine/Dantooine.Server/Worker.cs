@@ -55,10 +55,6 @@ namespace Dantooine.Server
                         ClientId = "blazorcodeflowpkceclient",
                         ConsentType = ConsentTypes.Explicit,
                         DisplayName = "Blazor code PKCE",
-                        DisplayNames =
-                        {
-                            [CultureInfo.GetCultureInfo("fr-FR")] = "Application cliente MVC"
-                        },
                         PostLogoutRedirectUris =
                         {
                             new Uri("https://localhost:44348/signout-callback-oidc"),
