@@ -116,18 +116,9 @@ namespace Dantooine.BFF.Server
                 .AddXssProtectionBlock()
                 .AddContentTypeOptionsNoSniff()
                 .AddReferrerPolicyStrictOriginWhenCrossOrigin()
-                .AddCrossOriginOpenerPolicy(builder =>
-                {
-                    builder.SameOrigin();
-                })
-                .AddCrossOriginResourcePolicy(builder =>
-                {
-                    builder.SameOrigin();
-                })
-                .AddCrossOriginEmbedderPolicy(builder =>
-                {
-                    builder.RequireCorp();
-                })
+                .AddCrossOriginOpenerPolicy(builder => builder.SameOrigin())
+                .AddCrossOriginResourcePolicy(builder => builder.SameOrigin())
+                .AddCrossOriginEmbedderPolicy(builder => builder.RequireCorp())
                 .AddContentSecurityPolicy(builder =>
                 {
                     builder.AddObjectSrc().None();
