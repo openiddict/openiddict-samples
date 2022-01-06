@@ -57,13 +57,11 @@ namespace Dantooine.Server
                         DisplayName = "Blazor code PKCE",
                         PostLogoutRedirectUris =
                         {
-                            new Uri("https://localhost:44348/signout-callback-oidc"),
-                            new Uri("https://localhost:5001/signout-callback-oidc")
+                            new Uri("https://localhost:44348/signout-callback-oidc")
                         },
                         RedirectUris =
                         {
-                            new Uri("https://localhost:44348/signin-oidc"),
-                            new Uri("https://localhost:5001/signin-oidc")
+                            new Uri("https://localhost:44348/signin-oidc")
                         },
                         ClientSecret = "codeflow_pkce_client_secret",
                         Permissions =
