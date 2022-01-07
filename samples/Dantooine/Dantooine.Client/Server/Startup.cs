@@ -1,6 +1,5 @@
-using System;
-using System.Net;
-using System.Net.Http;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -11,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Yarp.ReverseProxy.Forwarder;
+using Yarp.ReverseProxy.Transforms;
 
 namespace Dantooine.BFF.Server
 {
@@ -60,11 +59,32 @@ namespace Dantooine.BFF.Server
             services.AddControllersWithViews(options =>
                  options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
 
+            // Create an authorization policy used by YARP when forwarding requests
+            // from the WASM application to the Dantooine.Api1 resource server.
+            services.AddAuthorization(options => options.AddPolicy("CookieAuthenticationPolicy", builder =>
+            {
+                builder.AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme);
+                builder.RequireAuthenticatedUser();
+            }));
+
             services.AddRazorPages();
-            services.AddHttpForwarder();
+            services.AddReverseProxy()
+                .LoadFromConfig(Configuration.GetSection("ReverseProxy"))
+                .AddTransforms(builder => builder.AddRequestTransform(async context =>
+                {
+                    // Attach the access token retrieved from the authentication cookie.
+                    //
+                    // Note: in a real world application, the expiration date of the access token
+                    // should be checked before sending a request to avoid getting a 401 response.
+                    // Once expired, a new access token could be retrieved using the OAuth 2.0
+                    // refresh token grant (which could be done transparently).
+                    var token = await context.HttpContext.GetTokenAsync("access_token");
+
+                    context.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                }));
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHttpForwarder forwarder)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -86,25 +106,11 @@ namespace Dantooine.BFF.Server
             app.UseAuthentication();
             app.UseAuthorization();
 
-            var httpClient = new HttpMessageInvoker(new SocketsHttpHandler()
-            {
-                UseProxy = false,
-                AllowAutoRedirect = false,
-                AutomaticDecompression = DecompressionMethods.None,
-                UseCookies = false
-            });
-            var transformer = new CookieTokenTransformer(); // or HttpTransformer.Default;
-            var requestConfig = new ForwarderRequestConfig { ActivityTimeout = TimeSpan.FromSeconds(100) };
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
-                endpoints.Map("/api/DantooineApi1", async httpContext =>
-                {
-                    await forwarder.SendAsync(httpContext, "https://localhost:44343/", httpClient, requestConfig, transformer);
-                }).RequireAuthorization();
-
+                endpoints.MapReverseProxy();
                 endpoints.MapFallbackToPage("/_Host");
             });
         }
