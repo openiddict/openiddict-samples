@@ -140,24 +140,6 @@ namespace Dantooine.BFF.Server
                         .Self()
                         .WithHash256("v8v3RKRPmN4odZ1CWM5gw80QKPCCWMcpNeOmimNL2AA=")
                         .UnsafeEval();
-                })
-                .RemoveServerHeader()
-                .AddPermissionsPolicy(builder =>
-                {
-                    builder.AddAccelerometer().None();
-                    builder.AddAutoplay().None();
-                    builder.AddCamera().None();
-                    builder.AddEncryptedMedia().None();
-                    builder.AddFullscreen().All();
-                    builder.AddGeolocation().None();
-                    builder.AddGyroscope().None();
-                    builder.AddMagnetometer().None();
-                    builder.AddMicrophone().None();
-                    builder.AddMidi().None();
-                    builder.AddPayment().None();
-                    builder.AddPictureInPicture().None();
-                    builder.AddSyncXHR().None();
-                    builder.AddUsb().None();
                 });
 
             if (!isDev)
