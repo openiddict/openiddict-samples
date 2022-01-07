@@ -10,6 +10,7 @@
     <PackageReference Update="Autofac.Web" Version="6.0.0" />
     <PackageReference Update="Autofac.WebApi2.Owin" Version="6.0.0" />
     <PackageReference Update="IdentityModel" Version="4.0.0-preview.4" />
+    <PackageReference Update="IdentityModel.AspNetCore" Version="4.1.2" />
     <PackageReference Update="IdentityModel.OidcClient.IdentityTokenValidator" Version="4.0.0-preview.4" />
     <PackageReference Update="Microsoft.AspNet.FriendlyUrls" Version="1.0.2" />
     <PackageReference Update="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.3" />
@@ -43,6 +44,7 @@
     <PackageReference Update="Microsoft.Owin.Security.Twitter" Version="4.2.0" />
     <PackageReference Update="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.0" />
     <PackageReference Update="Microsoft.Web.Infrastructure" Version="1.0.0.0" />
+    <PackageReference Update="NetEscapades.AspNetCore.SecurityHeaders" Version="0.16.1" />
     <PackageReference Update="OpenIddict.AspNetCore" Version="3.1.1" />
     <PackageReference Update="OpenIddict.EntityFramework" Version="3.1.1" />
     <PackageReference Update="OpenIddict.EntityFrameworkCore" Version="3.1.1" />
@@ -54,6 +56,7 @@
     <PackageReference Update="System.Linq.Async" Version="5.1.0" />
     <PackageReference Update="System.Net.Http.Json" Version="6.0.0" />
     <PackageReference Update="WebGrease" Version="1.6.0" />
+    <PackageReference Update="Yarp.ReverseProxy" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
