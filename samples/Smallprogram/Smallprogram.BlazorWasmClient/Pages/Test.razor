@@ -1,0 +1,23 @@
+﻿@page "/test"
+@inject CallApiService callApiService
+@attribute [Authorize(Roles = "admin")]
+
+<h3>Test</h3>
+@if (string.IsNullOrEmpty(response_string))
+{
+    <h2 style="color:red">Call Api1 Error</h2>
+}
+else
+{
+    <h2 style="color:green">@response_string</h2>
+}
+
+
+@code {
+
+    public string response_string { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        response_string = await callApiService.CallApi();
+    }
+}
