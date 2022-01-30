@@ -1,6 +1,6 @@
 ﻿@page "/dantooineapi1"
 @using Dantooine.BFF.Shared
-@inject HttpClient Http
+@inject IHttpClientFactory httpClientFactory
 @inject IJSRuntime JSRuntime
 
 <h1>Data from Dantooine Api1 using yarp proxy</h1>
@@ -35,9 +35,10 @@ else
     {
         var token = await JSRuntime.InvokeAsync<string>("getAntiForgeryToken");
 
-        Http.DefaultRequestHeaders.Add("X-XSRF-TOKEN", token);
+        var client = httpClientFactory.CreateClient("authorizedClient");
+        client.DefaultRequestHeaders.Add("X-XSRF-TOKEN", token);
 
-        apiData = await Http.GetFromJsonAsync<string[]>("api/DantooineApi1");
+        apiData = await client.GetFromJsonAsync<string[]>("api/DantooineApi1");
     }
 
 }
