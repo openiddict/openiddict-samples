@@ -1,0 +1,48 @@
+﻿<Project Sdk="MSBuild.SDK.SystemWeb/4.0.49">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <AppConfig>Web.config</AppConfig>
+    <VSToolsPath>$(NuGetPackageRoot)msbuild.microsoft.visualstudio.web.targets\14.0.0.3\tools\VSToolsPath</VSToolsPath>
+    <MvcBuildViews>false</MvcBuildViews>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Views\Authorization\Logout.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Views\Authorization\Logout.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Web.Extensions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Antlr" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" />
+    <PackageReference Include="Autofac.Mvc5" />
+    <PackageReference Include="Autofac.Owin" />
+    <PackageReference Include="Microsoft.AspNet.Identity.EntityFramework" />
+    <PackageReference Include="Microsoft.AspNet.Identity.Owin" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" />
+    <PackageReference Include="Microsoft.AspNet.Web.Optimization" />
+    <PackageReference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Owin.Host.SystemWeb" />
+    <PackageReference Include="Microsoft.Owin.Security.Cookies" />
+    <PackageReference Include="Microsoft.Owin.Security.Google" />
+    <PackageReference Include="Microsoft.Owin.Security.MicrosoftAccount" />
+    <PackageReference Include="Microsoft.Owin.Security.OAuth" />
+    <PackageReference Include="Microsoft.Owin.Security.Twitter" />
+    <PackageReference Include="Microsoft.Web.Infrastructure" PrivateAssets="all" />
+    <PackageReference Include="OpenIddict.EntityFramework" />
+    <PackageReference Include="OpenIddict.Owin" />
+    <PackageReference Include="WebGrease" />
+  </ItemGroup>
+
+</Project>
