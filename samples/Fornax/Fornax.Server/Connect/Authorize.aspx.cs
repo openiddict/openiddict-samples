@@ -83,7 +83,9 @@ namespace Fornax.Server.Connect
                     case ConsentTypes.Explicit when authorizations.Any() && !request.HasPrompt(Prompts.Consent):
                         var identity = new ClaimsIdentity(OpenIddictServerOwinDefaults.AuthenticationType);
                         identity.AddClaims((await context.Get<ApplicationSignInManager>().CreateUserIdentityAsync(user)).Claims);
+
                         identity.AddClaim(new Claim(Claims.Subject, identity.FindFirstValue(ClaimTypes.NameIdentifier)));
+                        identity.AddClaim(new Claim(Claims.Name, identity.FindFirstValue(ClaimTypes.Name)));
 
                         var principal = new ClaimsPrincipal(identity);
 
@@ -210,7 +212,9 @@ namespace Fornax.Server.Connect
 
                 var identity = new ClaimsIdentity(OpenIddictServerOwinDefaults.AuthenticationType);
                 identity.AddClaims((await context.Get<ApplicationSignInManager>().CreateUserIdentityAsync(user)).Claims);
+
                 identity.AddClaim(new Claim(Claims.Subject, identity.FindFirstValue(ClaimTypes.NameIdentifier)));
+                identity.AddClaim(new Claim(Claims.Name, identity.FindFirstValue(ClaimTypes.Name)));
 
                 var principal = new ClaimsPrincipal(identity);
 

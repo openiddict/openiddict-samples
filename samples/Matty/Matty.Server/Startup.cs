@@ -8,6 +8,12 @@ using Microsoft.Extensions.Hosting;
 using Quartz;
 using Matty.Server.Data;
 using static OpenIddict.Abstractions.OpenIddictConstants;
+using static OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers;
+using static OpenIddict.Validation.OpenIddictValidationEvents;
+using OpenIddict.Validation;
+using OpenIddict.Validation.AspNetCore;
+using Microsoft.AspNetCore;
+using System.Diagnostics;
 
 namespace Matty.Server;
 
@@ -122,6 +128,19 @@ public class Startup
 
                 // Register the ASP.NET Core host.
                 options.UseAspNetCore();
+
+                options.AddEventHandler<OpenIddictValidationEvents.ProcessAuthenticationContext>(builder =>
+                {
+                    builder.UseInlineHandler(context =>
+                    {
+                        var request = context.Transaction.GetHttpRequest();
+                        Debug.WriteLine("Authorization header: {0}", request.Headers.Authorization.ToString());
+
+                        return default;
+                    });
+
+                    builder.SetOrder(ExtractAccessTokenFromAuthorizationHeader.Descriptor.Order + 1);
+                });
             });
 
         // Register the worker responsible of creating and seeding the SQL database.
