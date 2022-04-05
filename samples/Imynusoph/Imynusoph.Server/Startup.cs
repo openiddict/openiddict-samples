@@ -108,7 +108,7 @@ public class Startup
                 options.UseAspNetCore();
             });
 
-        // Register the worker responsible of seeding the database.
+        // Register the worker responsible for seeding the database.
         // Note: in a real world application, this step should be part of a setup script.
         services.AddHostedService<Worker>();
     }

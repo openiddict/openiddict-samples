@@ -37,7 +37,7 @@ public class AuthorizationController : Controller
             throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
         // Retrieve the Windows identity associated with the current authorization request.
-        // If it can't be extracted, trigger a Integrated Windows Authentication dance.
+        // If it can't be extracted, trigger an Integrated Windows Authentication dance.
         var result = await HttpContext.AuthenticateAsync(NegotiateDefaults.AuthenticationScheme);
         if (result is not { Succeeded: true })
         {
