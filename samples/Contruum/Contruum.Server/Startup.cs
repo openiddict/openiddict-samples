@@ -94,7 +94,7 @@ public class Startup
                        .EnableAuthorizationEndpointPassthrough()
                        .EnableAuthorizationRequestCaching();
 
-                // Register the event handler responsible of populating userinfo responses.
+                // Register the event handler responsible for populating userinfo responses.
                 options.AddEventHandler<HandleUserinfoRequestContext>(options =>
                     options.UseSingletonHandler<Handlers.PopulateUserinfo>());
             })
@@ -112,7 +112,7 @@ public class Startup
                 options.EnableAuthorizationEntryValidation();
             });
 
-        // Register the worker responsible of creating and seeding the SQL database.
+        // Register the worker responsible for creating and seeding the SQL database.
         // Note: in a real world application, this step should be part of a setup script.
         services.AddHostedService<Worker>();
     }

@@ -307,10 +307,10 @@ namespace Mortis.Server.Controllers
             if (request.IsAuthorizationCodeGrantType() || request.IsRefreshTokenGrantType())
             {
                 // Retrieve the claims principal stored in the authorization code/device code/refresh token.
-                var principal = new ClaimsPrincipal((await context.Authentication.AuthenticateAsync(OpenIddictServerOwinDefaults.AuthenticationType)).Identity);
+                var result = await context.Authentication.AuthenticateAsync(OpenIddictServerOwinDefaults.AuthenticationType);
 
                 // Retrieve the user profile corresponding to the authorization code/refresh token.
-                var user = await context.GetUserManager<ApplicationUserManager>().FindByIdAsync(principal.GetClaim(Claims.Subject));
+                var user = await context.GetUserManager<ApplicationUserManager>().FindByIdAsync(result.Identity.GetClaim(Claims.Subject));
                 if (user == null)
                 {
                     context.Authentication.Challenge(
@@ -343,6 +343,8 @@ namespace Mortis.Server.Controllers
 
                 identity.AddClaim(new Claim(Claims.Subject, identity.FindFirstValue(ClaimTypes.NameIdentifier)));
                 identity.AddClaim(new Claim(Claims.Name, identity.FindFirstValue(ClaimTypes.Name)));
+
+                var principal = new ClaimsPrincipal(identity);
 
                 foreach (var claim in identity.Claims)
                 {

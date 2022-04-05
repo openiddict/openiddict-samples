@@ -74,7 +74,7 @@ public class Startup
                 options.UseOwin()
                        .DisableTransportSecurityRequirement();
 
-                // Register an event handler responsible of validating token requests.
+                // Register an event handler responsible for validating token requests.
                 options.AddEventHandler<ValidateTokenRequestContext>(builder =>
                     builder.UseInlineHandler(context =>
                     {
@@ -84,7 +84,7 @@ public class Startup
                         return default;
                     }));
 
-                // Register an event handler responsible of handling token requests.
+                // Register an event handler responsible for handling token requests.
                 options.AddEventHandler<HandleTokenRequestContext>(builder =>
                     builder.UseInlineHandler(context =>
                     {
