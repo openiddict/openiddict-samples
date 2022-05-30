@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using IdentityModel.Client;
 using IdentityModel.OidcClient;
 
 Console.WriteLine("Press any key to start the authentication process.");
@@ -27,10 +28,10 @@ var options = new OidcClientOptions
 };
 
 var client = new OidcClient(options);
-var state = await client.PrepareLoginAsync(new Dictionary<string, string>
+var state = await client.PrepareLoginAsync(new Parameters(new Dictionary<string, string>
 {
     ["hardcoded_identity_id"] = "1"
-});
+}));
 
 // Launch the system browser to initiate the authentication dance.
 Process.Start(new ProcessStartInfo

@@ -3,52 +3,53 @@
   <ItemGroup>
     <PackageReference Update="Antlr" Version="3.5.0.2" />
     <PackageReference Update="AspNet.ScriptManager.bootstrap" Version="3.4.1" />
-    <PackageReference Update="AspNet.ScriptManager.jQuery" Version="3.4.1" />
+    <PackageReference Update="AspNet.ScriptManager.jQuery" Version="3.6.0" />
     <PackageReference Update="AspNet.Security.OpenId.Steam" Version="6.0.0" />
-    <PackageReference Update="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
+    <PackageReference Update="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
     <PackageReference Update="Autofac.Mvc5" Version="6.0.0" />
     <PackageReference Update="Autofac.Owin" Version="6.0.1" />
     <PackageReference Update="Autofac.Web" Version="6.0.0" />
     <PackageReference Update="Autofac.WebApi2.Owin" Version="6.0.0" />
-    <PackageReference Update="IdentityModel" Version="4.0.0-preview.4" />
-    <PackageReference Update="IdentityModel.AspNetCore" Version="4.1.2" />
-    <PackageReference Update="IdentityModel.OidcClient.IdentityTokenValidator" Version="4.0.0-preview.4" />
+    <PackageReference Update="IdentityModel" Version="4.6.0" />
+    <PackageReference Update="IdentityModel.AspNetCore" Version="4.2.0" />
+    <PackageReference Update="IdentityModel.OidcClient.IdentityTokenValidator" Version="4.0.0" />
+    <PackageReference Update="jQuery" Version="3.6.0" />
     <PackageReference Update="Microsoft.AspNet.FriendlyUrls" Version="1.0.2" />
     <PackageReference Update="Microsoft.AspNet.Identity.EntityFramework" Version="2.2.3" />
     <PackageReference Update="Microsoft.AspNet.Identity.Owin" Version="2.2.3" />
-    <PackageReference Update="Microsoft.AspNet.Mvc" Version="5.2.7" />
+    <PackageReference Update="Microsoft.AspNet.Mvc" Version="5.2.8" />
     <PackageReference Update="Microsoft.AspNet.ScriptManager.MSAjax" Version="5.0.0" />
     <PackageReference Update="Microsoft.AspNet.ScriptManager.WebForms" Version="5.0.0" />
     <PackageReference Update="Microsoft.AspNet.Web.Optimization" Version="1.1.3" />
     <PackageReference Update="Microsoft.AspNet.Web.Optimization.WebForms" Version="1.1.3" />
-    <PackageReference Update="Microsoft.AspNet.WebApi.Owin" Version="5.2.7" />
-    <PackageReference Update="Microsoft.AspNetCore.Authentication.Negotiate" Version="6.0.0" />
-    <PackageReference Update="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0" />
-    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />
-    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="6.0.0" />
+    <PackageReference Update="Microsoft.AspNet.WebApi.Owin" Version="5.2.8" />
+    <PackageReference Update="Microsoft.AspNetCore.Authentication.Negotiate" Version="6.0.5" />
+    <PackageReference Update="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.5" />
+    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.5" />
+    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="6.0.5" />
     <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="6.0.0" />
-    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0" />
-    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.0" />
-    <PackageReference Update="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0" />
-    <PackageReference Update="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0" />
-    <PackageReference Update="Microsoft.AspNetCore.Identity.UI" Version="6.0.0" />
-    <PackageReference Update="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
+    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.5" />
+    <PackageReference Update="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.5" />
+    <PackageReference Update="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.5" />
+    <PackageReference Update="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.5" />
+    <PackageReference Update="Microsoft.AspNetCore.Identity.UI" Version="6.0.5" />
+    <PackageReference Update="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.5" />
     <PackageReference Update="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" Version="3.6.0" />
-    <PackageReference Update="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0" />
-    <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
-    <PackageReference Update="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0" />
-    <PackageReference Update="Microsoft.Owin.Diagnostics" Version="4.2.0" />
-    <PackageReference Update="Microsoft.Owin.Host.HttpListener" Version="4.2.0" />
-    <PackageReference Update="Microsoft.Owin.Host.SystemWeb" Version="4.2.0" />
-    <PackageReference Update="Microsoft.Owin.Hosting" Version="4.2.0" />
-    <PackageReference Update="Microsoft.Owin.Security.Cookies" Version="4.2.0" />
-    <PackageReference Update="Microsoft.Owin.Security.Google" Version="4.2.0" />
-    <PackageReference Update="Microsoft.Owin.Security.MicrosoftAccount" Version="4.2.0" />
-    <PackageReference Update="Microsoft.Owin.Security.OAuth" Version="4.2.0" />
-    <PackageReference Update="Microsoft.Owin.Security.OpenIdConnect" Version="4.2.0" />
-    <PackageReference Update="Microsoft.Owin.Security.Twitter" Version="4.2.0" />
-    <PackageReference Update="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.0" />
-    <PackageReference Update="Microsoft.Web.Infrastructure" Version="1.0.0.0" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.5" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore.Tools" Version="6.0.5" />
+    <PackageReference Update="Microsoft.Owin.Diagnostics" Version="4.2.2" />
+    <PackageReference Update="Microsoft.Owin.Host.HttpListener" Version="4.2.2" />
+    <PackageReference Update="Microsoft.Owin.Host.SystemWeb" Version="4.2.2" />
+    <PackageReference Update="Microsoft.Owin.Hosting" Version="4.2.2" />
+    <PackageReference Update="Microsoft.Owin.Security.Cookies" Version="4.2.2" />
+    <PackageReference Update="Microsoft.Owin.Security.Google" Version="4.2.2" />
+    <PackageReference Update="Microsoft.Owin.Security.MicrosoftAccount" Version="4.2.2" />
+    <PackageReference Update="Microsoft.Owin.Security.OAuth" Version="4.2.2" />
+    <PackageReference Update="Microsoft.Owin.Security.OpenIdConnect" Version="4.2.2" />
+    <PackageReference Update="Microsoft.Owin.Security.Twitter" Version="4.2.2" />
+    <PackageReference Update="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.5" />
+    <PackageReference Update="Microsoft.Web.Infrastructure" Version="1.0.0" />
     <PackageReference Update="NetEscapades.AspNetCore.SecurityHeaders" Version="0.16.1" />
     <PackageReference Update="OpenIddict.AspNetCore" Version="3.1.1" />
     <PackageReference Update="OpenIddict.EntityFramework" Version="3.1.1" />
@@ -57,16 +58,16 @@
     <PackageReference Update="OpenIddict.Quartz" Version="3.1.1" />
     <PackageReference Update="OpenIddict.Validation.AspNetCore" Version="3.1.1" />
     <PackageReference Update="OpenIddict.Validation.SystemNetHttp" Version="3.1.1" />
-    <PackageReference Update="Quartz.Extensions.Hosting" Version="3.2.4" />
+    <PackageReference Update="Quartz.Extensions.Hosting" Version="3.4.0" />
     <PackageReference Update="System.Linq.Async" Version="5.1.0" />
     <PackageReference Update="System.Net.Http.Json" Version="6.0.0" />
     <PackageReference Update="WebGrease" Version="1.6.0" />
-    <PackageReference Update="Yarp.ReverseProxy" Version="1.0.0" />
+    <PackageReference Update="Yarp.ReverseProxy" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETFramework' ">
     <PackageReference Update="Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
-    <PackageReference Update="Microsoft.Extensions.Http" Version="2.1.0" />
+    <PackageReference Update="Microsoft.Extensions.Http" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' ">
