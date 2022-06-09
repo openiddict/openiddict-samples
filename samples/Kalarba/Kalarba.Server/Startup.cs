@@ -95,8 +95,8 @@ public class Startup
 
                         // Validate the username/password parameters.
                         //
-                        // In a real world application, you'd use likely use a key derivation function like PBKDF2 to slow
-                        // the client secret validation process down and a time-constant comparer to prevent timing attacks.
+                        // In a real world application, you'd use likely use a key derivation function like PBKDF2 to slow the
+                        // username/password validation process down and a time-constant comparer to prevent timing attacks.
                         if (!string.Equals(context.Request.Username, "alice@wonderland.com", StringComparison.Ordinal) ||
                             !string.Equals(context.Request.Password, "P@ssw0rd", StringComparison.Ordinal))
                         {
