@@ -87,13 +87,11 @@ namespace Fornax.Server.Connect
                         identity.AddClaim(new Claim(Claims.Subject, identity.FindFirstValue(ClaimTypes.NameIdentifier)));
                         identity.AddClaim(new Claim(Claims.Name, identity.FindFirstValue(ClaimTypes.Name)));
 
-                        var principal = new ClaimsPrincipal(identity);
-
                         // Note: in this sample, the granted scopes match the requested scope
                         // but you may want to allow the user to uncheck specific scopes.
                         // For that, simply restrict the list of scopes before calling SetScopes.
-                        principal.SetScopes(request.GetScopes());
-                        principal.SetResources(await ScopeManager.ListResourcesAsync(principal.GetScopes()).ToListAsync());
+                        identity.SetScopes(request.GetScopes());
+                        identity.SetResources(await ScopeManager.ListResourcesAsync(identity.GetScopes()).ToListAsync());
 
                         // Automatically create a permanent authorization to avoid requiring explicit consent
                         // for future authorization or token requests containing the same scopes.
@@ -101,21 +99,17 @@ namespace Fornax.Server.Connect
                         if (authorization == null)
                         {
                             authorization = await AuthorizationManager.CreateAsync(
-                                principal: principal,
+                                principal: new ClaimsPrincipal(identity),
                                 subject  : user.Id,
                                 client   : await ApplicationManager.GetIdAsync(application),
                                 type     : AuthorizationTypes.Permanent,
-                                scopes   : principal.GetScopes());
+                                scopes   : identity.GetScopes());
                         }
 
-                        principal.SetAuthorizationId(await AuthorizationManager.GetIdAsync(authorization));
+                        identity.SetAuthorizationId(await AuthorizationManager.GetIdAsync(authorization));
+                        identity.SetDestinations(GetDestinations);
 
-                        foreach (var claim in principal.Claims)
-                        {
-                            claim.SetDestinations(GetDestinations(claim, principal));
-                        }
-
-                        context.Authentication.SignIn((ClaimsIdentity) principal.Identity);
+                        context.Authentication.SignIn(identity);
                         Visible = false;
                         return;
 
@@ -216,13 +210,11 @@ namespace Fornax.Server.Connect
                 identity.AddClaim(new Claim(Claims.Subject, identity.FindFirstValue(ClaimTypes.NameIdentifier)));
                 identity.AddClaim(new Claim(Claims.Name, identity.FindFirstValue(ClaimTypes.Name)));
 
-                var principal = new ClaimsPrincipal(identity);
-
                 // Note: in this sample, the granted scopes match the requested scope
                 // but you may want to allow the user to uncheck specific scopes.
                 // For that, simply restrict the list of scopes before calling SetScopes.
-                principal.SetScopes(request.GetScopes());
-                principal.SetResources(await ScopeManager.ListResourcesAsync(principal.GetScopes()).ToListAsync());
+                identity.SetScopes(request.GetScopes());
+                identity.SetResources(await ScopeManager.ListResourcesAsync(identity.GetScopes()).ToListAsync());
 
                 // Automatically create a permanent authorization to avoid requiring explicit consent
                 // for future authorization or token requests containing the same scopes.
@@ -230,21 +222,17 @@ namespace Fornax.Server.Connect
                 if (authorization == null)
                 {
                     authorization = await AuthorizationManager.CreateAsync(
-                        principal: principal,
+                        principal: new ClaimsPrincipal(identity),
                         subject  : user.Id,
                         client   : await ApplicationManager.GetIdAsync(application),
                         type     : AuthorizationTypes.Permanent,
-                        scopes   : principal.GetScopes());
+                        scopes   : identity.GetScopes());
                 }
 
-                principal.SetAuthorizationId(await AuthorizationManager.GetIdAsync(authorization));
+                identity.SetAuthorizationId(await AuthorizationManager.GetIdAsync(authorization));
+                identity.SetDestinations(GetDestinations);
 
-                foreach (var claim in principal.Claims)
-                {
-                    claim.SetDestinations(GetDestinations(claim, principal));
-                }
-
-                context.Authentication.SignIn((ClaimsIdentity) principal.Identity);
+                context.Authentication.SignIn(identity);
                 Visible = false;
                 return;
             }));
@@ -264,7 +252,7 @@ namespace Fornax.Server.Connect
             Visible = false;
         }
 
-        private static IEnumerable<string> GetDestinations(Claim claim, ClaimsPrincipal principal)
+        private static IEnumerable<string> GetDestinations(Claim claim)
         {
             // Note: by default, claims are NOT automatically included in the access and identity tokens.
             // To allow OpenIddict to serialize them, you must attach them a destination, that specifies
@@ -275,7 +263,7 @@ namespace Fornax.Server.Connect
                 case Claims.Name:
                     yield return Destinations.AccessToken;
 
-                    if (principal.HasScope(Scopes.Profile))
+                    if (claim.Subject.HasScope(Scopes.Profile))
                         yield return Destinations.IdentityToken;
 
                     yield break;
@@ -283,7 +271,7 @@ namespace Fornax.Server.Connect
                 case Claims.Email:
                     yield return Destinations.AccessToken;
 
-                    if (principal.HasScope(Scopes.Email))
+                    if (claim.Subject.HasScope(Scopes.Email))
                         yield return Destinations.IdentityToken;
 
                     yield break;
@@ -291,7 +279,7 @@ namespace Fornax.Server.Connect
                 case Claims.Role:
                     yield return Destinations.AccessToken;
 
-                    if (principal.HasScope(Scopes.Roles))
+                    if (claim.Subject.HasScope(Scopes.Roles))
                         yield return Destinations.IdentityToken;
 
                     yield break;

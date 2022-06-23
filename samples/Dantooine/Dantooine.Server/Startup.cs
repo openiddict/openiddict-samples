@@ -36,28 +36,11 @@ public class Startup
 
         services.AddDatabaseDeveloperPageExceptionFilter();
 
+        // Register the Identity services.
         services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders()
             .AddDefaultUI();
-
-        services.Configure<IdentityOptions>(options =>
-        {
-            // Configure Identity to use the same JWT claims as OpenIddict instead
-            // of the legacy WS-Federation claims it uses by default (ClaimTypes),
-            // which saves you from doing the mapping in your authorization controller.
-            options.ClaimsIdentity.UserNameClaimType = Claims.Name;
-            options.ClaimsIdentity.UserIdClaimType = Claims.Subject;
-            options.ClaimsIdentity.RoleClaimType = Claims.Role;
-            options.ClaimsIdentity.EmailClaimType = Claims.Email;
-
-            // Note: to require account confirmation before login,
-            // register an email sender service (IEmailSender) and
-            // set options.SignIn.RequireConfirmedAccount to true.
-            //
-            // For more information, visit https://aka.ms/aspaccountconf.
-            options.SignIn.RequireConfirmedAccount = false;
-        });
 
         // OpenIddict offers native integration with Quartz.NET to perform scheduled tasks
         // (like pruning orphaned authorizations/tokens from the database) at regular intervals.
@@ -90,11 +73,11 @@ public class Startup
             {
                 // Enable the authorization, logout, token and userinfo endpoints.
                 options.SetAuthorizationEndpointUris("/connect/authorize")
-                          .SetLogoutEndpointUris("/connect/logout")
-                          .SetIntrospectionEndpointUris("/connect/introspect")
-                          .SetTokenEndpointUris("/connect/token")
-                          .SetUserinfoEndpointUris("/connect/userinfo")
-                          .SetVerificationEndpointUris("/connect/verify");
+                       .SetLogoutEndpointUris("/connect/logout")
+                       .SetIntrospectionEndpointUris("/connect/introspect")
+                       .SetTokenEndpointUris("/connect/token")
+                       .SetUserinfoEndpointUris("/connect/userinfo")
+                       .SetVerificationEndpointUris("/connect/verify");
 
                 // Mark the "email", "profile" and "roles" scopes as supported scopes.
                 options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);

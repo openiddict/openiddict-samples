@@ -1,3 +1,4 @@
+using Matty.Server.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -6,14 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quartz;
-using Matty.Server.Data;
 using static OpenIddict.Abstractions.OpenIddictConstants;
-using static OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreHandlers;
-using static OpenIddict.Validation.OpenIddictValidationEvents;
-using OpenIddict.Validation;
-using OpenIddict.Validation.AspNetCore;
-using Microsoft.AspNetCore;
-using System.Diagnostics;
 
 namespace Matty.Server;
 
@@ -42,28 +36,11 @@ public class Startup
 
         services.AddDatabaseDeveloperPageExceptionFilter();
 
+        // Register the Identity services.
         services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders()
             .AddDefaultUI();
-
-        services.Configure<IdentityOptions>(options =>
-        {
-            // Configure Identity to use the same JWT claims as OpenIddict instead
-            // of the legacy WS-Federation claims it uses by default (ClaimTypes),
-            // which saves you from doing the mapping in your authorization controller.
-            options.ClaimsIdentity.UserNameClaimType = Claims.Name;
-            options.ClaimsIdentity.UserIdClaimType = Claims.Subject;
-            options.ClaimsIdentity.RoleClaimType = Claims.Role;
-            options.ClaimsIdentity.EmailClaimType = Claims.Email;
-
-            // Note: to require account confirmation before login,
-            // register an email sender service (IEmailSender) and
-            // set options.SignIn.RequireConfirmedAccount to true.
-            //
-            // For more information, visit https://aka.ms/aspaccountconf.
-            options.SignIn.RequireConfirmedAccount = false;
-        });
 
         // OpenIddict offers native integration with Quartz.NET to perform scheduled tasks
         // (like pruning orphaned authorizations/tokens from the database) at regular intervals.
@@ -128,19 +105,6 @@ public class Startup
 
                 // Register the ASP.NET Core host.
                 options.UseAspNetCore();
-
-                options.AddEventHandler<OpenIddictValidationEvents.ProcessAuthenticationContext>(builder =>
-                {
-                    builder.UseInlineHandler(context =>
-                    {
-                        var request = context.Transaction.GetHttpRequest();
-                        Debug.WriteLine("Authorization header: {0}", request.Headers.Authorization.ToString());
-
-                        return default;
-                    });
-
-                    builder.SetOrder(ExtractAccessTokenFromAuthorizationHeader.Descriptor.Order + 1);
-                });
             });
 
         // Register the worker responsible for creating and seeding the SQL database.

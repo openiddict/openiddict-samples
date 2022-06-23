@@ -5,8 +5,8 @@
  */
 
 using System;
-using System.Collections.Immutable;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Aridka.Server.Helpers;
@@ -52,11 +52,8 @@ public class AuthorizationController : Controller
                 Claims.Name, Claims.Role);
 
             // Use the client_id as the subject identifier.
-            identity.AddClaim(Claims.Subject, await _applicationManager.GetClientIdAsync(application),
-                Destinations.AccessToken, Destinations.IdentityToken);
-
-            identity.AddClaim(Claims.Name, await _applicationManager.GetDisplayNameAsync(application),
-                Destinations.AccessToken, Destinations.IdentityToken);
+            identity.AddClaim(Claims.Subject, await _applicationManager.GetClientIdAsync(application));
+            identity.AddClaim(Claims.Name, await _applicationManager.GetDisplayNameAsync(application));
             
             // Note: In the original OAuth 2.0 specification, the client credentials grant
             // doesn't return an identity token, which is an OpenID Connect concept.
@@ -67,22 +64,17 @@ public class AuthorizationController : Controller
             // scope is not explicitly set, no identity token is returned to the client application.
 
             // Set the list of scopes granted to the client application in access_token.
-            var principal = new ClaimsPrincipal(identity);
-            principal.SetScopes(request.GetScopes());
-            principal.SetResources(await _scopeManager.ListResourcesAsync(principal.GetScopes()).ToListAsync());
+            identity.SetScopes(request.GetScopes());
+            identity.SetResources(await _scopeManager.ListResourcesAsync(identity.GetScopes()).ToListAsync());
+            identity.SetDestinations(GetDestinations);
 
-            foreach (var claim in principal.Claims)
-            {
-                claim.SetDestinations(GetDestinations(claim));
-            }
-
-            return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+            return SignIn(new ClaimsPrincipal(identity), OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
 
         throw new NotImplementedException("The specified grant type is not implemented.");
     }
 
-    private IEnumerable<string> GetDestinations(Claim claim)
+    private static IEnumerable<string> GetDestinations(Claim claim)
     {
         // Note: by default, claims are NOT automatically included in the access and identity tokens.
         // To allow OpenIddict to serialize them, you must attach them a destination, that specifies
@@ -92,9 +84,9 @@ public class AuthorizationController : Controller
         {
             Claims.Name or 
             Claims.Subject 
-                => ImmutableArray.Create(Destinations.AccessToken, Destinations.IdentityToken),
+                => new[] { Destinations.AccessToken, Destinations.IdentityToken },
 
-            _ => ImmutableArray.Create(Destinations.AccessToken),
+            _ => new[] { Destinations.AccessToken },
         };
     }
 }

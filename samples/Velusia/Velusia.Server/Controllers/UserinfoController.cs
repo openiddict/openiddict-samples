@@ -25,8 +25,8 @@ public class UserinfoController : Controller
     [HttpGet("~/connect/userinfo"), HttpPost("~/connect/userinfo"), Produces("application/json")]
     public async Task<IActionResult> Userinfo()
     {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
+        var user = await _userManager.FindByIdAsync(User.GetClaim(Claims.Subject));
+        if (user is null)
         {
             return Challenge(
                 authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
