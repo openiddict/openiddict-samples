@@ -13,7 +13,7 @@ using OpenIddict.Validation.Owin;
 using Owin;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
-[assembly: OwinStartupAttribute(typeof(Mortis.Server.Startup))]
+[assembly: OwinStartup(typeof(Mortis.Server.Startup))]
 namespace Mortis.Server
 {
     public partial class Startup

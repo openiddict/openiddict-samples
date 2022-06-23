@@ -220,24 +220,25 @@ app.MapGet("/authorize", async (HttpContext context, IOpenIddictScopeManager man
         1 => "Alice",
         2 => "Bob",
         _ => throw new InvalidOperationException()
-    }).SetDestinations(Destinations.AccessToken));
+    }));
 
     // Note: in this sample, the client is granted all the requested scopes for the first identity (Alice)
     // but for the second one (Bob), only the "api1" scope can be granted, which will cause requests sent
     // to Zirku.Api2 on behalf of Bob to be automatically rejected by the OpenIddict validation handler,
     // as the access token representing Bob won't contain the "resource_server_2" audience required by Api2.
-    var principal = new ClaimsPrincipal(identity);
-
-    principal.SetScopes(identifier switch
+    identity.SetScopes(identifier switch
     {
         1 => request.GetScopes(),
         2 => new[] { "api1" }.Intersect(request.GetScopes()),
         _ => throw new InvalidOperationException()
     });
 
-    principal.SetResources(await manager.ListResourcesAsync(principal.GetScopes()).ToListAsync());
+    identity.SetResources(await manager.ListResourcesAsync(identity.GetScopes()).ToListAsync());
 
-    return Results.SignIn(principal, properties: null, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+    // Allow all claims to be added in the access tokens.
+    identity.SetDestinations(static _ => new[] { Destinations.AccessToken });
+
+    return Results.SignIn(new ClaimsPrincipal(identity), properties: null, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 });
 
 app.Run();

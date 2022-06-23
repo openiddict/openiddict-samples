@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -95,19 +96,18 @@ namespace Mortis.Server.Controllers
                 case ConsentTypes.Implicit:
                 case ConsentTypes.External when authorizations.Any():
                 case ConsentTypes.Explicit when authorizations.Any() && !request.HasPrompt(Prompts.Consent):
-                    var identity = new ClaimsIdentity(OpenIddictServerOwinDefaults.AuthenticationType);
-                    identity.AddClaims((await context.Get<ApplicationSignInManager>().CreateUserIdentityAsync(user)).Claims);
-
-                    identity.AddClaim(new Claim(Claims.Subject, identity.FindFirstValue(ClaimTypes.NameIdentifier)));
-                    identity.AddClaim(new Claim(Claims.Name, identity.FindFirstValue(ClaimTypes.Name)));
-
-                    var principal = new ClaimsPrincipal(identity);
+                    // Create the claims-based identity that will be used by OpenIddict to generate tokens.
+                    var identity = new ClaimsIdentity(OpenIddictServerOwinDefaults.AuthenticationType)
+                        .AddClaim(Claims.Subject, user.Id)
+                        .AddClaim(Claims.Email, user.Email)
+                        .AddClaim(Claims.Name, user.UserName)
+                        .AddClaims(Claims.Role, (await context.Get<ApplicationUserManager>().GetRolesAsync(user.Id)).ToImmutableArray());
 
                     // Note: in this sample, the granted scopes match the requested scope
                     // but you may want to allow the user to uncheck specific scopes.
                     // For that, simply restrict the list of scopes before calling SetScopes.
-                    principal.SetScopes(request.GetScopes());
-                    principal.SetResources(await _scopeManager.ListResourcesAsync(principal.GetScopes()).ToListAsync());
+                    identity.SetScopes(request.GetScopes());
+                    identity.SetResources(await _scopeManager.ListResourcesAsync(identity.GetScopes()).ToListAsync());
 
                     // Automatically create a permanent authorization to avoid requiring explicit consent
                     // for future authorization or token requests containing the same scopes.
@@ -115,21 +115,17 @@ namespace Mortis.Server.Controllers
                     if (authorization == null)
                     {
                         authorization = await _authorizationManager.CreateAsync(
-                            principal: principal,
+                            principal: new ClaimsPrincipal(identity),
                             subject  : user.Id,
                             client   : await _applicationManager.GetIdAsync(application),
                             type     : AuthorizationTypes.Permanent,
-                            scopes   : principal.GetScopes());
+                            scopes   : identity.GetScopes());
                     }
 
-                    principal.SetAuthorizationId(await _authorizationManager.GetIdAsync(authorization));
+                    identity.SetAuthorizationId(await _authorizationManager.GetIdAsync(authorization));
+                    identity.SetDestinations(GetDestinations);
 
-                    foreach (var claim in principal.Claims)
-                    {
-                        claim.SetDestinations(GetDestinations(claim, principal));
-                    }
-
-                    context.Authentication.SignIn(new AuthenticationProperties(), (ClaimsIdentity) principal.Identity);
+                    context.Authentication.SignIn(identity);
 
                     return new EmptyResult();
 
@@ -216,19 +212,18 @@ namespace Mortis.Server.Controllers
                 return new EmptyResult();
             }
 
-            var identity = new ClaimsIdentity(OpenIddictServerOwinDefaults.AuthenticationType);
-            identity.AddClaims((await context.Get<ApplicationSignInManager>().CreateUserIdentityAsync(user)).Claims);
-
-            identity.AddClaim(new Claim(Claims.Subject, identity.FindFirstValue(ClaimTypes.NameIdentifier)));
-            identity.AddClaim(new Claim(Claims.Name, identity.FindFirstValue(ClaimTypes.Name)));
-
-            var principal = new ClaimsPrincipal(identity);
+            // Create the claims-based identity that will be used by OpenIddict to generate tokens.
+            var identity = new ClaimsIdentity(OpenIddictServerOwinDefaults.AuthenticationType)
+                .AddClaim(Claims.Subject, user.Id)
+                .AddClaim(Claims.Email, user.Email)
+                .AddClaim(Claims.Name, user.UserName)
+                .AddClaims(Claims.Role, (await context.Get<ApplicationUserManager>().GetRolesAsync(user.Id)).ToImmutableArray());
 
             // Note: in this sample, the granted scopes match the requested scope
             // but you may want to allow the user to uncheck specific scopes.
             // For that, simply restrict the list of scopes before calling SetScopes.
-            principal.SetScopes(request.GetScopes());
-            principal.SetResources(await _scopeManager.ListResourcesAsync(principal.GetScopes()).ToListAsync());
+            identity.SetScopes(request.GetScopes());
+            identity.SetResources(await _scopeManager.ListResourcesAsync(identity.GetScopes()).ToListAsync());
 
             // Automatically create a permanent authorization to avoid requiring explicit consent
             // for future authorization or token requests containing the same scopes.
@@ -236,22 +231,18 @@ namespace Mortis.Server.Controllers
             if (authorization == null)
             {
                 authorization = await _authorizationManager.CreateAsync(
-                    principal: principal,
+                    principal: new ClaimsPrincipal(identity),
                     subject  : user.Id,
                     client   : await _applicationManager.GetIdAsync(application),
                     type     : AuthorizationTypes.Permanent,
-                    scopes   : principal.GetScopes());
+                    scopes   : identity.GetScopes());
             }
 
-            principal.SetAuthorizationId(await _authorizationManager.GetIdAsync(authorization));
-
-            foreach (var claim in principal.Claims)
-            {
-                claim.SetDestinations(GetDestinations(claim, principal));
-            }
+            identity.SetAuthorizationId(await _authorizationManager.GetIdAsync(authorization));
+            identity.SetDestinations(GetDestinations);
 
             // Returning a SignInResult will ask OpenIddict to issue the appropriate access/identity tokens.
-            context.Authentication.SignIn(new AuthenticationProperties(), (ClaimsIdentity) principal.Identity);
+            context.Authentication.SignIn(identity);
 
             return new EmptyResult();
         }
@@ -338,21 +329,11 @@ namespace Mortis.Server.Controllers
                     return new EmptyResult();
                 }
 
-                var identity = new ClaimsIdentity(OpenIddictServerOwinDefaults.AuthenticationType);
-                identity.AddClaims((await context.Get<ApplicationSignInManager>().CreateUserIdentityAsync(user)).Claims);
-
-                identity.AddClaim(new Claim(Claims.Subject, identity.FindFirstValue(ClaimTypes.NameIdentifier)));
-                identity.AddClaim(new Claim(Claims.Name, identity.FindFirstValue(ClaimTypes.Name)));
-
-                var principal = new ClaimsPrincipal(identity);
-
-                foreach (var claim in identity.Claims)
-                {
-                    claim.SetDestinations(GetDestinations(claim, principal));
-                }
+                var identity = new ClaimsIdentity(result.Identity.Claims, OpenIddictServerOwinDefaults.AuthenticationType);
+                identity.SetDestinations(GetDestinations);
 
                 // Ask OpenIddict to issue the appropriate access/identity tokens.
-                context.Authentication.SignIn(new AuthenticationProperties(), identity);
+                context.Authentication.SignIn(identity);
 
                 return new EmptyResult();
             }
@@ -360,7 +341,7 @@ namespace Mortis.Server.Controllers
             throw new InvalidOperationException("The specified grant type is not supported.");
         }
 
-        private IEnumerable<string> GetDestinations(Claim claim, ClaimsPrincipal principal)
+        private static IEnumerable<string> GetDestinations(Claim claim)
         {
             // Note: by default, claims are NOT automatically included in the access and identity tokens.
             // To allow OpenIddict to serialize them, you must attach them a destination, that specifies
@@ -371,7 +352,7 @@ namespace Mortis.Server.Controllers
                 case Claims.Name:
                     yield return Destinations.AccessToken;
 
-                    if (principal.HasScope(Scopes.Profile))
+                    if (claim.Subject.HasScope(Scopes.Profile))
                         yield return Destinations.IdentityToken;
 
                     yield break;
@@ -379,7 +360,7 @@ namespace Mortis.Server.Controllers
                 case Claims.Email:
                     yield return Destinations.AccessToken;
 
-                    if (principal.HasScope(Scopes.Email))
+                    if (claim.Subject.HasScope(Scopes.Email))
                         yield return Destinations.IdentityToken;
 
                     yield break;
@@ -387,7 +368,7 @@ namespace Mortis.Server.Controllers
                 case Claims.Role:
                     yield return Destinations.AccessToken;
 
-                    if (principal.HasScope(Scopes.Roles))
+                    if (claim.Subject.HasScope(Scopes.Roles))
                         yield return Destinations.IdentityToken;
 
                     yield break;

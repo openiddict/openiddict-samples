@@ -25,7 +25,7 @@ public class UserinfoController : Controller
     [HttpGet("~/connect/userinfo"), HttpPost("~/connect/userinfo"), Produces("application/json")]
     public async Task<IActionResult> Userinfo()
     {
-        var user = await _userManager.GetUserAsync(User);
+        var user = await _userManager.FindByIdAsync(User.GetClaim(Claims.Subject));
         if (user == null)
         {
             return Challenge(
