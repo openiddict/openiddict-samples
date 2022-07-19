@@ -33,26 +33,19 @@ public class Worker : IHostedService
                 ClientSecret = "901564A5-E7FE-42CB-B10D-61EF6A8F3654",
                 ConsentType = ConsentTypes.Explicit,
                 DisplayName = "MVC client application",
-                PostLogoutRedirectUris =
-                {
-                    new Uri("https://localhost:44338/signout-callback-oidc")
-                },
                 RedirectUris =
                 {
-                    new Uri("https://localhost:44338/signin-oidc")
+                    new Uri("https://localhost:44338/signin-local")
                 },
                 Permissions =
                 {
                     Permissions.Endpoints.Authorization,
-                    Permissions.Endpoints.Logout,
                     Permissions.Endpoints.Token,
                     Permissions.GrantTypes.AuthorizationCode,
-                    Permissions.GrantTypes.RefreshToken,
                     Permissions.ResponseTypes.Code,
                     Permissions.Scopes.Email,
                     Permissions.Scopes.Profile,
-                    Permissions.Scopes.Roles,
-                    Permissions.Prefixes.Scope + "demo_api"
+                    Permissions.Scopes.Roles
                 },
                 Requirements =
                 {

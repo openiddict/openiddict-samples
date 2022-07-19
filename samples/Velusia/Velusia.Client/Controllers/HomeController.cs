@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,7 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using OpenIddict.Client.AspNetCore;
 
 namespace Velusia.Client.Controllers;
 
@@ -19,17 +18,13 @@ public class HomeController : Controller
         => _httpClientFactory = httpClientFactory;
 
     [HttpGet("~/")]
-    public ActionResult Index() => View("Home");
+    public ActionResult Index() => View();
 
     [Authorize, HttpPost("~/")]
     public async Task<ActionResult> Index(CancellationToken cancellationToken)
     {
-        var token = await HttpContext.GetTokenAsync(CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectParameterNames.AccessToken);
-        if (string.IsNullOrEmpty(token))
-        {
-            throw new InvalidOperationException("The access token cannot be found in the authentication ticket. " +
-                                                "Make sure that SaveTokens is set to true in the OIDC options.");
-        }
+        var token = await HttpContext.GetTokenAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+            OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken);
 
         using var client = _httpClientFactory.CreateClient();
 
@@ -39,6 +34,6 @@ public class HomeController : Controller
         using var response = await client.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
-        return View("Home", model: await response.Content.ReadAsStringAsync());
+        return View(model: await response.Content.ReadAsStringAsync(cancellationToken));
     }
 }

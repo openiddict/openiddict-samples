@@ -1,31 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Owin.Security.Cookies;
+using static OpenIddict.Client.Owin.OpenIddictClientOwinConstants;
 
 namespace Mortis.Client.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public HomeController(IHttpClientFactory httpClientFactory)
+            => _httpClientFactory = httpClientFactory;
+
+        [HttpGet, Route("~/")]
+        public ActionResult Index() => View();
+
+        [Authorize, HttpPost, Route("~/")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Index(CancellationToken cancellationToken)
         {
-            return View();
-        }
+            var context = HttpContext.GetOwinContext();
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
+            var result = await context.Authentication.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationType);
+            var token = result.Properties.Dictionary[Tokens.BackchannelAccessToken];
 
-            return View();
-        }
+            using var client = _httpClientFactory.CreateClient();
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
+            using var request = new HttpRequestMessage(HttpMethod.Get, "https://localhost:44349/api/message");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            return View();
+            using var response = await client.SendAsync(request, cancellationToken);
+            response.EnsureSuccessStatusCode();
+
+            return View(model: await response.Content.ReadAsStringAsync());
         }
     }
 }

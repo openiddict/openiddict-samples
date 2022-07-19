@@ -1,31 +1,36 @@
-﻿@{
-    ViewBag.Title = "Home Page";
-}
+﻿@using System.Security.Claims
+@model string
 
 <div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+    @if (User?.Identity is { IsAuthenticated: true })
+    {
+        <h1>Welcome, @User.Identity.Name</h1>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
         <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
+            @foreach (var claim in ((ClaimsPrincipal) Context.User).Claims)
+            {
+                <div>@claim.Type: <b>@claim.Value</b></div>
+            }
         </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
+
+        if (!string.IsNullOrEmpty(Model))
+        {
+            <h3>Message received from the resource controller: @Model</h3>
+        }
+
+        <form action="~/" method="post">
+            @Html.AntiForgeryToken()
+
+            <button class="btn btn-lg btn-warning" type="submit">Query the resource controller</button>
+        </form>
+
+        <a class="btn btn-lg btn-danger" href="/logout">Sign out</a>
+    }
+
+    else
+    {
+        <h1>Welcome, anonymous</h1>
+        @Html.ActionLink("Sign in using the local OIDC server", "Login", "Authentication",
+            new { provider = "local" }, new { @class = "btn btn-lg btn-success" })
+    }
 </div>

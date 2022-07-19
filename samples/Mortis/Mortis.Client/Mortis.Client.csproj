@@ -16,12 +16,17 @@
 
   <ItemGroup>
     <PackageReference Include="Antlr" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" />
+    <PackageReference Include="Autofac.Mvc5" />
+    <PackageReference Include="Autofac.Owin" />
     <PackageReference Include="Microsoft.AspNet.Mvc" />
     <PackageReference Include="Microsoft.AspNet.Web.Optimization" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Owin.Host.SystemWeb" />
     <PackageReference Include="Microsoft.Owin.Security.Cookies" />
-    <PackageReference Include="Microsoft.Owin.Security.OpenIdConnect" />
     <PackageReference Include="Microsoft.Web.Infrastructure" PrivateAssets="all" />
+    <PackageReference Include="OpenIddict.EntityFramework" />
+    <PackageReference Include="OpenIddict.Owin" />
     <PackageReference Include="WebGrease" />
   </ItemGroup>
 

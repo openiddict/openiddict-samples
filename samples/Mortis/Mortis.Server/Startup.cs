@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Web.Http;
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Autofac.Integration.Mvc;
+using Autofac.Integration.WebApi;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Owin;
 using Mortis.Server.Models;
@@ -34,6 +36,19 @@ namespace Mortis.Server
             // Configure ASP.NET MVC 5.2 to use Autofac when activating controller instances.
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
 
+            // Configure ASP.NET MVC 5.2 to use Autofac when activating controller instances
+            // and infer the Web API routes using the HTTP attributes used in the controllers.
+            var configuration = new HttpConfiguration
+            {
+                DependencyResolver = new AutofacWebApiDependencyResolver(container)
+            };
+
+            configuration.MapHttpAttributeRoutes();
+
+            // Register the Autofac Web API integration and Web API middleware.
+            app.UseAutofacWebApi(configuration);
+            app.UseWebApi(configuration);
+
             // Seed the database with the sample client using the OpenIddict application manager.
             // Note: in a real world application, this step should be part of a setup script.
             Task.Run(async delegate
@@ -55,24 +70,17 @@ namespace Mortis.Server
                         DisplayName = "MVC client application",
                         RedirectUris =
                         {
-                            new Uri("https://localhost:44378/signin-oidc")
+                            new Uri("https://localhost:44378/signin-local")
                         },
                         Permissions =
                         {
                             Permissions.Endpoints.Authorization,
-                            Permissions.Endpoints.Logout,
                             Permissions.Endpoints.Token,
                             Permissions.GrantTypes.AuthorizationCode,
-                            Permissions.GrantTypes.RefreshToken,
                             Permissions.ResponseTypes.Code,
                             Permissions.Scopes.Email,
                             Permissions.Scopes.Profile,
-                            Permissions.Scopes.Roles,
-                            Permissions.Prefixes.Scope + "demo_api"
-                        },
-                        PostLogoutRedirectUris =
-                        {
-                            new Uri("https://localhost:44378/Account/SignOutCallback")
+                            Permissions.Scopes.Roles
                         },
                         Requirements =
                         {
@@ -140,6 +148,9 @@ namespace Mortis.Server
 
             // Register the MVC controllers.
             builder.RegisterControllers(typeof(Startup).Assembly);
+
+            // Register the Web API controllers.
+            builder.RegisterApiControllers(typeof(Startup).Assembly);
 
             return builder.Build();
         }
