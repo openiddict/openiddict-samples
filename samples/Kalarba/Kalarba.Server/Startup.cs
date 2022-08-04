@@ -107,8 +107,13 @@ public class Startup
                             return default;
                         }
 
-                        // Create a new identity containing the claims used to generate new tokens.
-                        var identity = new ClaimsIdentity(OpenIddictServerOwinDefaults.AuthenticationType);
+                        // Create the claims-based identity that will be used by OpenIddict to generate tokens.
+                        var identity = new ClaimsIdentity(
+                            authenticationType: OpenIddictServerOwinDefaults.AuthenticationType,
+                            nameType: Claims.Name,
+                            roleType: Claims.Role);
+
+                        // Add the claims that will be persisted in the tokens.
                         identity.AddClaim(new Claim(Claims.Subject, "999d4ea0-164f-4c1b-8585-b83f313995c9"));
                         identity.AddClaim(new Claim(Claims.Name, "Alice").SetDestinations(Destinations.AccessToken));
 

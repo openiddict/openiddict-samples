@@ -122,8 +122,13 @@ app.MapGet("/authorize", async (HttpContext context) =>
 
     var identifier = principal.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
-    // Create a new identity and import a few select claims from the Steam principal.
-    var identity = new ClaimsIdentity(TokenValidationParameters.DefaultAuthenticationType);
+    // Create the claims-based identity that will be used by OpenIddict to generate tokens.
+    var identity = new ClaimsIdentity(
+        authenticationType: TokenValidationParameters.DefaultAuthenticationType,
+        nameType: Claims.Name,
+        roleType: Claims.Role);
+
+    // Import a few select claims from the Steam principal.
     identity.AddClaim(new Claim(Claims.Subject, identifier));
     identity.AddClaim(new Claim(Claims.Name, identifier).SetDestinations(Destinations.AccessToken));
 

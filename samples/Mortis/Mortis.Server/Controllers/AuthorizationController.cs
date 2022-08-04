@@ -97,11 +97,16 @@ namespace Mortis.Server.Controllers
                 case ConsentTypes.External when authorizations.Any():
                 case ConsentTypes.Explicit when authorizations.Any() && !request.HasPrompt(Prompts.Consent):
                     // Create the claims-based identity that will be used by OpenIddict to generate tokens.
-                    var identity = new ClaimsIdentity(OpenIddictServerOwinDefaults.AuthenticationType)
-                        .AddClaim(Claims.Subject, user.Id)
-                        .AddClaim(Claims.Email, user.Email)
-                        .AddClaim(Claims.Name, user.UserName)
-                        .AddClaims(Claims.Role, (await context.Get<ApplicationUserManager>().GetRolesAsync(user.Id)).ToImmutableArray());
+                    var identity = new ClaimsIdentity(
+                        authenticationType: OpenIddictServerOwinDefaults.AuthenticationType,
+                        nameType: Claims.Name,
+                        roleType: Claims.Role);
+
+                    // Add the claims that will be persisted in the tokens.
+                    identity.AddClaim(Claims.Subject, user.Id)
+                            .AddClaim(Claims.Email, user.Email)
+                            .AddClaim(Claims.Name, user.UserName)
+                            .AddClaims(Claims.Role, (await context.Get<ApplicationUserManager>().GetRolesAsync(user.Id)).ToImmutableArray());
 
                     // Note: in this sample, the granted scopes match the requested scope
                     // but you may want to allow the user to uncheck specific scopes.
@@ -213,11 +218,16 @@ namespace Mortis.Server.Controllers
             }
 
             // Create the claims-based identity that will be used by OpenIddict to generate tokens.
-            var identity = new ClaimsIdentity(OpenIddictServerOwinDefaults.AuthenticationType)
-                .AddClaim(Claims.Subject, user.Id)
-                .AddClaim(Claims.Email, user.Email)
-                .AddClaim(Claims.Name, user.UserName)
-                .AddClaims(Claims.Role, (await context.Get<ApplicationUserManager>().GetRolesAsync(user.Id)).ToImmutableArray());
+            var identity = new ClaimsIdentity(
+                authenticationType: OpenIddictServerOwinDefaults.AuthenticationType,
+                nameType: Claims.Name,
+                roleType: Claims.Role);
+
+            // Add the claims that will be persisted in the tokens.
+            identity.AddClaim(Claims.Subject, user.Id)
+                    .AddClaim(Claims.Email, user.Email)
+                    .AddClaim(Claims.Name, user.UserName)
+                    .AddClaims(Claims.Role, (await context.Get<ApplicationUserManager>().GetRolesAsync(user.Id)).ToImmutableArray());
 
             // Note: in this sample, the granted scopes match the requested scope
             // but you may want to allow the user to uncheck specific scopes.
@@ -329,7 +339,9 @@ namespace Mortis.Server.Controllers
                     return new EmptyResult();
                 }
 
-                var identity = new ClaimsIdentity(result.Identity.Claims, OpenIddictServerOwinDefaults.AuthenticationType);
+                var identity = new ClaimsIdentity(result.Identity.Claims,
+                    OpenIddictServerOwinDefaults.AuthenticationType, Claims.Name, Claims.Role);
+
                 identity.SetDestinations(GetDestinations);
 
                 // Ask OpenIddict to issue the appropriate access/identity tokens.

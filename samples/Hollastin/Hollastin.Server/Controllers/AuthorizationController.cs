@@ -15,6 +15,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -68,11 +69,16 @@ public class AuthorizationController : Controller
             }
 
             // Create the claims-based identity that will be used by OpenIddict to generate tokens.
-            var identity = new ClaimsIdentity(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)
-                .AddClaim(Claims.Subject, await _userManager.GetUserIdAsync(user))
-                .AddClaim(Claims.Email, await _userManager.GetEmailAsync(user))
-                .AddClaim(Claims.Name, await _userManager.GetUserNameAsync(user))
-                .AddClaims(Claims.Role, (await _userManager.GetRolesAsync(user)).ToImmutableArray());
+            var identity = new ClaimsIdentity(
+                authenticationType: TokenValidationParameters.DefaultAuthenticationType,
+                nameType: Claims.Name,
+                roleType: Claims.Role);
+
+            // Add the claims that will be persisted in the tokens.
+            identity.AddClaim(Claims.Subject, await _userManager.GetUserIdAsync(user))
+                    .AddClaim(Claims.Email, await _userManager.GetEmailAsync(user))
+                    .AddClaim(Claims.Name, await _userManager.GetUserNameAsync(user))
+                    .AddClaims(Claims.Role, (await _userManager.GetRolesAsync(user)).ToImmutableArray());
 
             // Set the list of scopes granted to the client application.
             identity.SetScopes(new[]

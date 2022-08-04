@@ -212,8 +212,13 @@ app.MapGet("/authorize", async (HttpContext context, IOpenIddictScopeManager man
             }));
     }
 
-    // Create a new identity and populate it based on the specified hardcoded identity identifier.
-    var identity = new ClaimsIdentity(TokenValidationParameters.DefaultAuthenticationType);
+    // Create the claims-based identity that will be used by OpenIddict to generate tokens.
+    var identity = new ClaimsIdentity(
+        authenticationType: TokenValidationParameters.DefaultAuthenticationType,
+        nameType: Claims.Name,
+        roleType: Claims.Role);
+
+    // Add the claims that will be persisted in the tokens.
     identity.AddClaim(new Claim(Claims.Subject, identifier.Value.ToString(CultureInfo.InvariantCulture)));
     identity.AddClaim(new Claim(Claims.Name, identifier switch
     {
