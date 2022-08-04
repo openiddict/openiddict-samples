@@ -67,11 +67,15 @@ public class AuthorizationController : Controller
                 }));
         }
 
+        // Create the claims-based identity that will be used by OpenIddict to generate tokens.
+        var identity = new ClaimsIdentity(result.Principal.Claims,
+            authenticationType: TokenValidationParameters.DefaultAuthenticationType,
+            nameType: Claims.Name,
+            roleType: Claims.Role);
+
         // The Windows identity doesn't contain the "sub" claim required by OpenIddict to represent
         // a stable identifier of the authenticated user. To work around that, a "sub" claim is
         // manually created by using the primary SID claim resolved from the Windows identity.
-        var identity = new ClaimsIdentity(result.Principal.Claims, TokenValidationParameters.DefaultAuthenticationType);
-
         var sid = identity.FindFirst(ClaimTypes.PrimarySid)?.Value;
         identity.AddClaim(new Claim(Claims.Subject, sid));
 

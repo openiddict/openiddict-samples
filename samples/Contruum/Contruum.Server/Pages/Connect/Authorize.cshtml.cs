@@ -75,11 +75,11 @@ public class AuthorizeModel : PageModel
                 });
         }
 
-        // Create a new ClaimsIdentity containing the claims that
-        // will be used to create an id_token, a token or a code.
+        // Create the claims-based identity that will be used by OpenIddict to generate tokens.
         var identity = new ClaimsIdentity(result.Principal!.Claims,
-            TokenValidationParameters.DefaultAuthenticationType,
-            Claims.Name, Claims.Role);
+            authenticationType: TokenValidationParameters.DefaultAuthenticationType,
+            nameType: Claims.Name,
+            roleType: Claims.Role);
 
         // The OP-Req-acr_values test consists in sending an "acr_values=1 2" parameter
         // as part of the authorization request. To indicate to the certification client

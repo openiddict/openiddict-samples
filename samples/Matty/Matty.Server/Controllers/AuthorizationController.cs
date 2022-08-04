@@ -21,6 +21,7 @@ using Matty.Server.Helpers;
 using Matty.Server.ViewModels.Authorization;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using System.Collections.Immutable;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Matty.Server.Controllers;
 
@@ -95,11 +96,16 @@ public class AuthorizationController : Controller
         if (result.Succeeded)
         {
             // Create the claims-based identity that will be used by OpenIddict to generate tokens.
-            var identity = new ClaimsIdentity(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)
-                .AddClaim(Claims.Subject, await _userManager.GetUserIdAsync(user))
-                .AddClaim(Claims.Email, await _userManager.GetEmailAsync(user))
-                .AddClaim(Claims.Name, await _userManager.GetUserNameAsync(user))
-                .AddClaims(Claims.Role, (await _userManager.GetRolesAsync(user)).ToImmutableArray());
+            var identity = new ClaimsIdentity(
+                authenticationType: TokenValidationParameters.DefaultAuthenticationType,
+                nameType: Claims.Name,
+                roleType: Claims.Role);
+
+            // Add the claims that will be persisted in the tokens.
+            identity.AddClaim(Claims.Subject, await _userManager.GetUserIdAsync(user))
+                    .AddClaim(Claims.Email, await _userManager.GetEmailAsync(user))
+                    .AddClaim(Claims.Name, await _userManager.GetUserNameAsync(user))
+                    .AddClaims(Claims.Role, (await _userManager.GetRolesAsync(user)).ToImmutableArray());
 
             // Note: in this sample, the granted scopes match the requested scope
             // but you may want to allow the user to uncheck specific scopes.

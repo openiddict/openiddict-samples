@@ -81,7 +81,13 @@ namespace Fornax.Server.Connect
                     case ConsentTypes.Implicit:
                     case ConsentTypes.External when authorizations.Any():
                     case ConsentTypes.Explicit when authorizations.Any() && !request.HasPrompt(Prompts.Consent):
-                        var identity = new ClaimsIdentity(OpenIddictServerOwinDefaults.AuthenticationType);
+                        // Create the claims-based identity that will be used by OpenIddict to generate tokens.
+                        var identity = new ClaimsIdentity(
+                            authenticationType: OpenIddictServerOwinDefaults.AuthenticationType,
+                            nameType: Claims.Name,
+                            roleType: Claims.Role);
+
+                        // Add the claims that will be persisted in the tokens.
                         identity.AddClaims((await context.Get<ApplicationSignInManager>().CreateUserIdentityAsync(user)).Claims);
 
                         identity.AddClaim(new Claim(Claims.Subject, identity.FindFirstValue(ClaimTypes.NameIdentifier)));
@@ -204,7 +210,13 @@ namespace Fornax.Server.Connect
                     return;
                 }
 
-                var identity = new ClaimsIdentity(OpenIddictServerOwinDefaults.AuthenticationType);
+                // Create the claims-based identity that will be used by OpenIddict to generate tokens.
+                var identity = new ClaimsIdentity(
+                    authenticationType: OpenIddictServerOwinDefaults.AuthenticationType,
+                    nameType: Claims.Name,
+                    roleType: Claims.Role);
+
+                // Add the claims that will be persisted in the tokens.
                 identity.AddClaims((await context.Get<ApplicationSignInManager>().CreateUserIdentityAsync(user)).Claims);
 
                 identity.AddClaim(new Claim(Claims.Subject, identity.FindFirstValue(ClaimTypes.NameIdentifier)));
