@@ -30,7 +30,7 @@ public class AuthorizationController : Controller
         _scopeManager = scopeManager;
     }
 
-    [HttpPost("~/connect/token"), Produces("application/json")]
+    [HttpPost("~/connect/token"), IgnoreAntiforgeryToken, Produces("application/json")]
     public async Task<IActionResult> Exchange()
     {
         var request = HttpContext.GetOpenIddictServerRequest();

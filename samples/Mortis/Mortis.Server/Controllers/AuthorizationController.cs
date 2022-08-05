@@ -340,7 +340,9 @@ namespace Mortis.Server.Controllers
                 }
 
                 var identity = new ClaimsIdentity(result.Identity.Claims,
-                    OpenIddictServerOwinDefaults.AuthenticationType, Claims.Name, Claims.Role);
+                    authenticationType: OpenIddictServerOwinDefaults.AuthenticationType,
+                    nameType: Claims.Name,
+                    roleType: Claims.Role);
 
                 identity.SetDestinations(GetDestinations);
 
