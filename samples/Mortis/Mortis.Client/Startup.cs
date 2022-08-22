@@ -72,7 +72,11 @@ namespace Mortis.Client
                     // address per provider, unless all the registered providers support returning an "iss"
                     // parameter containing their URL as part of authorization responses. For more information,
                     // see https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#section-4.4.
-                    options.SetRedirectionEndpointUris("/signin-local");
+                    options.SetRedirectionEndpointUris("/callback/login/local");
+
+                    // Enable the post-logout redirection endpoints needed to handle the callback stage.
+                    options.SetPostLogoutRedirectionEndpointUris(
+                        "/callback/logout/local");
 
                     // Register the signing and encryption credentials used to protect
                     // sensitive data like the state tokens produced by OpenIddict.
@@ -81,7 +85,8 @@ namespace Mortis.Client
 
                     // Register the OWIN host and configure the OWIN-specific options.
                     options.UseOwin()
-                           .EnableRedirectionEndpointPassthrough();
+                           .EnableRedirectionEndpointPassthrough()
+                           .EnablePostLogoutRedirectionEndpointPassthrough();
 
                     // Register the System.Net.Http integration.
                     options.UseSystemNetHttp();
@@ -93,8 +98,10 @@ namespace Mortis.Client
 
                         ClientId = "mvc",
                         ClientSecret = "901564A5-E7FE-42CB-B10D-61EF6A8F3654",
-                        RedirectUri = new Uri("https://localhost:44378/signin-local", UriKind.Absolute),
-                        Scopes = { Scopes.Email, Scopes.Profile }
+                        Scopes = { Scopes.Email, Scopes.Profile },
+
+                        RedirectUri = new Uri("https://localhost:44378/callback/login/local", UriKind.Absolute),
+                        PostLogoutRedirectUri = new Uri("https://localhost:44378/callback/logout/local", UriKind.Absolute)
                     });
                 });
 

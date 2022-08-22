@@ -35,11 +35,16 @@ public class Worker : IHostedService
                 DisplayName = "MVC client application",
                 RedirectUris =
                 {
-                    new Uri("https://localhost:44338/signin-local")
+                    new Uri("https://localhost:44338/callback/login/local")
+                },
+                PostLogoutRedirectUris =
+                {
+                    new Uri("https://localhost:44338/callback/logout/local")
                 },
                 Permissions =
                 {
                     Permissions.Endpoints.Authorization,
+                    Permissions.Endpoints.Logout,
                     Permissions.Endpoints.Token,
                     Permissions.GrantTypes.AuthorizationCode,
                     Permissions.ResponseTypes.Code,

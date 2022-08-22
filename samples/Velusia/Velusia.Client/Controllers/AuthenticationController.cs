@@ -31,11 +31,46 @@ public class AuthenticationController : Controller
         return Challenge(properties, OpenIddictClientAspNetCoreDefaults.AuthenticationScheme);
     }
 
+    [HttpPost("~/logout"), ValidateAntiForgeryToken]
+    public async Task<ActionResult> LogOut(string returnUrl)
+    {
+        // Retrieve the identity stored in the local authentication cookie. If it's not available,
+        // this indicate that the user is already logged out locally (or has not logged in yet).
+        var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        if (result is not { Succeeded: true })
+        {
+            // Only allow local return URLs to prevent open redirect attacks.
+            return Redirect(Url.IsLocalUrl(returnUrl) ? returnUrl : "/");
+        }
+
+        // Remove the local authentication cookie before triggering a redirection to the remote server.
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        var properties = new AuthenticationProperties(new Dictionary<string, string>
+        {
+            // Note: when only one client is registered in the client options,
+            // setting the issuer property is not required and can be omitted.
+            [OpenIddictClientAspNetCoreConstants.Properties.Issuer] = "https://localhost:44313/",
+
+            // While not required, the specification encourages sending an id_token_hint
+            // parameter containing an identity token returned by the server for this user.
+            [OpenIddictClientAspNetCoreConstants.Properties.IdentityTokenHint] =
+                result.Properties.GetTokenValue(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelIdentityToken)
+        })
+        {
+            // Only allow local return URLs to prevent open redirect attacks.
+            RedirectUri = Url.IsLocalUrl(returnUrl) ? returnUrl : "/"
+        };
+
+        // Ask the OpenIddict client middleware to redirect the user agent to the identity provider.
+        return SignOut(properties, OpenIddictClientAspNetCoreDefaults.AuthenticationScheme);
+    }
+
     // Note: this controller uses the same callback action for all providers
     // but for users who prefer using a different action per provider,
     // the following action can be split into separate actions.
-    [HttpGet("~/signin-{provider}"), HttpPost("~/signin-{provider}")]
-    public async Task<ActionResult> Callback()
+    [HttpGet("~/callback/login/{provider}"), HttpPost("~/callback/login/{provider}"), IgnoreAntiforgeryToken]
+    public async Task<ActionResult> LogInCallback()
     {
         // Retrieve the authorization data validated by OpenIddict as part of the callback handling.
         var result = await HttpContext.AuthenticateAsync(OpenIddictClientAspNetCoreDefaults.AuthenticationScheme);
@@ -92,7 +127,7 @@ public class AuthenticationController : Controller
             })
             .Where(claim => claim switch
             {
-                // Preserve the nameidentifier and name claims.
+                // Preserve the basic claims that are necessary for the application to work correctly.
                 { Type: ClaimTypes.NameIdentifier or ClaimTypes.Name } => true,
 
                 // Don't preserve the other claims.
@@ -111,9 +146,10 @@ public class AuthenticationController : Controller
         // To make cookies less heavy, tokens that are not used are filtered out before creating the cookie.
         properties.StoreTokens(result.Properties.GetTokens().Where(token => token switch
         {
-            // Preserve the access and refresh tokens returned in the token response, if available.
+            // Preserve the access, identity and refresh tokens returned in the token response, if available.
             {
-                Name: OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken or
+                Name: OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken   or
+                      OpenIddictClientAspNetCoreConstants.Tokens.BackchannelIdentityToken or
                       OpenIddictClientAspNetCoreConstants.Tokens.RefreshToken
             } => true,
 
@@ -129,16 +165,19 @@ public class AuthenticationController : Controller
         return Redirect(properties.RedirectUri);
     }
 
-    [HttpGet("~/logout"), HttpPost("~/logout")]
-    public ActionResult LogOut()
+    // Note: this controller uses the same callback action for all providers
+    // but for users who prefer using a different action per provider,
+    // the following action can be split into separate actions.
+    [HttpGet("~/callback/logout/{provider}"), HttpPost("~/callback/logout/{provider}"), IgnoreAntiforgeryToken]
+    public async Task<ActionResult> LogOutCallback()
     {
-        // Ask the cookies middleware to delete the local cookie created when the user agent
-        // is redirected from the identity provider after a successful authorization flow.
-        var properties = new AuthenticationProperties
-        {
-            RedirectUri = "/"
-        };
+        // Retrieve the data stored by OpenIddict in the state token created when the logout was triggered.
+        var result = await HttpContext.AuthenticateAsync(OpenIddictClientAspNetCoreDefaults.AuthenticationScheme);
 
-        return SignOut(properties, CookieAuthenticationDefaults.AuthenticationScheme);
+        // In this sample, the local authentication cookie is always removed before the user agent is redirected
+        // to the authorization server. Applications that prefer delaying the removal of the local cookie can
+        // remove the corresponding code from the logout action and remove the authentication cookie in this action.
+
+        return Redirect(result!.Properties!.RedirectUri);
     }
 }

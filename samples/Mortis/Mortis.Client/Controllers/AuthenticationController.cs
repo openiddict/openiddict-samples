@@ -10,7 +10,6 @@ using Microsoft.Owin.Security.Cookies;
 using OpenIddict.Abstractions;
 using OpenIddict.Client.Owin;
 using static OpenIddict.Abstractions.OpenIddictConstants;
-using static OpenIddict.Client.Owin.OpenIddictClientOwinConstants;
 
 namespace Mortis.Client.Controllers
 {
@@ -37,11 +36,49 @@ namespace Mortis.Client.Controllers
             return new EmptyResult();
         }
 
+        [HttpPost, Route("~/logout"), ValidateAntiForgeryToken]
+        public async Task<ActionResult> LogOut(string returnUrl)
+        {
+            var context = HttpContext.GetOwinContext();
+
+            // Retrieve the identity stored in the local authentication cookie. If it's not available,
+            // this indicate that the user is already logged out locally (or has not logged in yet).
+            var result = await context.Authentication.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationType);
+            if (result is not { Identity: ClaimsIdentity identity })
+            {
+                // Only allow local return URLs to prevent open redirect attacks.
+                return Redirect(Url.IsLocalUrl(returnUrl) ? returnUrl : "/");
+            }
+
+            // Remove the local authentication cookie before triggering a redirection to the remote server.
+            context.Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
+
+            var properties = new AuthenticationProperties(new Dictionary<string, string>
+            {
+                // Note: when only one client is registered in the client options,
+                // setting the issuer property is not required and can be omitted.
+                [OpenIddictClientOwinConstants.Properties.Issuer] = "https://localhost:44349/",
+
+                // While not required, the specification encourages sending an id_token_hint
+                // parameter containing an identity token returned by the server for this user.
+                [OpenIddictClientOwinConstants.Properties.IdentityTokenHint] =
+                    result.Properties.Dictionary[OpenIddictClientOwinConstants.Tokens.BackchannelIdentityToken]
+            })
+            {
+                // Only allow local return URLs to prevent open redirect attacks.
+                RedirectUri = Url.IsLocalUrl(returnUrl) ? returnUrl : "/"
+            };
+
+            // Ask the OpenIddict client middleware to redirect the user agent to the identity provider.
+            context.Authentication.SignOut(properties, OpenIddictClientOwinDefaults.AuthenticationType);
+            return Redirect(properties.RedirectUri);
+        }
+
         // Note: this controller uses the same callback action for all providers
         // but for users who prefer using a different action per provider,
         // the following action can be split into separate actions.
-        [AcceptVerbs("GET", "POST"), Route("~/signin-{provider}")]
-        public async Task<ActionResult> Callback()
+        [AcceptVerbs("GET", "POST"), Route("~/callback/login/{provider}")]
+        public async Task<ActionResult> LogInCallback()
         {
             var context = HttpContext.GetOwinContext();
 
@@ -100,7 +137,7 @@ namespace Mortis.Client.Controllers
                 })
                 .Where(claim => claim switch
                 {
-                    // Preserve the nameidentifier and name claims.
+                    // Preserve the basic claims that are necessary for the application to work correctly.
                     { Type: ClaimTypes.NameIdentifier or ClaimTypes.Name } => true,
 
                     // Don't preserve the other claims.
@@ -124,8 +161,12 @@ namespace Mortis.Client.Controllers
                     // Preserve the redirect URL.
                     { Key: ".redirect" } => true,
 
-                    // If needed, the tokens returned by the authorization server can be stored in the authentication cookie.
-                    { Key: Tokens.BackchannelAccessToken or Tokens.RefreshToken } => true,
+                    // Preserve the access, identity and refresh tokens returned in the token response, if available.
+                    {
+                        Key: OpenIddictClientOwinConstants.Tokens.BackchannelAccessToken   or
+                             OpenIddictClientOwinConstants.Tokens.BackchannelIdentityToken or
+                             OpenIddictClientOwinConstants.Tokens.RefreshToken
+                    } => true,
 
                     // Don't add the other properties to the external cookie.
                     _ => false
@@ -136,20 +177,22 @@ namespace Mortis.Client.Controllers
             return Redirect(properties.RedirectUri);
         }
 
-        [AcceptVerbs("GET", "POST"), Route("~/logout")]
-        public ActionResult LogOut()
+        // Note: this controller uses the same callback action for all providers
+        // but for users who prefer using a different action per provider,
+        // the following action can be split into separate actions.
+        [AcceptVerbs("GET", "POST"), Route("~/callback/logout/{provider}")]
+        public async Task<ActionResult> LogOutCallback()
         {
             var context = HttpContext.GetOwinContext();
 
-            // Ask the cookies middleware to delete the local cookie created when the user agent
-            // is redirected from the identity provider after a successful authorization flow.
-            var properties = new AuthenticationProperties
-            {
-                RedirectUri = "/"
-            };
+            // Retrieve the data stored by OpenIddict in the state token created when the logout was triggered.
+            var result = await context.Authentication.AuthenticateAsync(OpenIddictClientOwinDefaults.AuthenticationType);
 
-            context.Authentication.SignOut(properties, CookieAuthenticationDefaults.AuthenticationType);
-            return Redirect(properties.RedirectUri);
+            // In this sample, the local authentication cookie is always removed before the user agent is redirected
+            // to the authorization server. Applications that prefer delaying the removal of the local cookie can
+            // remove the corresponding code from the logout action and remove the authentication cookie in this action.
+
+            return Redirect(result!.Properties!.RedirectUri);
         }
     }
 }
