@@ -14,7 +14,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Http" />
-    <PackageReference Include="System.Net.Http.Json" />
   </ItemGroup>
 
   <ItemGroup>

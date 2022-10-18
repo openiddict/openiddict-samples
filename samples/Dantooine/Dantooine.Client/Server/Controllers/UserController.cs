@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using Dantooine.BFF.Shared.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Dantooine.BFF.Shared.Authorization;
-using IdentityModel;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Dantooine.BFF.Server.Controllers
 {
@@ -39,8 +39,8 @@ namespace Dantooine.BFF.Server.Controllers
             }
             else
             {
-                userInfo.NameClaimType = JwtClaimTypes.Name;
-                userInfo.RoleClaimType = JwtClaimTypes.Role;
+                userInfo.NameClaimType = Claims.Name;
+                userInfo.RoleClaimType = Claims.Role;
             }
 
             if (claimsPrincipal.Claims.Any())
