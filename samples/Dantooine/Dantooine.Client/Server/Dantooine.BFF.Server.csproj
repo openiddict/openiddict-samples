@@ -5,11 +5,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="IdentityModel.AspNetCore"  />
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
 	  <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
-	  <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect"  NoWarn="NU1605" />
-	  
 	  <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" />
+    <PackageReference Include="OpenIddict.Abstractions" />
 	  <PackageReference Include="Yarp.ReverseProxy" />
 	</ItemGroup>
 
