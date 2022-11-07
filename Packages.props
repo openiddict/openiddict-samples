@@ -1,5 +1,13 @@
 <Project>
 
+  <!--
+                  ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+                  █████ ▀██ ██ ▄▄▄█▄▄ ▄▄████ ▄▄▄██ ▄▄▀█ ▄▄▀██ ▄▀▄ ██ ▄▄▄██ ███ ██ ▄▄▄ ██ ▄▄▀██ █▀▄████ ▄ █████▀▄▄▀██
+                  █▀▀██ █ █ ██ ▄▄▄███ ██████ ▄▄███ ▀▀▄█ ▀▀ ██ █ █ ██ ▄▄▄██ █ █ ██ ███ ██ ▀▀▄██ ▄▀████ ▀▀ ▀█▀▀█▀▄▄▀██
+                  █▄▄██ ██▄ ██ ▀▀▀███ ██████ █████ ██ █ ██ ██ ███ ██ ▀▀▀██▄▀▄▀▄██ ▀▀▀ ██ ██ ██ ██ ██████ ██▄▄█▄▀▀▄██
+                  ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+  -->
+
   <ItemGroup Label="Package versions for .NET Framework 4.8"
     Condition=" ('$(TargetFrameworkIdentifier)' == '.NETFramework' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '4.8'))) ">
     <!--
@@ -37,10 +45,18 @@
     <PackageReference Update="Microsoft.Owin.Security.OpenIdConnect"                      Version="4.2.2"                   />
     <PackageReference Update="Microsoft.Owin.Security.Twitter"                            Version="4.2.2"                   />
     <PackageReference Update="Microsoft.Web.Infrastructure"                               Version="1.0.0"                   />
-    <PackageReference Update="OpenIddict.EntityFramework"                                 Version="4.0.0-preview4.22517.68" />
-    <PackageReference Update="OpenIddict.Owin"                                            Version="4.0.0-preview4.22517.68" />
+    <PackageReference Update="OpenIddict.EntityFramework"                                 Version="4.0.0-preview5.22557.92" />
+    <PackageReference Update="OpenIddict.Owin"                                            Version="4.0.0-preview5.22557.92" />
     <PackageReference Update="WebGrease"                                                  Version="1.6.0"                   />
   </ItemGroup>
+
+  <!--
+                                              ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+                                              █████ ▀██ ██ ▄▄▄█▄▄ ▄▄███▀▄▄▀████ ▄▄ ██
+                                              █▀▀██ █ █ ██ ▄▄▄███ █████ ▀▀██▀▀█ ▀▄ ██
+                                              █▄▄██ ██▄ ██ ▀▀▀███ █████▄▀▀▄█▄▄█ ▀▀ ██
+                                              ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+  -->
 
   <ItemGroup Label="Package versions for .NET 6.0"
     Condition=" ('$(TargetFrameworkIdentifier)' == '.NETCoreApp' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0'))) ">
@@ -69,12 +85,12 @@
     <PackageReference Update="Microsoft.Extensions.Http"                                  Version="6.0.0"                   />
     <PackageReference Update="Microsoft.VisualStudio.Web.CodeGeneration.Design"           Version="6.0.10"                  />
     <PackageReference Update="NetEscapades.AspNetCore.SecurityHeaders"                    Version="0.17.0"                  />
-    <PackageReference Update="OpenIddict.Abstractions"                                    Version="4.0.0-preview4.22517.68" />
-    <PackageReference Update="OpenIddict.AspNetCore"                                      Version="4.0.0-preview4.22517.68" />
-    <PackageReference Update="OpenIddict.EntityFrameworkCore"                             Version="4.0.0-preview4.22517.68" />
-    <PackageReference Update="OpenIddict.Quartz"                                          Version="4.0.0-preview4.22517.68" />
-    <PackageReference Update="OpenIddict.Validation.AspNetCore"                           Version="4.0.0-preview4.22517.68" />
-    <PackageReference Update="OpenIddict.Validation.SystemNetHttp"                        Version="4.0.0-preview4.22517.68" />
+    <PackageReference Update="OpenIddict.Abstractions"                                    Version="4.0.0-preview5.22557.92" />
+    <PackageReference Update="OpenIddict.AspNetCore"                                      Version="4.0.0-preview5.22557.92" />
+    <PackageReference Update="OpenIddict.EntityFrameworkCore"                             Version="4.0.0-preview5.22557.92" />
+    <PackageReference Update="OpenIddict.Quartz"                                          Version="4.0.0-preview5.22557.92" />
+    <PackageReference Update="OpenIddict.Validation.AspNetCore"                           Version="4.0.0-preview5.22557.92" />
+    <PackageReference Update="OpenIddict.Validation.SystemNetHttp"                        Version="4.0.0-preview5.22557.92" />
     <PackageReference Update="Quartz.Extensions.Hosting"                                  Version="3.5.0"                   />
     <PackageReference Update="System.Linq.Async"                                          Version="5.1.0"                   />
     <PackageReference Update="Yarp.ReverseProxy"                                          Version="1.1.1"                   />
