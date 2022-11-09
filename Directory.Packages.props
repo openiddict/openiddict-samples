@@ -68,20 +68,20 @@
     <PackageVersion Include="IdentityModel"                                              Version="4.6.0"                   />
     <PackageVersion Include="IdentityModel.AspNetCore"                                   Version="4.3.0"                   />
     <PackageVersion Include="IdentityModel.OidcClient.IdentityTokenValidator"            Version="4.0.0"                   />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Negotiate"              Version="6.0.10"                  />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect"          Version="6.0.10"                  />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly"                Version="6.0.10"                  />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="6.0.10"                  />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Negotiate"              Version="6.0.11"                  />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect"          Version="6.0.11"                  />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly"                Version="6.0.11"                  />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="6.0.11"                  />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Build"          Version="6.0.0"                   />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer"      Version="6.0.10"                  />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server"         Version="6.0.10"                  />
-    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"       Version="6.0.10"                  />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"          Version="6.0.10"                  />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI"                           Version="6.0.10"                  />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"          Version="6.0.10"                  />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory"                     Version="6.0.10"                  />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer"                    Version="6.0.10"                  />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools"                        Version="6.0.10"                  />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer"      Version="6.0.11"                  />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server"         Version="6.0.11"                  />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"       Version="6.0.11"                  />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"          Version="6.0.11"                  />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI"                           Version="6.0.11"                  />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"          Version="6.0.11"                  />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory"                     Version="6.0.11"                  />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer"                    Version="6.0.11"                  />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools"                        Version="6.0.11"                  />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection"                   Version="6.0.1"                   />
     <PackageVersion Include="Microsoft.Extensions.Http"                                  Version="6.0.0"                   />
     <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design"           Version="6.0.10"                  />
@@ -93,7 +93,7 @@
     <PackageVersion Include="OpenIddict.Validation.AspNetCore"                           Version="4.0.0-preview5.22557.92" />
     <PackageVersion Include="OpenIddict.Validation.SystemNetHttp"                        Version="4.0.0-preview5.22557.92" />
     <PackageVersion Include="Quartz.Extensions.Hosting"                                  Version="3.5.0"                   />
-    <PackageVersion Include="System.Linq.Async"                                          Version="5.1.0"                   />
+    <PackageVersion Include="System.Linq.Async"                                          Version="6.0.1"                   />
     <PackageVersion Include="Yarp.ReverseProxy"                                          Version="1.1.1"                   />
   </ItemGroup>
 
