@@ -11,8 +11,8 @@ jobs:
     steps:
     - name: Add sponsor label
       id: sponsors-labels
-      uses: brianlagunas/sponsor-action@v1.0
+      uses: devlooped/actions-sponsor@v1
       with:
-        maintainers: 'kevinchalet'
-        label: 'sponsor'
-        github_token: ${{ secrets.SPONSORS_TOKEN }}
+        label: sponsor
+        sponsorable: kevinchalet
+        token: ${{ secrets.SPONSORS_TOKEN }}

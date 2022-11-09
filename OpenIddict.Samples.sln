@@ -64,6 +64,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{0E148014-CB0B-4E21-A1B9-90F0BDC1530C}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build.yml = .github\workflows\build.yml
+		.github\workflows\issue.yml = .github\workflows\issue.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Balosar.Server", "samples\Balosar\Balosar.Server\Balosar.Server.csproj", "{650ADCA7-6D20-41D6-AC76-827E0EBEDB5A}"
