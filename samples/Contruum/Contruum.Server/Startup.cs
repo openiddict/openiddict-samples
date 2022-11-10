@@ -65,10 +65,10 @@ public class Startup
             .AddServer(options =>
             {
                 // Enable the authorization, token, introspection and userinfo endpoints.
-                options.SetAuthorizationEndpointUris(Configuration["OpenIddict:Endpoints:Authorization"])
-                       .SetTokenEndpointUris(Configuration["OpenIddict:Endpoints:Token"])
-                       .SetIntrospectionEndpointUris(Configuration["OpenIddict:Endpoints:Introspection"])
-                       .SetUserinfoEndpointUris(Configuration["OpenIddict:Endpoints:Userinfo"]);
+                options.SetAuthorizationEndpointUris(Configuration["OpenIddict:Endpoints:Authorization"]!)
+                       .SetTokenEndpointUris(Configuration["OpenIddict:Endpoints:Token"]!)
+                       .SetIntrospectionEndpointUris(Configuration["OpenIddict:Endpoints:Introspection"]!)
+                       .SetUserinfoEndpointUris(Configuration["OpenIddict:Endpoints:Userinfo"]!);
 
                 // Enable the authorization code, implicit and the refresh token flows.
                 options.AllowAuthorizationCodeFlow()
@@ -76,10 +76,10 @@ public class Startup
                        .AllowRefreshTokenFlow();
 
                 // Expose all the supported claims in the discovery document.
-                options.RegisterClaims(Configuration.GetSection("OpenIddict:Claims").Get<string[]>());
+                options.RegisterClaims(Configuration.GetSection("OpenIddict:Claims").Get<string[]>()!);
 
                 // Expose all the supported scopes in the discovery document.
-                options.RegisterScopes(Configuration.GetSection("OpenIddict:Scopes").Get<string[]>());
+                options.RegisterScopes(Configuration.GetSection("OpenIddict:Scopes").Get<string[]>()!);
 
                 // Note: an ephemeral signing key is deliberately used to make the "OP-Rotation-OP-Sig"
                 // test easier to run as restarting the application is enough to rotate the keys.

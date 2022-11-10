@@ -34,7 +34,7 @@ public class Worker : IHostedService
         // Retrieve the client definitions from the configuration
         // and insert them in the applications table if necessary.
         var descriptors = _configuration.GetSection("OpenIddict:Clients").Get<OpenIddictApplicationDescriptor[]>();
-        if (descriptors.Length == 0)
+        if (descriptors is not { Length: > 0 })
         {
             throw new InvalidOperationException("No client application was found in the configuration file.");
         }
