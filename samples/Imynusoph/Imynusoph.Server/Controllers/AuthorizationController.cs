@@ -74,10 +74,10 @@ public class AuthorizationController : Controller
                 roleType: Claims.Role);
 
             // Add the claims that will be persisted in the tokens.
-            identity.AddClaim(Claims.Subject, await _userManager.GetUserIdAsync(user))
-                    .AddClaim(Claims.Email, await _userManager.GetEmailAsync(user))
-                    .AddClaim(Claims.Name, await _userManager.GetUserNameAsync(user))
-                    .AddClaims(Claims.Role, (await _userManager.GetRolesAsync(user)).ToImmutableArray());
+            identity.SetClaim(Claims.Subject, await _userManager.GetUserIdAsync(user))
+                    .SetClaim(Claims.Email, await _userManager.GetEmailAsync(user))
+                    .SetClaim(Claims.Name, await _userManager.GetUserNameAsync(user))
+                    .SetClaims(Claims.Role, (await _userManager.GetRolesAsync(user)).ToImmutableArray());
 
             // Note: in this sample, the granted scopes match the requested scope
             // but you may want to allow the user to uncheck specific scopes.
@@ -91,11 +91,11 @@ public class AuthorizationController : Controller
 
         else if (request.IsRefreshTokenGrantType())
         {
-            // Retrieve the claims principal stored in the authorization code/device code/refresh token.
-            var principal = (await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)).Principal;
+            // Retrieve the claims principal stored in the refresh token.
+            var result = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 
             // Retrieve the user profile corresponding to the refresh token.
-            var user = await _userManager.FindByIdAsync(principal.GetClaim(Claims.Subject));
+            var user = await _userManager.FindByIdAsync(result.Principal.GetClaim(Claims.Subject));
             if (user == null)
             {
                 var properties = new AuthenticationProperties(new Dictionary<string, string>
@@ -119,9 +119,20 @@ public class AuthorizationController : Controller
                 return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }
 
-            principal.SetDestinations(GetDestinations);
+            var identity = new ClaimsIdentity(result.Principal.Claims,
+                authenticationType: TokenValidationParameters.DefaultAuthenticationType,
+                nameType: Claims.Name,
+                roleType: Claims.Role);
 
-            return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+            // Override the user claims present in the principal in case they changed since the refresh token was issued.
+            identity.SetClaim(Claims.Subject, await _userManager.GetUserIdAsync(user))
+                    .SetClaim(Claims.Email, await _userManager.GetEmailAsync(user))
+                    .SetClaim(Claims.Name, await _userManager.GetUserNameAsync(user))
+                    .SetClaims(Claims.Role, (await _userManager.GetRolesAsync(user)).ToImmutableArray());
+
+            identity.SetDestinations(GetDestinations);
+
+            return SignIn(new ClaimsPrincipal(identity), OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
         }
 
         throw new NotImplementedException("The specified grant type is not implemented.");

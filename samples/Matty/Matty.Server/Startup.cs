@@ -80,10 +80,10 @@ public class Startup
                 // Mark the "email", "profile" and "roles" scopes as supported scopes.
                 options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
 
-                // Note: this sample only uses the device code flow but you can enable
-                // the other flows if you need to support implicit, password, etc.
-                options.AllowDeviceCodeFlow();
-                options.AllowRefreshTokenFlow();
+                // Note: this sample uses the device code and refresh token flows but you can
+                // enable the other flows if you need to support implicit, password, etc.
+                options.AllowDeviceCodeFlow()
+                       .AllowRefreshTokenFlow();
 
                 // Register the signing and encryption credentials.
                 options.AddDevelopmentEncryptionCertificate()

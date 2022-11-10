@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Security.Claims;
 using System.Web;
@@ -88,10 +89,10 @@ namespace Fornax.Server.Connect
                             roleType: Claims.Role);
 
                         // Add the claims that will be persisted in the tokens.
-                        identity.AddClaims((await context.Get<ApplicationSignInManager>().CreateUserIdentityAsync(user)).Claims);
-
-                        identity.AddClaim(new Claim(Claims.Subject, identity.FindFirstValue(ClaimTypes.NameIdentifier)));
-                        identity.AddClaim(new Claim(Claims.Name, identity.FindFirstValue(ClaimTypes.Name)));
+                        identity.SetClaim(Claims.Subject, user.Id)
+                                .SetClaim(Claims.Email, user.Email)
+                                .SetClaim(Claims.Name, user.UserName)
+                                .SetClaims(Claims.Role, (await context.Get<ApplicationUserManager>().GetRolesAsync(user.Id)).ToImmutableArray());
 
                         // Note: in this sample, the granted scopes match the requested scope
                         // but you may want to allow the user to uncheck specific scopes.
@@ -217,10 +218,10 @@ namespace Fornax.Server.Connect
                     roleType: Claims.Role);
 
                 // Add the claims that will be persisted in the tokens.
-                identity.AddClaims((await context.Get<ApplicationSignInManager>().CreateUserIdentityAsync(user)).Claims);
-
-                identity.AddClaim(new Claim(Claims.Subject, identity.FindFirstValue(ClaimTypes.NameIdentifier)));
-                identity.AddClaim(new Claim(Claims.Name, identity.FindFirstValue(ClaimTypes.Name)));
+                identity.SetClaim(Claims.Subject, user.Id)
+                        .SetClaim(Claims.Email, user.Email)
+                        .SetClaim(Claims.Name, user.UserName)
+                        .SetClaims(Claims.Role, (await context.Get<ApplicationUserManager>().GetRolesAsync(user.Id)).ToImmutableArray());
 
                 // Note: in this sample, the granted scopes match the requested scope
                 // but you may want to allow the user to uncheck specific scopes.

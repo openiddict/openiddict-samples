@@ -52,8 +52,8 @@ public class AuthorizationController : Controller
                 roleType: Claims.Role);
 
             // Add the claims that will be persisted in the tokens (use the client_id as the subject identifier).
-            identity.AddClaim(Claims.Subject, await _applicationManager.GetClientIdAsync(application));
-            identity.AddClaim(Claims.Name, await _applicationManager.GetDisplayNameAsync(application));
+            identity.SetClaim(Claims.Subject, await _applicationManager.GetClientIdAsync(application));
+            identity.SetClaim(Claims.Name, await _applicationManager.GetDisplayNameAsync(application));
 
             // Note: In the original OAuth 2.0 specification, the client credentials grant
             // doesn't return an identity token, which is an OpenID Connect concept.
