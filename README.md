@@ -3,7 +3,7 @@
 This repository contains samples demonstrating **how to use [OpenIddict](https://github.com/openiddict/openiddict-core) with the different OAuth 2.0/OpenID Connect flows**.
 
 > **Note**
-> The `dev` branch has been updated to use [OpenIddict 4.0 preview1](https://kevinchalet.com/2022/06/22/openiddict-4-0-preview1-is-out/).
+> The `dev` branch has been updated to use [the latest OpenIddict 4.0 preview](https://github.com/openiddict/openiddict-core/releases).
 > For samples targeting OpenIddict 3.1.1, [switch to the `master` branch](https://github.com/openiddict/openiddict-samples/tree/master).
 
 ## ASP.NET Core samples
