@@ -14,6 +14,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Owin.Security;
 using Mortis.Server.Helpers;
 using Mortis.Server.ViewModels.Authorization;
@@ -103,10 +104,10 @@ namespace Mortis.Server.Controllers
                         roleType: Claims.Role);
 
                     // Add the claims that will be persisted in the tokens.
-                    identity.AddClaim(Claims.Subject, user.Id)
-                            .AddClaim(Claims.Email, user.Email)
-                            .AddClaim(Claims.Name, user.UserName)
-                            .AddClaims(Claims.Role, (await context.Get<ApplicationUserManager>().GetRolesAsync(user.Id)).ToImmutableArray());
+                    identity.SetClaim(Claims.Subject, user.Id)
+                            .SetClaim(Claims.Email, user.Email)
+                            .SetClaim(Claims.Name, user.UserName)
+                            .SetClaims(Claims.Role, (await context.Get<ApplicationUserManager>().GetRolesAsync(user.Id)).ToImmutableArray());
 
                     // Note: in this sample, the granted scopes match the requested scope
                     // but you may want to allow the user to uncheck specific scopes.
@@ -224,10 +225,10 @@ namespace Mortis.Server.Controllers
                 roleType: Claims.Role);
 
             // Add the claims that will be persisted in the tokens.
-            identity.AddClaim(Claims.Subject, user.Id)
-                    .AddClaim(Claims.Email, user.Email)
-                    .AddClaim(Claims.Name, user.UserName)
-                    .AddClaims(Claims.Role, (await context.Get<ApplicationUserManager>().GetRolesAsync(user.Id)).ToImmutableArray());
+            identity.SetClaim(Claims.Subject, user.Id)
+                    .SetClaim(Claims.Email, user.Email)
+                    .SetClaim(Claims.Name, user.UserName)
+                    .SetClaims(Claims.Role, (await context.Get<ApplicationUserManager>().GetRolesAsync(user.Id)).ToImmutableArray());
 
             // Note: in this sample, the granted scopes match the requested scope
             // but you may want to allow the user to uncheck specific scopes.
@@ -343,6 +344,13 @@ namespace Mortis.Server.Controllers
                     authenticationType: OpenIddictServerOwinDefaults.AuthenticationType,
                     nameType: Claims.Name,
                     roleType: Claims.Role);
+
+                // Override the user claims present in the principal in case they
+                // changed since the authorization code/refresh token was issued.
+                identity.SetClaim(Claims.Subject, user.Id)
+                        .SetClaim(Claims.Email, user.Email)
+                        .SetClaim(Claims.Name, user.UserName)
+                        .SetClaims(Claims.Role, (await context.Get<ApplicationUserManager>().GetRolesAsync(user.Id)).ToImmutableArray());
 
                 identity.SetDestinations(GetDestinations);
 

@@ -241,7 +241,7 @@ app.MapGet("/authorize", async (HttpContext context, IOpenIddictScopeManager man
     identity.SetResources(await manager.ListResourcesAsync(identity.GetScopes()).ToListAsync());
 
     // Allow all claims to be added in the access tokens.
-    identity.SetDestinations(static _ => new[] { Destinations.AccessToken });
+    identity.SetDestinations(claim => new[] { Destinations.AccessToken });
 
     return Results.SignIn(new ClaimsPrincipal(identity), properties: null, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 });

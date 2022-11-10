@@ -80,10 +80,7 @@ public class AuthorizationController : Controller
         identity.AddClaim(new Claim(Claims.Subject, sid));
 
         // Allow all the claims resolved from the principal to be copied to the access and identity tokens.
-        foreach (var claim in identity.Claims)
-        {
-            claim.SetDestinations(Destinations.AccessToken, Destinations.IdentityToken);
-        }
+        identity.SetDestinations(claim => new[] { Destinations.AccessToken, Destinations.IdentityToken });
 
         return SignIn(new ClaimsPrincipal(identity), OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }
