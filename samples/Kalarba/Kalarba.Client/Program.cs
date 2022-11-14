@@ -2,45 +2,52 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using IdentityModel.Client;
+using Microsoft.Extensions.DependencyInjection;
+using OpenIddict.Client;
 
-using var client = new HttpClient();
+var services = new ServiceCollection();
+services.AddOpenIddict()
+    .AddClient(options =>
+    {
+        options.AddEphemeralEncryptionKey()
+               .AddEphemeralSigningKey();
 
-var token = await GetTokenAsync(client, "alice@wonderland.com", "P@ssw0rd");
+        options.DisableTokenStorage();
+
+        options.UseSystemNetHttp();
+
+        options.AddRegistration(new OpenIddictClientRegistration
+        {
+            Issuer = new Uri("http://localhost:58779/", UriKind.Absolute)
+        });
+    });
+
+await using var provider = services.BuildServiceProvider();
+
+var token = await GetTokenAsync(provider, "alice@wonderland.com", "P@ssw0rd");
 Console.WriteLine("Access token: {0}", token);
 Console.WriteLine();
 
-var resource = await GetResourceAsync(client, token);
+var resource = await GetResourceAsync(provider, token);
 Console.WriteLine("API response: {0}", resource);
 
 Console.ReadLine();
 
-static async Task<string> GetTokenAsync(HttpClient client, string email, string password)
+static async Task<string> GetTokenAsync(IServiceProvider provider, string email, string password)
 {
-    // Retrieve the OpenIddict server configuration document containing the endpoint URLs.
-    var configuration = await client.GetDiscoveryDocumentAsync("http://localhost:58779/");
-    if (configuration.IsError)
-    {
-        throw new Exception($"An error occurred while retrieving the configuration document: {configuration.Error}");
-    }
+    var service = provider.GetRequiredService<OpenIddictClientService>();
 
-    var response = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
-    {
-        Address = configuration.TokenEndpoint,
-        UserName = email,
-        Password = password
-    });
-
-    if (response.IsError)
-    {
-        throw new Exception($"An error occurred while retrieving an access token: {response.Error}");
-    }
+    var (response, principal) = await service.AuthenticateWithPasswordAsync(
+        issuer  : new Uri("https://localhost:58779/", UriKind.Absolute),
+        username: email,
+        password: password);
 
     return response.AccessToken;
 }
 
-static async Task<string> GetResourceAsync(HttpClient client, string token)
+static async Task<string> GetResourceAsync(IServiceProvider provider, string token)
 {
+    using var client = provider.GetRequiredService<HttpClient>();
     using var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:58779/api/message");
     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
