@@ -1,59 +1,51 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
-using IdentityModel.Client;
+using Microsoft.Extensions.DependencyInjection;
+using OpenIddict.Client;
 
-using var client = new HttpClient();
-
-try
-{
-    var token = await GetTokenAsync(client);
-    Console.WriteLine("Access token: {0}", token);
-    Console.WriteLine();
-
-    var resource = await GetResourceAsync(client, token);
-    Console.WriteLine("API response: {0}", resource);
-    Console.ReadLine();
-}
-catch (HttpRequestException exception)
-{
-    var builder = new StringBuilder();
-    builder.AppendLine("+++++++++++++++++++++");
-    builder.AppendLine(exception.Message);
-    builder.AppendLine(exception.InnerException?.Message);
-    builder.AppendLine("Make sure you started the authorization server.");
-    builder.AppendLine("+++++++++++++++++++++");
-    Console.WriteLine(builder.ToString());
-}
-
-static async Task<string> GetTokenAsync(HttpClient client)
-{
-    // Retrieve the OpenIddict server configuration document containing the endpoint URLs.
-    var configuration = await client.GetDiscoveryDocumentAsync("https://localhost:44385/");
-    if (configuration.IsError)
+var services = new ServiceCollection();
+services.AddOpenIddict()
+    .AddClient(options =>
     {
-        throw new Exception($"An error occurred while retrieving the configuration document: {configuration.Error}");
-    }
+        options.AddEphemeralEncryptionKey()
+               .AddEphemeralSigningKey();
 
-    var response = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-    {
-        Address = configuration.TokenEndpoint,
-        ClientId = "console",
-        ClientSecret = "388D45FA-B36B-4988-BA59-B187D329C207"
+        options.DisableTokenStorage();
+
+        options.UseSystemNetHttp();
+
+        options.AddRegistration(new OpenIddictClientRegistration
+        {
+            Issuer = new Uri("https://localhost:44385/", UriKind.Absolute),
+
+            ClientId = "console",
+            ClientSecret = "388D45FA-B36B-4988-BA59-B187D329C207"
+        });
     });
 
-    if (response.IsError)
-    {
-        throw new Exception($"An error occurred while retrieving an access token: {response.Error}");
-    }
+await using var provider = services.BuildServiceProvider();
 
+var token = await GetTokenAsync(provider);
+Console.WriteLine("Access token: {0}", token);
+Console.WriteLine();
+
+var resource = await GetResourceAsync(provider, token);
+Console.WriteLine("API response: {0}", resource);
+Console.ReadLine();
+
+static async Task<string> GetTokenAsync(IServiceProvider provider)
+{
+    var service = provider.GetRequiredService<OpenIddictClientService>();
+
+    var (response, _) = await service.AuthenticateWithClientCredentialsAsync(new Uri("https://localhost:44385/", UriKind.Absolute));
     return response.AccessToken;
 }
 
-static async Task<string> GetResourceAsync(HttpClient client, string token)
+static async Task<string> GetResourceAsync(IServiceProvider provider, string token)
 {
+    using var client = provider.GetRequiredService<HttpClient>();
     using var request = new HttpRequestMessage(HttpMethod.Get, "https://localhost:44385/api/message");
     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
