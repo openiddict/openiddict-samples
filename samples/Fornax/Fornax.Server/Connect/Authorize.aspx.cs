@@ -103,15 +103,12 @@ namespace Fornax.Server.Connect
                         // Automatically create a permanent authorization to avoid requiring explicit consent
                         // for future authorization or token requests containing the same scopes.
                         var authorization = authorizations.LastOrDefault();
-                        if (authorization == null)
-                        {
-                            authorization = await AuthorizationManager.CreateAsync(
-                                principal: new ClaimsPrincipal(identity),
-                                subject  : user.Id,
-                                client   : await ApplicationManager.GetIdAsync(application),
-                                type     : AuthorizationTypes.Permanent,
-                                scopes   : identity.GetScopes());
-                        }
+                        authorization ??= await AuthorizationManager.CreateAsync(
+                            identity: identity,
+                            subject : user.Id,
+                            client  : await ApplicationManager.GetIdAsync(application),
+                            type    : AuthorizationTypes.Permanent,
+                            scopes  : identity.GetScopes());
 
                         identity.SetAuthorizationId(await AuthorizationManager.GetIdAsync(authorization));
                         identity.SetDestinations(GetDestinations);
@@ -232,15 +229,12 @@ namespace Fornax.Server.Connect
                 // Automatically create a permanent authorization to avoid requiring explicit consent
                 // for future authorization or token requests containing the same scopes.
                 var authorization = authorizations.LastOrDefault();
-                if (authorization == null)
-                {
-                    authorization = await AuthorizationManager.CreateAsync(
-                        principal: new ClaimsPrincipal(identity),
-                        subject  : user.Id,
-                        client   : await ApplicationManager.GetIdAsync(application),
-                        type     : AuthorizationTypes.Permanent,
-                        scopes   : identity.GetScopes());
-                }
+                authorization ??= await AuthorizationManager.CreateAsync(
+                    identity: identity,
+                    subject : user.Id,
+                    client  : await ApplicationManager.GetIdAsync(application),
+                    type    : AuthorizationTypes.Permanent,
+                    scopes  : identity.GetScopes());
 
                 identity.SetAuthorizationId(await AuthorizationManager.GetIdAsync(authorization));
                 identity.SetDestinations(GetDestinations);
