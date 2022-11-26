@@ -28,6 +28,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.0.100'
+
     - name: Build
       run: eng\common\CIBuild.cmd -configuration Release -prepareMachine -integrationTest
       if: ${{ runner.os == 'Windows' }}
