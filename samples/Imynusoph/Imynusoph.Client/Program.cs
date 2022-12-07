@@ -11,8 +11,8 @@ var services = new ServiceCollection();
 services.AddOpenIddict()
     .AddClient(options =>
     {
-        options.AddEphemeralEncryptionKey()
-               .AddEphemeralSigningKey();
+        options.AllowPasswordFlow()
+               .AllowRefreshTokenFlow();
 
         options.DisableTokenStorage();
 
