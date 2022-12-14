@@ -31,7 +31,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.0.100'
+        dotnet-version: '7.0.101'
 
     - name: Build
       run: eng\common\CIBuild.cmd -configuration Release -prepareMachine -integrationTest
