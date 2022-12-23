@@ -78,17 +78,6 @@ public class Startup
             // Register the OpenIddict client components.
             .AddClient(options =>
             {
-                // Enable the redirection endpoint needed to handle the callback stage.
-                //
-                // Note: to mitigate mix-up attacks, it's recommended to use a unique redirection endpoint
-                // URI per provider, unless all the registered providers support returning a special "iss"
-                // parameter containing their URL as part of authorization responses. For more information,
-                // see https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#section-4.4.
-                options.SetRedirectionEndpointUris("callback/login/local");
-
-                // Enable the post-logout redirection endpoints needed to handle the callback stage.
-                options.SetPostLogoutRedirectionEndpointUris("callback/logout/local");
-
                 // Note: this sample uses the code flow, but you can enable the other flows if necessary.
                 options.AllowAuthorizationCodeFlow();
 
@@ -118,6 +107,10 @@ public class Startup
                     ClientSecret = "901564A5-E7FE-42CB-B10D-61EF6A8F3654",
                     Scopes = { Scopes.Email, Scopes.Profile },
 
+                    // Note: to mitigate mix-up attacks, it's recommended to use a unique redirection endpoint
+                    // URI per provider, unless all the registered providers support returning a special "iss"
+                    // parameter containing their URL as part of authorization responses. For more information,
+                    // see https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#section-4.4.
                     RedirectUri = new Uri("callback/login/local", UriKind.Relative),
                     PostLogoutRedirectUri = new Uri("callback/logout/local", UriKind.Relative)
                 });
