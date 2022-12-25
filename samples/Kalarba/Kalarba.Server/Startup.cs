@@ -19,34 +19,6 @@ public class Startup
 {
     public void Configuration(IAppBuilder app)
     {
-        var container = CreateContainer();
-
-        app.UseErrorPage();
-
-        // Register the Autofac scope injector middleware.
-        app.UseAutofacLifetimeScopeInjector(container);
-
-        // Register the two OpenIddict server/validation middleware.
-        app.UseMiddlewareFromContainer<OpenIddictServerOwinMiddleware>();
-        app.UseMiddlewareFromContainer<OpenIddictValidationOwinMiddleware>();
-
-        var configuration = new HttpConfiguration
-        {
-            DependencyResolver = new AutofacWebApiDependencyResolver(container)
-        };
-
-        configuration.MapHttpAttributeRoutes();
-
-        // Configure ASP.NET Web API to use token authentication.
-        configuration.Filters.Add(new HostAuthenticationFilter(OpenIddictValidationOwinDefaults.AuthenticationType));
-
-        // Register the Web API/Autofac integration middleware.
-        app.UseAutofacWebApi(configuration);
-        app.UseWebApi(configuration);
-    }
-
-    private static IContainer CreateContainer()
-    {
         var services = new ServiceCollection();
 
         services.AddOpenIddict()
@@ -138,6 +110,29 @@ public class Startup
         builder.Populate(services);
         builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
-        return builder.Build();
+        var container = builder.Build();
+
+        app.UseErrorPage();
+
+        // Register the Autofac scope injector middleware.
+        app.UseAutofacLifetimeScopeInjector(container);
+
+        // Register the two OpenIddict server/validation middleware.
+        app.UseMiddlewareFromContainer<OpenIddictServerOwinMiddleware>();
+        app.UseMiddlewareFromContainer<OpenIddictValidationOwinMiddleware>();
+
+        var configuration = new HttpConfiguration
+        {
+            DependencyResolver = new AutofacWebApiDependencyResolver(container)
+        };
+
+        configuration.MapHttpAttributeRoutes();
+
+        // Configure ASP.NET Web API to use token authentication.
+        configuration.Filters.Add(new HostAuthenticationFilter(OpenIddictValidationOwinDefaults.AuthenticationType));
+
+        // Register the Web API/Autofac integration middleware.
+        app.UseAutofacWebApi(configuration);
+        app.UseWebApi(configuration);
     }
 }

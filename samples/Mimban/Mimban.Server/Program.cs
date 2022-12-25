@@ -1,15 +1,17 @@
 using System.Security.Claims;
-using AspNet.Security.OpenId.Steam;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
+using OpenIddict.Client.AspNetCore;
 using OpenIddict.Server.AspNetCore;
 using OpenIddict.Validation.AspNetCore;
 using Quartz;
 using static OpenIddict.Abstractions.OpenIddictConstants;
+using static OpenIddict.Client.WebIntegration.OpenIddictClientWebIntegrationConstants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +36,42 @@ builder.Services.AddOpenIddict()
     {
         options.UseEntityFrameworkCore()
                .UseDbContext<DbContext>();
+    })
+
+    // Register the OpenIddict client components.
+    .AddClient(options =>
+    {
+        // Note: this sample uses the code flow, but you can enable the other flows if necessary.
+        options.AllowAuthorizationCodeFlow();
+
+        // Register the signing and encryption credentials used to protect
+        // sensitive data like the state tokens produced by OpenIddict.
+        options.AddDevelopmentEncryptionCertificate()
+               .AddDevelopmentSigningCertificate();
+
+        // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
+        options.UseAspNetCore()
+               .EnableRedirectionEndpointPassthrough();
+
+        // Register the System.Net.Http integration and use the identity of the current
+        // assembly as a more specific user agent, which can be useful when dealing with
+        // providers that use the user agent as a way to throttle requests (e.g Reddit).
+        options.UseSystemNetHttp()
+               .SetProductInformation(typeof(Program).Assembly);
+
+        // Register the Web providers integrations.
+        //
+        // Note: to mitigate mix-up attacks, it's recommended to use a unique redirection endpoint
+        // URI per provider, unless all the registered providers support returning a special "iss"
+        // parameter containing their URL as part of authorization responses. For more information,
+        // see https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#section-4.4.
+        options.UseWebProviders()
+               .UseGitHub(options =>
+               {
+                   options.SetClientId("c4ade52327b01ddacff3")
+                          .SetClientSecret("da6bed851b75e317bf6b2cb67013679d9467c122")
+                          .SetRedirectUri("callback/login/github");
+               });
     })
 
     // Register the OpenIddict server components.
@@ -74,8 +112,7 @@ builder.Services.AddOpenIddict()
 
 builder.Services.AddAuthorization()
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie()
-    .AddSteam();
+    .AddCookie();
 
 var app = builder.Build();
 
@@ -110,14 +147,35 @@ app.UseAuthorization();
 app.MapGet("/api", [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     (ClaimsPrincipal user) => user.Identity!.Name);
 
+app.MapMethods("callback/login/github", new[] { HttpMethods.Get, HttpMethods.Post }, async (HttpContext context) =>
+{
+    // Resolve the claims extracted by OpenIddict from the userinfo response returned by GitHub.
+    var result = await context.AuthenticateAsync(OpenIddictClientAspNetCoreDefaults.AuthenticationScheme);
+
+    var identity = new ClaimsIdentity(Providers.GitHub);
+    identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, result.Principal!.FindFirst("id")!.Value));
+
+    var properties = new AuthenticationProperties
+    {
+        RedirectUri = result.Properties!.RedirectUri
+    };
+
+    return Results.SignIn(new ClaimsPrincipal(identity), properties, CookieAuthenticationDefaults.AuthenticationScheme);
+});
+
 app.MapGet("/authorize", async (HttpContext context) =>
 {
-    // Resolve the claims stored in the principal created after the Steam authentication dance.
-    // If the principal cannot be found, trigger a new challenge to redirect the user to Steam.
-    var principal = (await context.AuthenticateAsync(SteamAuthenticationDefaults.AuthenticationScheme))?.Principal;
+    // Resolve the claims stored in the cookie created after the GitHub authentication dance.
+    // If the principal cannot be found, trigger a new challenge to redirect the user to GitHub.
+    var principal = (await context.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme))?.Principal;
     if (principal is null)
     {
-        return Results.Challenge(properties: null, new[] { SteamAuthenticationDefaults.AuthenticationScheme });
+        var properties = new AuthenticationProperties
+        {
+            RedirectUri = context.Request.GetEncodedUrl()
+        };
+
+        return Results.Challenge(properties, new[] { OpenIddictClientAspNetCoreDefaults.AuthenticationScheme });
     }
 
     var identifier = principal.FindFirst(ClaimTypes.NameIdentifier)!.Value;
@@ -128,7 +186,7 @@ app.MapGet("/authorize", async (HttpContext context) =>
         nameType: Claims.Name,
         roleType: Claims.Role);
 
-    // Import a few select claims from the Steam principal.
+    // Import a few select claims from the identity stored in the local cookie.
     identity.AddClaim(new Claim(Claims.Subject, identifier));
     identity.AddClaim(new Claim(Claims.Name, identifier).SetDestinations(Destinations.AccessToken));
 

@@ -58,7 +58,7 @@ while (true)
 
     else
     {
-        Console.WriteLine("Your Steam handle is: {0}", await GetResourceAsync(result.AccessToken));
+        Console.WriteLine("Your GitHub identifier is: {0}", await GetResourceAsync(result.AccessToken));
         break;
     }
 }

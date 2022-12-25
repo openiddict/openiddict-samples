@@ -2,10 +2,6 @@
 
 This repository contains samples demonstrating **how to use [OpenIddict](https://github.com/openiddict/openiddict-core) with the different OAuth 2.0/OpenID Connect flows**.
 
-> **Note**
-> The `dev` branch has been updated to use [the latest OpenIddict 4.0 preview](https://github.com/openiddict/openiddict-core/releases).
-> For samples targeting OpenIddict 3.1.1, [switch to the `master` branch](https://github.com/openiddict/openiddict-samples/tree/master).
-
 ## ASP.NET Core samples
 
   - [Aridka](samples/Aridka): client credentials demo, with a .NET console acting as the client.
@@ -15,7 +11,7 @@ This repository contains samples demonstrating **how to use [OpenIddict](https:/
   - [Hollastin](samples/Hollastin): resource owner password credentials demo, with a .NET console acting as the client.
   - [Imynusoph](samples/Imynusoph): refresh token grant demo, with a .NET console acting as the client.
   - [Matty](samples/Matty): device authorization flow demo, with a .NET console acting as the client.
-  - [Mimban](samples/Mimban): authorization code flow demo using minimal APIs and Steam delegation for user authentication, with a .NET console acting as the client.
+  - [Mimban](samples/Mimban): authorization code flow demo using minimal APIs and GitHub delegation for user authentication, with a .NET console acting as the client.
   - [Velusia](samples/Velusia): authorization code flow demo, with an ASP.NET Core application acting as the client.
   - [Weytta](samples/Weytta): authorization code flow with Integrated Windows Authentication support and a .NET console acting as the client.
   - [Zirku](samples/Zirku): authorization code flow demo using minimal APIs with 2 hard-coded user identities, a .NET console acting as the client and two API projects using introspection (Api1) and local validation (Api2).
