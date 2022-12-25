@@ -42,8 +42,8 @@ namespace Fornax.Server
                 .AddServer(options =>
                 {
                     // Enable the authorization and token endpoints.
-                    options.SetAuthorizationEndpointUris("/connect/authorize")
-                           .SetTokenEndpointUris("/connect/token");
+                    options.SetAuthorizationEndpointUris("connect/authorize")
+                           .SetTokenEndpointUris("connect/token");
 
                     // Mark the "email", "profile" and "roles" scopes as supported scopes.
                     options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
@@ -87,7 +87,7 @@ namespace Fornax.Server
             // Note: in a real world application, this step should be part of a setup script.
             Task.Run(async delegate
             {
-                using var scope = Provider.ApplicationContainer.BeginLifetimeScope();
+                await using var scope = Provider.ApplicationContainer.BeginLifetimeScope();
 
                 var context = scope.Resolve<ApplicationDbContext>();
                 context.Database.CreateIfNotExists();
