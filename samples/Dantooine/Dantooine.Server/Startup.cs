@@ -72,12 +72,12 @@ public class Startup
             .AddServer(options =>
             {
                 // Enable the authorization, logout, token and userinfo endpoints.
-                options.SetAuthorizationEndpointUris("/connect/authorize")
-                       .SetLogoutEndpointUris("/connect/logout")
-                       .SetIntrospectionEndpointUris("/connect/introspect")
-                       .SetTokenEndpointUris("/connect/token")
-                       .SetUserinfoEndpointUris("/connect/userinfo")
-                       .SetVerificationEndpointUris("/connect/verify");
+                options.SetAuthorizationEndpointUris("connect/authorize")
+                       .SetLogoutEndpointUris("connect/logout")
+                       .SetIntrospectionEndpointUris("connect/introspect")
+                       .SetTokenEndpointUris("connect/token")
+                       .SetUserinfoEndpointUris("connect/userinfo")
+                       .SetVerificationEndpointUris("connect/verify");
 
                 // Mark the "email", "profile" and "roles" scopes as supported scopes.
                 options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);

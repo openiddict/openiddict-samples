@@ -57,9 +57,9 @@ builder.Services.AddOpenIddict()
     .AddServer(options =>
     {
         // Enable the authorization, introspection and token endpoints.
-        options.SetAuthorizationEndpointUris("/authorize")
-               .SetIntrospectionEndpointUris("/introspect")
-               .SetTokenEndpointUris("/token");
+        options.SetAuthorizationEndpointUris("authorize")
+               .SetIntrospectionEndpointUris("introspect")
+               .SetTokenEndpointUris("token");
 
         // Note: this sample only uses the authorization code flow but you can enable
         // the other flows if you need to support implicit, password or client credentials.

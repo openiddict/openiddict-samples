@@ -72,10 +72,10 @@ public class Startup
             .AddServer(options =>
             {
                 // Enable the device, verification, token and userinfo endpoints.
-                options.SetDeviceEndpointUris("/connect/device")
-                       .SetVerificationEndpointUris("/connect/verify")
-                       .SetTokenEndpointUris("/connect/token")
-                       .SetUserinfoEndpointUris("/connect/userinfo");
+                options.SetDeviceEndpointUris("connect/device")
+                       .SetVerificationEndpointUris("connect/verify")
+                       .SetTokenEndpointUris("connect/token")
+                       .SetUserinfoEndpointUris("connect/userinfo");
 
                 // Mark the "email", "profile" and "roles" scopes as supported scopes.
                 options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);

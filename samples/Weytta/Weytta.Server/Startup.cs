@@ -60,8 +60,8 @@ public class Startup
             .AddServer(options =>
             {
                 // Enable the authorization and token endpoints.
-                options.SetAuthorizationEndpointUris("/connect/authorize")
-                       .SetTokenEndpointUris("/connect/token");
+                options.SetAuthorizationEndpointUris("connect/authorize")
+                       .SetTokenEndpointUris("connect/token");
 
                 // Mark the "email", "profile" and "roles" scopes as supported scopes.
                 options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
