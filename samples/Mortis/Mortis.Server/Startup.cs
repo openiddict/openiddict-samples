@@ -39,9 +39,9 @@ namespace Mortis.Server
                 .AddServer(options =>
                 {
                     // Enable the authorization, logout and token endpoints.
-                    options.SetAuthorizationEndpointUris("/connect/authorize")
-                           .SetLogoutEndpointUris("/connect/logout")
-                           .SetTokenEndpointUris("/connect/token");
+                    options.SetAuthorizationEndpointUris("connect/authorize")
+                           .SetLogoutEndpointUris("connect/logout")
+                           .SetTokenEndpointUris("connect/token");
 
                     // Mark the "email", "profile" and "roles" scopes as supported scopes.
                     options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);

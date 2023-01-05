@@ -66,7 +66,7 @@ public class Startup
             .AddServer(options =>
             {
                 // Enable the token endpoint.
-                options.SetTokenEndpointUris("/connect/token");
+                options.SetTokenEndpointUris("connect/token");
 
                 // Enable the password flow.
                 options.AllowPasswordFlow();
