@@ -26,6 +26,7 @@ This repository contains samples demonstrating **how to use [OpenIddict](https:/
 **Looking for additional samples to help you get started with OpenIddict?** Don't miss these interesting samples maintained by the community:
 
   - **[Angular and Blazor samples](https://github.com/damienbod/AspNetCoreOpeniddict)** by [Damien Bowden](https://github.com/damienbod)
+ - **[PersonaServer .An authentication server that implements OpenID Connect (OIDC) and OAuth 2.0 standards using OpenIddict. With user management implementation using ASP NET Core Identity](https://github.com/babaktaremi/PersonaServer)** by [Babak Taremi](https://github.com/babaktaremi)
 
 ## Certification
 
