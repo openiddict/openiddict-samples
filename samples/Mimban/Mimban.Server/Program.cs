@@ -27,7 +27,7 @@ builder.Services.AddQuartz(options =>
 // Register the Quartz.NET service and configure it to block shutdown until jobs are complete.
 builder.Services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
-builder.Services.AddDbContext<DbContext>(options => options.UseInMemoryDatabase("db").UseOpenIddict());
+builder.Services.AddDbContext<DbContext>(options => options.UseSqlite($"Filename={Path.Combine(Path.GetTempPath(), "openiddict-mimban-server.sqlite3")}").UseOpenIddict());
 
 builder.Services.AddOpenIddict()
 

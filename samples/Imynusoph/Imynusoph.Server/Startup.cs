@@ -1,11 +1,11 @@
-﻿using Imynusoph.Server.Models;
+﻿using System.IO;
+using Imynusoph.Server.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
-using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Imynusoph.Server;
 
@@ -25,8 +25,8 @@ public class Startup
 
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            // Configure the context to use Microsoft SQL Server.
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            // Configure the context to use sqlite.
+            options.UseSqlite($"Filename={Path.Combine(Path.GetTempPath(), "openiddict-imynusoph-server.sqlite3")}");
 
             // Register the entity sets needed by OpenIddict.
             // Note: use the generic overload if you need

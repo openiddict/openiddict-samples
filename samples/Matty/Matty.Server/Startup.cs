@@ -1,3 +1,4 @@
+using System.IO;
 using Matty.Server.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,8 +26,8 @@ public class Startup
 
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            // Configure the context to use Microsoft SQL Server.
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            // Configure the context to use sqlite.
+            options.UseSqlite($"Filename={Path.Combine(Path.GetTempPath(), "openiddict-matty-server.sqlite3")}");
 
             // Register the entity sets needed by OpenIddict.
             // Note: use the generic overload if you need

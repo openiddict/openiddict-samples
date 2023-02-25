@@ -1,3 +1,4 @@
+using System.IO;
 using Contruum.Server.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -24,7 +25,7 @@ public class Startup
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             // Configure the context to use an in-memory store.
-            options.UseInMemoryDatabase("db");
+            options.UseSqlite($"Filename={Path.Combine(Path.GetTempPath(), "openiddict-contruum-server.sqlite3")}");
 
             // Register the entity sets needed by OpenIddict.
             options.UseOpenIddict();
