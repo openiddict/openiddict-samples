@@ -16,7 +16,7 @@ public class Startup
 
         services.AddDbContext<DbContext>(options =>
         {
-            // Configure the context to use Microsoft SQL Server.
+            // Configure the context to use sqlite.
             options.UseInMemoryDatabase("db");
 
             // Register the entity sets needed by OpenIddict.

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -10,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
@@ -35,8 +35,8 @@ builder.Services.AddQuartzHostedService(options => options.WaitForJobsToComplete
 
 builder.Services.AddDbContext<DbContext>(options =>
 {
-    // Configure the context to use Microsoft SQL Server.
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    // Configure the context to use sqlite.
+    options.UseSqlite($"Filename={Path.Combine(Path.GetTempPath(), "openiddict-zirku-server.sqlite3")}");
 
     // Register the entity sets needed by OpenIddict.
     // Note: use the generic overload if you need
