@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,7 @@ public class Startup
         services.AddDbContext<DbContext>(options =>
         {
             // Configure the context to use sqlite.
-            options.UseInMemoryDatabase("db");
+            options.UseSqlite($"Filename={Path.Combine(Path.GetTempPath(), "openiddict-weytta-server.sqlite3")}");
 
             // Register the entity sets needed by OpenIddict.
             // Note: use the generic overload if you need
