@@ -124,6 +124,10 @@ await using (var scope = app.Services.CreateAsyncScope())
 {
     var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
+    using var context = scope.ServiceProvider.GetRequiredService<DbContext>();
+    await context.Database.EnsureDeletedAsync();
+    await context.Database.EnsureCreatedAsync();
+
     await manager.CreateAsync(new OpenIddictApplicationDescriptor
     {
         ClientId = "console_app",
