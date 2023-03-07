@@ -130,13 +130,13 @@ await using (var scope = app.Services.CreateAsyncScope())
     if (await manager.FindByClientIdAsync("console_app") == null)
     {
         await manager.CreateAsync(new OpenIddictApplicationDescriptor
-            {
-                ClientId = "console_app",
-                RedirectUris =
+        {
+            ClientId = "console_app",
+            RedirectUris =
             {
                 new Uri("http://localhost:8914/")
             },
-                Permissions =
+            Permissions =
             {
                 Permissions.Endpoints.Authorization,
                 Permissions.Endpoints.Token,
