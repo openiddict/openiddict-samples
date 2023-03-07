@@ -122,23 +122,29 @@ app.UseHttpsRedirection();
 // Note: in a real world application, this step should be part of a setup script.
 await using (var scope = app.Services.CreateAsyncScope())
 {
+    var context = scope.ServiceProvider.GetRequiredService<DbContext>();
+    await context.Database.EnsureCreatedAsync();
+
     var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
-    await manager.CreateAsync(new OpenIddictApplicationDescriptor
+    if (await manager.FindByClientIdAsync("console_app") == null)
     {
-        ClientId = "console_app",
-        RedirectUris =
+        await manager.CreateAsync(new OpenIddictApplicationDescriptor
         {
-            new Uri("http://localhost:8914/")
-        },
-        Permissions =
-        {
-            Permissions.Endpoints.Authorization,
-            Permissions.Endpoints.Token,
-            Permissions.GrantTypes.AuthorizationCode,
-            Permissions.ResponseTypes.Code
-        }
-    });
+            ClientId = "console_app",
+            RedirectUris =
+            {
+                new Uri("http://localhost:8914/")
+            },
+            Permissions =
+            {
+                Permissions.Endpoints.Authorization,
+                Permissions.Endpoints.Token,
+                Permissions.GrantTypes.AuthorizationCode,
+                Permissions.ResponseTypes.Code
+            }
+        });
+    }
 }
 
 app.UseAuthentication();
