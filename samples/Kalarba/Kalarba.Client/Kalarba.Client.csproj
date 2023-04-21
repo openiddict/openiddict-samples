@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenIddict.Client" />
     <PackageReference Include="OpenIddict.Client.SystemNetHttp" />
   </ItemGroup>
 

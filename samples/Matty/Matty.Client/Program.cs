@@ -1,114 +1,62 @@
 ﻿using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using IdentityModel;
-using IdentityModel.Client;
+using Matty.Client;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using OpenIddict.Client;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
-Console.WriteLine("+-------------------------------------------------------------------+");
-Console.WriteLine("             Welcome to Matty a device code flow sample");
-Console.WriteLine("+-------------------------------------------------------------------+");
-Console.Write(" - Please press Enter after the server started...");
-Console.ReadLine();
-
-using var client = new HttpClient();
-
-try
-{
-    // Retrieve the OpenIddict server configuration document containing the endpoint URLs.
-    var configuration = await client.GetDiscoveryDocumentAsync("https://localhost:44321/");
-    if (configuration.IsError)
+var host = new HostBuilder()
+    // Note: applications for which a single instance is preferred can reference
+    // the Dapplo.Microsoft.Extensions.Hosting.AppServices package and call this
+    // method to automatically close extra instances based on the specified identifier:
+    //
+    // .ConfigureSingleInstance(options => options.MutexId = "{C9E0D6B4-8142-4BC5-813B-12064CF4238C}")
+    //
+    .ConfigureLogging(options => options.AddDebug())
+    .ConfigureServices(services =>
     {
-        throw new Exception($"An error occurred while retrieving the configuration document: {configuration.Error}");
-    }
+        services.AddOpenIddict()
 
-    var deviceResponse = await client.RequestDeviceAuthorizationAsync(new DeviceAuthorizationRequest
-    { 
-        Address = configuration.DeviceAuthorizationEndpoint,
-        Scope = "openid offline_access profile email",
-        ClientId = "device"
-    });
-    if (deviceResponse.IsError)
-    {
-        throw new Exception($"An error occurred while retrieving a device code: {deviceResponse.Error}");
-        throw new Exception(deviceResponse.Error);
-    }
+            // Register the OpenIddict client components.
+            .AddClient(options =>
+            {
+                // Note: this sample uses the device authorization flow,
+                // but you can enable the other flows if necessary.
+                options.AllowDeviceCodeFlow();
 
-    Console.WriteLine("+-------------------------------------------------------------------+");
-    Console.WriteLine("Device endpoint response");
-    Console.WriteLine($" - Device code: {deviceResponse.DeviceCode}");
-    Console.WriteLine($" - User code: {deviceResponse.UserCode}");
-    Console.WriteLine($" - Verification uri: {deviceResponse.VerificationUri}");
-    Console.WriteLine($" - Verification uri (complete): {deviceResponse.VerificationUriComplete}");
+                // Disable token storage, which is not necessary for the device authorization flow.
+                options.DisableTokenStorage();
 
-    Console.WriteLine("+-------------------------------------------------------------------+");
-    Console.WriteLine(" - Please open the verification uri in the browser");
-    Console.WriteLine(" and enter the user code to authorize this device ");
-    Console.WriteLine("+-------------------------------------------------------------------+");
-                
-    TokenResponse tokenResponse;
-    do
-    {
-        tokenResponse = await client.RequestDeviceTokenAsync(new DeviceTokenRequest
-        {
-            Address = configuration.TokenEndpoint,
-            ClientId = "device",
-            DeviceCode = deviceResponse.DeviceCode
-        });
+                // Register the signing and encryption credentials used to protect
+                // sensitive data like the state tokens produced by OpenIddict.
+                options.AddDevelopmentEncryptionCertificate()
+                       .AddDevelopmentSigningCertificate();
 
-        if (tokenResponse is { IsError: true, Error: OidcConstants.TokenErrors.AuthorizationPending })
-        {
-            Console.WriteLine(" - authorization pending...");
+                // Register the System.Net.Http integration and use the identity of the current
+                // assembly as a more specific user agent, which can be useful when dealing with
+                // providers that use the user agent as a way to throttle requests (e.g Reddit).
+                options.UseSystemNetHttp()
+                       .SetProductInformation(typeof(Program).Assembly);
 
-            // Note: `deviceResponse.Interval` is the minimum number of seconds
-            // the client should wait between polling requests.
-            // In this sample the client will retry every 60 seconds at most.
-            await Task.Delay(Math.Clamp(deviceResponse.Interval, 1, 60) * 1000);
-        }
+                // Add a client registration matching the client application definition in the server project.
+                options.AddRegistration(new OpenIddictClientRegistration
+                {
+                    Issuer = new Uri("https://localhost:44321/", UriKind.Absolute),
+                    ProviderName = "Local",
 
-        else if (tokenResponse.IsError)
-        {
-            throw new Exception($"An error occurred while retrieving an access token: {tokenResponse.Error}");
-        }
+                    ClientId = "device",
+                    Scopes = { Scopes.Email, Scopes.Profile, Scopes.OfflineAccess }
+                });
+            });
 
-        else
-        {
-            Console.WriteLine("+-------------------------------------------------------------------+");
-            Console.WriteLine("Token endpoint response");
-            Console.WriteLine($" - Identity token: {tokenResponse.IdentityToken}");
-            Console.WriteLine();
-            Console.WriteLine($" - Access token: {tokenResponse.AccessToken}");
-            Console.WriteLine();
-            Console.WriteLine($" - Refresh token: {tokenResponse.RefreshToken}");
-            Console.WriteLine();
-            break;
-        }
-    }
-    while (true);
+        // Register the background service responsible for handling the console interactions.
+        services.AddHostedService<InteractiveService>();
 
-    Console.WriteLine("+-------------------------------------------------------------------+");
-    var resource = await GetResourceAsync(client, tokenResponse.AccessToken);
-    Console.WriteLine($" - API response: {resource}");
-    Console.ReadLine();
-}
+        // Prevent the console lifetime manager from writing status messages to the output stream.
+        services.Configure<ConsoleLifetimeOptions>(options => options.SuppressStatusMessages = true);
+    })
+    .UseConsoleLifetime()
+    .Build();
 
-catch (Exception exception)
-{
-    Console.WriteLine("+-------------------------------------------------------------------+");
-    Console.WriteLine(exception.Message);
-    Console.WriteLine(exception.InnerException?.Message);
-    Console.WriteLine(" - Make sure you started the authorization server.");
-    Console.WriteLine("+-------------------------------------------------------------------+");
-    Console.ReadLine();
-}
-
-static async Task<string> GetResourceAsync(HttpClient client, string token)
-{
-    using var request = new HttpRequestMessage(HttpMethod.Get, "https://localhost:44321/api/message");
-    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-    using var response = await client.SendAsync(request);
-    response.EnsureSuccessStatusCode();
-
-    return await response.Content.ReadAsStringAsync();
-}
+await host.RunAsync();
