@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Silent Callback</title>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/oidc-client-ts/2.0.2/browser/oidc-client-ts.min.js"></script>
+    <script src="./index.js"></script>
+    <script>
+        (async () => {
+            try {
+                await userManager.signinCallback();
+            } catch (e) {
+                console.error(e);
+            } finally {
+                window.location.replace('./index.html');
+            }
+        })();
+    </script>
+</body>
+</html>

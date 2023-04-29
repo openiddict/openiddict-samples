@@ -11,7 +11,7 @@ using OpenIddict.Client;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using static OpenIddict.Abstractions.OpenIddictExceptions;
 
-namespace Zirku.Client;
+namespace Zirku.Client1;
 
 public class InteractiveService : BackgroundService
 {

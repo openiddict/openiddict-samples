@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+    <button id="login-button">Login</button>
+    <button id="refresh-button">Refresh Token</button>
+    <p id="login-status"></p>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/oidc-client-ts/2.0.2/browser/oidc-client-ts.min.js"></script>
+    <script src="./index.js"></script>
+    <script>
+        document.getElementById('login-button').onclick = () => login();
+        document.getElementById('refresh-button').onclick = () => refreshToken();
+
+        (async () => {
+            const user = await userManager.getUser();
+            const loginStatusElement = document.getElementById('login-status');
+            if (user) {
+                const accessToken = user.access_token;
+
+                const response = await fetch('https://localhost:44342/api', {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                });
+                
+                loginStatusElement.innerText = await response.text();
+            }
+        })();
+    </script>
+</body>
+</html>

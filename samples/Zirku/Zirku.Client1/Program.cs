@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenIddict.Client;
-using Zirku.Client;
+using Zirku.Client1;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 var host = new HostBuilder()

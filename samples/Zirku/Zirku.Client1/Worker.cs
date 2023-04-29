@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Zirku.Client;
+namespace Zirku.Client1;
 
 public class Worker : IHostedService
 {
