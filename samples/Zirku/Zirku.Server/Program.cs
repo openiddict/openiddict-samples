@@ -105,7 +105,7 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-app.UseCors(b => b.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+app.UseCors(b => b.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5112"));
 app.UseHttpsRedirection();
 
 // Create new application registrations matching the values configured in Zirku.Client1 and Zirku.Api1.
@@ -146,43 +146,37 @@ await using (var scope = app.Services.CreateAsyncScope())
             });
         }
 
-        OpenIddictApplicationDescriptor spaClient = new()
+        if (await manager.FindByClientIdAsync("spa") is null)
         {
-            ClientId = "spa",
-            Type = ClientTypes.Public,
-            RedirectUris =
+            await manager.CreateAsync(new OpenIddictApplicationDescriptor
             {
-                new Uri("http://localhost:5112/index.html"),
-                new Uri("http://localhost:5112/signin-callback.html"),
-                new Uri("http://localhost:5112/signin-silent-callback.html"),
-            },
-            Permissions =
-            {
-                Permissions.Endpoints.Authorization,
-                Permissions.Endpoints.Logout,
-                Permissions.Endpoints.Token,
-                Permissions.GrantTypes.AuthorizationCode,
-                Permissions.GrantTypes.RefreshToken,
-                Permissions.ResponseTypes.Code,
-                Permissions.Scopes.Email,
-                Permissions.Scopes.Profile,
-                Permissions.Scopes.Roles,
-                Permissions.Prefixes.Scope + "api1",
-                Permissions.Prefixes.Scope + "api2"
-            },
-            Requirements =
-            {
-                Requirements.Features.ProofKeyForCodeExchange,
-            },
-        };
-        object existingSpaClient = await manager.FindByClientIdAsync(spaClient.ClientId!);
-        if (existingSpaClient == null)
-        {
-            await manager.CreateAsync(spaClient);
-        }
-        else
-        {
-            await manager.UpdateAsync(existingSpaClient, spaClient);
+                ClientId = "spa",
+                Type = ClientTypes.Public,
+                RedirectUris =
+                {
+                    new Uri("http://localhost:5112/index.html"),
+                    new Uri("http://localhost:5112/signin-callback.html"),
+                    new Uri("http://localhost:5112/signin-silent-callback.html"),
+                },
+                Permissions =
+                {
+                    Permissions.Endpoints.Authorization,
+                    Permissions.Endpoints.Logout,
+                    Permissions.Endpoints.Token,
+                    Permissions.GrantTypes.AuthorizationCode,
+                    Permissions.GrantTypes.RefreshToken,
+                    Permissions.ResponseTypes.Code,
+                    Permissions.Scopes.Email,
+                    Permissions.Scopes.Profile,
+                    Permissions.Scopes.Roles,
+                    Permissions.Prefixes.Scope + "api1",
+                    Permissions.Prefixes.Scope + "api2"
+                },
+                Requirements =
+                {
+                    Requirements.Features.ProofKeyForCodeExchange,
+                },
+            });
         }
 
         if (await manager.FindByClientIdAsync("resource_server_1") is null)

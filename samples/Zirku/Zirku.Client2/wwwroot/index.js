@@ -5,7 +5,6 @@ const userManager = new oidc.UserManager({
     scope: 'openid offline_access api1',
     client_id: 'spa',
     redirect_uri: window.location.origin + '/signin-callback.html',
-    silent_redirect_uri: window.location.origin + '/signin-silent-callback.html',
     response_type: 'code',
     userStore: new oidc.WebStorageStateStore({ store: window.localStorage }),
 });
@@ -17,10 +16,6 @@ function login() {
             hardcoded_identity_id: '1',
         },
     });
-}
-
-function logout() {
-    return userManager.signoutRedirect();
 }
 
 function refreshToken() {
