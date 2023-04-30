@@ -8,105 +8,104 @@ using Microsoft.Extensions.Hosting;
 using OpenIddict.Abstractions;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
-namespace Dantooine.Server
+namespace Dantooine.Server;
+
+public class Worker : IHostedService
 {
-    public class Worker : IHostedService
+    private readonly IServiceProvider _serviceProvider;
+
+    public Worker(IServiceProvider serviceProvider)
+        => _serviceProvider = serviceProvider;
+
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
-        private readonly IServiceProvider _serviceProvider;
+        using var scope = _serviceProvider.CreateScope();
 
-        public Worker(IServiceProvider serviceProvider)
-            => _serviceProvider = serviceProvider;
+        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        await context.Database.EnsureCreatedAsync(cancellationToken);
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        await RegisterApplicationsAsync(scope.ServiceProvider);
+        await RegisterScopesAsync(scope.ServiceProvider);
+
+        static async Task RegisterApplicationsAsync(IServiceProvider provider)
         {
-            using var scope = _serviceProvider.CreateScope();
+            var manager = provider.GetRequiredService<IOpenIddictApplicationManager>();
 
-            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            await context.Database.EnsureCreatedAsync(cancellationToken);
-
-            await RegisterApplicationsAsync(scope.ServiceProvider);
-            await RegisterScopesAsync(scope.ServiceProvider);
-
-            static async Task RegisterApplicationsAsync(IServiceProvider provider)
+            // API
+            if (await manager.FindByClientIdAsync("resource_server_1") == null)
             {
-                var manager = provider.GetRequiredService<IOpenIddictApplicationManager>();
-
-                // API
-                if (await manager.FindByClientIdAsync("resource_server_1") == null)
+                var descriptor = new OpenIddictApplicationDescriptor
                 {
-                    var descriptor = new OpenIddictApplicationDescriptor
+                    ClientId = "resource_server_1",
+                    ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342",
+                    Permissions =
                     {
-                        ClientId = "resource_server_1",
-                        ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342",
-                        Permissions =
-                        {
-                            Permissions.Endpoints.Introspection
-                        }
-                    };
+                        Permissions.Endpoints.Introspection
+                    }
+                };
 
-                    await manager.CreateAsync(descriptor);
-                }
-
-                // Blazor Hosted
-                if (await manager.FindByClientIdAsync("blazorcodeflowpkceclient") is null)
-                {
-                    await manager.CreateAsync(new OpenIddictApplicationDescriptor
-                    {
-                        ClientId = "blazorcodeflowpkceclient",
-                        ConsentType = ConsentTypes.Explicit,
-                        DisplayName = "Blazor code PKCE",
-                        PostLogoutRedirectUris =
-                        {
-                            new Uri("https://localhost:44348/signout-callback-oidc")
-                        },
-                        RedirectUris =
-                        {
-                            new Uri("https://localhost:44348/signin-oidc")
-                        },
-                        ClientSecret = "codeflow_pkce_client_secret",
-                        Permissions =
-                        {
-                            Permissions.Endpoints.Authorization,
-                            Permissions.Endpoints.Logout,
-                            Permissions.Endpoints.Token,
-                            Permissions.GrantTypes.AuthorizationCode,
-                            Permissions.ResponseTypes.Code,
-                            Permissions.Scopes.Email,
-                            Permissions.Scopes.Profile,
-                            Permissions.Scopes.Roles,
-                            Permissions.Prefixes.Scope + "api1"
-                        },
-                        Requirements =
-                        {
-                            Requirements.Features.ProofKeyForCodeExchange
-                        }
-                    });
-                }
+                await manager.CreateAsync(descriptor);
             }
 
-            static async Task RegisterScopesAsync(IServiceProvider provider)
+            // Blazor Hosted
+            if (await manager.FindByClientIdAsync("blazorcodeflowpkceclient") is null)
             {
-                var manager = provider.GetRequiredService<IOpenIddictScopeManager>();
-
-                if (await manager.FindByNameAsync("api1") is null)
+                await manager.CreateAsync(new OpenIddictApplicationDescriptor
                 {
-                    await manager.CreateAsync(new OpenIddictScopeDescriptor
+                    ClientId = "blazorcodeflowpkceclient",
+                    ConsentType = ConsentTypes.Explicit,
+                    DisplayName = "Blazor code PKCE",
+                    PostLogoutRedirectUris =
                     {
-                        DisplayName = "Dantooine API access",
-                        DisplayNames =
-                        {
-                            [CultureInfo.GetCultureInfo("fr-FR")] = "Accès à l'API de démo"
-                        },
-                        Name = "api1",
-                        Resources =
-                        {
-                            "resource_server_1"
-                        }
-                    });
-                }
+                        new Uri("https://localhost:44348/callback/logout/local")
+                    },
+                    RedirectUris =
+                    {
+                        new Uri("https://localhost:44348/callback/login/local")
+                    },
+                    ClientSecret = "codeflow_pkce_client_secret",
+                    Permissions =
+                    {
+                        Permissions.Endpoints.Authorization,
+                        Permissions.Endpoints.Logout,
+                        Permissions.Endpoints.Token,
+                        Permissions.GrantTypes.AuthorizationCode,
+                        Permissions.ResponseTypes.Code,
+                        Permissions.Scopes.Email,
+                        Permissions.Scopes.Profile,
+                        Permissions.Scopes.Roles,
+                        Permissions.Prefixes.Scope + "api1"
+                    },
+                    Requirements =
+                    {
+                        Requirements.Features.ProofKeyForCodeExchange
+                    }
+                });
             }
         }
 
-        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+        static async Task RegisterScopesAsync(IServiceProvider provider)
+        {
+            var manager = provider.GetRequiredService<IOpenIddictScopeManager>();
+
+            if (await manager.FindByNameAsync("api1") is null)
+            {
+                await manager.CreateAsync(new OpenIddictScopeDescriptor
+                {
+                    DisplayName = "Dantooine API access",
+                    DisplayNames =
+                    {
+                        [CultureInfo.GetCultureInfo("fr-FR")] = "Accès à l'API de démo"
+                    },
+                    Name = "api1",
+                    Resources =
+                    {
+                        "resource_server_1"
+                    }
+                });
+            }
+        }
     }
+
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }

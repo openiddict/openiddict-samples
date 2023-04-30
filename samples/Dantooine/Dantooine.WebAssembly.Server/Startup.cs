@@ -1,16 +1,23 @@
 using System;
 using System.IO;
+using System.Net.Http.Headers;
+using Dantooine.WebAssembly.Server.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using OpenIddict.Client;
 using Quartz;
-using Velusia.Client.Models;
+using Yarp.ReverseProxy.Transforms;
 using static OpenIddict.Abstractions.OpenIddictConstants;
+using static OpenIddict.Client.AspNetCore.OpenIddictClientAspNetCoreConstants;
 
-namespace Velusia.Client;
+namespace Dantooine.WebAssembly.Server;
 
 public class Startup
 {
@@ -24,12 +31,22 @@ public class Startup
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             // Configure the context to use sqlite.
-            options.UseSqlite($"Filename={Path.Combine(Path.GetTempPath(), "openiddict-velusia-client.sqlite3")}");
+            options.UseSqlite($"Filename={Path.Combine(Path.GetTempPath(), "openiddict-dantooine-webassembly-server.sqlite3")}");
 
             // Register the entity sets needed by OpenIddict.
             // Note: use the generic overload if you need
             // to replace the default OpenIddict entities.
             options.UseOpenIddict();
+        });
+
+        // Configure the antiforgery stack to allow extracting
+        // antiforgery tokens from the X-XSRF-TOKEN header.
+        services.AddAntiforgery(options =>
+        {
+            options.HeaderName = "X-XSRF-TOKEN";
+            options.Cookie.Name = "__Host-X-XSRF-TOKEN";
+            options.Cookie.SameSite = SameSiteMode.Strict;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         });
 
         services.AddAuthentication(options =>
@@ -102,11 +119,11 @@ public class Startup
                 // Add a client registration matching the client application definition in the server project.
                 options.AddRegistration(new OpenIddictClientRegistration
                 {
-                    Issuer = new Uri("https://localhost:44313/", UriKind.Absolute),
+                    Issuer = new Uri("https://localhost:44319/", UriKind.Absolute),
 
-                    ClientId = "mvc",
-                    ClientSecret = "901564A5-E7FE-42CB-B10D-61EF6A8F3654",
-                    Scopes = { Scopes.Email, Scopes.Profile },
+                    ClientId = "blazorcodeflowpkceclient",
+                    ClientSecret = "codeflow_pkce_client_secret",
+                    Scopes = { Scopes.Profile, "api1" },
 
                     // Note: to mitigate mix-up attacks, it's recommended to use a unique redirection endpoint
                     // URI per provider, unless all the registered providers support returning a special "iss"
@@ -117,30 +134,65 @@ public class Startup
                 });
             });
 
-        services.AddHttpClient();
-
         services.AddControllersWithViews();
+        services.AddRazorPages();
+
+        // Create an authorization policy used by YARP when forwarding requests
+        // from the WASM application to the Dantooine.Api resource server.
+        services.AddAuthorization(options => options.AddPolicy("CookieAuthenticationPolicy", builder =>
+        {
+            builder.AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme);
+            builder.RequireAuthenticatedUser();
+        }));
+
+        services.AddReverseProxy()
+            .LoadFromConfig(Configuration.GetSection("ReverseProxy"))
+            .AddTransforms(builder => builder.AddRequestTransform(async context =>
+            {
+                // Attach the access token retrieved from the authentication cookie.
+                //
+                // Note: in a real world application, the expiration date of the access token
+                // should be checked before sending a request to avoid getting a 401 response.
+                // Once expired, a new access token could be retrieved using the OAuth 2.0
+                // refresh token grant (which could be done transparently).
+                var token = await context.HttpContext.GetTokenAsync(
+                    scheme: CookieAuthenticationDefaults.AuthenticationScheme,
+                    tokenName: Tokens.BackchannelAccessToken);
+
+                context.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue(Schemes.Bearer, token);
+            }));
 
         // Register the worker responsible for creating the database used to store tokens.
         // Note: in a real world application, this step should be part of a setup script.
         services.AddHostedService<Worker>();
     }
 
-    public void Configure(IApplicationBuilder app)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        app.UseDeveloperExceptionPage();
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+            app.UseWebAssemblyDebugging();
+        }
+        else
+        {
+            app.UseExceptionHandler("/Error");
+        }
 
+        app.UseHttpsRedirection();
+        app.UseBlazorFrameworkFiles();
         app.UseStaticFiles();
 
         app.UseRouting();
-
         app.UseAuthentication();
         app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapRazorPages();
             endpoints.MapControllers();
-            endpoints.MapDefaultControllerRoute();
+            endpoints.MapReverseProxy();
+            endpoints.MapFallbackToPage("/_Host");
         });
     }
 }

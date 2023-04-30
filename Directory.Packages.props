@@ -65,7 +65,6 @@
       Note: the following references are exclusively used in the .NET 7.0 and ASP.NET Core 7.0 samples:
     -->
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.Negotiate"              Version="7.0.5"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect"          Version="7.0.5"   />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly"                Version="7.0.5"   />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="7.0.5"   />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Build"          Version="7.0.0"   />
@@ -81,7 +80,6 @@
     <PackageVersion Include="Microsoft.Extensions.Http"                                  Version="7.0.0"   />
     <PackageVersion Include="Microsoft.Extensions.Hosting"                               Version="7.0.1"   />
     <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design"           Version="7.0.6"   />
-    <PackageVersion Include="NetEscapades.AspNetCore.SecurityHeaders"                    Version="0.18.0"  />
     <PackageVersion Include="OpenIddict.Abstractions"                                    Version="4.3.0"   />
     <PackageVersion Include="OpenIddict.AspNetCore"                                      Version="4.3.0"   />
     <PackageVersion Include="OpenIddict.Client.SystemIntegration"                        Version="4.3.0"   />
@@ -93,7 +91,7 @@
     <PackageVersion Include="Quartz.Extensions.Hosting"                                  Version="3.5.0"   />
     <PackageVersion Include="Spectre.Console"                                            Version="0.46.0"  />
     <PackageVersion Include="System.Linq.Async"                                          Version="6.0.1"   />
-    <PackageVersion Include="Yarp.ReverseProxy"                                          Version="1.1.1"   />
+    <PackageVersion Include="Yarp.ReverseProxy"                                          Version="2.0.0"   />
   </ItemGroup>
 
 </Project>

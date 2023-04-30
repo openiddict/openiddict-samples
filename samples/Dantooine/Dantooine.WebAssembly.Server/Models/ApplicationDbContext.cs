@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Velusia.Client.Models;
+namespace Dantooine.WebAssembly.Server.Models;
 
 public class ApplicationDbContext : DbContext
 {

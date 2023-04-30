@@ -1,0 +1,43 @@
+﻿@page "/dantooineapi1"
+@using Dantooine.WebAssembly.Shared
+@inject IHttpClientFactory httpClientFactory
+@inject IJSRuntime JSRuntime
+
+<h1>Data retrieved from Dantooine API via YARP</h1>
+
+@if (apiData == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var data in apiData)
+            {
+                <tr>
+                    <td>@data</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private string[] apiData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var token = await JSRuntime.InvokeAsync<string>("getAntiForgeryToken");
+
+        var client = httpClientFactory.CreateClient("authorizedClient");
+        client.DefaultRequestHeaders.Add("X-XSRF-TOKEN", token);
+
+        apiData = await client.GetFromJsonAsync<string[]>("api/DantooineApi");
+    }
+}

@@ -114,10 +114,10 @@ public class Startup
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseEndpoints(options =>
+        app.UseEndpoints(endpoints =>
         {
-            options.MapControllers();
-            options.MapDefaultControllerRoute();
+            endpoints.MapControllers();
+            endpoints.MapDefaultControllerRoute();
         });
 
         app.UseWelcomePage();

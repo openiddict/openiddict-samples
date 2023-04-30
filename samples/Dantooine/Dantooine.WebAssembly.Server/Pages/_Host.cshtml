@@ -1,0 +1,47 @@
+﻿@page "/"
+@using Dantooine.WebAssembly.Client
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>OpenIddict Dantooine demo</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/app.css" rel="stylesheet" />
+    <link href="Dantooine.WebAssembly.Client.styles.css" rel="stylesheet" />
+    <link href="manifest.json" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+</head>
+<body>
+
+    <div id="app">
+        <!-- Spinner -->
+        <div class="spinner d-flex align-items-center justify-content-center spinner">
+            <div class="spinner-border text-success" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="_framework/blazor.webassembly.js" ></script>
+    <script src="antiForgeryToken.js" ></script>
+    @Html.AntiForgeryToken()
+</body>
+</html>

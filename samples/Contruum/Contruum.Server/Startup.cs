@@ -133,6 +133,6 @@ public class Startup
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseEndpoints(options => options.MapRazorPages());
+        app.UseEndpoints(endpoints => endpoints.MapRazorPages());
     }
 }

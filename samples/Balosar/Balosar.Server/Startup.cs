@@ -133,11 +133,11 @@ public class Startup
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseEndpoints(options =>
+        app.UseEndpoints(endpoints =>
         {
-            options.MapRazorPages();
-            options.MapControllers();
-            options.MapFallbackToFile("index.html");
+            endpoints.MapRazorPages();
+            endpoints.MapControllers();
+            endpoints.MapFallbackToFile("index.html");
         });
     }
 }
