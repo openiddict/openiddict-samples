@@ -34,7 +34,7 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-app.UseCors(b => b.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+app.UseCors(b => b.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5112"));
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
