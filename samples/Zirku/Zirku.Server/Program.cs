@@ -61,9 +61,11 @@ builder.Services.AddOpenIddict()
                .SetIntrospectionEndpointUris("introspect")
                .SetTokenEndpointUris("token");
 
-        // Note: this sample only uses the authorization code flow but you can enable
-        // the other flows if you need to support implicit, password or client credentials.
-        options.AllowAuthorizationCodeFlow();
+        // Note: this sample only uses the authorization code and refresh token
+        // flows but you can enable the other flows if you need to support implicit,
+        // password or client credentials.
+        options.AllowAuthorizationCodeFlow()
+            .AllowRefreshTokenFlow();
 
         // Register the encryption credentials. This sample uses a symmetric
         // encryption key that is shared between the server and the Api2 sample
@@ -98,13 +100,15 @@ builder.Services.AddOpenIddict()
         options.UseAspNetCore();
     });
 
+builder.Services.AddCors();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+app.UseCors(b => b.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5112"));
 app.UseHttpsRedirection();
 
-// Create new application registrations matching the values configured in Zirku.Client and Zirku.Api1.
+// Create new application registrations matching the values configured in Zirku.Client1 and Zirku.Api1.
 // Note: in a real world application, this step should be part of a setup script.
 await using (var scope = app.Services.CreateAsyncScope())
 {
@@ -139,6 +143,39 @@ await using (var scope = app.Services.CreateAsyncScope())
                     Permissions.Prefixes.Scope + "api1",
                     Permissions.Prefixes.Scope + "api2"
                 }
+            });
+        }
+
+        if (await manager.FindByClientIdAsync("spa") is null)
+        {
+            await manager.CreateAsync(new OpenIddictApplicationDescriptor
+            {
+                ClientId = "spa",
+                Type = ClientTypes.Public,
+                RedirectUris =
+                {
+                    new Uri("http://localhost:5112/index.html"),
+                    new Uri("http://localhost:5112/signin-callback.html"),
+                    new Uri("http://localhost:5112/signin-silent-callback.html"),
+                },
+                Permissions =
+                {
+                    Permissions.Endpoints.Authorization,
+                    Permissions.Endpoints.Logout,
+                    Permissions.Endpoints.Token,
+                    Permissions.GrantTypes.AuthorizationCode,
+                    Permissions.GrantTypes.RefreshToken,
+                    Permissions.ResponseTypes.Code,
+                    Permissions.Scopes.Email,
+                    Permissions.Scopes.Profile,
+                    Permissions.Scopes.Roles,
+                    Permissions.Prefixes.Scope + "api1",
+                    Permissions.Prefixes.Scope + "api2"
+                },
+                Requirements =
+                {
+                    Requirements.Features.ProofKeyForCodeExchange,
+                },
             });
         }
 
