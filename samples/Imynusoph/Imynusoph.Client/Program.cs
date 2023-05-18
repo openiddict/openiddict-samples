@@ -77,6 +77,8 @@ static async Task<(string AccessToken, string RefreshToken)> GetTokensAsync(ISer
 
     var (response, _) = await service.AuthenticateWithPasswordAsync(
         issuer  : new Uri("https://localhost:44382/", UriKind.Absolute),
+        /* N.B. you have to explicitly include an "offline_access" scope (Scopes.OfflineAccess)
+         * to be able to receive a refresh_token */
         scopes  : new[] { Scopes.OfflineAccess },
         username: email,
         password: password);
