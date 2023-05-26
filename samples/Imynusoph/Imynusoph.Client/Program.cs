@@ -75,6 +75,7 @@ static async Task<(string AccessToken, string RefreshToken)> GetTokensAsync(ISer
 {
     var service = provider.GetRequiredService<OpenIddictClientService>();
 
+    // Note: the "offline_access" scope must be requested and granted to receive a refresh token.
     var (response, _) = await service.AuthenticateWithPasswordAsync(
         issuer  : new Uri("https://localhost:44382/", UriKind.Absolute),
         scopes  : new[] { Scopes.OfflineAccess },
