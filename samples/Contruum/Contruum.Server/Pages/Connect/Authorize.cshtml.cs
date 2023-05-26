@@ -89,9 +89,7 @@ public class AuthorizeModel : PageModel
             identity.AddClaim(new Claim(Claims.AuthenticationContextReference, "1"));
         }
 
-        var principal = new ClaimsPrincipal(identity);
-
-        principal.SetScopes(new[]
+        identity.SetScopes(new[]
         {
             Scopes.OfflineAccess,
             Scopes.OpenId,
@@ -101,57 +99,54 @@ public class AuthorizeModel : PageModel
             Scopes.Profile
         }.Intersect(request.GetScopes()));
 
-        foreach (var claim in identity.Claims)
+        identity.SetDestinations(claim => claim.Type switch
         {
-            claim.SetDestinations(claim.Type switch
-            {
-                // Note: always include acr and auth_time in the identity token as they must be flowed
-                // from the authorization endpoint to the identity token returned from the token endpoint.
-                Claims.AuthenticationContextReference or
-                Claims.AuthenticationTime
-                    => ImmutableArray.Create(Destinations.IdentityToken),
+            // Note: always include acr and auth_time in the identity token as they must be flowed
+            // from the authorization endpoint to the identity token returned from the token endpoint.
+            Claims.AuthenticationContextReference or
+            Claims.AuthenticationTime
+                => ImmutableArray.Create(Destinations.IdentityToken),
 
-                // Note: when an authorization code or access token is returned, don't add the profile, email,
-                // phone and address claims to the identity tokens as they are returned from the userinfo endpoint.
-                Claims.Subject or
-                Claims.Name or
-                Claims.Gender or
-                Claims.GivenName or
-                Claims.MiddleName or
-                Claims.FamilyName or
-                Claims.Nickname or
-                Claims.PreferredUsername or
-                Claims.Birthdate or
-                Claims.Profile or
-                Claims.Picture or
-                Claims.Website or
-                Claims.Locale or
-                Claims.Zoneinfo or
-                Claims.UpdatedAt when principal.HasScope(Scopes.Profile) &&
-                    !request.HasResponseType(ResponseTypes.Code) &&
-                    !request.HasResponseType(ResponseTypes.Token)
-                    => ImmutableArray.Create(Destinations.AccessToken, Destinations.IdentityToken),
+            // Note: when an authorization code or access token is returned, don't add the profile, email,
+            // phone and address claims to the identity tokens as they are returned from the userinfo endpoint.
+            Claims.Subject or
+            Claims.Name or
+            Claims.Gender or
+            Claims.GivenName or
+            Claims.MiddleName or
+            Claims.FamilyName or
+            Claims.Nickname or
+            Claims.PreferredUsername or
+            Claims.Birthdate or
+            Claims.Profile or
+            Claims.Picture or
+            Claims.Website or
+            Claims.Locale or
+            Claims.Zoneinfo or
+            Claims.UpdatedAt when identity.HasScope(Scopes.Profile) &&
+                !request.HasResponseType(ResponseTypes.Code) &&
+                !request.HasResponseType(ResponseTypes.Token)
+                => ImmutableArray.Create(Destinations.AccessToken, Destinations.IdentityToken),
 
-                Claims.Email when principal.HasScope(Scopes.Email) &&
-                    !request.HasResponseType(ResponseTypes.Code) &&
-                    !request.HasResponseType(ResponseTypes.Token)
-                    => ImmutableArray.Create(Destinations.AccessToken, Destinations.IdentityToken),
+            Claims.Email when identity.HasScope(Scopes.Email) &&
+                !request.HasResponseType(ResponseTypes.Code) &&
+                !request.HasResponseType(ResponseTypes.Token)
+                => ImmutableArray.Create(Destinations.AccessToken, Destinations.IdentityToken),
 
-                Claims.PhoneNumber when principal.HasScope(Scopes.Phone) &&
-                    !request.HasResponseType(ResponseTypes.Code) &&
-                    !request.HasResponseType(ResponseTypes.Token)
-                    => ImmutableArray.Create(Destinations.AccessToken, Destinations.IdentityToken),
+            Claims.PhoneNumber when identity.HasScope(Scopes.Phone) &&
+                !request.HasResponseType(ResponseTypes.Code) &&
+                !request.HasResponseType(ResponseTypes.Token)
+                => ImmutableArray.Create(Destinations.AccessToken, Destinations.IdentityToken),
 
-                Claims.Address when principal.HasScope(Scopes.Address) &&
-                    !request.HasResponseType(ResponseTypes.Code) &&
-                    !request.HasResponseType(ResponseTypes.Token)
-                    => ImmutableArray.Create(Destinations.AccessToken, Destinations.IdentityToken),
+            Claims.Address when identity.HasScope(Scopes.Address) &&
+                !request.HasResponseType(ResponseTypes.Code) &&
+                !request.HasResponseType(ResponseTypes.Token)
+                => ImmutableArray.Create(Destinations.AccessToken, Destinations.IdentityToken),
 
-                _ => ImmutableArray.Create(Destinations.AccessToken)
-            });
-        }
+            _ => ImmutableArray.Create(Destinations.AccessToken)
+        });
 
         // Returning a SignInResult will ask OpenIddict to issue the appropriate access/identity tokens.
-        return SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        return SignIn(new ClaimsPrincipal(identity), OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }
 }
