@@ -6,10 +6,21 @@ on:
     tags: [ '*' ]
   pull_request:
     branches: [ dev, rel/* ]
+  workflow_dispatch:
+
+env:
+  DOTNET_MULTILEVEL_LOOKUP: 0
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION: 1
+  NUGET_XMLDOC_MODE: skip
+  TERM: xterm
+
+permissions:
+  contents: read
 
 jobs:
   build:
-    name: ${{ matrix.os }}
+    name: build-${{ matrix.os }}
     runs-on: ${{ matrix.os }}
 
     strategy:
