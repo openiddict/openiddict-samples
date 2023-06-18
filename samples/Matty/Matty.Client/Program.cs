@@ -43,7 +43,6 @@ var host = new HostBuilder()
                 options.AddRegistration(new OpenIddictClientRegistration
                 {
                     Issuer = new Uri("https://localhost:44321/", UriKind.Absolute),
-                    ProviderName = "Local",
 
                     ClientId = "device",
                     Scopes = { Scopes.Email, Scopes.Profile, Scopes.OfflineAccess }

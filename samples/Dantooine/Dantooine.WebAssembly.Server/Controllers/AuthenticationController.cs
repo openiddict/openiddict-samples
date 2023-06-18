@@ -16,12 +16,7 @@ public class AuthenticationController : Controller
     [HttpGet("~/login")]
     public ActionResult LogIn(string returnUrl)
     {
-        var properties = new AuthenticationProperties(new Dictionary<string, string>
-        {
-            // Note: when only one client is registered in the client options,
-            // setting the issuer property is not required and can be omitted.
-            [OpenIddictClientAspNetCoreConstants.Properties.Issuer] = "https://localhost:44319/"
-        })
+        var properties = new AuthenticationProperties
         {
             // Only allow local return URLs to prevent open redirect attacks.
             RedirectUri = Url.IsLocalUrl(returnUrl) ? returnUrl : "/"
@@ -48,10 +43,6 @@ public class AuthenticationController : Controller
 
         var properties = new AuthenticationProperties(new Dictionary<string, string>
         {
-            // Note: when only one client is registered in the client options,
-            // setting the issuer property is not required and can be omitted.
-            [OpenIddictClientAspNetCoreConstants.Properties.Issuer] = "https://localhost:44319/",
-
             // While not required, the specification encourages sending an id_token_hint
             // parameter containing an identity token returned by the server for this user.
             [OpenIddictClientAspNetCoreConstants.Properties.IdentityTokenHint] =

@@ -20,12 +20,7 @@ namespace Mortis.Client.Controllers
         {
             var context = HttpContext.GetOwinContext();
 
-            var properties = new AuthenticationProperties(new Dictionary<string, string>
-            {
-                // Note: when only one client is registered in the client options,
-                // setting the issuer property is not required and can be omitted.
-                [OpenIddictClientOwinConstants.Properties.Issuer] = "https://localhost:44349/"
-            })
+            var properties = new AuthenticationProperties
             {
                 // Only allow local return URLs to prevent open redirect attacks.
                 RedirectUri = Url.IsLocalUrl(returnUrl) ? returnUrl : "/"
@@ -55,10 +50,6 @@ namespace Mortis.Client.Controllers
 
             var properties = new AuthenticationProperties(new Dictionary<string, string>
             {
-                // Note: when only one client is registered in the client options,
-                // setting the issuer property is not required and can be omitted.
-                [OpenIddictClientOwinConstants.Properties.Issuer] = "https://localhost:44349/",
-
                 // While not required, the specification encourages sending an id_token_hint
                 // parameter containing an identity token returned by the server for this user.
                 [OpenIddictClientOwinConstants.Properties.IdentityTokenHint] =

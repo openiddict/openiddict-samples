@@ -35,14 +35,23 @@ public class InteractiveService : BackgroundService
 
         try
         {
-            // Ask OpenIddict to initiate the authentication flow (typically, by
-            // starting the system browser) and wait for the user to complete it.
-            var (_, response, principal) = await _service.AuthenticateInteractivelyAsync(
-                provider: "Local", cancellationToken: stoppingToken);
+            // Ask OpenIddict to initiate the authentication flow (typically, by starting the system browser).
+            var result = await _service.ChallengeInteractivelyAsync(new()
+            {
+                CancellationToken = stoppingToken
+            });
+
+            Console.WriteLine("System browser launched.");
+
+            // Wait for the user to complete the authorization process.
+            var response = await _service.AuthenticateInteractivelyAsync(new()
+            {
+                Nonce = result.Nonce
+            });
 
             Console.WriteLine("Claims:");
 
-            foreach (var claim in principal.Claims)
+            foreach (var claim in response.Principal.Claims)
             {
                 Console.WriteLine("{0}: {1}", claim.Type, claim.Value);
             }
@@ -50,7 +59,7 @@ public class InteractiveService : BackgroundService
             Console.WriteLine();
             Console.WriteLine("Access token:");
             Console.WriteLine();
-            Console.WriteLine(response.AccessToken);
+            Console.WriteLine(response.BackchannelAccessToken ?? response.FrontchannelAccessToken);
         }
 
         catch (OperationCanceledException)

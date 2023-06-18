@@ -37,12 +37,22 @@ public class InteractiveService : BackgroundService
 
         try
         {
-            // Ask OpenIddict to initiate the authentication flow (typically, by
-            // starting the system browser) and wait for the user to complete it.
-            var (_, response, _) = await _service.AuthenticateInteractivelyAsync(
-                provider: "Local", cancellationToken: stoppingToken);
+            // Ask OpenIddict to initiate the authentication flow (typically, by starting the system browser).
+            var result = await _service.ChallengeInteractivelyAsync(new()
+            {
+                CancellationToken = stoppingToken
+            });
 
-            Console.WriteLine("Your GitHub identifier is: {0}", await GetResourceAsync(response.AccessToken, stoppingToken));
+            Console.WriteLine("System browser launched.");
+
+            // Wait for the user to complete the authorization process.
+            var response = await _service.AuthenticateInteractivelyAsync(new()
+            {
+                Nonce = result.Nonce
+            });
+
+            Console.WriteLine("Your GitHub identifier is: {0}", await GetResourceAsync(
+                response.BackchannelAccessToken ?? response.FrontchannelAccessToken, stoppingToken));
         }
 
         catch (OperationCanceledException)
