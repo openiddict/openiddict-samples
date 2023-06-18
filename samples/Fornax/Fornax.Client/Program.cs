@@ -55,7 +55,6 @@ var host = new HostBuilder()
                 options.AddRegistration(new OpenIddictClientRegistration
                 {
                     Issuer = new Uri("https://localhost:44387/", UriKind.Absolute),
-                    ProviderName = "Local",
 
                     ClientId = "console_app",
                     RedirectUri = new Uri("http://localhost:7891/", UriKind.Absolute)

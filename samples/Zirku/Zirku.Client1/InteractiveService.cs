@@ -40,18 +40,28 @@ public class InteractiveService : BackgroundService
 
         try
         {
-            // Ask OpenIddict to initiate the authentication flow (typically, by
-            // starting the system browser) and wait for the user to complete it.
-            var (_, response, _) = await _service.AuthenticateInteractivelyAsync(
-                provider: "Local",
-                cancellationToken: stoppingToken,
-                parameters: new Dictionary<string, OpenIddictParameter>()
+            // Ask OpenIddict to initiate the authentication flow (typically, by starting the system browser).
+            var result = await _service.ChallengeInteractivelyAsync(new()
+            {
+                AdditionalAuthorizationRequestParameters = new()
                 {
                     ["hardcoded_identity_id"] = "1"
-                });
+                },
+                CancellationToken = stoppingToken
+            });
 
-            Console.WriteLine("Response from Api1: {0}", await GetResourceFromApi1Async(response.AccessToken, stoppingToken));
-            Console.WriteLine("Response from Api2: {0}", await GetResourceFromApi2Async(response.AccessToken, stoppingToken));
+            Console.WriteLine("System browser launched.");
+
+            // Wait for the user to complete the authorization process.
+            var response = await _service.AuthenticateInteractivelyAsync(new()
+            {
+                Nonce = result.Nonce
+            });
+
+            Console.WriteLine("Response from Api1: {0}", await GetResourceFromApi1Async(
+                response.BackchannelAccessToken ?? response.FrontchannelAccessToken, stoppingToken));
+            Console.WriteLine("Response from Api2: {0}", await GetResourceFromApi2Async(
+                response.BackchannelAccessToken ?? response.FrontchannelAccessToken, stoppingToken));
         }
 
         catch (OperationCanceledException)

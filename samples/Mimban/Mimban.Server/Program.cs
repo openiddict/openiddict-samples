@@ -11,7 +11,6 @@ using OpenIddict.Server.AspNetCore;
 using OpenIddict.Validation.AspNetCore;
 using Quartz;
 using static OpenIddict.Abstractions.OpenIddictConstants;
-using static OpenIddict.Client.WebIntegration.OpenIddictClientWebIntegrationConstants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,7 +65,7 @@ builder.Services.AddOpenIddict()
         // parameter containing their URL as part of authorization responses. For more information,
         // see https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#section-4.4.
         options.UseWebProviders()
-               .UseGitHub(options =>
+               .AddGitHub(options =>
                {
                    options.SetClientId("c4ade52327b01ddacff3")
                           .SetClientSecret("da6bed851b75e317bf6b2cb67013679d9467c122")
@@ -158,7 +157,7 @@ app.MapMethods("callback/login/github", new[] { HttpMethods.Get, HttpMethods.Pos
     // Resolve the claims extracted by OpenIddict from the userinfo response returned by GitHub.
     var result = await context.AuthenticateAsync(OpenIddictClientAspNetCoreDefaults.AuthenticationScheme);
 
-    var identity = new ClaimsIdentity(Providers.GitHub);
+    var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
     identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, result.Principal!.FindFirst("id")!.Value));
 
     var properties = new AuthenticationProperties

@@ -35,26 +35,30 @@ public class InteractiveService : BackgroundService
         {
             // Ask OpenIddict to send a device authorization request and write
             // the complete verification endpoint URI to the console output.
-            var response = await _service.ChallengeUsingDeviceAsync("Local", cancellationToken: stoppingToken);
-            if (response.VerificationUriComplete is not null)
+            var result = await _service.ChallengeUsingDeviceAsync(new()
+            {
+                CancellationToken = stoppingToken
+            });
+
+            if (result.VerificationUriComplete is not null)
             {
                 AnsiConsole.MarkupLineInterpolated(
-                    $"[yellow]Please visit [link]{response.VerificationUriComplete}[/] and confirm the displayed code is '{response.UserCode}' to complete the authentication demand.[/]");
+                    $"[yellow]Please visit [link]{result.VerificationUriComplete}[/] and confirm the displayed code is '{result.UserCode}' to complete the authentication demand.[/]");
             }
 
             else
             {
                 AnsiConsole.MarkupLineInterpolated(
-                    $"[yellow]Please visit [link]{response.VerificationUri}[/] and enter '{response.UserCode}' to complete the authentication demand.[/]");
+                    $"[yellow]Please visit [link]{result.VerificationUri}[/] and enter '{result.UserCode}' to complete the authentication demand.[/]");
             }
 
-            using var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
-            cancellationTokenSource.CancelAfter(response.ExpiresIn < TimeSpan.FromMinutes(5) ?
-                response.ExpiresIn : TimeSpan.FromMinutes(5));
-
             // Wait for the user to complete the demand on the other device.
-            (_, var principal) = await _service.AuthenticateWithDeviceAsync("Local",
-                response.DeviceCode, cancellationToken: cancellationTokenSource.Token);
+            var principal = (await _service.AuthenticateWithDeviceAsync(new()
+            {
+                DeviceCode = result.DeviceCode,
+                Interval = result.Interval,
+                Timeout = result.ExpiresIn < TimeSpan.FromMinutes(5) ? result.ExpiresIn : TimeSpan.FromMinutes(5)
+            })).Principal;
 
             AnsiConsole.MarkupLine("[green]Authentication successful:[/]");
 
