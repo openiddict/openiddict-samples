@@ -3,7 +3,6 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Client.AspNetCore;
@@ -23,8 +22,9 @@ public class HomeController : Controller
     [Authorize, HttpPost("~/")]
     public async Task<ActionResult> Index(CancellationToken cancellationToken)
     {
-        var token = await HttpContext.GetTokenAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-            OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken);
+        // For scenarios where the default authentication handler configured in the ASP.NET Core
+        // authentication options shouldn't be used, a specific scheme can be specified here.
+        var token = await HttpContext.GetTokenAsync(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken);
 
         using var client = _httpClientFactory.CreateClient();
 

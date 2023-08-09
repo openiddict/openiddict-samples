@@ -157,7 +157,7 @@ app.MapMethods("callback/login/github", new[] { HttpMethods.Get, HttpMethods.Pos
     // Resolve the claims extracted by OpenIddict from the userinfo response returned by GitHub.
     var result = await context.AuthenticateAsync(OpenIddictClientAspNetCoreDefaults.AuthenticationScheme);
 
-    var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+    var identity = new ClaimsIdentity(authenticationType: "ExternalLogin");
     identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, result.Principal!.FindFirst("id")!.Value));
 
     var properties = new AuthenticationProperties
@@ -165,14 +165,19 @@ app.MapMethods("callback/login/github", new[] { HttpMethods.Get, HttpMethods.Pos
         RedirectUri = result.Properties!.RedirectUri
     };
 
-    return Results.SignIn(new ClaimsPrincipal(identity), properties, CookieAuthenticationDefaults.AuthenticationScheme);
+    // For scenarios where the default sign-in handler configured in the ASP.NET Core
+    // authentication options shouldn't be used, a specific scheme can be specified here.
+    return Results.SignIn(new ClaimsPrincipal(identity), properties);
 });
 
 app.MapGet("/authorize", async (HttpContext context) =>
 {
     // Resolve the claims stored in the cookie created after the GitHub authentication dance.
     // If the principal cannot be found, trigger a new challenge to redirect the user to GitHub.
-    var principal = (await context.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme))?.Principal;
+    //
+    // For scenarios where the default authentication handler configured in the ASP.NET Core
+    // authentication options shouldn't be used, a specific scheme can be specified here.
+    var principal = (await context.AuthenticateAsync())?.Principal;
     if (principal is null)
     {
         var properties = new AuthenticationProperties

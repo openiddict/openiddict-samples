@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using OpenIddict.Abstractions;
 using OpenIddict.Client.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -31,7 +32,10 @@ public class AuthenticationController : Controller
     {
         // Retrieve the identity stored in the local authentication cookie. If it's not available,
         // this indicate that the user is already logged out locally (or has not logged in yet).
-        var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        //
+        // For scenarios where the default authentication handler configured in the ASP.NET Core
+        // authentication options shouldn't be used, a specific scheme can be specified here.
+        var result = await HttpContext.AuthenticateAsync();
         if (result is not { Succeeded: true })
         {
             // Only allow local return URLs to prevent open redirect attacks.
@@ -39,7 +43,10 @@ public class AuthenticationController : Controller
         }
 
         // Remove the local authentication cookie before triggering a redirection to the remote server.
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        //
+        // For scenarios where the default sign-out handler configured in the ASP.NET Core
+        // authentication options shouldn't be used, a specific scheme can be specified here.
+        await HttpContext.SignOutAsync();
 
         var properties = new AuthenticationProperties(new Dictionary<string, string>
         {
@@ -93,47 +100,32 @@ public class AuthenticationController : Controller
         // Such identities cannot be used as-is to build an authentication cookie in ASP.NET Core (as the
         // antiforgery stack requires at least a name claim to bind CSRF cookies to the user's identity) but
         // the access/refresh tokens can be retrieved using result.Properties.GetTokens() to make API calls.
-        if (result.Principal.Identity is not ClaimsIdentity { IsAuthenticated: true })
+        if (result.Principal is not ClaimsPrincipal { Identity.IsAuthenticated: true })
         {
             throw new InvalidOperationException("The external authorization data cannot be used for authentication.");
         }
 
         // Build an identity based on the external claims and that will be used to create the authentication cookie.
-        //
-        // By default, all claims extracted during the authorization dance are available. The claims collection stored
-        // in the cookie can be filtered out or mapped to different names depending the claim name or its issuer.
-        var claims = new List<Claim>(result.Principal.Claims
-            .Select(claim => claim switch
-            {
-                // Map the standard "sub" and custom "id" claims to ClaimTypes.NameIdentifier, which is
-                // the default claim type used by .NET and is required by the antiforgery components.
-                { Type: Claims.Subject }
-                    => new Claim(ClaimTypes.NameIdentifier, claim.Value, claim.ValueType, claim.Issuer),
+        var identity = new ClaimsIdentity(authenticationType: "ExternalLogin");
 
-                // Map the standard "name" claim to ClaimTypes.Name.
-                { Type: Claims.Name }
-                    => new Claim(ClaimTypes.Name, claim.Value, claim.ValueType, claim.Issuer),
+        // By default, OpenIddict will automatically try to map the email/name and name identifier claims from
+        // their standard OpenID Connect or provider-specific equivalent, if available. If needed, additional
+        // claims can be resolved from the external identity and copied to the final authentication cookie.
+        identity.SetClaim(ClaimTypes.Email, result.Principal.GetClaim(ClaimTypes.Email))
+                .SetClaim(ClaimTypes.Name, result.Principal.GetClaim(ClaimTypes.Name))
+                .SetClaim(ClaimTypes.NameIdentifier, result.Principal.GetClaim(ClaimTypes.NameIdentifier));
 
-                _ => claim
-            })
-            .Where(claim => claim switch
-            {
-                // Preserve the basic claims that are necessary for the application to work correctly.
-                { Type: ClaimTypes.NameIdentifier or ClaimTypes.Name } => true,
-
-                // Don't preserve the other claims.
-                _ => false
-            }));
-
-        var identity = new ClaimsIdentity(claims,
-            authenticationType: CookieAuthenticationDefaults.AuthenticationScheme,
-            nameType: ClaimTypes.Name,
-            roleType: ClaimTypes.Role);
+        // Preserve the registration identifier to be able to resolve it later.
+        identity.SetClaim(Claims.Private.RegistrationId, result.Principal.GetClaim(Claims.Private.RegistrationId));
 
         // Build the authentication properties based on the properties that were added when the challenge was triggered.
-        var properties = new AuthenticationProperties(result.Properties.Items);
+        var properties = new AuthenticationProperties(result.Properties.Items)
+        {
+            RedirectUri = result.Properties.RedirectUri ?? "/"
+        };
 
         // If needed, the tokens returned by the authorization server can be stored in the authentication cookie.
+        //
         // To make cookies less heavy, tokens that are not used are filtered out before creating the cookie.
         properties.StoreTokens(result.Properties.GetTokens().Where(token => token switch
         {
@@ -148,9 +140,12 @@ public class AuthenticationController : Controller
             _ => false
         }));
 
-        // Ask the cookie authentication handler to return a new cookie and redirect
-        // the user agent to the return URL stored in the authentication properties.
-        return SignIn(new ClaimsPrincipal(identity), properties, CookieAuthenticationDefaults.AuthenticationScheme);
+        // Ask the default sign-in handler to return a new cookie and redirect the
+        // user agent to the return URL stored in the authentication properties.
+        //
+        // For scenarios where the default sign-in handler configured in the ASP.NET Core
+        // authentication options shouldn't be used, a specific scheme can be specified here.
+        return SignIn(new ClaimsPrincipal(identity), properties);
     }
 
     // Note: this controller uses the same callback action for all providers
