@@ -15,6 +15,7 @@ This repository contains samples demonstrating **how to use [OpenIddict](https:/
   - [Velusia](samples/Velusia): authorization code flow demo, with an ASP.NET Core application acting as the client.
   - [Weytta](samples/Weytta): authorization code flow with Integrated Windows Authentication support and a .NET console acting as the client.
   - [Zirku](samples/Zirku): authorization code flow demo using minimal APIs with 2 hard-coded user identities, a .NET console and a SPA acting as the clients and two API projects using introspection (Api1) and local validation (Api2).
+  - [Sandbox](https://github.com/kevinchalet/openiddict-core/tree/maui_winui_sample/sandbox): .net maui sample.
 
 ## OWIN/ASP.NET 4.8 samples
   - [Fornax](samples/Fornax): authorization code flow demo using ASP.NET Web Forms 4.8 and OWIN/Katana, with a .NET console acting as the client.
