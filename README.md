@@ -27,6 +27,8 @@ This repository contains samples demonstrating **how to use [OpenIddict](https:/
 
   - **[Angular and Blazor samples](https://github.com/damienbod/AspNetCoreOpeniddict)** by [Damien Bowden](https://github.com/damienbod)
 
+  - **[Experimental MAUI (WinUI-only) sample](https://github.com/kevinchalet/openiddict-core/tree/maui_winui_sample/sandbox/OpenIddict.Sandbox.Maui.Client)** by [Kévin Chalet](https://github.com/kevinchalet)
+
 ## Certification
 
 Unlike many other identity providers, **OpenIddict is not a turnkey solution but a framework that requires writing custom code**
