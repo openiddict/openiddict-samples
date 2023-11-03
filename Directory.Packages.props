@@ -23,8 +23,8 @@
     <PackageVersion Include="Autofac.WebApi2.Owin"                                       Version="6.0.0"   />
     <PackageVersion Include="jQuery"                                                     Version="3.6.0"   />
     <PackageVersion Include="Microsoft.AspNet.FriendlyUrls"                              Version="1.0.2"   />
-    <PackageVersion Include="Microsoft.AspNet.Identity.EntityFramework"                  Version="2.2.3"   />
-    <PackageVersion Include="Microsoft.AspNet.Identity.Owin"                             Version="2.2.3"   />
+    <PackageVersion Include="Microsoft.AspNet.Identity.EntityFramework"                  Version="2.2.4"   />
+    <PackageVersion Include="Microsoft.AspNet.Identity.Owin"                             Version="2.2.4"   />
     <PackageVersion Include="Microsoft.AspNet.Mvc"                                       Version="5.2.9"   />
     <PackageVersion Include="Microsoft.AspNet.ScriptManager.MSAjax"                      Version="5.0.0"   />
     <PackageVersion Include="Microsoft.AspNet.ScriptManager.WebForms"                    Version="5.0.0"   />
