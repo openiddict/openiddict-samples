@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <UserSecretsId>Balosar.Server-22C6183C-4927-4801-90E6-4AC1E79183B5</UserSecretsId>
   </PropertyGroup>
 
