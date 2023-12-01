@@ -102,8 +102,16 @@ public class Startup
                        {
                            options.SetClientId("c4ade52327b01ddacff3")
                                   .SetClientSecret("da6bed851b75e317bf6b2cb67013679d9467c122")
-                                  .SetRedirectUri("callback/login/github");
-                       });
+                                  .SetRedirectUri("callback/login/github")
+                                  .AddScopes(Scopes.Email); // Will work only if github user has chosen to make their email public on their profile
+                    })
+                    .AddGoogle(googleConfig =>
+                    {
+                        googleConfig.SetClientId("Add Your Google Client ID here");
+                        googleConfig.SetClientSecret("Add your Google Client Secret here");
+                        googleConfig.SetRedirectUri("callback/login/google");
+                        googleConfig.AddScopes(Scopes.Email, Scopes.Profile, Scopes.OpenId);
+                    });
             })
 
             // Register the OpenIddict server components.
