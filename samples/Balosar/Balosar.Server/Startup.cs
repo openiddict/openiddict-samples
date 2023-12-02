@@ -64,6 +64,43 @@ public class Startup
                  options.UseQuartz();
              })
 
+            // Register the OpenIddict client components.
+            .AddClient(options =>
+            {
+                // Note: this sample uses the code flow, but you can enable the other flows if necessary.
+                options.AllowAuthorizationCodeFlow();
+
+                // Register the signing and encryption credentials used to protect
+                // sensitive data like the state tokens produced by OpenIddict.
+                options.AddDevelopmentEncryptionCertificate()
+                       .AddDevelopmentSigningCertificate();
+
+                // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
+                options.UseAspNetCore()
+                       .EnableStatusCodePagesIntegration()
+                       .EnableRedirectionEndpointPassthrough();
+
+                // Register the System.Net.Http integration and use the identity of the current
+                // assembly as a more specific user agent, which can be useful when dealing with
+                // providers that use the user agent as a way to throttle requests (e.g Reddit).
+                options.UseSystemNetHttp()
+                       .SetProductInformation(typeof(Startup).Assembly);
+
+                // Register the Web providers integrations.
+                //
+                // Note: to mitigate mix-up attacks, it's recommended to use a unique redirection endpoint
+                // URI per provider, unless all the registered providers support returning a special "iss"
+                // parameter containing their URL as part of authorization responses. For more information,
+                // see https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics#section-4.4.
+                options.UseWebProviders()
+                       .AddGitHub(options =>
+                       {
+                           options.SetClientId("c4ade52327b01ddacff3")
+                                  .SetClientSecret("da6bed851b75e317bf6b2cb67013679d9467c122")
+                                  .SetRedirectUri("callback/login/github");
+                       });
+            })
+
             // Register the OpenIddict server components.
             .AddServer(options =>
             {
