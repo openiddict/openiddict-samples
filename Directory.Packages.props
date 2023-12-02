@@ -46,8 +46,8 @@
     <PackageVersion Include="Microsoft.Owin.Security.OpenIdConnect"                      Version="4.2.2"   />
     <PackageVersion Include="Microsoft.Owin.Security.Twitter"                            Version="4.2.2"   />
     <PackageVersion Include="Microsoft.Web.Infrastructure"                               Version="1.0.0"   />
-    <PackageVersion Include="OpenIddict.EntityFramework"                                 Version="4.10.0"  />
-    <PackageVersion Include="OpenIddict.Owin"                                            Version="4.10.0"  />
+    <PackageVersion Include="OpenIddict.EntityFramework"                                 Version="4.10.1"  />
+    <PackageVersion Include="OpenIddict.Owin"                                            Version="4.10.1"  />
     <PackageVersion Include="WebGrease"                                                  Version="1.6.0"   />
   </ItemGroup>
 
@@ -80,14 +80,14 @@
     <PackageVersion Include="Microsoft.Extensions.Http"                                  Version="8.0.0"   />
     <PackageVersion Include="Microsoft.Extensions.Hosting"                               Version="8.0.0"   />
     <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design"           Version="8.0.0"   />
-    <PackageVersion Include="OpenIddict.Abstractions"                                    Version="4.10.0"  />
-    <PackageVersion Include="OpenIddict.AspNetCore"                                      Version="4.10.0"  />
-    <PackageVersion Include="OpenIddict.Client.SystemIntegration"                        Version="4.10.0"  />
-    <PackageVersion Include="OpenIddict.Client.SystemNetHttp"                            Version="4.10.0"  />
-    <PackageVersion Include="OpenIddict.EntityFrameworkCore"                             Version="4.10.0"  />
-    <PackageVersion Include="OpenIddict.Quartz"                                          Version="4.10.0"  />
-    <PackageVersion Include="OpenIddict.Validation.AspNetCore"                           Version="4.10.0"  />
-    <PackageVersion Include="OpenIddict.Validation.SystemNetHttp"                        Version="4.10.0"  />
+    <PackageVersion Include="OpenIddict.Abstractions"                                    Version="4.10.1"  />
+    <PackageVersion Include="OpenIddict.AspNetCore"                                      Version="4.10.1"  />
+    <PackageVersion Include="OpenIddict.Client.SystemIntegration"                        Version="4.10.1"  />
+    <PackageVersion Include="OpenIddict.Client.SystemNetHttp"                            Version="4.10.1"  />
+    <PackageVersion Include="OpenIddict.EntityFrameworkCore"                             Version="4.10.1"  />
+    <PackageVersion Include="OpenIddict.Quartz"                                          Version="4.10.1"  />
+    <PackageVersion Include="OpenIddict.Validation.AspNetCore"                           Version="4.10.1"  />
+    <PackageVersion Include="OpenIddict.Validation.SystemNetHttp"                        Version="4.10.1"  />
     <PackageVersion Include="Quartz.Extensions.Hosting"                                  Version="3.5.0"   />
     <PackageVersion Include="Spectre.Console"                                            Version="0.46.0"  />
     <PackageVersion Include="System.Linq.Async"                                          Version="6.0.1"   />
