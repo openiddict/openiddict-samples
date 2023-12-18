@@ -32,7 +32,7 @@ public class Worker : IHostedService
                 ClientId = "balosar-blazor-client",
                 ConsentType = ConsentTypes.Explicit,
                 DisplayName = "Blazor client application",
-                Type = ClientTypes.Public,
+                ClientType = ClientTypes.Public,
                 PostLogoutRedirectUris =
                 {
                     new Uri("https://localhost:44310/authentication/logout-callback")

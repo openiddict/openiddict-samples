@@ -151,7 +151,7 @@ await using (var scope = app.Services.CreateAsyncScope())
             await manager.CreateAsync(new OpenIddictApplicationDescriptor
             {
                 ClientId = "spa",
-                Type = ClientTypes.Public,
+                ClientType = ClientTypes.Public,
                 RedirectUris =
                 {
                     new Uri("http://localhost:5112/index.html"),
