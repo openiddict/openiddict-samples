@@ -55,7 +55,7 @@ If you're not a sponsor, you can post your questions on Gitter or StackOverflow:
 - **Gitter: [https://app.gitter.im/#/room/#openiddict_openiddict-core:gitter.im](https://app.gitter.im/#/room/#openiddict_openiddict-core:gitter.im)**
 - **StackOverflow: [https://stackoverflow.com/questions/tagged/openiddict](https://stackoverflow.com/questions/tagged/openiddict)**
 
-> **Note**
+> [!IMPORTANT]
 > With OpenIddict 5.0 being now generally available, the previous version, OpenIddict 4.0, stops being supported and won't receive bug
 > fixes or security updates. As such, it is recommended to migrate to OpenIddict 5.0 to continue receiving bug and security fixes.
 > 
