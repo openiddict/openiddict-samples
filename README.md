@@ -49,19 +49,18 @@ You should receive a response within 24 hours. If for some reason you do not, pl
 
 ## Support
 
-If you need support, please make sure you [sponsor the project](https://github.com/sponsors/kevinchalet) before creating a GitHub ticket.
-If you're not a sponsor, you can post your questions on Gitter or StackOverflow:
+If you need support, please first make sure you're [sponsoring the project](https://github.com/sponsors/kevinchalet).
+Depending on the tier you selected, you can open a GitHub ticket or send an email to contact@openiddict.com for private support.
 
-- **Gitter: [https://app.gitter.im/#/room/#openiddict_openiddict-core:gitter.im](https://app.gitter.im/#/room/#openiddict_openiddict-core:gitter.im)**
-- **StackOverflow: [https://stackoverflow.com/questions/tagged/openiddict](https://stackoverflow.com/questions/tagged/openiddict)**
+Alternatively, you can also post your question on [Gitter](https://app.gitter.im/#/room/#openiddict_openiddict-core:gitter.im).
 
 > [!IMPORTANT]
-> With OpenIddict 5.0 being now generally available, the previous version, OpenIddict 4.0, stops being supported and won't receive bug
-> fixes or security updates. As such, it is recommended to migrate to OpenIddict 5.0 to continue receiving bug and security fixes.
+> With OpenIddict 5.x being now generally available, the previous version, OpenIddict 4.x, stops being supported and won't receive bug
+> fixes or security updates. As such, it is recommended to migrate to OpenIddict 5.x to continue receiving bug and security fixes.
 > 
 > **There are, however, two exceptions to this policy**:
->   - **ABP Framework 7.0 users will still receive patches for OpenIddict 4.x for as long as ABP Framework 7.0 itself is supported by Volosoft**
->   (typically a year following the release of ABP 8.0), whether they have a commercial ABP license or just use the free packages.
+>   - **ABP Framework 7.x users will still receive patches for OpenIddict 4.x for as long as ABP Framework 7.x itself is supported by Volosoft**
+>   (typically a year following the release of ABP 8.x), whether they have a commercial ABP license or just use the free packages.
 > 
 >   - **OpenIddict sponsors who have opted for a $250+/month sponsorship are now offered extended support:**
 >     - $250/month sponsors get full support for OpenIddict 4.x until June 18, 2024 (6 months).
