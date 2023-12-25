@@ -38,6 +38,7 @@ While a reference implementation could be submitted as-is, **this wouldn't guara
 
 Instead, **developers are encouraged to execute the conformance tests against their own deployment** once they've implemented their own logic.
 
+> [!TIP]
 > This repository contains [a dedicated sample](https://github.com/openiddict/openiddict-samples/tree/dev/samples/Contruum/Contruum.Server) specially designed to be used
 > with the OpenID Connect Provider Certification tool and demonstrate that OpenIddict can be easily used in a certified implementation. To allow executing the certification tests
 > as fast as possible, that sample doesn't include any membership or consent feature (two hardcoded identities are proposed for tests that require switching between identities).
