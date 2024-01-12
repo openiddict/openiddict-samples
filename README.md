@@ -7,15 +7,18 @@ This repository contains samples demonstrating **how to use [OpenIddict](https:/
   - [Aridka](samples/Aridka): client credentials demo, with a .NET console acting as the client.
   - [Balosar](samples/Balosar): authorization code flow demo, with a Blazor WASM application acting as the client.
   - [Contruum](samples/Contruum): conformance tests project using Razor Pages and 2 hardcoded user identities, meant to be used with [the OIDC certification suite](https://www.certification.openid.net/).
-  - [Dantooine](samples/Dantooine): BFF Blazor WASM application hosted in ASP.NET Core with YARP proxy for downstream API.
+  - [Dantooine](samples/Dantooine): backend-for-frontend (BFF) Blazor WASM application hosted in ASP.NET Core with Microsoft YARP for downstream API.
   - [Hollastin](samples/Hollastin): resource owner password credentials demo, with a .NET console acting as the client.
   - [Imynusoph](samples/Imynusoph): refresh token grant demo, with a .NET console acting as the client.
   - [Matty](samples/Matty): device authorization flow demo, with a .NET console acting as the client.
   - [Mimban](samples/Mimban): authorization code flow demo using minimal APIs and GitHub delegation for user authentication, with a .NET console acting as the client.
-  - [Sorgan](samples/Sorgan): Windows Forms and Windows Presentation Foundation clients using GitHub for user authentication.
   - [Velusia](samples/Velusia): authorization code flow demo, with an ASP.NET Core application acting as the client.
   - [Weytta](samples/Weytta): authorization code flow with Integrated Windows Authentication support and a .NET console acting as the client.
   - [Zirku](samples/Zirku): authorization code flow demo using minimal APIs with 2 hard-coded user identities, a .NET console and a SPA acting as the clients and two API projects using introspection (Api1) and local validation (Api2).
+
+## .NET samples
+
+  - [Sorgan](samples/Sorgan): Windows Forms, Windows Presentation Foundation and Blazor Hybrid clients using GitHub for user authentication.
 
 ## OWIN/ASP.NET 4.8 samples
   - [Fornax](samples/Fornax): authorization code flow demo using ASP.NET Web Forms 4.8 and OWIN/Katana, with a .NET console acting as the client.

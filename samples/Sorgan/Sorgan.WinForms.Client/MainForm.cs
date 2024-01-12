@@ -1,4 +1,5 @@
 using System;
+using System.Security.Claims;
 using System.Threading;
 using System.Windows.Forms;
 using Dapplo.Microsoft.Extensions.Hosting.WinForms;
@@ -48,7 +49,7 @@ public partial class MainForm : Form, IWinFormsShell
                     Caption = "Authentication successful",
                     Heading = "Authentication successful",
                     Icon = TaskDialogIcon.ShieldSuccessGreenBar,
-                    Text = $"Welcome, {principal.FindFirst(Claims.Name)!.Value}."
+                    Text = $"Welcome, {principal.FindFirst(ClaimTypes.Name)!.Value}."
                 });
             }
 
