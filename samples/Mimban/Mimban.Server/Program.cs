@@ -156,7 +156,7 @@ app.UseAuthorization();
 app.MapGet("/api", [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     (ClaimsPrincipal user) => user.Identity!.Name);
 
-app.MapMethods("callback/login/github", new[] { HttpMethods.Get, HttpMethods.Post }, async (HttpContext context) =>
+app.MapMethods("callback/login/github", [HttpMethods.Get, HttpMethods.Post], async (HttpContext context) =>
 {
     // Resolve the claims extracted by OpenIddict from the userinfo response returned by GitHub.
     var result = await context.AuthenticateAsync(OpenIddictClientAspNetCoreDefaults.AuthenticationScheme);
@@ -189,7 +189,7 @@ app.MapGet("/authorize", async (HttpContext context) =>
             RedirectUri = context.Request.GetEncodedUrl()
         };
 
-        return Results.Challenge(properties, new[] { OpenIddictClientAspNetCoreDefaults.AuthenticationScheme });
+        return Results.Challenge(properties, [OpenIddictClientAspNetCoreDefaults.AuthenticationScheme]);
     }
 
     var identifier = principal.FindFirst(ClaimTypes.NameIdentifier)!.Value;

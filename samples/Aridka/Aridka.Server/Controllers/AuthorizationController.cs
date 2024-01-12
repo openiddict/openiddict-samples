@@ -82,11 +82,9 @@ public class AuthorizationController : Controller
 
         return claim.Type switch
         {
-            Claims.Name or 
-            Claims.Subject 
-                => new[] { Destinations.AccessToken, Destinations.IdentityToken },
+            Claims.Name or Claims.Subject => [Destinations.AccessToken, Destinations.IdentityToken],
 
-            _ => new[] { Destinations.AccessToken },
+            _ => [Destinations.AccessToken],
         };
     }
 }
