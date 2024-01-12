@@ -12,6 +12,7 @@ This repository contains samples demonstrating **how to use [OpenIddict](https:/
   - [Imynusoph](samples/Imynusoph): refresh token grant demo, with a .NET console acting as the client.
   - [Matty](samples/Matty): device authorization flow demo, with a .NET console acting as the client.
   - [Mimban](samples/Mimban): authorization code flow demo using minimal APIs and GitHub delegation for user authentication, with a .NET console acting as the client.
+  - [Sorgan](samples/Sorgan): Windows Forms and Windows Presentation Foundation clients using GitHub for user authentication.
   - [Velusia](samples/Velusia): authorization code flow demo, with an ASP.NET Core application acting as the client.
   - [Weytta](samples/Weytta): authorization code flow with Integrated Windows Authentication support and a .NET console acting as the client.
   - [Zirku](samples/Zirku): authorization code flow demo using minimal APIs with 2 hard-coded user identities, a .NET console and a SPA acting as the clients and two API projects using introspection (Api1) and local validation (Api2).

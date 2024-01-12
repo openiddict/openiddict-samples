@@ -42,19 +42,24 @@ public class InteractiveService : BackgroundService
 
             if (result.VerificationUriComplete is not null)
             {
-                AnsiConsole.MarkupLineInterpolated(
-                    $"[yellow]Please visit [link]{result.VerificationUriComplete}[/] and confirm the displayed code is '{result.UserCode}' to complete the authentication demand.[/]");
+                AnsiConsole.MarkupLineInterpolated($"""
+                    [yellow]Please visit [link]{result.VerificationUriComplete}[/] and confirm the
+                    displayed code is '{result.UserCode}' to complete the authentication demand.[/]
+                    """);
             }
 
             else
             {
-                AnsiConsole.MarkupLineInterpolated(
-                    $"[yellow]Please visit [link]{result.VerificationUri}[/] and enter '{result.UserCode}' to complete the authentication demand.[/]");
+                AnsiConsole.MarkupLineInterpolated($"""
+                    [yellow]Please visit [link]{result.VerificationUri}[/] and enter
+                    '{result.UserCode}' to complete the authentication demand.[/]
+                    """);
             }
 
             // Wait for the user to complete the demand on the other device.
             var principal = (await _service.AuthenticateWithDeviceAsync(new()
             {
+                CancellationToken = stoppingToken,
                 DeviceCode = result.DeviceCode,
                 Interval = result.Interval,
                 Timeout = result.ExpiresIn < TimeSpan.FromMinutes(5) ? result.ExpiresIn : TimeSpan.FromMinutes(5)
