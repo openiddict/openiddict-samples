@@ -1,29 +1,23 @@
-﻿using System;
-using System.Security.Claims;
-using System.Threading;
-using System.Windows;
-using Dapplo.Microsoft.Extensions.Hosting.Wpf;
-using OpenIddict.Client;
-using static OpenIddict.Abstractions.OpenIddictConstants;
-using static OpenIddict.Abstractions.OpenIddictExceptions;
+@using OpenIddict.Client;
+@using System.Security.Claims;
+@using System.Threading
+@using System.Windows
+@using static OpenIddict.Abstractions.OpenIddictExceptions
+@using static OpenIddict.Abstractions.OpenIddictConstants
+@inject OpenIddictClientService service;
 
-namespace Sorgan.Wpf.Client;
+<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <button disabled="@IsButtonDisabled" style="font-size: large" @onclick="LoginAsync">Log in using GitHub</button>
+</div>
 
-public partial class MainWindow : Window, IWpfShell
+@code
 {
-    private readonly OpenIddictClientService _service;
+    private bool IsButtonDisabled;
 
-    public MainWindow(OpenIddictClientService service)
-    {
-        _service = service ?? throw new ArgumentNullException(nameof(service));
-
-        InitializeComponent();
-    }
-
-    private async void LoginButton_Click(object sender, RoutedEventArgs e)
+    public async Task LoginAsync()
     {
         // Disable the login button to prevent concurrent authentication operations.
-        LoginButton.IsEnabled = false;
+        IsButtonDisabled = true;
 
         try
         {
@@ -32,13 +26,13 @@ public partial class MainWindow : Window, IWpfShell
             try
             {
                 // Ask OpenIddict to initiate the authentication flow (typically, by starting the system browser).
-                var result = await _service.ChallengeInteractivelyAsync(new()
+                var result = await service.ChallengeInteractivelyAsync(new()
                 {
                     CancellationToken = source.Token
                 });
 
                 // Wait for the user to complete the authorization process.
-                var principal = (await _service.AuthenticateInteractivelyAsync(new()
+                var principal = (await service.AuthenticateInteractivelyAsync(new()
                 {
                     CancellationToken = source.Token,
                     Nonce = result.Nonce
@@ -70,7 +64,7 @@ public partial class MainWindow : Window, IWpfShell
         finally
         {
             // Re-enable the login button to allow starting a new authentication operation.
-            LoginButton.IsEnabled = true;
+            IsButtonDisabled = false;
         }
     }
 }
