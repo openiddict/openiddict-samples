@@ -1,0 +1,11 @@
+﻿<Window x:Class="Sorgan.Wpf.Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="OpenIddict WPF client" Height="450" Width="800">
+    <Grid>
+        <Button Name="LoginButton" Content="Log in using GitHub" HorizontalAlignment="Center" VerticalAlignment="Center" Click="LoginButton_Click" Height="64" Width="540" FontSize="20" />
+    </Grid>
+</Window>

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapplo.Microsoft.Extensions.Hosting.AppServices" />
+    <PackageReference Include="Dapplo.Microsoft.Extensions.Hosting.WinForms" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+    <PackageReference Include="OpenIddict.Client.SystemIntegration" />
+    <PackageReference Include="OpenIddict.Client.SystemNetHttp" />
+    <PackageReference Include="OpenIddict.Client.WebIntegration" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.17763</TargetFramework>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <UseWPF>true</UseWPF>
+    <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapplo.Microsoft.Extensions.Hosting.AppServices" />
+    <PackageReference Include="Dapplo.Microsoft.Extensions.Hosting.Wpf" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+    <PackageReference Include="OpenIddict.Client.SystemIntegration" />
+    <PackageReference Include="OpenIddict.Client.SystemNetHttp" />
+    <PackageReference Include="OpenIddict.Client.WebIntegration" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" />
+  </ItemGroup>
+
+</Project>

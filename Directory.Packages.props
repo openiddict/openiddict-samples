@@ -64,6 +64,9 @@
     <!--
       Note: the following references are exclusively used in the .NET 8.0 and ASP.NET Core 8.0 samples:
     -->
+    <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.AppServices"            Version="1.0.14"  />
+    <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.WinForms"               Version="1.0.14"  />
+    <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.Wpf"                    Version="1.0.14"  />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.Negotiate"              Version="8.0.1"   />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly"                Version="8.0.1"   />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.1"   />
@@ -77,13 +80,14 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite"                       Version="8.0.1"   />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools"                        Version="8.0.1"   />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection"                   Version="8.0.0"   />
-    <PackageVersion Include="Microsoft.Extensions.Http"                                  Version="8.0.0"   />
     <PackageVersion Include="Microsoft.Extensions.Hosting"                               Version="8.0.0"   />
+    <PackageVersion Include="Microsoft.Extensions.Http"                                  Version="8.0.0"   />
     <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design"           Version="8.0.0"   />
     <PackageVersion Include="OpenIddict.Abstractions"                                    Version="5.0.1"   />
     <PackageVersion Include="OpenIddict.AspNetCore"                                      Version="5.0.1"   />
     <PackageVersion Include="OpenIddict.Client.SystemIntegration"                        Version="5.0.1"   />
     <PackageVersion Include="OpenIddict.Client.SystemNetHttp"                            Version="5.0.1"   />
+    <PackageVersion Include="OpenIddict.Client.WebIntegration"                           Version="5.0.1"   />
     <PackageVersion Include="OpenIddict.EntityFrameworkCore"                             Version="5.0.1"   />
     <PackageVersion Include="OpenIddict.Quartz"                                          Version="5.0.1"   />
     <PackageVersion Include="OpenIddict.Validation.AspNetCore"                           Version="5.0.1"   />
