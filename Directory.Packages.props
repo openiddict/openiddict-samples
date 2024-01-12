@@ -64,18 +64,18 @@
     <!--
       Note: the following references are exclusively used in the .NET 8.0 and ASP.NET Core 8.0 samples:
     -->
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Negotiate"              Version="8.0.0"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly"                Version="8.0.0"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.0"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Negotiate"              Version="8.0.1"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly"                Version="8.0.1"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.1"   />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Build"          Version="8.0.0"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer"      Version="8.0.0"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server"         Version="8.0.0"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"       Version="8.0.0"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"          Version="8.0.0"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI"                           Version="8.0.0"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"          Version="8.0.0"   />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite"                       Version="8.0.0"   />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools"                        Version="8.0.0"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer"      Version="8.0.1"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server"         Version="8.0.1"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"       Version="8.0.1"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"          Version="8.0.1"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI"                           Version="8.0.1"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"          Version="8.0.1"   />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite"                       Version="8.0.1"   />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools"                        Version="8.0.1"   />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection"                   Version="8.0.0"   />
     <PackageVersion Include="Microsoft.Extensions.Http"                                  Version="8.0.0"   />
     <PackageVersion Include="Microsoft.Extensions.Hosting"                               Version="8.0.0"   />

@@ -241,7 +241,7 @@ app.MapGet("/authorize", async (HttpContext context, IOpenIddictScopeManager man
     if (identifier is not (1 or 2))
     {
         return Results.Challenge(
-            authenticationSchemes: new[] { OpenIddictServerAspNetCoreDefaults.AuthenticationScheme },
+            authenticationSchemes: [OpenIddictServerAspNetCoreDefaults.AuthenticationScheme],
             properties: new AuthenticationProperties(new Dictionary<string, string>
             {
                 [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidRequest,
@@ -278,7 +278,7 @@ app.MapGet("/authorize", async (HttpContext context, IOpenIddictScopeManager man
     identity.SetResources(await manager.ListResourcesAsync(identity.GetScopes()).ToListAsync());
 
     // Allow all claims to be added in the access tokens.
-    identity.SetDestinations(claim => new[] { Destinations.AccessToken });
+    identity.SetDestinations(claim => [Destinations.AccessToken]);
 
     return Results.SignIn(new ClaimsPrincipal(identity), properties: null, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 });
