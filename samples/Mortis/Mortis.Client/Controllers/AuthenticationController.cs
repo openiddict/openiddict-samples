@@ -7,7 +7,6 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
-using OpenIddict.Abstractions;
 using OpenIddict.Client.Owin;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -39,7 +38,7 @@ namespace Mortis.Client.Controllers
             // Retrieve the identity stored in the local authentication cookie. If it's not available,
             // this indicate that the user is already logged out locally (or has not logged in yet).
             var result = await context.Authentication.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationType);
-            if (result is not { Identity: ClaimsIdentity identity })
+            if (result is not { Identity: ClaimsIdentity })
             {
                 // Only allow local return URLs to prevent open redirect attacks.
                 return Redirect(Url.IsLocalUrl(returnUrl) ? returnUrl : "/");
@@ -112,33 +111,15 @@ namespace Mortis.Client.Controllers
             //
             // By default, all claims extracted during the authorization dance are available. The claims collection stored
             // in the cookie can be filtered out or mapped to different names depending the claim name or its issuer.
-            var claims = new List<Claim>(result.Identity.Claims
-                .Select(claim => claim switch
-                {
-                    // Map the standard "sub" and custom "id" claims to ClaimTypes.NameIdentifier, which is
-                    // the default claim type used by .NET and is required by the antiforgery components.
-                    { Type: Claims.Subject }
-                        => new Claim(ClaimTypes.NameIdentifier, claim.Value, claim.ValueType, claim.Issuer),
-
-                    // Map the standard "name" claim to ClaimTypes.Name.
-                    { Type: Claims.Name }
-                        => new Claim(ClaimTypes.Name, claim.Value, claim.ValueType, claim.Issuer),
-
-                    _ => claim
-                })
-                .Where(claim => claim switch
-                {
-                    // Preserve the basic claims that are necessary for the application to work correctly.
-                    { Type: ClaimTypes.NameIdentifier or ClaimTypes.Name } => true,
-
-                    // Don't preserve the other claims.
-                    _ => false
-                }));
-
-            // The antiforgery components require both the ClaimTypes.NameIdentifier and identityprovider claims
-            // so the latter is manually added using the issuer identity resolved from the remote server.
-            claims.Add(new Claim("http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider",
-                result.Identity.GetClaim(Claims.AuthorizationServer)));
+            var claims = result.Identity.Claims.Where(claim => claim.Type is ClaimTypes.NameIdentifier or ClaimTypes.Name
+                //
+                // Preserve the registration details to be able to resolve them later.
+                //
+                or Claims.Private.RegistrationId or Claims.Private.ProviderName
+                //
+                // The ASP.NET 4.x antiforgery module requires preserving the "identityprovider" claim.
+                //
+                or "http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/identityprovider");
 
             var identity = new ClaimsIdentity(claims,
                 authenticationType: CookieAuthenticationDefaults.AuthenticationType,
@@ -149,10 +130,10 @@ namespace Mortis.Client.Controllers
             var properties = new AuthenticationProperties(result.Properties.Dictionary
                 .Where(item => item switch
                 {
-                    // Preserve the redirect URL.
+                    // Preserve the return URL.
                     { Key: ".redirect" } => true,
 
-                    // Preserve the access, identity and refresh tokens returned in the token response, if available.
+                    // If needed, the tokens returned by the authorization server can be stored in the authentication cookie.
                     {
                         Key: OpenIddictClientOwinConstants.Tokens.BackchannelAccessToken   or
                              OpenIddictClientOwinConstants.Tokens.BackchannelIdentityToken or
@@ -165,7 +146,7 @@ namespace Mortis.Client.Controllers
                 .ToDictionary(pair => pair.Key, pair => pair.Value));
 
             context.Authentication.SignIn(properties, identity);
-            return Redirect(properties.RedirectUri);
+            return Redirect(properties.RedirectUri ?? "/");
         }
 
         // Note: this controller uses the same callback action for all providers
