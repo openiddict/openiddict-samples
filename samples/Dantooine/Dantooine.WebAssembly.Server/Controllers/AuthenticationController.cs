@@ -130,18 +130,11 @@ public class AuthenticationController : Controller
         // If needed, the tokens returned by the authorization server can be stored in the authentication cookie.
         //
         // To make cookies less heavy, tokens that are not used are filtered out before creating the cookie.
-        properties.StoreTokens(result.Properties.GetTokens().Where(token => token switch
-        {
+        properties.StoreTokens(result.Properties.GetTokens().Where(token => token.Name is
             // Preserve the access, identity and refresh tokens returned in the token response, if available.
-            {
-                Name: OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken   or
-                      OpenIddictClientAspNetCoreConstants.Tokens.BackchannelIdentityToken or
-                      OpenIddictClientAspNetCoreConstants.Tokens.RefreshToken
-            } => true,
-
-            // Ignore the other tokens.
-            _ => false
-        }));
+            OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken   or
+            OpenIddictClientAspNetCoreConstants.Tokens.BackchannelIdentityToken or
+            OpenIddictClientAspNetCoreConstants.Tokens.RefreshToken));
 
         // Ask the default sign-in handler to return a new cookie and redirect the
         // user agent to the return URL stored in the authentication properties.
