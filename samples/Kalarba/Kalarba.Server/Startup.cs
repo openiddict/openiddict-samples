@@ -88,6 +88,7 @@ public class Startup
                         // Add the claims that will be persisted in the tokens.
                         identity.AddClaim(new Claim(Claims.Subject, "999d4ea0-164f-4c1b-8585-b83f313995c9"));
                         identity.AddClaim(new Claim(Claims.Name, "Alice").SetDestinations(Destinations.AccessToken));
+                        identity.AddClaim(new Claim(Claims.PreferredUsername, "Alice").SetDestinations(Destinations.AccessToken));
 
                         context.SignIn(new ClaimsPrincipal(identity));
 
