@@ -107,6 +107,7 @@ namespace Mortis.Server.Controllers
                     identity.SetClaim(Claims.Subject, user.Id)
                             .SetClaim(Claims.Email, user.Email)
                             .SetClaim(Claims.Name, user.UserName)
+                            .SetClaim(Claims.PreferredUsername, user.UserName)
                             .SetClaims(Claims.Role, (await context.Get<ApplicationUserManager>().GetRolesAsync(user.Id)).ToImmutableArray());
 
                     // Note: in this sample, the granted scopes match the requested scope
@@ -225,6 +226,7 @@ namespace Mortis.Server.Controllers
             identity.SetClaim(Claims.Subject, user.Id)
                     .SetClaim(Claims.Email, user.Email)
                     .SetClaim(Claims.Name, user.UserName)
+                    .SetClaim(Claims.PreferredUsername, user.UserName)
                     .SetClaims(Claims.Role, (await context.Get<ApplicationUserManager>().GetRolesAsync(user.Id)).ToImmutableArray());
 
             // Note: in this sample, the granted scopes match the requested scope
@@ -344,6 +346,7 @@ namespace Mortis.Server.Controllers
                 identity.SetClaim(Claims.Subject, user.Id)
                         .SetClaim(Claims.Email, user.Email)
                         .SetClaim(Claims.Name, user.UserName)
+                        .SetClaim(Claims.PreferredUsername, user.UserName)
                         .SetClaims(Claims.Role, (await context.Get<ApplicationUserManager>().GetRolesAsync(user.Id)).ToImmutableArray());
 
                 identity.SetDestinations(GetDestinations);
@@ -365,7 +368,7 @@ namespace Mortis.Server.Controllers
 
             switch (claim.Type)
             {
-                case Claims.Name:
+                case Claims.Name or Claims.PreferredUsername:
                     yield return Destinations.AccessToken;
 
                     if (claim.Subject.HasScope(Scopes.Profile))

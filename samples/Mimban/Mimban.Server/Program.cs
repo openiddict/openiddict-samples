@@ -161,7 +161,11 @@ app.MapMethods("callback/login/github", [HttpMethods.Get, HttpMethods.Post], asy
     // Resolve the claims extracted by OpenIddict from the userinfo response returned by GitHub.
     var result = await context.AuthenticateAsync(OpenIddictClientAspNetCoreDefaults.AuthenticationScheme);
 
-    var identity = new ClaimsIdentity(authenticationType: "ExternalLogin");
+    var identity = new ClaimsIdentity(
+        authenticationType: "ExternalLogin",
+        nameType: ClaimTypes.Name,
+        roleType: ClaimTypes.Role);
+
     identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, result.Principal!.FindFirst("id")!.Value));
 
     var properties = new AuthenticationProperties
@@ -203,6 +207,7 @@ app.MapGet("/authorize", async (HttpContext context) =>
     // Import a few select claims from the identity stored in the local cookie.
     identity.AddClaim(new Claim(Claims.Subject, identifier));
     identity.AddClaim(new Claim(Claims.Name, identifier).SetDestinations(Destinations.AccessToken));
+    identity.AddClaim(new Claim(Claims.PreferredUsername, identifier).SetDestinations(Destinations.AccessToken));
 
     return Results.SignIn(new ClaimsPrincipal(identity), properties: null, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 });

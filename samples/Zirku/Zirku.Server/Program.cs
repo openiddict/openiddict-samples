@@ -263,6 +263,12 @@ app.MapGet("/authorize", async (HttpContext context, IOpenIddictScopeManager man
         2 => "Bob",
         _ => throw new InvalidOperationException()
     }));
+    identity.AddClaim(new Claim(Claims.PreferredUsername, identifier switch
+    {
+        1 => "Alice",
+        2 => "Bob",
+        _ => throw new InvalidOperationException()
+    }));
 
     // Note: in this sample, the client is granted all the requested scopes for the first identity (Alice)
     // but for the second one (Bob), only the "api1" scope can be granted, which will cause requests sent

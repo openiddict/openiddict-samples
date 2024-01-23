@@ -54,7 +54,10 @@ public class AuthenticationController : Controller
         }
 
         // Build an identity based on the external claims and that will be used to create the authentication cookie.
-        var identity = new ClaimsIdentity(authenticationType: "ExternalLogin");
+        var identity = new ClaimsIdentity(
+            authenticationType: "ExternalLogin",
+            nameType: ClaimTypes.Name,
+            roleType: ClaimTypes.Role);
 
         // By default, OpenIddict will automatically try to map the email/name and name identifier claims from
         // their standard OpenID Connect or provider-specific equivalent, if available. If needed, additional
