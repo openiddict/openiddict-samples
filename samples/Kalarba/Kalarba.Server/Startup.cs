@@ -128,6 +128,7 @@ public class Startup
         };
 
         configuration.MapHttpAttributeRoutes();
+        configuration.SuppressDefaultHostAuthentication();
 
         // Configure ASP.NET Web API to use token authentication.
         configuration.Filters.Add(new HostAuthenticationFilter(OpenIddictValidationOwinDefaults.AuthenticationType));
