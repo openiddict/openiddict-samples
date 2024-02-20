@@ -10,11 +10,11 @@ namespace Fornax.Client;
 
 public class InteractiveService : BackgroundService
 {
-    private readonly IHostApplicationLifetime _lifetime;
+    private readonly IApplicationLifetime _lifetime;
     private readonly OpenIddictClientService _service;
 
     public InteractiveService(
-        IHostApplicationLifetime lifetime,
+        IApplicationLifetime lifetime,
         OpenIddictClientService service)
     {
         _lifetime = lifetime;
@@ -31,7 +31,7 @@ public class InteractiveService : BackgroundService
         }
 
         Console.WriteLine("Press any key to start the authentication process.");
-        await Task.Run(Console.ReadKey).WaitAsync(stoppingToken);
+        await WaitAsync(Task.Run(Console.ReadKey, stoppingToken), stoppingToken);
 
         try
         {
@@ -75,6 +75,21 @@ public class InteractiveService : BackgroundService
         catch
         {
             Console.WriteLine("An error occurred while trying to authenticate the user.");
+        }
+
+        static async Task<T> WaitAsync<T>(Task<T> task, CancellationToken cancellationToken)
+        {
+            var source = new TaskCompletionSource<bool>(TaskCreationOptions.None);
+
+            using (cancellationToken.Register(static state => ((TaskCompletionSource<bool>) state!).SetResult(true), source))
+            {
+                if (await Task.WhenAny(task, source.Task) == source.Task)
+                {
+                    throw new OperationCanceledException(cancellationToken);
+                }
+
+                return await task;
+            }
         }
     }
 }

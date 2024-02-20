@@ -29,12 +29,14 @@ public class Worker : IHostedService
         {
             await manager.CreateAsync(new OpenIddictApplicationDescriptor
             {
+                ApplicationType = ApplicationTypes.Native,
                 ClientId = "console_app",
+                ClientType = ClientTypes.Public,
                 ConsentType = ConsentTypes.Implicit,
                 DisplayName = "Console application",
                 RedirectUris =
                 {
-                    new Uri("http://localhost:7890/")
+                    new Uri("http://localhost/")
                 },
                 Permissions =
                 {

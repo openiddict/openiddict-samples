@@ -98,12 +98,14 @@ namespace Fornax.Server
                 {
                     await manager.CreateAsync(new OpenIddictApplicationDescriptor
                     {
+                        ApplicationType = ApplicationTypes.Native,
                         ClientId = "console_app",
+                        ClientType = ClientTypes.Public,
                         ConsentType = ConsentTypes.Explicit,
                         DisplayName = "Console application",
                         RedirectUris =
                         {
-                            new Uri("http://localhost:7891/")
+                            new Uri("http://localhost/")
                         },
                         Permissions =
                         {
