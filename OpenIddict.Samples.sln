@@ -136,6 +136,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sorgan.Wpf.Client", "sample
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sorgan.BlazorHybrid.Client", "samples\Sorgan\Sorgan.BlazorHybrid.Client\Sorgan.BlazorHybrid.Client.csproj", "{C392496F-B3E4-4B7C-97F3-66EB13206985}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sorgan.Console.Client", "samples\Sorgan\Sorgan.Console.Client\Sorgan.Console.Client.csproj", "{A2B093AC-6044-467E-B94F-936343DCD11B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -290,6 +292,10 @@ Global
 		{C392496F-B3E4-4B7C-97F3-66EB13206985}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C392496F-B3E4-4B7C-97F3-66EB13206985}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C392496F-B3E4-4B7C-97F3-66EB13206985}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2B093AC-6044-467E-B94F-936343DCD11B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2B093AC-6044-467E-B94F-936343DCD11B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2B093AC-6044-467E-B94F-936343DCD11B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2B093AC-6044-467E-B94F-936343DCD11B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -347,6 +353,7 @@ Global
 		{6E1B3224-B529-4B45-AD66-969BBBA08F63} = {F2076FDE-06F9-441B-938E-97953A3C0906}
 		{5132ABBD-6FC5-4232-B9E1-7F53EC52C826} = {F2076FDE-06F9-441B-938E-97953A3C0906}
 		{C392496F-B3E4-4B7C-97F3-66EB13206985} = {F2076FDE-06F9-441B-938E-97953A3C0906}
+		{A2B093AC-6044-467E-B94F-936343DCD11B} = {F2076FDE-06F9-441B-938E-97953A3C0906}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3ECDD26-F40D-4AB4-BC48-8DF143F98FAE}

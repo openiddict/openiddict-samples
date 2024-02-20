@@ -95,7 +95,7 @@
     <PackageVersion Include="OpenIddict.Validation.AspNetCore"                           Version="5.2.0"   />
     <PackageVersion Include="OpenIddict.Validation.SystemNetHttp"                        Version="5.2.0"   />
     <PackageVersion Include="Quartz.Extensions.Hosting"                                  Version="3.5.0"   />
-    <PackageVersion Include="Spectre.Console"                                            Version="0.46.0"  />
+    <PackageVersion Include="Spectre.Console"                                            Version="0.48.0"  />
     <PackageVersion Include="System.Linq.Async"                                          Version="6.0.1"   />
     <PackageVersion Include="Yarp.ReverseProxy"                                          Version="2.0.1"   />
   </ItemGroup>
