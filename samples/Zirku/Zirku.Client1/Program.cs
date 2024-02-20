@@ -43,8 +43,7 @@ var host = new HostBuilder()
                        .AddDevelopmentSigningCertificate();
 
                 // Add the operating system integration.
-                options.UseSystemIntegration()
-                       .SetAllowedEmbeddedWebServerPorts(8739);
+                options.UseSystemIntegration();
 
                 // Register the System.Net.Http integration and use the identity of the current
                 // assembly as a more specific user agent, which can be useful when dealing with
@@ -58,7 +57,7 @@ var host = new HostBuilder()
                     Issuer = new Uri("https://localhost:44319/", UriKind.Absolute),
 
                     ClientId = "console_app",
-                    RedirectUri = new Uri("http://localhost:8739/", UriKind.Absolute),
+                    RedirectUri = new Uri("/", UriKind.Relative),
                     Scopes = { Scopes.OpenId, "api1", "api2" }
                 });
             });

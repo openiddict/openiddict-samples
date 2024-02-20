@@ -134,10 +134,12 @@ await using (var scope = app.Services.CreateAsyncScope())
     {
         await manager.CreateAsync(new OpenIddictApplicationDescriptor
         {
+            ApplicationType = ApplicationTypes.Native,
             ClientId = "console_app",
+            ClientType = ClientTypes.Public,
             RedirectUris =
             {
-                new Uri("http://localhost:8914/")
+                new Uri("http://localhost/")
             },
             Permissions =
             {
