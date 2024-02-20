@@ -18,7 +18,7 @@ This repository contains samples demonstrating **how to use [OpenIddict](https:/
 
 ## .NET samples
 
-  - [Sorgan](samples/Sorgan): Windows Forms, Windows Presentation Foundation and Blazor Hybrid clients using GitHub for user authentication.
+  - [Sorgan](samples/Sorgan): console, Windows Forms, Windows Presentation Foundation and Blazor Hybrid clients using GitHub for user authentication.
 
 ## OWIN/ASP.NET 4.8 samples
   - [Fornax](samples/Fornax): authorization code flow demo using ASP.NET Web Forms 4.8 and OWIN/Katana, with a .NET Framework 4.8 console acting as the client.
