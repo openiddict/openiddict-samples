@@ -40,11 +40,7 @@
     <PackageVersion Include="Microsoft.Owin.Host.SystemWeb"                              Version="4.2.2"   />
     <PackageVersion Include="Microsoft.Owin.Hosting"                                     Version="4.2.2"   />
     <PackageVersion Include="Microsoft.Owin.Security.Cookies"                            Version="4.2.2"   />
-    <PackageVersion Include="Microsoft.Owin.Security.Google"                             Version="4.2.2"   />
-    <PackageVersion Include="Microsoft.Owin.Security.MicrosoftAccount"                   Version="4.2.2"   />
     <PackageVersion Include="Microsoft.Owin.Security.OAuth"                              Version="4.2.2"   />
-    <PackageVersion Include="Microsoft.Owin.Security.OpenIdConnect"                      Version="4.2.2"   />
-    <PackageVersion Include="Microsoft.Owin.Security.Twitter"                            Version="4.2.2"   />
     <PackageVersion Include="Microsoft.Web.Infrastructure"                               Version="1.0.0"   />
     <PackageVersion Include="OpenIddict.EntityFramework"                                 Version="5.2.0"   />
     <PackageVersion Include="OpenIddict.Owin"                                            Version="5.2.0"   />
