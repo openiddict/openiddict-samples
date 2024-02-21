@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.SDK.SystemWeb/4.0.79">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>$(NetFrameworkTargetFramework)</TargetFramework>
     <AppConfig>Web.config</AppConfig>
     <GeneratedBindingRedirectsAction>Overwrite</GeneratedBindingRedirectsAction>
     <UsingMicrosoftCentralPackageVersionsSdk>true</UsingMicrosoftCentralPackageVersionsSdk>
