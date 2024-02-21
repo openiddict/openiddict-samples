@@ -63,7 +63,7 @@ namespace Fornax.Server.Connect
             {
                 // If the consent is external (e.g when authorizations are granted by a sysadmin),
                 // immediately return an error if no authorization can be found in the database.
-                case ConsentTypes.External when !authorizations.Any():
+                case ConsentTypes.External when authorizations.Count is 0:
                     context.Authentication.Challenge(
                         authenticationTypes: OpenIddictServerOwinDefaults.AuthenticationType,
                         properties: new AuthenticationProperties(new Dictionary<string, string>
@@ -78,8 +78,8 @@ namespace Fornax.Server.Connect
                 // If the consent is implicit or if an authorization was found,
                 // return an authorization response without displaying the consent form.
                 case ConsentTypes.Implicit:
-                case ConsentTypes.External when authorizations.Any():
-                case ConsentTypes.Explicit when authorizations.Any() && !request.HasPrompt(Prompts.Consent):
+                case ConsentTypes.External when authorizations.Count is not 0:
+                case ConsentTypes.Explicit when authorizations.Count is not 0 && !request.HasPrompt(Prompts.Consent):
                     // Create the claims-based identity that will be used by OpenIddict to generate tokens.
                     var identity = new ClaimsIdentity(
                         authenticationType: OpenIddictServerOwinDefaults.AuthenticationType,
@@ -191,7 +191,7 @@ namespace Fornax.Server.Connect
             // Note: the same check is already made in the other action but is repeated
             // here to ensure a malicious user can't abuse this POST-only endpoint and
             // force it to return a valid response without the external authorization.
-            if (!authorizations.Any() && await ApplicationManager.HasConsentTypeAsync(application, ConsentTypes.External))
+            if (authorizations.Count is 0 && await ApplicationManager.HasConsentTypeAsync(application, ConsentTypes.External))
             {
                 context.Authentication.Challenge(
                     authenticationTypes: OpenIddictServerOwinDefaults.AuthenticationType,
