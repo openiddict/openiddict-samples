@@ -68,23 +68,23 @@
     <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.AppServices"            Version="1.0.14"  />
     <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.WinForms"               Version="1.0.14"  />
     <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.Wpf"                    Version="1.0.14"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Negotiate"              Version="8.0.1"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly"                Version="8.0.1"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.1"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Negotiate"              Version="8.0.2"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly"                Version="8.0.2"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.2"   />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Build"          Version="8.0.0"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer"      Version="8.0.1"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server"         Version="8.0.1"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebView.Wpf"                Version="8.0.3"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"       Version="8.0.1"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"          Version="8.0.1"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI"                           Version="8.0.1"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"          Version="8.0.1"   />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite"                       Version="8.0.1"   />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools"                        Version="8.0.1"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer"      Version="8.0.2"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server"         Version="8.0.2"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebView.Wpf"                Version="8.0.7"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"       Version="8.0.2"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"          Version="8.0.2"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI"                           Version="8.0.2"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"          Version="8.0.2"   />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite"                       Version="8.0.2"   />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools"                        Version="8.0.2"   />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection"                   Version="8.0.0"   />
     <PackageVersion Include="Microsoft.Extensions.Hosting"                               Version="8.0.0"   />
     <PackageVersion Include="Microsoft.Extensions.Http"                                  Version="8.0.0"   />
-    <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design"           Version="8.0.0"   />
+    <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design"           Version="8.0.1"   />
     <PackageVersion Include="OpenIddict.Abstractions"                                    Version="5.2.0"   />
     <PackageVersion Include="OpenIddict.AspNetCore"                                      Version="5.2.0"   />
     <PackageVersion Include="OpenIddict.Client.SystemIntegration"                        Version="5.2.0"   />
