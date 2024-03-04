@@ -44,11 +44,11 @@
     <PackageVersion Include="Microsoft.Owin.Security.Cookies"                            Version="4.2.2"   />
     <PackageVersion Include="Microsoft.Owin.Security.OAuth"                              Version="4.2.2"   />
     <PackageVersion Include="Microsoft.Web.Infrastructure"                               Version="1.0.0"   />
-    <PackageVersion Include="OpenIddict.Client.SystemIntegration"                        Version="5.2.0"   />
-    <PackageVersion Include="OpenIddict.Client.SystemNetHttp"                            Version="5.2.0"   />
-    <PackageVersion Include="OpenIddict.EntityFramework"                                 Version="5.2.0"   />
-    <PackageVersion Include="OpenIddict.EntityFrameworkCore"                             Version="5.2.0"   />
-    <PackageVersion Include="OpenIddict.Owin"                                            Version="5.2.0"   />
+    <PackageVersion Include="OpenIddict.Client.SystemIntegration"                        Version="5.3.0"   />
+    <PackageVersion Include="OpenIddict.Client.SystemNetHttp"                            Version="5.3.0"   />
+    <PackageVersion Include="OpenIddict.EntityFramework"                                 Version="5.3.0"   />
+    <PackageVersion Include="OpenIddict.EntityFrameworkCore"                             Version="5.3.0"   />
+    <PackageVersion Include="OpenIddict.Owin"                                            Version="5.3.0"   />
     <PackageVersion Include="WebGrease"                                                  Version="1.6.0"   />
   </ItemGroup>
 
@@ -85,15 +85,15 @@
     <PackageVersion Include="Microsoft.Extensions.Hosting"                               Version="8.0.0"   />
     <PackageVersion Include="Microsoft.Extensions.Http"                                  Version="8.0.0"   />
     <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design"           Version="8.0.0"   />
-    <PackageVersion Include="OpenIddict.Abstractions"                                    Version="5.2.0"   />
-    <PackageVersion Include="OpenIddict.AspNetCore"                                      Version="5.2.0"   />
-    <PackageVersion Include="OpenIddict.Client.SystemIntegration"                        Version="5.2.0"   />
-    <PackageVersion Include="OpenIddict.Client.SystemNetHttp"                            Version="5.2.0"   />
-    <PackageVersion Include="OpenIddict.Client.WebIntegration"                           Version="5.2.0"   />
-    <PackageVersion Include="OpenIddict.EntityFrameworkCore"                             Version="5.2.0"   />
-    <PackageVersion Include="OpenIddict.Quartz"                                          Version="5.2.0"   />
-    <PackageVersion Include="OpenIddict.Validation.AspNetCore"                           Version="5.2.0"   />
-    <PackageVersion Include="OpenIddict.Validation.SystemNetHttp"                        Version="5.2.0"   />
+    <PackageVersion Include="OpenIddict.Abstractions"                                    Version="5.3.0"   />
+    <PackageVersion Include="OpenIddict.AspNetCore"                                      Version="5.3.0"   />
+    <PackageVersion Include="OpenIddict.Client.SystemIntegration"                        Version="5.3.0"   />
+    <PackageVersion Include="OpenIddict.Client.SystemNetHttp"                            Version="5.3.0"   />
+    <PackageVersion Include="OpenIddict.Client.WebIntegration"                           Version="5.3.0"   />
+    <PackageVersion Include="OpenIddict.EntityFrameworkCore"                             Version="5.3.0"   />
+    <PackageVersion Include="OpenIddict.Quartz"                                          Version="5.3.0"   />
+    <PackageVersion Include="OpenIddict.Validation.AspNetCore"                           Version="5.3.0"   />
+    <PackageVersion Include="OpenIddict.Validation.SystemNetHttp"                        Version="5.3.0"   />
     <PackageVersion Include="Quartz.Extensions.Hosting"                                  Version="3.5.0"   />
     <PackageVersion Include="Spectre.Console"                                            Version="0.48.0"  />
     <PackageVersion Include="System.Linq.Async"                                          Version="6.0.1"   />
