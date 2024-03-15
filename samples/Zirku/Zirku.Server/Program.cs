@@ -231,10 +231,10 @@ await using (var scope = app.Services.CreateAsyncScope())
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/api", [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
+app.MapGet("api", [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
 (ClaimsPrincipal user) => user.Identity!.Name);
 
-app.MapGet("/authorize", async (HttpContext context, IOpenIddictScopeManager manager) =>
+app.MapMethods("authorize", [HttpMethods.Get, HttpMethods.Post], async (HttpContext context, IOpenIddictScopeManager manager) =>
 {
     // Retrieve the OpenIddict server request from the HTTP context.
     var request = context.GetOpenIddictServerRequest();
