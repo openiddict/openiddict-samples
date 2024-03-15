@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
-using OpenIddict.Client.AspNetCore;
 using OpenIddict.Server.AspNetCore;
 using OpenIddict.Validation.AspNetCore;
 using Quartz;
 using static OpenIddict.Abstractions.OpenIddictConstants;
+using static OpenIddict.Client.WebIntegration.OpenIddictClientWebIntegrationConstants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -161,7 +161,7 @@ app.MapGet("api", [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetC
 app.MapMethods("callback/login/github", [HttpMethods.Get, HttpMethods.Post], async (HttpContext context) =>
 {
     // Resolve the claims extracted by OpenIddict from the userinfo response returned by GitHub.
-    var result = await context.AuthenticateAsync(OpenIddictClientAspNetCoreDefaults.AuthenticationScheme);
+    var result = await context.AuthenticateAsync(Providers.GitHub);
 
     var identity = new ClaimsIdentity(
         authenticationType: "ExternalLogin",
@@ -195,7 +195,7 @@ app.MapMethods("authorize", [HttpMethods.Get, HttpMethods.Post], async (HttpCont
             RedirectUri = context.Request.GetEncodedUrl()
         };
 
-        return Results.Challenge(properties, [OpenIddictClientAspNetCoreDefaults.AuthenticationScheme]);
+        return Results.Challenge(properties, [Providers.GitHub]);
     }
 
     var identifier = principal.FindFirst(ClaimTypes.NameIdentifier)!.Value;

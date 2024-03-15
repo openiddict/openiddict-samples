@@ -14,7 +14,6 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.Owin.Security;
 using Mortis.Server.Helpers;
 using Mortis.Server.ViewModels.Authorization;
