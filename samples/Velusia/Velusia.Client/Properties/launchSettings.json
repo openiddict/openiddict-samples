@@ -3,22 +3,24 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:53507/",
+      "applicationUrl": "https://localhost:44338/",
       "sslPort": 44338
     }
   },
+
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
+    "Kestrel": {
+      "commandName": "Project",
       "launchBrowser": true,
+      "applicationUrl": "https://localhost:44338/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Velusia.Client": {
-      "commandName": "Project",
+
+    "IIS Express": {
+      "commandName": "IISExpress",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:44338/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

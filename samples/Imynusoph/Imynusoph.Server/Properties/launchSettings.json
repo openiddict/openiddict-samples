@@ -3,22 +3,24 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:54895/",
+      "applicationUrl": "https://localhost:44382/",
       "sslPort": 44382
     }
   },
+
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
+    "Kestrel": {
+      "commandName": "Project",
       "launchBrowser": true,
+      "applicationUrl": "https://localhost:44382/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Imynusoph.Server": {
-      "commandName": "Project",
+
+    "IIS Express": {
+      "commandName": "IISExpress",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:44382/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

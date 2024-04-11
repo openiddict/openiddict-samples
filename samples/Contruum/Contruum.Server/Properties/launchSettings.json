@@ -3,23 +3,24 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:16181",
+      "applicationUrl": "https://localhost:44323/",
       "sslPort": 44323
     }
   },
+
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
+    "Kestrel": {
+      "commandName": "Project",
       "launchBrowser": true,
+      "applicationUrl": "https://localhost:44323/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Contruum.Server": {
-      "commandName": "Project",
-      "dotnetRunMessages": "true",
+
+    "IIS Express": {
+      "commandName": "IISExpress",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:44323/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

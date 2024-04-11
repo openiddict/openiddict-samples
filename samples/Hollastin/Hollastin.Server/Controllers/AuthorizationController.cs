@@ -79,7 +79,7 @@ public class AuthorizationController : Controller
                     .SetClaim(Claims.Email, await _userManager.GetEmailAsync(user))
                     .SetClaim(Claims.Name, await _userManager.GetUserNameAsync(user))
                     .SetClaim(Claims.PreferredUsername, await _userManager.GetUserNameAsync(user))
-                    .SetClaims(Claims.Role, (await _userManager.GetRolesAsync(user)).ToImmutableArray());
+                    .SetClaims(Claims.Role, [.. (await _userManager.GetRolesAsync(user))]);
 
             // Set the list of scopes granted to the client application.
             identity.SetScopes(new[]

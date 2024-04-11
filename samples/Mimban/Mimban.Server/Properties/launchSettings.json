@@ -1,28 +1,26 @@
 ﻿{
-  "$schema": "https://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:55143",
+      "applicationUrl": "https://localhost:44383/",
       "sslPort": 44383
     }
   },
+
   "profiles": {
-    "Mimban.Server": {
+    "Kestrel": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": false,
-      "launchUrl": "api",
-      "applicationUrl": "https://localhost:44383;http://localhost:55143",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:44383/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
+
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchBrowser": false,
-      "launchUrl": "api",
+      "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

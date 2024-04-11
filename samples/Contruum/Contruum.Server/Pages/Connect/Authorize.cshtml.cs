@@ -49,7 +49,7 @@ public class AuthorizeModel : PageModel
                 properties: new AuthenticationProperties
                 {
                     RedirectUri = Request.PathBase + Request.Path + QueryString.Create(
-                        Request.HasFormContentType ? Request.Form.ToList() : Request.Query.ToList())
+                        Request.HasFormContentType ? [.. Request.Form] : [.. Request.Query])
                 });
         }
 
