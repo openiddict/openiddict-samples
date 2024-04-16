@@ -6,7 +6,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenIddict.Client;
 using Zirku.Client1;
-using static OpenIddict.Abstractions.OpenIddictConstants;
 
 var host = new HostBuilder()
     .ConfigureLogging(options => options.AddDebug())
@@ -58,7 +57,7 @@ var host = new HostBuilder()
 
                     ClientId = "console_app",
                     RedirectUri = new Uri("/", UriKind.Relative),
-                    Scopes = { Scopes.OpenId, "api1", "api2" }
+                    Scopes = { "api1", "api2" }
                 });
             });
 
