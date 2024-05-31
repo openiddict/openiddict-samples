@@ -8,27 +8,26 @@
 //------------------------------------------------------------------------------
 
 
-namespace Fornax.Server.Connect
+namespace Fornax.Server.Connect;
+
+public partial class Authorize
 {
-    public partial class Authorize
-    {
-        
-        /// <summary>
-        /// ApplicationName control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ApplicationName;
-        
-        /// <summary>
-        /// Scope control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Scope;
-    }
+    
+    /// <summary>
+    /// ApplicationName control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label ApplicationName;
+    
+    /// <summary>
+    /// Scope control.
+    /// </summary>
+    /// <remarks>
+    /// Auto-generated field.
+    /// To modify move field declaration from designer file to code-behind file.
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Label Scope;
 }

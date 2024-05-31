@@ -1,19 +1,18 @@
 ﻿using System.Data.Entity;
 
-namespace Mortis.Client.Models
+namespace Mortis.Client.Models;
+
+public class ApplicationDbContext : DbContext
 {
-    public class ApplicationDbContext : DbContext
+    public ApplicationDbContext()
+        : base("DefaultConnection")
     {
-        public ApplicationDbContext()
-            : base("DefaultConnection")
-        {
-        }
+    }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.UseOpenIddict();
+    protected override void OnModelCreating(DbModelBuilder modelBuilder)
+    {
+        modelBuilder.UseOpenIddict();
 
-            base.OnModelCreating(modelBuilder);
-        }
+        base.OnModelCreating(modelBuilder);
     }
 }

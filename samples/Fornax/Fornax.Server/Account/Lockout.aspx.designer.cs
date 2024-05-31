@@ -7,11 +7,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Fornax.Server.Account
+namespace Fornax.Server.Account;
+
+
+
+public partial class Lockout
 {
-
-
-    public partial class Lockout
-    {
-    }
 }

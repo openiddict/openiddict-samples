@@ -1,15 +1,14 @@
 using System.Web.Routing;
 using Microsoft.AspNet.FriendlyUrls;
 
-namespace Fornax.Server
+namespace Fornax.Server;
+
+public static class RouteConfig
 {
-    public static class RouteConfig
+    public static void RegisterRoutes(RouteCollection routes)
     {
-        public static void RegisterRoutes(RouteCollection routes)
-        {
-            var settings = new FriendlyUrlSettings();
-            settings.AutoRedirectMode = RedirectMode.Permanent;
-            routes.EnableFriendlyUrls(settings);
-        }
+        var settings = new FriendlyUrlSettings();
+        settings.AutoRedirectMode = RedirectMode.Permanent;
+        routes.EnableFriendlyUrls(settings);
     }
 }

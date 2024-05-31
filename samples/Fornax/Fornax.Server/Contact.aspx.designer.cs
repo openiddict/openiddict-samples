@@ -8,9 +8,8 @@
 //------------------------------------------------------------------------------
 
 
-namespace Fornax.Server
+namespace Fornax.Server;
+
+public partial class Contact
 {
-    public partial class Contact
-    {
-    }
 }

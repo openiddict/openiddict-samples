@@ -22,8 +22,8 @@ This repository contains samples demonstrating **how to use [OpenIddict](https:/
 
 ## OWIN/ASP.NET 4.8 samples
   - [Fornax](samples/Fornax): authorization code flow demo using ASP.NET Web Forms 4.8 and OWIN/Katana, with a .NET Framework 4.8 console acting as the client.
-  - [Mortis](samples/Mortis): authorization code flow demo, with an ASP.NET MVC 5.2 application acting as the client.
-  - [Kalarba](samples/Kalarba): resource owner password credentials demo using OWIN/Katana, ASP.NET Web API and the OpenIddict degraded mode.
+  - [Mortis](samples/Mortis): authorization code flow demo using ASP.NET MVC 5.2 and ASP.NET Web API 2.2, with an ASP.NET MVC 5.2 application acting as the client.
+  - [Kalarba](samples/Kalarba): resource owner password credentials demo using OWIN/Katana, ASP.NET Web API 2.2 and the OpenIddict degraded mode.
 
 ## External samples
 

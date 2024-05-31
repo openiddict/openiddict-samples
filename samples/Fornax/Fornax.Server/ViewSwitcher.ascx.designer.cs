@@ -7,9 +7,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Fornax.Server {
-    
-    
-    public partial class ViewSwitcher {
-    }
+namespace Fornax.Server; 
+
+
+public partial class ViewSwitcher {
 }

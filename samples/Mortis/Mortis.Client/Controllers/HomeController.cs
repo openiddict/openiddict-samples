@@ -7,36 +7,35 @@ using System.Web.Mvc;
 using Microsoft.Owin.Security.Cookies;
 using static OpenIddict.Client.Owin.OpenIddictClientOwinConstants;
 
-namespace Mortis.Client.Controllers
+namespace Mortis.Client.Controllers;
+
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    public HomeController(IHttpClientFactory httpClientFactory)
+        => _httpClientFactory = httpClientFactory;
+
+    [HttpGet, Route("~/")]
+    public ActionResult Index() => View();
+
+    [Authorize, HttpPost, Route("~/")]
+    [ValidateAntiForgeryToken]
+    public async Task<ActionResult> Index(CancellationToken cancellationToken)
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+        var context = HttpContext.GetOwinContext();
 
-        public HomeController(IHttpClientFactory httpClientFactory)
-            => _httpClientFactory = httpClientFactory;
+        var result = await context.Authentication.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationType);
+        var token = result.Properties.Dictionary[Tokens.BackchannelAccessToken];
 
-        [HttpGet, Route("~/")]
-        public ActionResult Index() => View();
+        using var client = _httpClientFactory.CreateClient();
 
-        [Authorize, HttpPost, Route("~/")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Index(CancellationToken cancellationToken)
-        {
-            var context = HttpContext.GetOwinContext();
+        using var request = new HttpRequestMessage(HttpMethod.Get, "https://localhost:44349/api/message");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var result = await context.Authentication.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationType);
-            var token = result.Properties.Dictionary[Tokens.BackchannelAccessToken];
+        using var response = await client.SendAsync(request, cancellationToken);
+        response.EnsureSuccessStatusCode();
 
-            using var client = _httpClientFactory.CreateClient();
-
-            using var request = new HttpRequestMessage(HttpMethod.Get, "https://localhost:44349/api/message");
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            using var response = await client.SendAsync(request, cancellationToken);
-            response.EnsureSuccessStatusCode();
-
-            return View(model: await response.Content.ReadAsStringAsync());
-        }
+        return View(model: await response.Content.ReadAsStringAsync());
     }
 }
