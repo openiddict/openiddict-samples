@@ -37,18 +37,13 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.302'
+      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
     - name: Build
-      run: eng\common\CIBuild.cmd -configuration Release -prepareMachine -integrationTest
       if: ${{ runner.os == 'Windows' }}
+      run: eng\common\CIBuild.cmd -configuration Release -prepareMachine -integrationTest
 
     - name: Build
+      if: ${{ runner.os != 'Windows' }}
       shell: pwsh
       run: ./eng/common/cibuild.sh -configuration Release -prepareMachine -integrationTest
-      if: ${{ runner.os != 'Windows' }}
