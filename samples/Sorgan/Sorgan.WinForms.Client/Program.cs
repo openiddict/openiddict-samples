@@ -6,6 +6,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Sorgan.WinForms.Client;
 
+ApplicationConfiguration.Initialize();
+
 var host = new HostBuilder()
     // Note: applications for which a single instance is preferred can reference
     // the Dapplo.Microsoft.Extensions.Hosting.AppServices package and call this

@@ -5,6 +5,7 @@
     <TargetFramework>$(NetCoreWindowsTargetFramework)</TargetFramework>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
   </PropertyGroup>
 
   <ItemGroup>
