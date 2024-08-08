@@ -70,6 +70,7 @@ public class Worker : IHostedService
                         Permissions.Endpoints.Logout,
                         Permissions.Endpoints.Token,
                         Permissions.GrantTypes.AuthorizationCode,
+                        Permissions.GrantTypes.RefreshToken,
                         Permissions.ResponseTypes.Code,
                         Permissions.Scopes.Email,
                         Permissions.Scopes.Profile,

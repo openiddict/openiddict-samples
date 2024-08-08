@@ -152,8 +152,12 @@ public class AuthenticationController : Controller
         // To make cookies less heavy, tokens that are not used are filtered out before creating the cookie.
         properties.StoreTokens(result.Properties.GetTokens().Where(token => token.Name is
             // Preserve the access, identity and refresh tokens returned in the token response, if available.
-            OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken   or
-            OpenIddictClientAspNetCoreConstants.Tokens.BackchannelIdentityToken or
+            //
+            // The expiration date of the access token is also preserved to later determine
+            // whether the access token is expired and proactively refresh tokens if necessary.
+            OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken               or
+            OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessTokenExpirationDate or
+            OpenIddictClientAspNetCoreConstants.Tokens.BackchannelIdentityToken             or
             OpenIddictClientAspNetCoreConstants.Tokens.RefreshToken));
 
         // Ask the default sign-in handler to return a new cookie and redirect the
