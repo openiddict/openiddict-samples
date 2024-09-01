@@ -4,30 +4,28 @@
  * the license and the contributors participating to this project.
  */
 
+using Matty.Server.ViewModels.Shared;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
-using Matty.Server.ViewModels.Shared;
 
 namespace Matty.Server.Controllers;
 
 public class ErrorController : Controller
 {
-    [Route("error")]
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true), Route("~/error")]
     public IActionResult Error()
     {
-        // If the error was not caused by an invalid
-        // OIDC request, display a generic error page.
+        // If the error originated from the OpenIddict server, render the error details.
         var response = HttpContext.GetOpenIddictServerResponse();
-        if (response == null)
+        if (response is not null)
         {
-            return View(new ErrorViewModel());
+            return View(new ErrorViewModel
+            {
+                Error = response.Error,
+                ErrorDescription = response.ErrorDescription
+            });
         }
 
-        return View(new ErrorViewModel
-        {
-            Error = response.Error,
-            ErrorDescription = response.ErrorDescription
-        });
+        return View(new ErrorViewModel());
     }
 }
