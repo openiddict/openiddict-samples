@@ -7,7 +7,7 @@
     <VSToolsPath>$(RepoRoot)eng\msbuild\web</VSToolsPath>
     <MvcBuildViews>false</MvcBuildViews>
     <ImplicitUsings>disable</ImplicitUsings>
-    <NoWarn>CA3147</NoWarn>
+    <NoWarn>CA3147;NU1605</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

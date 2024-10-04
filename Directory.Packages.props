@@ -43,7 +43,7 @@
     <PackageVersion Include="Microsoft.Owin.Hosting"                                     Version="4.2.2"   />
     <PackageVersion Include="Microsoft.Owin.Security.Cookies"                            Version="4.2.2"   />
     <PackageVersion Include="Microsoft.Owin.Security.OAuth"                              Version="4.2.2"   />
-    <PackageVersion Include="Microsoft.Web.Infrastructure"                               Version="1.0.0"   />
+    <PackageVersion Include="Microsoft.Web.Infrastructure"                               Version="2.0.0"   />
     <PackageVersion Include="OpenIddict.Client.SystemIntegration"                        Version="5.8.0"   />
     <PackageVersion Include="OpenIddict.Client.SystemNetHttp"                            Version="5.8.0"   />
     <PackageVersion Include="OpenIddict.EntityFramework"                                 Version="5.8.0"   />
