@@ -47,7 +47,6 @@ public class Startup
         // (like pruning orphaned authorizations/tokens from the database) at regular intervals.
         services.AddQuartz(options =>
         {
-            options.UseMicrosoftDependencyInjectionJobFactory();
             options.UseSimpleTypeLoader();
             options.UseInMemoryStore();
         });
@@ -74,11 +73,11 @@ public class Startup
             {
                 // Enable the authorization, logout, token and userinfo endpoints.
                 options.SetAuthorizationEndpointUris("connect/authorize")
-                       .SetLogoutEndpointUris("connect/logout")
+                       .SetEndSessionEndpointUris("connect/logout")
                        .SetIntrospectionEndpointUris("connect/introspect")
                        .SetTokenEndpointUris("connect/token")
-                       .SetUserinfoEndpointUris("connect/userinfo")
-                       .SetVerificationEndpointUris("connect/verify");
+                       .SetUserInfoEndpointUris("connect/userinfo")
+                       .SetEndUserVerificationEndpointUris("connect/verify");
 
                 // Mark the "email", "profile" and "roles" scopes as supported scopes.
                 options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
@@ -96,9 +95,9 @@ public class Startup
                 // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
                 options.UseAspNetCore()
                        .EnableAuthorizationEndpointPassthrough()
-                       .EnableLogoutEndpointPassthrough()
+                       .EnableEndSessionEndpointPassthrough()
                        .EnableTokenEndpointPassthrough()
-                       .EnableUserinfoEndpointPassthrough()
+                       .EnableUserInfoEndpointPassthrough()
                        .EnableStatusCodePagesIntegration();
             })
 

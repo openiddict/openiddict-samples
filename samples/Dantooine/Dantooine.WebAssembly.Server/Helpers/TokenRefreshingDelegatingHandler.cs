@@ -42,7 +42,7 @@ namespace Dantooine.WebAssembly.Server.Helpers
                 var result = await _service.AuthenticateWithRefreshTokenAsync(new RefreshTokenAuthenticationRequest
                 {
                     CancellationToken = cancellationToken,
-                    DisableUserinfo = true,
+                    DisableUserInfo = true,
                     RefreshToken = GetRefreshToken(request.Options)
                 });
 
@@ -57,7 +57,7 @@ namespace Dantooine.WebAssembly.Server.Helpers
                 var result = await _service.AuthenticateWithRefreshTokenAsync(new RefreshTokenAuthenticationRequest
                 {
                     CancellationToken = cancellationToken,
-                    DisableUserinfo = true,
+                    DisableUserInfo = true,
                     RefreshToken = GetRefreshToken(request.Options)
                 });
 

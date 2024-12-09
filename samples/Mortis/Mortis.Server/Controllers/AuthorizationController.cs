@@ -95,7 +95,7 @@ public class AuthorizationController : Controller
             // return an authorization response without displaying the consent form.
             case ConsentTypes.Implicit:
             case ConsentTypes.External when authorizations.Count is not 0:
-            case ConsentTypes.Explicit when authorizations.Count is not 0 && !request.HasPrompt(Prompts.Consent):
+            case ConsentTypes.Explicit when authorizations.Count is not 0 && !request.HasPromptValue(PromptValues.Consent):
                 // Create the claims-based identity that will be used by OpenIddict to generate tokens.
                 var identity = new ClaimsIdentity(
                     authenticationType: OpenIddictServerOwinDefaults.AuthenticationType,
@@ -134,8 +134,8 @@ public class AuthorizationController : Controller
 
             // At this point, no authorization was found in the database and an error must be returned
             // if the client application specified prompt=none in the authorization request.
-            case ConsentTypes.Explicit   when request.HasPrompt(Prompts.None):
-            case ConsentTypes.Systematic when request.HasPrompt(Prompts.None):
+            case ConsentTypes.Explicit   when request.HasPromptValue(PromptValues.None):
+            case ConsentTypes.Systematic when request.HasPromptValue(PromptValues.None):
                 context.Authentication.Challenge(
                     authenticationTypes: OpenIddictServerOwinDefaults.AuthenticationType,
                     properties: new AuthenticationProperties(new Dictionary<string, string>

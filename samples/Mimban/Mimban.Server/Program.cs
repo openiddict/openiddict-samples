@@ -18,7 +18,6 @@ var builder = WebApplication.CreateBuilder(args);
 // (like pruning orphaned authorizations/tokens from the database) at regular intervals.
 builder.Services.AddQuartz(options =>
 {
-    options.UseMicrosoftDependencyInjectionJobFactory();
     options.UseSimpleTypeLoader();
     options.UseInMemoryStore();
 });

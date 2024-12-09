@@ -25,7 +25,6 @@ var builder = WebApplication.CreateBuilder(args);
 // (like pruning orphaned authorizations/tokens from the database) at regular intervals.
 builder.Services.AddQuartz(options =>
 {
-    options.UseMicrosoftDependencyInjectionJobFactory();
     options.UseSimpleTypeLoader();
     options.UseInMemoryStore();
 });
@@ -163,7 +162,7 @@ await using (var scope = app.Services.CreateAsyncScope())
                 Permissions =
                 {
                     Permissions.Endpoints.Authorization,
-                    Permissions.Endpoints.Logout,
+                    Permissions.Endpoints.EndSession,
                     Permissions.Endpoints.Token,
                     Permissions.GrantTypes.AuthorizationCode,
                     Permissions.GrantTypes.RefreshToken,

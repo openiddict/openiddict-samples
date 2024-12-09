@@ -37,7 +37,7 @@ var host = new HostBuilder()
                 // Note: this sample uses the authorization code, device authorization code
                 // and refresh token flows, but you can enable the other flows if necessary.
                 options.AllowAuthorizationCodeFlow()
-                       .AllowDeviceCodeFlow()
+                       .AllowDeviceAuthorizationFlow()
                        .AllowRefreshTokenFlow();
 
                 // Register the signing and encryption credentials used to protect

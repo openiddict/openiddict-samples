@@ -23,7 +23,7 @@ var host = new HostBuilder()
             {
                 // Note: this sample uses the device authorization flow,
                 // but you can enable the other flows if necessary.
-                options.AllowDeviceCodeFlow();
+                options.AllowDeviceAuthorizationFlow();
 
                 // Disable token storage, which is not necessary for the device authorization flow.
                 options.DisableTokenStorage();

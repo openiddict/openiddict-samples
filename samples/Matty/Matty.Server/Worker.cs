@@ -37,7 +37,7 @@ public class Worker : IHostedService
                 {
                     Permissions.GrantTypes.DeviceCode,
                     Permissions.GrantTypes.RefreshToken,
-                    Permissions.Endpoints.Device,
+                    Permissions.Endpoints.DeviceAuthorization,
                     Permissions.Endpoints.Token,
                     Permissions.Scopes.Email,
                     Permissions.Scopes.Profile,

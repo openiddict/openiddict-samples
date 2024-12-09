@@ -43,7 +43,7 @@ public class Startup
             {
                 // Enable the authorization, logout and token endpoints.
                 options.SetAuthorizationEndpointUris("connect/authorize")
-                       .SetLogoutEndpointUris("connect/logout")
+                       .SetEndSessionEndpointUris("connect/logout")
                        .SetTokenEndpointUris("connect/token");
 
                 // Mark the "email", "profile" and "roles" scopes as supported scopes.
@@ -60,7 +60,7 @@ public class Startup
                 // Register the OWIN host and configure the OWIN-specific options.
                 options.UseOwin()
                        .EnableAuthorizationEndpointPassthrough()
-                       .EnableLogoutEndpointPassthrough()
+                       .EnableEndSessionEndpointPassthrough()
                        .EnableTokenEndpointPassthrough();
             })
 
@@ -162,7 +162,7 @@ public class Startup
                     Permissions =
                     {
                         Permissions.Endpoints.Authorization,
-                        Permissions.Endpoints.Logout,
+                        Permissions.Endpoints.EndSession,
                         Permissions.Endpoints.Token,
                         Permissions.GrantTypes.AuthorizationCode,
                         Permissions.ResponseTypes.Code,

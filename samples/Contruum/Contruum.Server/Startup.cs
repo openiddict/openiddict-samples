@@ -1,4 +1,6 @@
+using System.Globalization;
 using System.IO;
+using System.Text.Json;
 using Contruum.Server.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -7,7 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenIddict.Abstractions;
 using Quartz;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 using static OpenIddict.Server.OpenIddictServerEvents;
 
 namespace Contruum.Server;
@@ -43,7 +47,6 @@ public class Startup
         // (like pruning orphaned authorizations/tokens from the database) at regular intervals.
         services.AddQuartz(options =>
         {
-            options.UseMicrosoftDependencyInjectionJobFactory();
             options.UseSimpleTypeLoader();
             options.UseInMemoryStore();
         });
@@ -69,8 +72,8 @@ public class Startup
                 options.SetAuthorizationEndpointUris(Configuration["OpenIddict:Endpoints:Authorization"]!)
                        .SetTokenEndpointUris(Configuration["OpenIddict:Endpoints:Token"]!)
                        .SetIntrospectionEndpointUris(Configuration["OpenIddict:Endpoints:Introspection"]!)
-                       .SetUserinfoEndpointUris(Configuration["OpenIddict:Endpoints:Userinfo"]!)
-                       .SetLogoutEndpointUris(Configuration["OpenIddict:Endpoints:Logout"]!);
+                       .SetUserInfoEndpointUris(Configuration["OpenIddict:Endpoints:Userinfo"]!)
+                       .SetEndSessionEndpointUris(Configuration["OpenIddict:Endpoints:Logout"]!);
 
                 // Enable the authorization code, implicit, hybrid and the refresh token flows.
                 options.AllowAuthorizationCodeFlow()
@@ -96,11 +99,51 @@ public class Startup
                 options.UseAspNetCore()
                        .EnableAuthorizationEndpointPassthrough()
                        .EnableAuthorizationRequestCaching()
-                       .EnableLogoutEndpointPassthrough();
+                       .EnableEndSessionEndpointPassthrough();
 
-                // Register the event handler responsible for populating userinfo responses.
-                options.AddEventHandler<HandleUserinfoRequestContext>(options =>
-                    options.UseSingletonHandler<Handlers.PopulateUserinfo>());
+                // Register the custom event handler responsible for populating userinfo responses.
+                options.AddEventHandler<HandleUserInfoRequestContext>(options => options.UseInlineHandler(context =>
+                {
+                    if (context.Principal.HasScope(Scopes.Profile))
+                    {
+                        context.GivenName = context.Principal.GetClaim(Claims.GivenName);
+                        context.FamilyName = context.Principal.GetClaim(Claims.FamilyName);
+                        context.BirthDate = context.Principal.GetClaim(Claims.Birthdate);
+                        context.Profile = context.Principal.GetClaim(Claims.Profile);
+                        context.PreferredUsername = context.Principal.GetClaim(Claims.PreferredUsername);
+                        context.Website = context.Principal.GetClaim(Claims.Website);
+
+                        context.Claims[Claims.Name] = context.Principal.GetClaim(Claims.Name);
+                        context.Claims[Claims.Gender] = context.Principal.GetClaim(Claims.Gender);
+                        context.Claims[Claims.MiddleName] = context.Principal.GetClaim(Claims.MiddleName);
+                        context.Claims[Claims.Nickname] = context.Principal.GetClaim(Claims.Nickname);
+                        context.Claims[Claims.Picture] = context.Principal.GetClaim(Claims.Picture);
+                        context.Claims[Claims.Locale] = context.Principal.GetClaim(Claims.Locale);
+                        context.Claims[Claims.Zoneinfo] = context.Principal.GetClaim(Claims.Zoneinfo);
+                        context.Claims[Claims.UpdatedAt] = long.Parse(
+                            context.Principal.GetClaim(Claims.UpdatedAt)!,
+                            NumberStyles.Number, CultureInfo.InvariantCulture);
+                    }
+
+                    if (context.Principal.HasScope(Scopes.Email))
+                    {
+                        context.Email = context.Principal.GetClaim(Claims.Email);
+                        context.EmailVerified = false;
+                    }
+
+                    if (context.Principal.HasScope(Scopes.Phone))
+                    {
+                        context.PhoneNumber = context.Principal.GetClaim(Claims.PhoneNumber);
+                        context.PhoneNumberVerified = false;
+                    }
+
+                    if (context.Principal.HasScope(Scopes.Address))
+                    {
+                        context.Address = JsonSerializer.Deserialize<JsonElement>(context.Principal.GetClaim(Claims.Address)!);
+                    }
+
+                    return default;
+                }));
             })
 
             .AddValidation(options =>

@@ -47,7 +47,6 @@ public class Startup
         // (like pruning orphaned authorizations/tokens from the database) at regular intervals.
         services.AddQuartz(options =>
         {
-            options.UseMicrosoftDependencyInjectionJobFactory();
             options.UseSimpleTypeLoader();
             options.UseInMemoryStore();
         });
@@ -73,17 +72,17 @@ public class Startup
             .AddServer(options =>
             {
                 // Enable the device, verification, token and userinfo endpoints.
-                options.SetDeviceEndpointUris("connect/device")
-                       .SetVerificationEndpointUris("connect/verify")
+                options.SetDeviceAuthorizationEndpointUris("connect/device")
+                       .SetEndUserVerificationEndpointUris("connect/verify")
                        .SetTokenEndpointUris("connect/token")
-                       .SetUserinfoEndpointUris("connect/userinfo");
+                       .SetUserInfoEndpointUris("connect/userinfo");
 
                 // Mark the "email", "profile" and "roles" scopes as supported scopes.
                 options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
 
                 // Note: this sample uses the device code and refresh token flows but you can
                 // enable the other flows if you need to support implicit, password, etc.
-                options.AllowDeviceCodeFlow()
+                options.AllowDeviceAuthorizationFlow()
                        .AllowRefreshTokenFlow();
 
                 // Register the signing and encryption credentials.
@@ -93,8 +92,8 @@ public class Startup
                 // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
                 options.UseAspNetCore()
                        .EnableTokenEndpointPassthrough()
-                       .EnableUserinfoEndpointPassthrough()
-                       .EnableVerificationEndpointPassthrough()
+                       .EnableUserInfoEndpointPassthrough()
+                       .EnableEndUserVerificationEndpointPassthrough()
                        .EnableStatusCodePagesIntegration();
             })
 
