@@ -98,7 +98,6 @@ public class Startup
                 // so that token requests are automatically handled by OpenIddict.
                 options.UseAspNetCore()
                        .EnableAuthorizationEndpointPassthrough()
-                       .EnableAuthorizationRequestCaching()
                        .EnableEndSessionEndpointPassthrough();
 
                 // Register the custom event handler responsible for populating userinfo responses.
