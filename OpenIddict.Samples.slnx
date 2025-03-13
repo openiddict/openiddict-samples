@@ -1,0 +1,112 @@
+<Solution>
+
+  <Folder Name="/eng/">
+    <File Path="eng/Build.props" />
+    <File Path="eng/Signing.props" />
+    <File Path="eng/Tools.props" />
+    <File Path="eng/Version.Details.xml" />
+  </Folder>
+
+  <Folder Name="/root/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="build.cmd" />
+    <File Path="build.sh" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="LICENSE.md" />
+    <File Path="NuGet.config" />
+    <File Path="README.md" />
+  </Folder>
+
+  <Folder Name="/samples/Aridka/">
+    <Project Path="samples/Aridka/Aridka.Client/Aridka.Client.csproj" />
+    <Project Path="samples/Aridka/Aridka.Server/Aridka.Server.csproj" />
+  </Folder>
+
+  <Folder Name="/samples/Balosar/">
+    <Project Path="samples/Balosar/Balosar.Client/Balosar.Client.csproj" />
+    <Project Path="samples/Balosar/Balosar.Server/Balosar.Server.csproj" />
+    <Project Path="samples/Balosar/Balosar.Shared/Balosar.Shared.csproj" />
+  </Folder>
+
+  <Folder Name="/samples/Contruum/">
+    <Project Path="samples/Contruum/Contruum.Server/Contruum.Server.csproj" />
+  </Folder>
+
+  <Folder Name="/samples/Dantooine/">
+    <Project Path="samples/Dantooine/Dantooine.Api/Dantooine.Api.csproj" />
+    <Project Path="samples/Dantooine/Dantooine.Server/Dantooine.Server.csproj" />
+    <Project Path="samples/Dantooine/Dantooine.WebAssembly.Client/Dantooine.WebAssembly.Client.csproj" />
+    <Project Path="samples/Dantooine/Dantooine.WebAssembly.Server/Dantooine.WebAssembly.Server.csproj" />
+    <Project Path="samples/Dantooine/Dantooine.WebAssembly.Shared/Dantooine.WebAssembly.Shared.csproj" />
+  </Folder>
+
+  <Folder Name="/samples/Fornax/">
+    <Project Path="samples/Fornax/Fornax.Client/Fornax.Client.csproj" />
+    <Project Path="samples/Fornax/Fornax.Server/Fornax.Server.csproj" />
+  </Folder>
+
+  <Folder Name="/samples/Hollastin/">
+    <Project Path="samples/Hollastin/Hollastin.Client/Hollastin.Client.csproj" />
+    <Project Path="samples/Hollastin/Hollastin.Server/Hollastin.Server.csproj" />
+  </Folder>
+
+  <Folder Name="/samples/Imynusoph/">
+    <Project Path="samples/Imynusoph/Imynusoph.Client/Imynusoph.Client.csproj" />
+    <Project Path="samples/Imynusoph/Imynusoph.Server/Imynusoph.Server.csproj" />
+  </Folder>
+
+  <Folder Name="/samples/Kalarba/">
+    <Project Path="samples/Kalarba/Kalarba.Client/Kalarba.Client.csproj" />
+    <Project Path="samples/Kalarba/Kalarba.Server/Kalarba.Server.csproj" />
+  </Folder>
+
+  <Folder Name="/samples/Matty/">
+    <Project Path="samples/Matty/Matty.Client/Matty.Client.csproj" />
+    <Project Path="samples/Matty/Matty.Server/Matty.Server.csproj" />
+  </Folder>
+
+  <Folder Name="/samples/Mimban/">
+    <Project Path="samples/Mimban/Mimban.Client/Mimban.Client.csproj" />
+    <Project Path="samples/Mimban/Mimban.Server/Mimban.Server.csproj" />
+  </Folder>
+
+  <Folder Name="/samples/Mortis/">
+    <Project Path="samples/Mortis/Mortis.Client/Mortis.Client.csproj" />
+    <Project Path="samples/Mortis/Mortis.Server/Mortis.Server.csproj" />
+  </Folder>
+
+  <Folder Name="/samples/Sorgan/">
+    <Project Path="samples/Sorgan/Sorgan.BlazorHybrid.Client/Sorgan.BlazorHybrid.Client.csproj" />
+    <Project Path="samples/Sorgan/Sorgan.Console.Client/Sorgan.Console.Client.csproj" />
+    <Project Path="samples/Sorgan/Sorgan.WinForms.Client/Sorgan.WinForms.Client.csproj" />
+    <Project Path="samples/Sorgan/Sorgan.Wpf.Client/Sorgan.Wpf.Client.csproj" />
+  </Folder>
+
+  <Folder Name="/samples/Velusia/">
+    <Project Path="samples/Velusia/Velusia.Client/Velusia.Client.csproj" />
+    <Project Path="samples/Velusia/Velusia.Server/Velusia.Server.csproj" />
+  </Folder>
+
+  <Folder Name="/samples/Weytta/">
+    <Project Path="samples/Weytta/Weytta.Client/Weytta.Client.csproj" />
+    <Project Path="samples/Weytta/Weytta.Server/Weytta.Server.csproj" />
+  </Folder>
+
+  <Folder Name="/samples/Zirku/">
+    <Project Path="samples/Zirku/Zirku.Api1/Zirku.Api1.csproj" />
+    <Project Path="samples/Zirku/Zirku.Api2/Zirku.Api2.csproj" />
+    <Project Path="samples/Zirku/Zirku.Client1/Zirku.Client1.csproj" />
+    <Project Path="samples/Zirku/Zirku.Client2/Zirku.Client2.csproj" />
+    <Project Path="samples/Zirku/Zirku.Server/Zirku.Server.csproj" />
+  </Folder>
+
+  <Folder Name="/workflows/">
+    <File Path=".github/workflows/build.yml" />
+  </Folder>
+
+</Solution>

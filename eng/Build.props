@@ -1,0 +1,7 @@
+<Project>
+
+  <ItemGroup>
+    <ProjectToBuild Include="$(RepoRoot)samples\**\*.csproj" />
+  </ItemGroup>
+
+</Project>
