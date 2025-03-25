@@ -24,6 +24,7 @@
   <PropertyGroup>
     <RepoRelativeProjectDir>$([MSBuild]::MakeRelative($(RepoRoot), $(MSBuildProjectDirectory)))</RepoRelativeProjectDir>
     <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
+    <WebApplicationsTargetPath>$(MSBuildThisFileDirectory)eng\msbuild\web\WebApplications\Microsoft.WebApplication.targets</WebApplicationsTargetPath>
   </PropertyGroup>
 
   <PropertyGroup>
