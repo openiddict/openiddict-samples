@@ -20,7 +20,6 @@ using Matty.Server.Data;
 using Matty.Server.Helpers;
 using Matty.Server.ViewModels.Authorization;
 using static OpenIddict.Abstractions.OpenIddictConstants;
-using System.Collections.Immutable;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Matty.Server.Controllers;
