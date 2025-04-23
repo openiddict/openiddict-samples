@@ -106,6 +106,7 @@ This project uses the newer `.slnx` format instead of the traditional `.sln` fil
 > 5. Click **OK** and restart Visual Studio.
 >
 > Once the solution file opens, you can set the desired project as the **Startup Project** (right-click on the project > *Set as Startup Project*) and start debugging or running as usual.
+
 ## Contributors
 
 **OpenIddict** is actively maintained by **[Kévin Chalet](https://github.com/kevinchalet)**. Contributions are welcome and can be submitted using pull requests.
