@@ -19,7 +19,6 @@ using Yarp.ReverseProxy.Forwarder;
 using Yarp.ReverseProxy.Transforms;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using static OpenIddict.Client.AspNetCore.OpenIddictClientAspNetCoreConstants;
-using static OpenIddict.Client.OpenIddictClientModels;
 
 namespace Dantooine.WebAssembly.Server;
 
@@ -62,8 +61,7 @@ public class Startup
         {
             options.LoginPath = "/login";
             options.LogoutPath = "/logout";
-            options.ExpireTimeSpan = TimeSpan.FromMinutes(50);
-            options.SlidingExpiration = false;
+            options.ExpireTimeSpan = TimeSpan.FromDays(7);
         });
 
         // OpenIddict offers native integration with Quartz.NET to perform scheduled tasks
@@ -185,8 +183,7 @@ public class Startup
                     // OpenIddict uses rolling refresh tokens: if the refresh token wasn't replaced, future refresh
                     // token requests would end up being rejected as they would be treated as replayed requests.
 
-                    if (context.ProxyResponse is not TokenRefreshingHttpResponseMessage {
-                        RefreshTokenAuthenticationResult: RefreshTokenAuthenticationResult } response)
+                    if (context.ProxyResponse is not TokenRefreshingHttpResponseMessage response)
                     {
                         return;
                     }
@@ -209,6 +206,16 @@ public class Startup
                     // Remove the redirect URI from the authentication properties
                     // to prevent the cookies handler from genering a 302 response.
                     properties.RedirectUri = null;
+
+                    // Replace the creation/expiration dates of the authentication ticket to extend the lifetime of the cookie.
+                    //
+                    // Note: doing that is not mandatory: if the expiration date is not replaced here, the resulting cookie
+                    // will have the same expiration date as the authentication cookie present in the HTTP request headers.
+                    //
+                    // In any case, if the sliding expiration mechanism is enabled, the cookie (but not the data it contains)
+                    // will be automatically renewed by the cookie handler upon reaching half of the cookie's lifespan.
+                    properties.IssuedUtc = TimeProvider.System.GetUtcNow();
+                    properties.ExpiresUtc = properties.IssuedUtc + TimeSpan.FromDays(7);
 
                     // Note: this event handler can be called concurrently for the same user if multiple HTTP
                     // responses are returned in parallel: in this case, the browser will always store the latest
