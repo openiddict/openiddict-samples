@@ -25,7 +25,7 @@ namespace Dantooine.WebAssembly.Server.Helpers
             // If it's not, try to use it: if the resource server returns a 401 error response, try
             // to refresh the tokens before replaying the request with the new access token attached.
             var date = GetBackchannelAccessTokenExpirationDate(request.Options);
-            if (date is null || DateTimeOffset.UtcNow <= date?.AddMinutes(-5))
+            if (date is null || TimeProvider.System.GetUtcNow() <= date?.AddMinutes(-5))
             {
                 request.Headers.Authorization = new AuthenticationHeaderValue(Schemes.Bearer, GetBackchannelAccessToken(request.Options));
 

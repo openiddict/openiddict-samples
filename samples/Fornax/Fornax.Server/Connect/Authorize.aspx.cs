@@ -32,11 +32,9 @@ public partial class Authorize : Page
             throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
         // Retrieve the user principal stored in the authentication cookie.
-        // If a max_age parameter was provided, ensure that the cookie is not too old.
-        // If the user principal can't be extracted or the cookie is too old, redirect the user to the login page.
+        // If the user principal can't be extracted, redirect the user to the login page.
         var result = await context.Authentication.AuthenticateAsync(DefaultAuthenticationTypes.ApplicationCookie);
-        if (result == null || result.Identity == null || (request.MaxAge != null && result.Properties?.IssuedUtc != null &&
-            DateTimeOffset.UtcNow - result.Properties.IssuedUtc > TimeSpan.FromSeconds(request.MaxAge.Value)))
+        if (result?.Identity is null)
         {
             context.Authentication.Challenge(DefaultAuthenticationTypes.ApplicationCookie);
             Visible = false;
