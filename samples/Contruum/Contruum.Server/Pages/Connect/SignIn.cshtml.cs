@@ -29,7 +29,7 @@ public class SignInModel : PageModel
     {
         var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, Claims.Name, Claims.Role);
 
-        var time = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture);
+        var time = TimeProvider.System.GetUtcNow().ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture);
         identity.AddClaim(new Claim(Claims.AuthenticationTime, time, ClaimValueTypes.Integer64));
 
         if (string.Equals(Username, "John", StringComparison.OrdinalIgnoreCase))
