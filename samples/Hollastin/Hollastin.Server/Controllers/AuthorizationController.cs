@@ -4,11 +4,7 @@
  * the license and the contributors participating to this project.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Hollastin.Server.Models;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
@@ -37,13 +33,15 @@ public class AuthorizationController : Controller
     [HttpPost("~/connect/token"), IgnoreAntiforgeryToken, Produces("application/json")]
     public async Task<IActionResult> Exchange()
     {
-        var request = HttpContext.GetOpenIddictServerRequest();
+        var request = HttpContext.GetOpenIddictServerRequest() ??
+            throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
+
         if (request.IsPasswordGrantType())
         {
-            var user = await _userManager.FindByNameAsync(request.Username);
+            var user = await _userManager.FindByNameAsync(request.Username!);
             if (user == null)
             {
-                var properties = new AuthenticationProperties(new Dictionary<string, string>
+                var properties = new AuthenticationProperties(new Dictionary<string, string?>
                 {
                     [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
                     [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
@@ -54,10 +52,10 @@ public class AuthorizationController : Controller
             }
 
             // Validate the username/password parameters and ensure the account is not locked out.
-            var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
+            var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password!, lockoutOnFailure: true);
             if (!result.Succeeded)
             {
-                var properties = new AuthenticationProperties(new Dictionary<string, string>
+                var properties = new AuthenticationProperties(new Dictionary<string, string?>
                 {
                     [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
                     [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
@@ -108,7 +106,7 @@ public class AuthorizationController : Controller
             case Claims.Name or Claims.PreferredUsername:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Profile))
+                if (claim.Subject!.HasScope(Scopes.Profile))
                     yield return Destinations.IdentityToken;
 
                 yield break;
@@ -116,7 +114,7 @@ public class AuthorizationController : Controller
             case Claims.Email:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Email))
+                if (claim.Subject!.HasScope(Scopes.Email))
                     yield return Destinations.IdentityToken;
 
                 yield break;
@@ -124,7 +122,7 @@ public class AuthorizationController : Controller
             case Claims.Role:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Roles))
+                if (claim.Subject!.HasScope(Scopes.Roles))
                     yield return Destinations.IdentityToken;
 
                 yield break;

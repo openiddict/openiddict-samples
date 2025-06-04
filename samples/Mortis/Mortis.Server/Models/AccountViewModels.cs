@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#nullable disable
+
 using System.ComponentModel.DataAnnotations;
 
 namespace Mortis.Server.Models;

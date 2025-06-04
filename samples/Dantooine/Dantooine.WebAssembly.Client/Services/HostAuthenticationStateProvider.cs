@@ -1,12 +1,8 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Dantooine.WebAssembly.Shared.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.Logging;
 
 namespace Dantooine.WebAssembly.Client.Services;
 
@@ -37,7 +33,7 @@ public class HostAuthenticationStateProvider : AuthenticationStateProvider
         return new AuthenticationState(await GetUser(useCache: true));
     }
 
-    public void SignIn(string customReturnUrl = null)
+    public void SignIn(string? customReturnUrl = null)
     {
         var returnUrl = customReturnUrl != null ? _navigation.ToAbsoluteUri(customReturnUrl).ToString() : null;
         var encodedReturnUrl = Uri.EscapeDataString(returnUrl ?? _navigation.Uri);
@@ -63,11 +59,10 @@ public class HostAuthenticationStateProvider : AuthenticationStateProvider
 
     private async Task<ClaimsPrincipal> FetchUser()
     {
-        UserInfo user = null;
+        UserInfo? user = null;
 
         try
         {
-            _logger.LogInformation(_client.BaseAddress.ToString());
             user = await _client.GetFromJsonAsync<UserInfo>("api/User");
         }
         catch (Exception exc)

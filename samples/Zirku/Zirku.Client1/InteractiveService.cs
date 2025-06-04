@@ -1,9 +1,5 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net;
 using System.Net.Http.Headers;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using OpenIddict.Client;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -57,9 +53,9 @@ public class InteractiveService : BackgroundService
             });
 
             Console.WriteLine("Response from Api1: {0}", await GetResourceFromApi1Async(
-                response.BackchannelAccessToken ?? response.FrontchannelAccessToken, stoppingToken));
+                (response.BackchannelAccessToken ?? response.FrontchannelAccessToken)!, stoppingToken));
             Console.WriteLine("Response from Api2: {0}", await GetResourceFromApi2Async(
-                response.BackchannelAccessToken ?? response.FrontchannelAccessToken, stoppingToken));
+                (response.BackchannelAccessToken ?? response.FrontchannelAccessToken)!, stoppingToken));
         }
 
         catch (OperationCanceledException)

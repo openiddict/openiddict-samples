@@ -1,10 +1,6 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading;
-using System.Threading.Tasks;
 using OpenIddict.Client;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using static OpenIddict.Client.AspNetCore.OpenIddictClientAspNetCoreConstants;
@@ -67,15 +63,18 @@ namespace Dantooine.WebAssembly.Server.Helpers
             }
 
             static string GetBackchannelAccessToken(HttpRequestOptions options) =>
-                options.TryGetValue(new(Tokens.BackchannelAccessToken), out string token) ? token :
+                options.TryGetValue(new(Tokens.BackchannelAccessToken), out string? token) &&
+                !string.IsNullOrEmpty(token) ? token :
                 throw new InvalidOperationException("The access token couldn't be found in the request options.");
 
             static DateTimeOffset? GetBackchannelAccessTokenExpirationDate(HttpRequestOptions options) =>
-                options.TryGetValue(new(Tokens.BackchannelAccessTokenExpirationDate), out string token) &&
+                options.TryGetValue(new(Tokens.BackchannelAccessTokenExpirationDate), out string? token) &&
+                !string.IsNullOrEmpty(token) &&
                 DateTimeOffset.TryParse(token, CultureInfo.InvariantCulture, out DateTimeOffset date) ? date : null;
 
             static string GetRefreshToken(HttpRequestOptions options) =>
-                options.TryGetValue(new(Tokens.RefreshToken), out string token) ? token :
+                options.TryGetValue(new(Tokens.RefreshToken), out string? token) &&
+                !string.IsNullOrEmpty(token) ? token :
                 throw new InvalidOperationException("The refresh token couldn't be found in the request options.");
         }
     }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using OpenIddict.Client;
+﻿using OpenIddict.Client;
 using Yarp.ReverseProxy.Forwarder;
 
 namespace Dantooine.WebAssembly.Server.Helpers

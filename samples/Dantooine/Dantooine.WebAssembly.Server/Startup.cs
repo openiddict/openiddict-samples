@@ -1,18 +1,10 @@
-using System;
 using System.Globalization;
-using System.IO;
 using Dantooine.WebAssembly.Server.Helpers;
 using Dantooine.WebAssembly.Server.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using OpenIddict.Client;
 using Quartz;
 using Yarp.ReverseProxy.Forwarder;
@@ -161,6 +153,10 @@ public class Startup
                     // Alternatively, the user tokens could be stored in a database or a distributed cache.
 
                     var result = await context.HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                    if (result is not { Succeeded: true })
+                    {
+                        return;
+                    }
 
                     context.ProxyRequest.Options.Set(
                         key  : new(Tokens.BackchannelAccessToken),
@@ -189,13 +185,17 @@ public class Startup
                     }
 
                     var result = await context.HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                    if (result is not { Succeeded: true })
+                    {
+                        return;
+                    }
 
                     // Override the tokens using the values returned in the token response.
                     var properties = result.Properties.Clone();
                     properties.UpdateTokenValue(Tokens.BackchannelAccessToken, response.RefreshTokenAuthenticationResult.AccessToken);
 
                     properties.UpdateTokenValue(Tokens.BackchannelAccessTokenExpirationDate,
-                        response.RefreshTokenAuthenticationResult.AccessTokenExpirationDate?.ToString(CultureInfo.InvariantCulture));
+                        response.RefreshTokenAuthenticationResult.AccessTokenExpirationDate?.ToString(CultureInfo.InvariantCulture) ?? string.Empty);
 
                     // Note: if no refresh token was returned, preserve the refresh token initially returned.
                     if (!string.IsNullOrEmpty(response.RefreshTokenAuthenticationResult.RefreshToken))

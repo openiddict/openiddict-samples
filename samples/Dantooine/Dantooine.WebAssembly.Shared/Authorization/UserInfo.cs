@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Dantooine.WebAssembly.Shared.Authorization;
+﻿namespace Dantooine.WebAssembly.Shared.Authorization;
 
 // Original source: https://github.com/berhir/BlazorWebAssemblyCookieAuth.
 public class UserInfo
@@ -9,9 +7,9 @@ public class UserInfo
 
     public bool IsAuthenticated { get; set; }
 
-    public string NameClaimType { get; set; }
+    public string? NameClaimType { get; set; }
 
-    public string RoleClaimType { get; set; }
+    public string? RoleClaimType { get; set; }
 
-    public ICollection<ClaimValue> Claims { get; set; }
+    public ICollection<ClaimValue> Claims { get; set; } = [];
 }

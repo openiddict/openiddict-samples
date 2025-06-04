@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Autofac.Integration.Mvc;

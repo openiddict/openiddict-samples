@@ -1,9 +1,5 @@
-﻿using System.IO;
-using Aridka.Server.Models;
-using Microsoft.AspNetCore.Builder;
+﻿using Aridka.Server.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 
 namespace Aridka.Server;

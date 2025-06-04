@@ -5,7 +5,13 @@
 
     <%-- Flow the request parameters so they can be received by the Accept/Reject actions: --%>
     
-    <% foreach (var parameter in Parameters) { %>
+    <% foreach (var parameter in string.Equals(Request.HttpMethod, "POST", StringComparison.OrdinalIgnoreCase) ?
+        from name in Request.Form.AllKeys
+        from value in Request.Form.GetValues(name)
+        select new KeyValuePair<string, string>(name, value) :
+        from name in Request.QueryString.AllKeys
+        from value in Request.QueryString.GetValues(name)
+        select new KeyValuePair<string, string>(name, value)) { %>
         <input type="hidden" name="<%: parameter.Key %>" value="<%: parameter.Value %>" />
     <% } %>
 

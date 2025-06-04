@@ -1,7 +1,4 @@
-using System;
 using System.Security.Claims;
-using System.Threading;
-using System.Windows.Forms;
 using Dapplo.Microsoft.Extensions.Hosting.WinForms;
 using OpenIddict.Client;
 using static OpenIddict.Abstractions.OpenIddictConstants;

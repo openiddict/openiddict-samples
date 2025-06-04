@@ -1,14 +1,8 @@
 using System.Globalization;
-using System.IO;
 using System.Text.Json;
 using Contruum.Server.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using OpenIddict.Abstractions;
 using Quartz;
 using static OpenIddict.Abstractions.OpenIddictConstants;

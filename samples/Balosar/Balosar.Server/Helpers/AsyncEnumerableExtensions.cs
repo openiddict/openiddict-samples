@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace Balosar.Server.Helpers;
+﻿namespace Balosar.Server.Helpers;
 
 public static class AsyncEnumerableExtensions
 {

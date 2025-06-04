@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-
-namespace Velusia.Client;
+﻿namespace Velusia.Client;
 
 public static class Program
 {

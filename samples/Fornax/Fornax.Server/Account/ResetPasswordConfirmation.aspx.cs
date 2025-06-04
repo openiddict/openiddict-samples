@@ -1,4 +1,6 @@
-﻿using System.Web.UI;
+﻿#nullable disable
+
+using System.Web.UI;
 
 namespace Fornax.Server.Account;
 

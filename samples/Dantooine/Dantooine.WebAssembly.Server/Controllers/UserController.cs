@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Dantooine.WebAssembly.Shared.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +15,12 @@ public class UserController : ControllerBase
     [AllowAnonymous]
     public IActionResult GetCurrentUser()
     {
-        return Ok(User.Identity.IsAuthenticated ? CreateUserInfo(User) : UserInfo.Anonymous);
+        return Ok(User.Identity is { IsAuthenticated: true } ? CreateUserInfo(User) : UserInfo.Anonymous);
     }
 
     private static UserInfo CreateUserInfo(ClaimsPrincipal principal)
     {
-        if (!principal.Identity.IsAuthenticated)
+        if (principal.Identity is not { IsAuthenticated: true })
         {
             return UserInfo.Anonymous;
         }

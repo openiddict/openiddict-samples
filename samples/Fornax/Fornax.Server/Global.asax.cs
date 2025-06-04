@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Web;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Autofac;
@@ -15,7 +13,7 @@ namespace Fornax.Server;
 
 public class Global : HttpApplication, IContainerProviderAccessor
 {
-    public static IContainerProvider Provider { get; private set; }
+    public static IContainerProvider Provider { get; private set; } = default!;
 
     IContainerProvider IContainerProviderAccessor.ContainerProvider => Provider;
 

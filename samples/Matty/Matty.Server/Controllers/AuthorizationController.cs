@@ -4,14 +4,10 @@
  * the license and the contributors participating to this project.
  */
 
-using System;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
@@ -49,24 +45,24 @@ public class AuthorizationController : Controller
     {
         // Retrieve the claims principal associated with the user code.
         var result = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-        if (result.Succeeded && !string.IsNullOrEmpty(result.Principal.GetClaim(Claims.ClientId)))
+        if (result is { Succeeded: true } && !string.IsNullOrEmpty(result.Principal.GetClaim(Claims.ClientId)))
         {
             // Retrieve the application details from the database using the client_id stored in the principal.
-            var application = await _applicationManager.FindByClientIdAsync(result.Principal.GetClaim(Claims.ClientId)) ??
+            var application = await _applicationManager.FindByClientIdAsync(result.Principal.GetClaim(Claims.ClientId)!) ??
                 throw new InvalidOperationException("Details concerning the calling client application cannot be found.");
 
             // Render a form asking the user to confirm the authorization demand.
             return View(new VerifyViewModel
             {
-                ApplicationName = await _applicationManager.GetLocalizedDisplayNameAsync(application),
+                ApplicationName = (await _applicationManager.GetLocalizedDisplayNameAsync(application))!,
                 Scope = string.Join(" ", result.Principal.GetScopes()),
-                UserCode = result.Properties.GetTokenValue(OpenIddictServerAspNetCoreConstants.Tokens.UserCode)
+                UserCode = result.Properties!.GetTokenValue(OpenIddictServerAspNetCoreConstants.Tokens.UserCode)
             });
         }
 
         // If a user code was specified (e.g as part of the verification_uri_complete)
         // but is not valid, render a form asking the user to enter the user code manually.
-        else if (!string.IsNullOrEmpty(result.Properties.GetTokenValue(OpenIddictServerAspNetCoreConstants.Tokens.UserCode)))
+        else if (!string.IsNullOrEmpty(result.Properties!.GetTokenValue(OpenIddictServerAspNetCoreConstants.Tokens.UserCode)))
         {
             return View(new VerifyViewModel
             {
@@ -89,7 +85,7 @@ public class AuthorizationController : Controller
 
         // Retrieve the claims principal associated with the user code.
         var result = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-        if (result.Succeeded && !string.IsNullOrEmpty(result.Principal.GetClaim(Claims.ClientId)))
+        if (result is { Succeeded: true } && !string.IsNullOrEmpty(result.Principal.GetClaim(Claims.ClientId)))
         {
             // Create the claims-based identity that will be used by OpenIddict to generate tokens.
             var identity = new ClaimsIdentity(
@@ -153,12 +149,12 @@ public class AuthorizationController : Controller
             var result = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 
             // Retrieve the user profile corresponding to the authorization code/refresh token.
-            var user = await _userManager.FindByIdAsync(result.Principal.GetClaim(Claims.Subject));
+            var user = await _userManager.FindByIdAsync(result.Principal!.GetClaim(Claims.Subject)!);
             if (user is null)
             {
                 return Forbid(
                     authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                    properties: new AuthenticationProperties(new Dictionary<string, string>
+                    properties: new AuthenticationProperties(new Dictionary<string, string?>
                     {
                         [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
                         [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The token is no longer valid."
@@ -170,14 +166,14 @@ public class AuthorizationController : Controller
             {
                 return Forbid(
                     authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                    properties: new AuthenticationProperties(new Dictionary<string, string>
+                    properties: new AuthenticationProperties(new Dictionary<string, string?>
                     {
                         [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
                         [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The user is no longer allowed to sign in."
                     }));
             }
 
-            var identity = new ClaimsIdentity(result.Principal.Claims,
+            var identity = new ClaimsIdentity(result.Principal!.Claims,
                 authenticationType: TokenValidationParameters.DefaultAuthenticationType,
                 nameType: Claims.Name,
                 roleType: Claims.Role);
@@ -210,7 +206,7 @@ public class AuthorizationController : Controller
             case Claims.Name or Claims.PreferredUsername:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Profile))
+                if (claim.Subject!.HasScope(Scopes.Profile))
                     yield return Destinations.IdentityToken;
 
                 yield break;
@@ -218,7 +214,7 @@ public class AuthorizationController : Controller
             case Claims.Email:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Email))
+                if (claim.Subject!.HasScope(Scopes.Email))
                     yield return Destinations.IdentityToken;
 
                 yield break;
@@ -226,7 +222,7 @@ public class AuthorizationController : Controller
             case Claims.Role:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Roles))
+                if (claim.Subject!.HasScope(Scopes.Roles))
                     yield return Destinations.IdentityToken;
 
                 yield break;

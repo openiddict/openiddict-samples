@@ -1,8 +1,6 @@
-﻿using System.Threading.Tasks;
-using Hollastin.Server.Models;
+﻿using Hollastin.Server.Models;
 using Hollastin.Server.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

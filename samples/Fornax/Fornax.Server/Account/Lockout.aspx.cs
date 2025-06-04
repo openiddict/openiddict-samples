@@ -1,4 +1,4 @@
-﻿using System;
+﻿#nullable disable
 
 namespace Fornax.Server.Account;
 

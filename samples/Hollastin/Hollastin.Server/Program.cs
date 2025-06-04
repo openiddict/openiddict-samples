@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-
-namespace Hollastin.Server;
+﻿namespace Hollastin.Server;
 
 public static class Program
 {

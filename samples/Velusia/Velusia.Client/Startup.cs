@@ -1,10 +1,5 @@
-using System;
-using System.IO;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using OpenIddict.Client;
 using Quartz;
 using Velusia.Client.Models;

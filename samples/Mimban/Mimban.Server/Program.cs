@@ -187,7 +187,7 @@ app.MapMethods("authorize", [HttpMethods.Get, HttpMethods.Post], async (HttpCont
     // For scenarios where the default authentication handler configured in the ASP.NET Core
     // authentication options shouldn't be used, a specific scheme can be specified here.
     var principal = (await context.AuthenticateAsync())?.Principal;
-    if (principal is null)
+    if (principal is not { Identity.IsAuthenticated: true })
     {
         var properties = new AuthenticationProperties
         {

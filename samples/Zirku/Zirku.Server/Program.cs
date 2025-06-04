@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
+﻿using System.Globalization;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
@@ -240,14 +232,15 @@ app.MapGet("api", [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetC
 app.MapMethods("authorize", [HttpMethods.Get, HttpMethods.Post], async (HttpContext context, IOpenIddictScopeManager manager) =>
 {
     // Retrieve the OpenIddict server request from the HTTP context.
-    var request = context.GetOpenIddictServerRequest();
+    var request = context.GetOpenIddictServerRequest() ??
+            throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
     var identifier = (int?) request["hardcoded_identity_id"];
     if (identifier is not (1 or 2))
     {
         return Results.Challenge(
             authenticationSchemes: [OpenIddictServerAspNetCoreDefaults.AuthenticationScheme],
-            properties: new AuthenticationProperties(new Dictionary<string, string>
+            properties: new AuthenticationProperties(new Dictionary<string, string?>
             {
                 [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidRequest,
                 [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The specified hardcoded identity is invalid."

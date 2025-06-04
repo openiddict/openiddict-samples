@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
@@ -47,7 +43,7 @@ public class AuthenticationController : Controller
         // authentication options shouldn't be used, a specific scheme can be specified here.
         await HttpContext.SignOutAsync();
 
-        var properties = new AuthenticationProperties(new Dictionary<string, string>
+        var properties = new AuthenticationProperties(new Dictionary<string, string?>
         {
             // While not required, the specification encourages sending an id_token_hint
             // parameter containing an identity token returned by the server for this user.
@@ -99,7 +95,7 @@ public class AuthenticationController : Controller
         // Such identities cannot be used as-is to build an authentication cookie in ASP.NET Core (as the
         // antiforgery stack requires at least a name claim to bind CSRF cookies to the user's identity) but
         // the access/refresh tokens can be retrieved using result.Properties.GetTokens() to make API calls.
-        if (result.Principal is not ClaimsPrincipal { Identity.IsAuthenticated: true })
+        if (result is not { Succeeded: true, Principal.Identity.IsAuthenticated: true })
         {
             throw new InvalidOperationException("The external authorization data cannot be used for authentication.");
         }
@@ -194,6 +190,6 @@ public class AuthenticationController : Controller
         // to the authorization server. Applications that prefer delaying the removal of the local cookie can
         // remove the corresponding code from the logout action and remove the authentication cookie in this action.
 
-        return Redirect(result!.Properties!.RedirectUri);
+        return Redirect(result?.Properties?.RedirectUri ?? "/");
     }
 }
