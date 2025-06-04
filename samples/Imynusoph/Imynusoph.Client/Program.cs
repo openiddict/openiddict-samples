@@ -1,8 +1,5 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using OpenIddict.Client;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -49,7 +46,7 @@ Console.WriteLine("Initial refresh token: {0}", tokens.RefreshToken);
 Console.WriteLine();
 Console.WriteLine();
 
-tokens = await RefreshTokensAsync(provider, tokens.RefreshToken);
+tokens = await RefreshTokensAsync(provider, tokens.RefreshToken!);
 Console.WriteLine("New access token: {0}", tokens.AccessToken);
 Console.WriteLine();
 Console.WriteLine("New refresh token: {0}", tokens.RefreshToken);
@@ -71,7 +68,7 @@ static async Task CreateAccountAsync(IServiceProvider provider, string email, st
     response.EnsureSuccessStatusCode();
 }
 
-static async Task<(string AccessToken, string RefreshToken)> GetTokensAsync(IServiceProvider provider, string email, string password)
+static async Task<(string AccessToken, string? RefreshToken)> GetTokensAsync(IServiceProvider provider, string email, string password)
 {
     var service = provider.GetRequiredService<OpenIddictClientService>();
 
@@ -80,13 +77,13 @@ static async Task<(string AccessToken, string RefreshToken)> GetTokensAsync(ISer
     {
         Username = email,
         Password = password,
-        Scopes = new() { Scopes.OfflineAccess }
+        Scopes = [Scopes.OfflineAccess]
     });
 
     return (result.AccessToken, result.RefreshToken);
 }
 
-static async Task<(string AccessToken, string RefreshToken)> RefreshTokensAsync(IServiceProvider provider, string token)
+static async Task<(string AccessToken, string? RefreshToken)> RefreshTokensAsync(IServiceProvider provider, string token)
 {
     var service = provider.GetRequiredService<OpenIddictClientService>();
 

@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-
-namespace Dantooine.WebAssembly.Server;
+﻿namespace Dantooine.WebAssembly.Server;
 
 public static class Program
 {

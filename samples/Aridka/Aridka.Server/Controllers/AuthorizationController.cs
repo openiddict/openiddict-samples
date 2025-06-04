@@ -4,10 +4,7 @@
  * the license and the contributors participating to this project.
  */
 
-using System;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Aridka.Server.Helpers;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
@@ -32,13 +29,15 @@ public class AuthorizationController : Controller
     [HttpPost("~/connect/token"), IgnoreAntiforgeryToken, Produces("application/json")]
     public async Task<IActionResult> Exchange()
     {
-        var request = HttpContext.GetOpenIddictServerRequest();
+        var request = HttpContext.GetOpenIddictServerRequest() ??
+            throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
+
         if (request.IsClientCredentialsGrantType())
         {
             // Note: the client credentials are automatically validated by OpenIddict:
             // if client_id or client_secret are invalid, this action won't be invoked.
 
-            var application = await _applicationManager.FindByClientIdAsync(request.ClientId);
+            var application = await _applicationManager.FindByClientIdAsync(request.ClientId!);
             if (application == null)
             {
                 throw new InvalidOperationException("The application details cannot be found in the database.");

@@ -1,13 +1,7 @@
-using System.IO;
 using Balosar.Server.Data;
 using Balosar.Server.Models;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Quartz;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 

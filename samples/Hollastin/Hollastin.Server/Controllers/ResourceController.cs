@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Hollastin.Server.Models;
+﻿using Hollastin.Server.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -25,12 +23,12 @@ public class ResourceController : Controller
     [HttpGet("message")]
     public async Task<IActionResult> GetMessage()
     {
-        var user = await _userManager.FindByIdAsync(User.GetClaim(Claims.Subject));
+        var user = await _userManager.FindByIdAsync(User.GetClaim(Claims.Subject)!);
         if (user is null)
         {
             return Challenge(
                 authenticationSchemes: OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme,
-                properties: new AuthenticationProperties(new Dictionary<string, string>
+                properties: new AuthenticationProperties(new Dictionary<string, string?>
                 {
                     [OpenIddictValidationAspNetCoreConstants.Properties.Error] = Errors.InvalidToken,
                     [OpenIddictValidationAspNetCoreConstants.Properties.ErrorDescription] =

@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.IdentityModel.Tokens;
@@ -20,7 +15,8 @@ public class AuthorizeModel : PageModel
 {
     public async Task<IActionResult> OnGetAsync()
     {
-        var request = HttpContext.GetOpenIddictServerRequest()!;
+        var request = HttpContext.GetOpenIddictServerRequest() ??
+            throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
         // Try to retrieve the user principal stored in the authentication cookie and redirect
         // the user agent to the login page (or to an external provider) in the following cases:

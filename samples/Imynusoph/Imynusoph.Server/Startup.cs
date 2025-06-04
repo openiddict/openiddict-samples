@@ -1,10 +1,6 @@
-﻿using System.IO;
-using Imynusoph.Server.Models;
-using Microsoft.AspNetCore.Builder;
+﻿using Imynusoph.Server.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 
 namespace Imynusoph.Server;

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Balosar.Server.Data;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+﻿using Balosar.Server.Data;
 using OpenIddict.Abstractions;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 

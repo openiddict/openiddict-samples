@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using Dapplo.Microsoft.Extensions.Hosting.Wpf;
 
 namespace Sorgan.BlazorHybrid.Client;

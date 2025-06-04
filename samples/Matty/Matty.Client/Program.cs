@@ -1,5 +1,4 @@
-﻿using System;
-using Matty.Client;
+﻿using Matty.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;

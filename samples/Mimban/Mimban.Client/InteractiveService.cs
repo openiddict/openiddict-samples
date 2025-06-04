@@ -1,8 +1,4 @@
-﻿using System;
-using System.Net.Http.Headers;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Net.Http.Headers;
 using Microsoft.Extensions.Hosting;
 using OpenIddict.Client;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -52,7 +48,7 @@ public class InteractiveService : BackgroundService
             });
 
             Console.WriteLine("Your GitHub identifier is: {0}", await GetResourceAsync(
-                response.BackchannelAccessToken ?? response.FrontchannelAccessToken, stoppingToken));
+                (response.BackchannelAccessToken ?? response.FrontchannelAccessToken)!, stoppingToken));
         }
 
         catch (OperationCanceledException)

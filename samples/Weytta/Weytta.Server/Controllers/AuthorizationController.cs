@@ -4,14 +4,10 @@
  * the license and the contributors participating to this project.
  */
 
-using System;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Negotiate;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
@@ -50,7 +46,7 @@ public class AuthorizationController : Controller
         }
 
         // Retrieve the application details from the database.
-        var application = await _applicationManager.FindByClientIdAsync(request.ClientId) ??
+        var application = await _applicationManager.FindByClientIdAsync(request.ClientId!) ??
             throw new InvalidOperationException("Details concerning the calling client application cannot be found.");
 
         // This sample doesn't include a consent view mechanism and requires that the application use implicit consents.
@@ -58,7 +54,7 @@ public class AuthorizationController : Controller
         {
             return Forbid(
                 authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                properties: new AuthenticationProperties(new Dictionary<string, string>
+                properties: new AuthenticationProperties(new Dictionary<string, string?>
                 {
                     [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.ServerError,
                     [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
@@ -76,6 +72,18 @@ public class AuthorizationController : Controller
         // a stable identifier of the authenticated user. To work around that, a "sub" claim is
         // manually created by using the primary SID claim resolved from the Windows identity.
         var sid = identity.FindFirst(ClaimTypes.PrimarySid)?.Value;
+        if (string.IsNullOrEmpty(sid))
+        {
+            return Forbid(
+                authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
+                properties: new AuthenticationProperties(new Dictionary<string, string?>
+                {
+                    [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.ServerError,
+                    [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
+                        "No suitable identifier could be extracted for the logged in user."
+                }));
+        }
+
         identity.AddClaim(new Claim(Claims.Subject, sid));
 
         // Allow all the claims resolved from the principal to be copied to the access and identity tokens.

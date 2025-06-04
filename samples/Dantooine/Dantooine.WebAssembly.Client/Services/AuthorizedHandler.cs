@@ -1,7 +1,4 @@
 ﻿using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Dantooine.WebAssembly.Client.Services;
 
@@ -21,7 +18,7 @@ public class AuthorizedHandler : DelegatingHandler
     {
         var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
         HttpResponseMessage responseMessage;
-        if (!authState.User.Identity.IsAuthenticated)
+        if (authState.User is not { Identity.IsAuthenticated: true })
         {
             // if user is not authenticated, immediately set response status to 401 Unauthorized
             responseMessage = new HttpResponseMessage(HttpStatusCode.Unauthorized);

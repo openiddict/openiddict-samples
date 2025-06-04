@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using static OpenIddict.Client.OpenIddictClientModels;
+﻿using static OpenIddict.Client.OpenIddictClientModels;
 
 namespace Dantooine.WebAssembly.Server.Helpers
 {

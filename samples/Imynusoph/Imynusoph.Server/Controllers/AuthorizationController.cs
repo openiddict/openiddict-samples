@@ -4,10 +4,7 @@
  * the license and the contributors participating to this project.
  */
 
-using System;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Imynusoph.Server.Models;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
@@ -36,13 +33,15 @@ public class AuthorizationController : Controller
     [HttpPost("~/connect/token"), IgnoreAntiforgeryToken, Produces("application/json")]
     public async Task<IActionResult> Exchange()
     {
-        var request = HttpContext.GetOpenIddictServerRequest();
+        var request = HttpContext.GetOpenIddictServerRequest() ??
+            throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
+
         if (request.IsPasswordGrantType())
         {
-            var user = await _userManager.FindByNameAsync(request.Username);
+            var user = await _userManager.FindByNameAsync(request.Username!);
             if (user == null)
             {
-                var properties = new AuthenticationProperties(new Dictionary<string, string>
+                var properties = new AuthenticationProperties(new Dictionary<string, string?>
                 {
                     [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
                     [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
@@ -53,10 +52,10 @@ public class AuthorizationController : Controller
             }
 
             // Validate the username/password parameters and ensure the account is not locked out.
-            var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
+            var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password!, lockoutOnFailure: true);
             if (!result.Succeeded)
             {
-                var properties = new AuthenticationProperties(new Dictionary<string, string>
+                var properties = new AuthenticationProperties(new Dictionary<string, string?>
                 {
                     [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
                     [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
@@ -95,10 +94,10 @@ public class AuthorizationController : Controller
             var result = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 
             // Retrieve the user profile corresponding to the refresh token.
-            var user = await _userManager.FindByIdAsync(result.Principal.GetClaim(Claims.Subject));
+            var user = await _userManager.FindByIdAsync(result.Principal!.GetClaim(Claims.Subject)!);
             if (user == null)
             {
-                var properties = new AuthenticationProperties(new Dictionary<string, string>
+                var properties = new AuthenticationProperties(new Dictionary<string, string?>
                 {
                     [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
                     [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The refresh token is no longer valid."
@@ -110,7 +109,7 @@ public class AuthorizationController : Controller
             // Ensure the user is still allowed to sign in.
             if (!await _signInManager.CanSignInAsync(user))
             {
-                var properties = new AuthenticationProperties(new Dictionary<string, string>
+                var properties = new AuthenticationProperties(new Dictionary<string, string?>
                 {
                     [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
                     [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The user is no longer allowed to sign in."
@@ -119,7 +118,7 @@ public class AuthorizationController : Controller
                 return Forbid(properties, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }
 
-            var identity = new ClaimsIdentity(result.Principal.Claims,
+            var identity = new ClaimsIdentity(result.Principal!.Claims,
                 authenticationType: TokenValidationParameters.DefaultAuthenticationType,
                 nameType: Claims.Name,
                 roleType: Claims.Role);
@@ -150,7 +149,7 @@ public class AuthorizationController : Controller
             case Claims.Name or Claims.PreferredUsername:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Profile))
+                if (claim.Subject!.HasScope(Scopes.Profile))
                     yield return Destinations.IdentityToken;
 
                 yield break;
@@ -158,7 +157,7 @@ public class AuthorizationController : Controller
             case Claims.Email:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Email))
+                if (claim.Subject!.HasScope(Scopes.Email))
                     yield return Destinations.IdentityToken;
 
                 yield break;
@@ -166,7 +165,7 @@ public class AuthorizationController : Controller
             case Claims.Role:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Roles))
+                if (claim.Subject!.HasScope(Scopes.Roles))
                     yield return Destinations.IdentityToken;
 
                 yield break;

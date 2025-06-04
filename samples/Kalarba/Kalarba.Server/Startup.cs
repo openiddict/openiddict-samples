@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Security.Claims;
 using System.Web.Http;
 using Autofac;

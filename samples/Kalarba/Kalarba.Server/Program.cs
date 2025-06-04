@@ -1,5 +1,4 @@
-﻿using System;
-using Kalarba.Server;
+﻿using Kalarba.Server;
 using Microsoft.Owin.Hosting;
 
 const string address = "http://localhost:58779/";

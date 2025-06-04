@@ -4,7 +4,6 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>$(NetCoreWindowsTargetFramework)</TargetFramework>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <RootNamespace>Sorgan.BlazorHybrid.Client</RootNamespace>
     <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Security.Claims;
-using System.Threading;
+﻿using System.Security.Claims;
 using System.Windows;
 using Dapplo.Microsoft.Extensions.Hosting.Wpf;
 using OpenIddict.Client;

@@ -9,7 +9,7 @@
         <div class="top-row px-4 auth">
             <AuthorizeView>
                 <Authorized>
-                    <strong>Hello, @context.User.Identity.Name!</strong>
+                    <strong>Hello, @context.User.Identity!.Name!</strong>
                     <form method="post" action="logout">
                         <AntiForgeryTokenInput/>
                         <button class="btn btn-link" type="submit">Sign out</button>

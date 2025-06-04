@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
+﻿using System.Collections.Immutable;
 using System.Security.Claims;
 using System.Web;
 using System.Web.UI;
@@ -19,11 +16,9 @@ namespace Fornax.Server.Connect;
 public partial class Authorize : Page
 {
     // Note: these properties are automatically injected by Autofac.
-    public IOpenIddictApplicationManager ApplicationManager { get; set; }
-    public IOpenIddictAuthorizationManager AuthorizationManager { get; set; }
-    public IOpenIddictScopeManager ScopeManager { get; set; }
-
-    public IEnumerable<KeyValuePair<string, string>> Parameters { get; private set; }
+    public IOpenIddictApplicationManager ApplicationManager { get; set; } = default!;
+    public IOpenIddictAuthorizationManager AuthorizationManager { get; set; } = default!;
+    public IOpenIddictScopeManager ScopeManager { get; set; } = default!;
 
     protected void Page_Load(object sender, EventArgs e) => RegisterAsyncTask(new PageAsyncTask(async () =>
     {
@@ -46,7 +41,7 @@ public partial class Authorize : Page
             throw new InvalidOperationException("The user details cannot be retrieved.");
 
         // Retrieve the application details from the database.
-        var application = await ApplicationManager.FindByClientIdAsync(request.ClientId) ??
+        var application = await ApplicationManager.FindByClientIdAsync(request.ClientId!) ??
             throw new InvalidOperationException("Details concerning the calling client application cannot be found.");
 
         // Retrieve the permanent authorizations associated with the user and the calling client application.
@@ -64,7 +59,7 @@ public partial class Authorize : Page
             case ConsentTypes.External when authorizations.Count is 0:
                 context.Authentication.Challenge(
                     authenticationTypes: OpenIddictServerOwinDefaults.AuthenticationType,
-                    properties: new AuthenticationProperties(new Dictionary<string, string>
+                    properties: new AuthenticationProperties(new Dictionary<string, string?>
                     {
                         [OpenIddictServerOwinConstants.Properties.Error] = Errors.ConsentRequired,
                         [OpenIddictServerOwinConstants.Properties.ErrorDescription] =
@@ -103,7 +98,7 @@ public partial class Authorize : Page
                 authorization ??= await AuthorizationManager.CreateAsync(
                     identity: identity,
                     subject : user.Id,
-                    client  : await ApplicationManager.GetIdAsync(application),
+                    client  : (await ApplicationManager.GetIdAsync(application))!,
                     type    : AuthorizationTypes.Permanent,
                     scopes  : identity.GetScopes());
 
@@ -120,7 +115,7 @@ public partial class Authorize : Page
             case ConsentTypes.Systematic when request.HasPromptValue(PromptValues.None):
                 context.Authentication.Challenge(
                     authenticationTypes: OpenIddictServerOwinDefaults.AuthenticationType,
-                    properties: new AuthenticationProperties(new Dictionary<string, string>
+                    properties: new AuthenticationProperties(new Dictionary<string, string?>
                     {
                         [OpenIddictServerOwinConstants.Properties.Error] = Errors.ConsentRequired,
                         [OpenIddictServerOwinConstants.Properties.ErrorDescription] =
@@ -133,15 +128,6 @@ public partial class Authorize : Page
             default:
                 ApplicationName.Text = await ApplicationManager.GetLocalizedDisplayNameAsync(application);
                 Scope.Text = request.Scope;
-
-                // Flow the request parameters so they can be received by the Accept/Reject actions.
-                Parameters = string.Equals(Request.HttpMethod, "POST", StringComparison.OrdinalIgnoreCase) ?
-                    from name in Request.Form.AllKeys
-                    from value in Request.Form.GetValues(name)
-                    select new KeyValuePair<string, string>(name, value) :
-                    from name in Request.QueryString.AllKeys
-                    from value in Request.QueryString.GetValues(name)
-                    select new KeyValuePair<string, string>(name, value);
                 return;
         }
     }));
@@ -175,7 +161,7 @@ public partial class Authorize : Page
             throw new InvalidOperationException("The user details cannot be retrieved.");
 
         // Retrieve the application details from the database.
-        var application = await ApplicationManager.FindByClientIdAsync(request.ClientId) ??
+        var application = await ApplicationManager.FindByClientIdAsync(request.ClientId!) ??
             throw new InvalidOperationException("Details concerning the calling client application cannot be found.");
 
         // Retrieve the permanent authorizations associated with the user and the calling client application.
@@ -193,7 +179,7 @@ public partial class Authorize : Page
         {
             context.Authentication.Challenge(
                 authenticationTypes: OpenIddictServerOwinDefaults.AuthenticationType,
-                properties: new AuthenticationProperties(new Dictionary<string, string>
+                properties: new AuthenticationProperties(new Dictionary<string, string?>
                 {
                     [OpenIddictServerOwinConstants.Properties.Error] = Errors.ConsentRequired,
                     [OpenIddictServerOwinConstants.Properties.ErrorDescription] =
@@ -228,7 +214,7 @@ public partial class Authorize : Page
         authorization ??= await AuthorizationManager.CreateAsync(
             identity: identity,
             subject : user.Id,
-            client  : await ApplicationManager.GetIdAsync(application),
+            client  : (await ApplicationManager.GetIdAsync(application))!,
             type    : AuthorizationTypes.Permanent,
             scopes  : identity.GetScopes());
 
@@ -269,7 +255,7 @@ public partial class Authorize : Page
             case Claims.Name or Claims.PreferredUsername:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Profile))
+                if (claim.Subject!.HasScope(Scopes.Profile))
                     yield return Destinations.IdentityToken;
 
                 yield break;
@@ -277,7 +263,7 @@ public partial class Authorize : Page
             case Claims.Email:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Email))
+                if (claim.Subject!.HasScope(Scopes.Email))
                     yield return Destinations.IdentityToken;
 
                 yield break;
@@ -285,7 +271,7 @@ public partial class Authorize : Page
             case Claims.Role:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Roles))
+                if (claim.Subject!.HasScope(Scopes.Roles))
                     yield return Destinations.IdentityToken;
 
                 yield break;

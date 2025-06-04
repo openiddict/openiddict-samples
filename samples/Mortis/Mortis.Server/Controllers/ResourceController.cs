@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -25,7 +23,7 @@ public class ResourceController : ApiController
         {
             context.Authentication.Challenge(
                 authenticationTypes: OpenIddictValidationOwinDefaults.AuthenticationType,
-                properties: new AuthenticationProperties(new Dictionary<string, string>
+                properties: new AuthenticationProperties(new Dictionary<string, string?>
                 {
                     [OpenIddictValidationOwinConstants.Properties.Error] = Errors.InvalidToken,
                     [OpenIddictValidationOwinConstants.Properties.ErrorDescription] =

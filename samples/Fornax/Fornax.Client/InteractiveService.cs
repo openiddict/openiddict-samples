@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using OpenIddict.Client;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 using static OpenIddict.Abstractions.OpenIddictExceptions;

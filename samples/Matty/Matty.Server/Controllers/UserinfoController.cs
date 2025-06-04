@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -25,12 +22,12 @@ public class UserinfoController : Controller
     [HttpGet("~/connect/userinfo"), HttpPost("~/connect/userinfo"), Produces("application/json")]
     public async Task<IActionResult> Userinfo()
     {
-        var user = await _userManager.FindByIdAsync(User.GetClaim(Claims.Subject));
+        var user = await _userManager.FindByIdAsync(User.GetClaim(Claims.Subject)!);
         if (user == null)
         {
             return Challenge(
                 authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                properties: new AuthenticationProperties(new Dictionary<string, string>
+                properties: new AuthenticationProperties(new Dictionary<string, string?>
                 {
                     [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidToken,
                     [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
@@ -38,7 +35,7 @@ public class UserinfoController : Controller
                 }));
         }
 
-        var claims = new Dictionary<string, object>(StringComparer.Ordinal)
+        var claims = new Dictionary<string, object?>(StringComparer.Ordinal)
         {
             // Note: the "sub" claim is a mandatory claim and must be included in the JSON response.
             [Claims.Subject] = await _userManager.GetUserIdAsync(user)

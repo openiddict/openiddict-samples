@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -72,7 +67,7 @@ public class AuthorizationController : Controller
             {
                 return Forbid(
                     authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                    properties: new AuthenticationProperties(new Dictionary<string, string>
+                    properties: new AuthenticationProperties(new Dictionary<string, string?>
                     {
                         [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.LoginRequired,
                         [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The user is not logged in."
@@ -102,7 +97,7 @@ public class AuthorizationController : Controller
             throw new InvalidOperationException("The user details cannot be retrieved.");
 
         // Retrieve the application details from the database.
-        var application = await _applicationManager.FindByClientIdAsync(request.ClientId) ??
+        var application = await _applicationManager.FindByClientIdAsync(request.ClientId!) ??
             throw new InvalidOperationException("Details concerning the calling client application cannot be found.");
 
         // Retrieve the permanent authorizations associated with the user and the calling client application.
@@ -120,7 +115,7 @@ public class AuthorizationController : Controller
             case ConsentTypes.External when authorizations.Count is 0:
                 return Forbid(
                     authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                    properties: new AuthenticationProperties(new Dictionary<string, string>
+                    properties: new AuthenticationProperties(new Dictionary<string, string?>
                     {
                         [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.ConsentRequired,
                         [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
@@ -157,7 +152,7 @@ public class AuthorizationController : Controller
                 authorization ??= await _authorizationManager.CreateAsync(
                     identity: identity,
                     subject : await _userManager.GetUserIdAsync(user),
-                    client  : await _applicationManager.GetIdAsync(application),
+                    client  : (await _applicationManager.GetIdAsync(application))!,
                     type    : AuthorizationTypes.Permanent,
                     scopes  : identity.GetScopes());
 
@@ -172,7 +167,7 @@ public class AuthorizationController : Controller
             case ConsentTypes.Systematic when request.HasPromptValue(PromptValues.None):
                 return Forbid(
                     authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                    properties: new AuthenticationProperties(new Dictionary<string, string>
+                    properties: new AuthenticationProperties(new Dictionary<string, string?>
                     {
                         [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.ConsentRequired,
                         [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
@@ -182,7 +177,7 @@ public class AuthorizationController : Controller
             // In every other case, render the consent form.
             default: return View(new AuthorizeViewModel
             {
-                ApplicationName = await _applicationManager.GetLocalizedDisplayNameAsync(application),
+                ApplicationName = (await _applicationManager.GetLocalizedDisplayNameAsync(application))!,
                 Scope = request.Scope
             });
         }
@@ -200,7 +195,7 @@ public class AuthorizationController : Controller
             throw new InvalidOperationException("The user details cannot be retrieved.");
 
         // Retrieve the application details from the database.
-        var application = await _applicationManager.FindByClientIdAsync(request.ClientId) ??
+        var application = await _applicationManager.FindByClientIdAsync(request.ClientId!) ??
             throw new InvalidOperationException("Details concerning the calling client application cannot be found.");
 
         // Retrieve the permanent authorizations associated with the user and the calling client application.
@@ -218,7 +213,7 @@ public class AuthorizationController : Controller
         {
             return Forbid(
                 authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                properties: new AuthenticationProperties(new Dictionary<string, string>
+                properties: new AuthenticationProperties(new Dictionary<string, string?>
                 {
                     [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.ConsentRequired,
                     [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] =
@@ -251,7 +246,7 @@ public class AuthorizationController : Controller
         authorization ??= await _authorizationManager.CreateAsync(
             identity: identity,
             subject : await _userManager.GetUserIdAsync(user),
-            client  : await _applicationManager.GetIdAsync(application),
+            client  : (await _applicationManager.GetIdAsync(application))!,
             type    : AuthorizationTypes.Permanent,
             scopes  : identity.GetScopes());
 
@@ -302,12 +297,12 @@ public class AuthorizationController : Controller
             var result = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 
             // Retrieve the user profile corresponding to the authorization code/refresh token.
-            var user = await _userManager.FindByIdAsync(result.Principal.GetClaim(Claims.Subject));
+            var user = await _userManager.FindByIdAsync(result.Principal!.GetClaim(Claims.Subject)!);
             if (user is null)
             {
                 return Forbid(
                     authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                    properties: new AuthenticationProperties(new Dictionary<string, string>
+                    properties: new AuthenticationProperties(new Dictionary<string, string?>
                     {
                         [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
                         [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The token is no longer valid."
@@ -319,14 +314,14 @@ public class AuthorizationController : Controller
             {
                 return Forbid(
                     authenticationSchemes: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
-                    properties: new AuthenticationProperties(new Dictionary<string, string>
+                    properties: new AuthenticationProperties(new Dictionary<string, string?>
                     {
                         [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidGrant,
                         [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The user is no longer allowed to sign in."
                     }));
             }
 
-            var identity = new ClaimsIdentity(result.Principal.Claims,
+            var identity = new ClaimsIdentity(result.Principal!.Claims,
                 authenticationType: TokenValidationParameters.DefaultAuthenticationType,
                 nameType: Claims.Name,
                 roleType: Claims.Role);
@@ -359,7 +354,7 @@ public class AuthorizationController : Controller
             case Claims.Name or Claims.PreferredUsername:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Profile))
+                if (claim.Subject!.HasScope(Scopes.Profile))
                     yield return Destinations.IdentityToken;
 
                 yield break;
@@ -367,7 +362,7 @@ public class AuthorizationController : Controller
             case Claims.Email:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Email))
+                if (claim.Subject!.HasScope(Scopes.Email))
                     yield return Destinations.IdentityToken;
 
                 yield break;
@@ -375,7 +370,7 @@ public class AuthorizationController : Controller
             case Claims.Role:
                 yield return Destinations.AccessToken;
 
-                if (claim.Subject.HasScope(Scopes.Roles))
+                if (claim.Subject!.HasScope(Scopes.Roles))
                     yield return Destinations.IdentityToken;
 
                 yield break;

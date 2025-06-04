@@ -1,8 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using OpenIddict.Abstractions;
 using Matty.Server.Data;
 using static OpenIddict.Abstractions.OpenIddictConstants;

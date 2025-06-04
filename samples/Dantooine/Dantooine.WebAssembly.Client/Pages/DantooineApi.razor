@@ -29,7 +29,7 @@ else
 }
 
 @code {
-    private string[] apiData;
+    private string[] apiData = default!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -38,6 +38,6 @@ else
         var client = httpClientFactory.CreateClient("authorizedClient");
         client.DefaultRequestHeaders.Add("X-XSRF-TOKEN", token);
 
-        apiData = await client.GetFromJsonAsync<string[]>("api/DantooineApi");
+        apiData = (await client.GetFromJsonAsync<string[]>("api/DantooineApi"))!;
     }
 }

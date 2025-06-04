@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using Fornax.Client;
+﻿using Fornax.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

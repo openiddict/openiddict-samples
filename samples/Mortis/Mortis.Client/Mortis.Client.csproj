@@ -5,7 +5,6 @@
     <AppConfig>Web.config</AppConfig>
     <GeneratedBindingRedirectsAction>Overwrite</GeneratedBindingRedirectsAction>
     <MvcBuildViews>false</MvcBuildViews>
-    <ImplicitUsings>disable</ImplicitUsings>
     <NoWarn>CA3147</NoWarn>
   </PropertyGroup>
 
