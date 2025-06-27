@@ -7,11 +7,11 @@ namespace Fornax.Client;
 
 public class InteractiveService : BackgroundService
 {
-    private readonly IApplicationLifetime _lifetime;
+    private readonly IHostApplicationLifetime _lifetime;
     private readonly OpenIddictClientService _service;
 
     public InteractiveService(
-        IApplicationLifetime lifetime,
+        IHostApplicationLifetime lifetime,
         OpenIddictClientService service)
     {
         _lifetime = lifetime;
