@@ -72,6 +72,9 @@ public class Startup
                 options.UseOwin();
             });
 
+        // Register the Entity Framework context needed by the OpenIddict stores.
+        services.AddScoped(static provider => ApplicationDbContext.Create());
+
         // Create a new Autofac container and import the OpenIddict services.
         var builder = new ContainerBuilder();
         builder.Populate(services);
@@ -85,7 +88,16 @@ public class Startup
         var container = builder.Build();
 
         // Register the Entity Framework context and the user/sign-in managers used by ASP.NET Identity.
-        app.CreatePerOwinContext(ApplicationDbContext.Create);
+        //
+        // Note: while the regular CreatePerOwinContext() method is used to store the Entity Framework
+        // context in the OWIN environment (so that it can be retrieved by the ASP.NET Identity components),
+        // the factory used here simply resolves the scoped context from the Autofac container to avoid
+        // having multiple instances of the same context created for each request. As such, the dispose
+        // callback action is left empty, as the context will be disposed by Autofac when the request ends.
+        app.CreatePerOwinContext<ApplicationDbContext>(
+            createCallback: (options, context) => container.Resolve<ApplicationDbContext>(),
+            disposeCallback: static (options, context) => { });
+
         app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
         app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 

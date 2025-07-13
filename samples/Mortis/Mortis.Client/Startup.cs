@@ -78,6 +78,9 @@ public class Startup
                 });
             });
 
+        // Register the Entity Framework context needed by the OpenIddict stores.
+        services.AddScoped(static provider => ApplicationDbContext.Create());
+
         // Create a new Autofac container and import the OpenIddict services.
         var builder = new ContainerBuilder();
         builder.Populate(services);
