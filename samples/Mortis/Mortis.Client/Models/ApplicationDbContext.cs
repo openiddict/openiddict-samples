@@ -9,6 +9,11 @@ public class ApplicationDbContext : DbContext
     {
     }
 
+    public static ApplicationDbContext Create()
+    {
+        return new ApplicationDbContext();
+    }
+
     protected override void OnModelCreating(DbModelBuilder modelBuilder)
     {
         modelBuilder.UseOpenIddict();
