@@ -26,13 +26,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest, ubuntu-latest, windows-latest ]
+        os: [ macos-26, ubuntu-24.04, windows-2022 ]
         include:
-          - os: macos-latest
+          - os: macos-26
             os_name: macos
-          - os: ubuntu-latest
+          - os: ubuntu-24.04
             os_name: linux
-          - os: windows-latest
+          - os: windows-2022
             os_name: windows
 
     steps:
