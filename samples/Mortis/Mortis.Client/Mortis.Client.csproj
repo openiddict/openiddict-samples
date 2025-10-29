@@ -13,6 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!--
+      Note: Newtonsoft.Json is explicitly referenced to override the
+      vulnerable version referenced by other packages or metapackages.
+    -->
+
     <PackageReference Include="Antlr" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" />
     <PackageReference Include="Autofac.Mvc5" />
@@ -23,6 +28,7 @@
     <PackageReference Include="Microsoft.Owin.Host.SystemWeb" />
     <PackageReference Include="Microsoft.Owin.Security.Cookies" />
     <PackageReference Include="Microsoft.Web.Infrastructure" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="OpenIddict.EntityFramework" />
     <PackageReference Include="OpenIddict.Owin" />
     <PackageReference Include="WebGrease" />
