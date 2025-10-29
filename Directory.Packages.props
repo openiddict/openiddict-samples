@@ -43,6 +43,7 @@
     <PackageVersion Include="Microsoft.Owin.Security.Cookies"                            Version="4.2.3"   />
     <PackageVersion Include="Microsoft.Owin.Security.OAuth"                              Version="4.2.3"   />
     <PackageVersion Include="Microsoft.Web.Infrastructure"                               Version="2.0.1"   />
+    <PackageVersion Include="Newtonsoft.Json"                                            Version="13.0.4"  />
     <PackageVersion Include="OpenIddict.Client.SystemIntegration"                        Version="7.0.0"   />
     <PackageVersion Include="OpenIddict.Client.SystemNetHttp"                            Version="7.0.0"   />
     <PackageVersion Include="OpenIddict.EntityFramework"                                 Version="7.0.0"   />
@@ -64,39 +65,40 @@
     <!--
       Note: the following references are exclusively used in the .NET 9.0 and ASP.NET Core 9.0 samples:
     -->
-    <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.AppServices"            Version="1.0.14"  />
-    <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.WinForms"               Version="1.0.14"  />
-    <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.Wpf"                    Version="1.0.14"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Negotiate"              Version="9.0.10"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly"                Version="9.0.10"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.10"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Build"          Version="3.2.1"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer"      Version="9.0.10"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server"         Version="9.0.10"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebView.Wpf"                Version="9.0.120" />
-    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"       Version="9.0.10"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"          Version="9.0.10"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI"                           Version="9.0.10"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"          Version="9.0.10"  />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite"                       Version="9.0.10"  />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools"                        Version="9.0.10"  />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection"                   Version="9.0.10"  />
-    <PackageVersion Include="Microsoft.Extensions.Hosting"                               Version="9.0.10"  />
-    <PackageVersion Include="Microsoft.Extensions.Http"                                  Version="9.0.10"  />
-    <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design"           Version="9.0.0"   />
-    <PackageVersion Include="OpenIddict.Abstractions"                                    Version="7.0.0"   />
-    <PackageVersion Include="OpenIddict.AspNetCore"                                      Version="7.0.0"   />
-    <PackageVersion Include="OpenIddict.Client.SystemIntegration"                        Version="7.0.0"   />
-    <PackageVersion Include="OpenIddict.Client.SystemNetHttp"                            Version="7.0.0"   />
-    <PackageVersion Include="OpenIddict.Client.WebIntegration"                           Version="7.0.0"   />
-    <PackageVersion Include="OpenIddict.EntityFrameworkCore"                             Version="7.0.0"   />
-    <PackageVersion Include="OpenIddict.Quartz"                                          Version="7.0.0"   />
-    <PackageVersion Include="OpenIddict.Validation.AspNetCore"                           Version="7.0.0"   />
-    <PackageVersion Include="OpenIddict.Validation.SystemNetHttp"                        Version="7.0.0"   />
-    <PackageVersion Include="Quartz.Extensions.Hosting"                                  Version="3.15.1"  />
-    <PackageVersion Include="Spectre.Console"                                            Version="0.51.1"  />
-    <PackageVersion Include="System.Linq.Async"                                          Version="6.0.3"   />
-    <PackageVersion Include="Yarp.ReverseProxy"                                          Version="2.3.0"   />
+    <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.AppServices"            Version="1.0.14"   />
+    <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.WinForms"               Version="1.0.14"   />
+    <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.Wpf"                    Version="1.0.14"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Negotiate"              Version="9.0.10"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly"                Version="9.0.10"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.10"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Build"          Version="3.2.1"    />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer"      Version="9.0.10"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server"         Version="9.0.10"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebView.Wpf"                Version="9.0.120"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"       Version="9.0.10"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"          Version="9.0.10"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI"                           Version="9.0.10"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"          Version="9.0.10"   />
+    <PackageVersion Include="Microsoft.Build"                                            Version="17.14.28" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite"                       Version="9.0.10"   />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools"                        Version="9.0.10"   />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection"                   Version="9.0.10"   />
+    <PackageVersion Include="Microsoft.Extensions.Hosting"                               Version="9.0.10"   />
+    <PackageVersion Include="Microsoft.Extensions.Http"                                  Version="9.0.10"   />
+    <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design"           Version="9.0.0"    />
+    <PackageVersion Include="OpenIddict.Abstractions"                                    Version="7.0.0"    />
+    <PackageVersion Include="OpenIddict.AspNetCore"                                      Version="7.0.0"    />
+    <PackageVersion Include="OpenIddict.Client.SystemIntegration"                        Version="7.0.0"    />
+    <PackageVersion Include="OpenIddict.Client.SystemNetHttp"                            Version="7.0.0"    />
+    <PackageVersion Include="OpenIddict.Client.WebIntegration"                           Version="7.0.0"    />
+    <PackageVersion Include="OpenIddict.EntityFrameworkCore"                             Version="7.0.0"    />
+    <PackageVersion Include="OpenIddict.Quartz"                                          Version="7.0.0"    />
+    <PackageVersion Include="OpenIddict.Validation.AspNetCore"                           Version="7.0.0"    />
+    <PackageVersion Include="OpenIddict.Validation.SystemNetHttp"                        Version="7.0.0"    />
+    <PackageVersion Include="Quartz.Extensions.Hosting"                                  Version="3.15.1"   />
+    <PackageVersion Include="Spectre.Console"                                            Version="0.51.1"   />
+    <PackageVersion Include="System.Linq.Async"                                          Version="6.0.3"    />
+    <PackageVersion Include="Yarp.ReverseProxy"                                          Version="2.3.0"    />
   </ItemGroup>
 
 </Project>
