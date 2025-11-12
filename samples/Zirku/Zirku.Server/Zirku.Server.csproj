@@ -18,7 +18,6 @@
     <PackageReference Include="OpenIddict.EntityFrameworkCore" />
     <PackageReference Include="OpenIddict.Quartz" />
     <PackageReference Include="Quartz.Extensions.Hosting" />
-    <PackageReference Include="System.Linq.Async" />
   </ItemGroup>
 
 </Project>
