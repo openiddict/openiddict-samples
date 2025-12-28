@@ -41,9 +41,9 @@ jobs:
 
     - name: Build
       if: ${{ runner.os == 'Windows' }}
-      run: eng\common\CIBuild.cmd -configuration Release -prepareMachine -integrationTest
+      run: eng\common\Build.cmd -configuration Release -ci -prepareMachine -restore -build -integrationTest
 
     - name: Build
       if: ${{ runner.os != 'Windows' }}
       shell: pwsh
-      run: ./eng/common/cibuild.sh -configuration Release -prepareMachine -integrationTest
+      run: ./eng/common/build.sh -configuration Release -ci -prepareMachine -restore -build -integrationTest
