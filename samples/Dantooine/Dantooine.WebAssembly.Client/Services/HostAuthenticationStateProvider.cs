@@ -11,8 +11,7 @@ public class HostAuthenticationStateProvider : AuthenticationStateProvider
 {
     private static readonly TimeSpan _userCacheRefreshInterval = TimeSpan.FromSeconds(60);
 
-    private const string LogInPath = "api/Account/Login";
-    private const string LogOutPath = "api/Account/Logout";
+    private const string LogInPath = "login";
 
     private readonly NavigationManager _navigation;
     private readonly HttpClient _client;

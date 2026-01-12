@@ -10,6 +10,7 @@ using Quartz;
 using Yarp.ReverseProxy.Forwarder;
 using Yarp.ReverseProxy.Transforms;
 using static OpenIddict.Abstractions.OpenIddictConstants;
+using static OpenIddict.Abstractions.OpenIddictExceptions;
 using static OpenIddict.Client.AspNetCore.OpenIddictClientAspNetCoreConstants;
 
 namespace Dantooine.WebAssembly.Server;
@@ -134,11 +135,12 @@ public class Startup
 
         // Create an authorization policy used by YARP when forwarding requests
         // from the WASM application to the Dantooine.Api resource server.
-        services.AddAuthorization(options => options.AddPolicy("CookieAuthenticationPolicy", builder =>
-        {
-            builder.AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme);
-            builder.RequireAuthenticatedUser();
-        }));
+        services.AddAuthorizationBuilder()
+            .AddPolicy("CookieAuthenticationPolicy", builder =>
+            {
+                builder.AddAuthenticationSchemes(CookieAuthenticationDefaults.AuthenticationScheme);
+                builder.RequireAuthenticatedUser();
+            });
 
         services.AddReverseProxy()
             .LoadFromConfig(Configuration.GetSection("ReverseProxy"))
@@ -257,8 +259,34 @@ public class Startup
         {
             endpoints.MapRazorPages();
             endpoints.MapControllers();
-            endpoints.MapReverseProxy();
+
+            // Note: by default, the cookie authentication middleware automatically redirects
+            // the user agent to the login page configured in the cookie authentication options.
+            // In this case, this behavior is not desirable as an HTTP 401 response MUST be
+            // returned to the WASM client to automatically redirect the user agent to the
+            // login page. As such, this logic is disabled for all proxied requests.
+            endpoints.MapReverseProxy(ConfigureProxyPipeline).DisableCookieRedirect();
+
             endpoints.MapFallbackToPage("/_Host");
         });
+
+        static void ConfigureProxyPipeline(IReverseProxyApplicationBuilder app)
+        {
+            app.Use(async (context, next) =>
+            {
+                await next();
+
+                // Note: if an "access_denied" error occurred while trying to refresh tokens,
+                // trigger a cookie authentication challenge to let the WASM client know that
+                // the user should be redirected to the login page to re-authenticate.
+                var exception = context.GetForwarderErrorFeature()?.Exception;
+                if (exception is ProtocolException { Error: Errors.InvalidGrant })
+                {
+                    context.Response.Clear();
+
+                    await context.ChallengeAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                }
+            });
+        }
     }
 }
