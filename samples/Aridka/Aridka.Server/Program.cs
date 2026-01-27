@@ -87,6 +87,6 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapDefaultControllerRoute();
 
-app.UseWelcomePage();
+app.UseWelcomePage("/");
 
 app.Run();
