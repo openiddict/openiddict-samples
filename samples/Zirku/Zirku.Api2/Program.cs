@@ -48,6 +48,6 @@ app.UseAuthorization();
 
 app.MapGet("api", [Authorize] (ClaimsPrincipal user) => $"{user.Identity!.Name} is allowed to access Api2.");
 
-app.UseWelcomePage();
+app.UseWelcomePage("/");
 
 app.Run();

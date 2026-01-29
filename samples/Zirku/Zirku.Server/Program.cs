@@ -287,6 +287,6 @@ app.MapMethods("authorize", [HttpMethods.Get, HttpMethods.Post], async (HttpCont
     return Results.SignIn(new ClaimsPrincipal(identity), properties: null, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 });
 
-app.UseWelcomePage();
+app.UseWelcomePage("/");
 
 app.Run();

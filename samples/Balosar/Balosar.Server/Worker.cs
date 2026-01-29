@@ -54,7 +54,6 @@ public class Worker : IHostedService
                 }
             });
         }
-
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
