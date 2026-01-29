@@ -51,7 +51,7 @@ public class Worker : IHostedService
                 Requirements =
                 {
                     Requirements.Features.ProofKeyForCodeExchange
-                },
+                }
             });
         }
     }
