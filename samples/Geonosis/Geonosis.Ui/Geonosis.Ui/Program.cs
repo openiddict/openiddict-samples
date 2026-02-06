@@ -1,11 +1,18 @@
+using System.Net.Http.Headers;
 using Geonosis.Ui;
 using Geonosis.Ui.Client;
+using Geonosis.Ui.Client.Weather;
 using Geonosis.Ui.Components;
+using Geonosis.Ui.Weather;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using OpenIddict.Client;
+using OpenIddict.Client.AspNetCore;
+using Yarp.ReverseProxy.Transforms;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 var issuerUrl = "https://localhost:7094";
+var apiUrl = "https://localhost:7070";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -93,6 +100,14 @@ builder.Services.AddRazorComponents()
 // Add authentication state provider
 builder.Services.AddCascadingAuthenticationState();
 
+// Add HttpClient for weather forecaster with base address of the weather API
+builder.Services.AddHttpForwarderWithServiceDiscovery();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient<IWeatherForecaster, ServerWeatherForecaster>(httpClient =>
+{
+    httpClient.BaseAddress = new(apiUrl);
+});
+
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
@@ -134,5 +149,36 @@ app.MapRazorComponents<App>()
 //  musth be registered in the OpenID ClientRegistration and
 //  must be configured in the AddRegistration method above.
 app.MapAuthenticationEndpoints();
+
+// Map a reverse proxy endpoint for the weather API, which will forward requests to the Weather API project and add the access
+// token in the authorization header.
+// This is used by the client-side weather forecaster to retrieve weather forecasts from the Weather API project without
+// having to worry about authentication and token management.
+app.MapForwarder("/weather-forecast", apiUrl, transformBuilder =>
+{
+    transformBuilder.AddRequestTransform(async transformContext =>
+    {
+        // Retrieve the data stored by OpenIddict in the state token created when the logout was triggered.
+        var result = await transformContext.HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        var openIddictClientService = transformContext.HttpContext.RequestServices.GetRequiredService<OpenIddictClientService>();
+        var accessToken = await transformContext.HttpContext.GetTokenAsync(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken)
+            ?? throw new InvalidOperationException("The access token cannot be retrieved.");
+
+        var exchangeResult = await openIddictClientService.AuthenticateWithTokenExchangeAsync(new()
+        {
+            SubjectToken = accessToken,
+            SubjectTokenType = TokenTypeIdentifiers.AccessToken,
+            RequestedTokenType = TokenTypeIdentifiers.AccessToken,
+            Scopes = [Scopes.OfflineAccess, Scopes.Profile, "Weather.Read"],
+        });
+
+        //var accessToken = await transformContext.HttpContext.GetTokenAsync("access_token");
+        transformContext.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", exchangeResult.IssuedToken);
+
+        // Remove application cookies
+        transformContext.HttpContext.Request.Headers.Remove("Cookie");
+    });
+}).RequireAuthorization();
 
 app.Run();

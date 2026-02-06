@@ -88,6 +88,7 @@
     <PackageVersion Include="Microsoft.Extensions.Http"                                  Version="10.0.0"   />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience"                       Version="10.0.0"   />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery"                      Version="10.0.0"   />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery.Yarp"                 Version="10.0.0"   />
     <PackageVersion Include="OpenIddict.Abstractions"                                    Version="7.2.0"    />
     <PackageVersion Include="OpenIddict.AspNetCore"                                      Version="7.2.0"    />
     <PackageVersion Include="OpenIddict.Client.SystemIntegration"                        Version="7.2.0"    />

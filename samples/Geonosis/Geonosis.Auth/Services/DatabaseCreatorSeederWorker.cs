@@ -131,12 +131,18 @@ namespace Geonosis.Auth.Services
 
                     Permissions.GrantTypes.AuthorizationCode,
                     Permissions.GrantTypes.RefreshToken,
+                    // The token exchange grant type is required for the UI to exchange the access token it receives
+                    // from the authorization server for a new access token that can be used to call the API.
+                    Permissions.GrantTypes.TokenExchange,
 
                     Permissions.ResponseTypes.Code,
 
                     Permissions.Scopes.Email,
                     Permissions.Scopes.Profile,
                     Permissions.Scopes.Roles,
+
+                    // Custom scope representing the API scope that the UI will request access to.
+                    Permissions.Prefixes.Scope + "Weather.Read",
                 },
                 Requirements =
                 {
@@ -151,6 +157,51 @@ namespace Geonosis.Auth.Services
             else
             {
                 await applicationManager.UpdateAsync(uiClient, uiClientApplicationDescriptor, cancellationToken);
+            }
+
+            // Create the client application representing the API if it doesn't exist.
+            var apiClient = await applicationManager.FindByClientIdAsync("geonosis-api", cancellationToken);
+            var apiClientApplicationDescriptor = new OpenIddictApplicationDescriptor
+            {
+                ClientId = "geonosis-api",
+                ClientSecret = "super-secret-client-secret-2",
+                DisplayName = "Geonosis API Application",
+                ClientType = ClientTypes.Confidential,
+                ConsentType = ConsentTypes.Implicit,
+            };
+
+            if (apiClient == null)
+            {
+                await applicationManager.CreateAsync(apiClientApplicationDescriptor, cancellationToken);
+            }
+            else
+            {
+                await applicationManager.UpdateAsync(apiClient, apiClientApplicationDescriptor, cancellationToken);
+            }
+        }
+
+        public static async Task SeedScopesAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        {
+            var scopeManager = serviceProvider.GetRequiredService<IOpenIddictScopeManager>();
+
+            var weatherReadApiScope = await scopeManager.FindByNameAsync("Weather.Read", cancellationToken);
+            var weatherReadApiScopeDescriptor = new OpenIddictScopeDescriptor
+            {
+                Name = "Weather.Read",
+                DisplayName = "Weather Read API Scope",
+                Resources =
+                {
+                    "Geonosis.Api"
+                }
+            };
+
+            if (weatherReadApiScope == null)
+            {
+                await scopeManager.CreateAsync(weatherReadApiScopeDescriptor, cancellationToken);
+            }
+            else
+            {
+                await scopeManager.UpdateAsync(weatherReadApiScope, weatherReadApiScopeDescriptor, cancellationToken);
             }
         }
     }
