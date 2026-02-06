@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Geonosis.Ui.Client.Layout
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -11,11 +12,11 @@
     <link rel="stylesheet" href="@Assets["Geonosis.Ui.styles.css"]" />
     <ImportMap />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <HeadOutlet />
+    <HeadOutlet @rendermode="InteractiveAuto" />
 </head>
 
 <body>
-    <Routes />
+    <Routes @rendermode="InteractiveAuto" />
     <ReconnectModal />
     <script src="@Assets["_framework/blazor.web.js"]"></script>
 </body>
