@@ -46,7 +46,7 @@ builder.Services.AddOpenIddict()
             Issuer = new Uri(issuerUrl, UriKind.Absolute),
 
             ClientId = "geonosis-ui",
-            ClientSecret = "super-secret-client-id",
+            ClientSecret = "super-secret-client-secret",
             // OfflineAccess is required to get refresh tokens
             Scopes = { Scopes.OfflineAccess, Scopes.Email, Scopes.Profile },
 
