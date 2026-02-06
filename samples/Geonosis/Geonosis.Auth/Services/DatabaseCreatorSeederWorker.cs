@@ -20,7 +20,7 @@ namespace Geonosis.Auth.Services
             await dbContext.Database.EnsureCreatedAsync(cancellationToken);
 
             await SeedRolesAsync(scope.ServiceProvider, cancellationToken);
-            await SeedUsersAsync(scope.ServiceProvider, cancellationToken);
+            await SeedSampleUsersAsync(scope.ServiceProvider, cancellationToken);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -28,7 +28,7 @@ namespace Geonosis.Auth.Services
             return Task.CompletedTask;
         }
 
-        private static async Task SeedUsersAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        private static async Task SeedSampleUsersAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             // Create an admin user if it doesn't exist.
