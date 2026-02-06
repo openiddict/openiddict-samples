@@ -133,6 +133,6 @@ app.MapRazorComponents<App>()
 // Callback endpoint for handling authentication responses from Auth project
 //  musth be registered in the OpenID ClientRegistration and
 //  must be configured in the AddRegistration method above.
-app.MapGroup("/authentication").MapAuthenticationEndpoints();
+app.MapAuthenticationEndpoints();
 
 app.Run();

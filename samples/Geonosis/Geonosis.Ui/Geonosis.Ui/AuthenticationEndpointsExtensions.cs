@@ -19,7 +19,7 @@ namespace Geonosis.Ui
         /// </summary>
         internal static RouteGroupBuilder MapAuthenticationEndpoints(this IEndpointRouteBuilder routes)
         {
-            var authGroup = routes.MapGroup("");
+            var authGroup = routes.MapGroup("/authentication");
 
             RegisterLoginEndpoint(authGroup);
             RegisterLogoutEndpoint(authGroup);
@@ -58,17 +58,17 @@ namespace Geonosis.Ui
 
         private static void RegisterCallbackEndpoints(RouteGroupBuilder authGroup)
         {
-            var callbackGroup = authGroup.MapGroup("").DisableAntiforgery();
-
-            callbackGroup.MapMethods(
+            authGroup.MapMethods(
                 "/login-callback/{provider}",
                 [HttpMethod.Get.Method, HttpMethod.Post.Method],
-                async (string? provider, HttpContext ctx) => await HandleLoginCallback(ctx));
+                async (string? provider, HttpContext ctx) => await HandleLoginCallback(ctx))
+                .DisableAntiforgery();
 
-            callbackGroup.MapMethods(
+            authGroup.MapMethods(
                 "/logout-callback/{provider}",
                 [HttpMethod.Get.Method, HttpMethod.Post.Method],
-                async (string? provider, HttpContext ctx) => await HandleLogoutCallback(ctx));
+                async (string? provider, HttpContext ctx) => await HandleLogoutCallback(ctx))
+                .DisableAntiforgery();
         }
 
         private static AuthenticationProperties BuildRedirectProperties(string? returnUrl)
