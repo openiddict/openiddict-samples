@@ -51,9 +51,10 @@
     <Project Path="samples/Fornax/Fornax.Server/Fornax.Server.csproj" />
   </Folder>
   <Folder Name="/samples/Geonosis/">
+    <Project Path="samples/Geonosis/Geonosis.Api/Geonosis.Api.csproj" />
     <Project Path="samples/Geonosis/Geonosis.AppHost/Geonosis.AppHost.csproj" Id="748f5304-32cb-427b-934f-23ebcd9d5066" />
-    <Project Path="samples/Geonosis/Geonosis.ServiceDefaults/Geonosis.ServiceDefaults.csproj" />
     <Project Path="samples/Geonosis/Geonosis.Auth/Geonosis.Auth.csproj" Id="b72af079-8a7b-42a1-8a2e-0f531993d73e" />
+    <Project Path="samples/Geonosis/Geonosis.ServiceDefaults/Geonosis.ServiceDefaults.csproj" />
     <Project Path="samples/Geonosis/Geonosis.Ui/Geonosis.Ui.Client/Geonosis.Ui.Client.csproj" />
     <Project Path="samples/Geonosis/Geonosis.Ui/Geonosis.Ui/Geonosis.Ui.csproj" />
   </Folder>

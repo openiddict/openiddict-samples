@@ -15,6 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Geonosis.Api\Geonosis.Api.csproj" />
+    <ProjectReference Include="..\Geonosis.Auth\Geonosis.Auth.csproj" />
     <ProjectReference Include="..\Geonosis.Ui\Geonosis.Ui\Geonosis.Ui.csproj" />
   </ItemGroup>
 
