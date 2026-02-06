@@ -35,10 +35,10 @@ namespace Geonosis.Auth.Services
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             // Create an admin user if it doesn't exist.
             // NOTE: In a production application, you would likely want to have a more robust seeding strategy and not hard-code credentials.
-            var defaultUser = await userManager.FindByNameAsync("admin");
-            if (defaultUser == null)
+            var defaultAdminUser = await userManager.FindByNameAsync("admin");
+            if (defaultAdminUser == null)
             {
-                defaultUser = new ApplicationUser
+                defaultAdminUser = new ApplicationUser
                 {
                     UserName = "admin@contoso.com",
                     NormalizedUserName = "ADMIN@CONTOSO.COM",
@@ -52,7 +52,30 @@ namespace Geonosis.Auth.Services
                     AccessFailedCount = 0,
                 };
 
-                defaultUser.PasswordHash = userManager.PasswordHasher.HashPassword(defaultUser, "Admin@12345");
+                defaultAdminUser.PasswordHash = userManager.PasswordHasher.HashPassword(defaultAdminUser, "Admin@12345");
+
+                await userManager.CreateAsync(defaultAdminUser);
+                await userManager.AddToRoleAsync(defaultAdminUser, "Admin");
+            }
+
+            var defaultUser = await userManager.FindByNameAsync("user");
+            if (defaultUser == null)
+            {
+                defaultUser = new ApplicationUser
+                {
+                    UserName = "user@contoso.com",
+                    NormalizedUserName = "USER@CONTOSO.COM",
+                    Email = "user@contoso.COM",
+                    NormalizedEmail = "USER@CONTOSO.COM",
+                    EmailConfirmed = true,
+                    LockoutEnabled = false,
+                    SecurityStamp = Guid.NewGuid().ToString("D"),
+                    ConcurrencyStamp = Guid.NewGuid().ToString("D"),
+                    TwoFactorEnabled = false,
+                    AccessFailedCount = 0,
+                };
+
+                defaultUser.PasswordHash = userManager.PasswordHasher.HashPassword(defaultUser, "User@12345");
 
                 await userManager.CreateAsync(defaultUser);
             }
@@ -60,6 +83,13 @@ namespace Geonosis.Auth.Services
 
         private static async Task SeedRolesAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
+            // Create an admin role if it doesn't exist.
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var adminRoleExists = await roleManager.RoleExistsAsync("Admin");
+            if (!adminRoleExists)
+            {
+                await roleManager.CreateAsync(new IdentityRole("Admin"));
+            }
         }
 
         private static async Task SeedClientsAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)

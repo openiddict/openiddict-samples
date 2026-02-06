@@ -48,7 +48,7 @@ builder.Services.AddOpenIddict()
             ClientId = "geonosis-ui",
             ClientSecret = "super-secret-client-secret",
             // OfflineAccess is required to get refresh tokens
-            Scopes = { Scopes.OfflineAccess, Scopes.Email, Scopes.Profile },
+            Scopes = { Scopes.OfflineAccess, Scopes.Email, Scopes.Profile, Scopes.Roles },
 
             // Note: to mitigate mix-up attacks, it's recommended to use a unique redirection endpoint
             // URI per provider, unless all the registered providers support returning a special "iss"

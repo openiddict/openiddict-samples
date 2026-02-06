@@ -105,7 +105,8 @@ namespace Geonosis.Ui
             // Map essential user claims from the external provider
             userIdentity.SetClaim(ClaimTypes.Email, authResult.Principal.GetClaim(ClaimTypes.Email))
                         .SetClaim(ClaimTypes.Name, authResult.Principal.GetClaim(ClaimTypes.Name))
-                        .SetClaim(ClaimTypes.NameIdentifier, authResult.Principal.GetClaim(ClaimTypes.NameIdentifier));
+                        .SetClaim(ClaimTypes.NameIdentifier, authResult.Principal.GetClaim(ClaimTypes.NameIdentifier))
+                        .SetClaim(ClaimTypes.Role, authResult.Principal.GetClaim("Role"));
 
             // Store provider registration details
             userIdentity.SetClaim(Claims.Private.RegistrationId, authResult.Principal.GetClaim(Claims.Private.RegistrationId))
