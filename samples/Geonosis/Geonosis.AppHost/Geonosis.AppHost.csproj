@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\samples\Geonosis\Geonosis.Ui\Geonosis.Ui\Geonosis.Ui.csproj" />
+    <ProjectReference Include="..\Geonosis.Ui\Geonosis.Ui\Geonosis.Ui.csproj" />
   </ItemGroup>
 
 </Project>

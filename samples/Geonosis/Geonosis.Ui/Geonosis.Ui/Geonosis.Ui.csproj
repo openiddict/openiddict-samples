@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\..\OpenIddict.Samples.ServiceDefaults\OpenIddict.Samples.ServiceDefaults.csproj" />
+		<ProjectReference Include="..\..\Geonosis.ServiceDefaults\Geonosis.ServiceDefaults.csproj" />
 		<ProjectReference Include="..\Geonosis.Ui.Client\Geonosis.Ui.Client.csproj" />
 
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
