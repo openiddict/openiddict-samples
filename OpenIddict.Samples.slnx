@@ -21,6 +21,7 @@
     <File Path="NuGet.config" />
     <File Path="README.md" />
   </Folder>
+  <Folder Name="/samples/" />
 
   <Folder Name="/samples/Aridka/">
     <Project Path="samples/Aridka/Aridka.Client/Aridka.Client.csproj" />
@@ -48,6 +49,13 @@
   <Folder Name="/samples/Fornax/">
     <Project Path="samples/Fornax/Fornax.Client/Fornax.Client.csproj" />
     <Project Path="samples/Fornax/Fornax.Server/Fornax.Server.csproj" />
+  </Folder>
+  <Folder Name="/samples/Geonosis/">
+    <Project Path="OpenIddict.Samples.AppHost/OpenIddict.Samples.AppHost.csproj" Id="748f5304-32cb-427b-934f-23ebcd9d5066" />
+    <Project Path="OpenIddict.Samples.ServiceDefaults/OpenIddict.Samples.ServiceDefaults.csproj" />
+    <Project Path="samples/Geonosis/Geonosis.Auth/Geonosis.Auth.csproj" Id="b72af079-8a7b-42a1-8a2e-0f531993d73e" />
+    <Project Path="samples/Geonosis/Geonosis.Ui/Geonosis.Ui.Client/Geonosis.Ui.Client.csproj" />
+    <Project Path="samples/Geonosis/Geonosis.Ui/Geonosis.Ui/Geonosis.Ui.csproj" />
   </Folder>
 
   <Folder Name="/samples/Hollastin/">
