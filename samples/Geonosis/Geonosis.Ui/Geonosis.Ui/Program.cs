@@ -158,9 +158,6 @@ app.MapForwarder("/weather-forecast", apiUrl, transformBuilder =>
 {
     transformBuilder.AddRequestTransform(async transformContext =>
     {
-        // Retrieve the data stored by OpenIddict in the state token created when the logout was triggered.
-        var result = await transformContext.HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
         var openIddictClientService = transformContext.HttpContext.RequestServices.GetRequiredService<OpenIddictClientService>();
         var accessToken = await transformContext.HttpContext.GetTokenAsync(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken)
             ?? throw new InvalidOperationException("The access token cannot be retrieved.");

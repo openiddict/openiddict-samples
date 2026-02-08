@@ -9,13 +9,13 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Geonosis.Ui.Weather
 {
-    internal sealed class ServerWeatherForecaster() : IWeatherForecaster
+    internal sealed class ServerWeatherForecaster(IHttpContextAccessor httpContextAccessor) : IWeatherForecaster
     //internal sealed class ServerWeatherForecaster(HttpClient httpClient, IHttpContextAccessor httpContextAccessor) : IWeatherForecaster
     {
-        public Task<IEnumerable<WeatherForecast>> GetWeatherForecastAsync()
+        public async Task<IEnumerable<WeatherForecast>> GetWeatherForecastAsync()
         {
-            //// Retrieve the data stored by OpenIddict in the state token created when the logout was triggered.
-            //var result = await httpContextAccessor.HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            // Retrieve the data stored by OpenIddict in the state token created when the logout was triggered.
+            var result = await httpContextAccessor.HttpContext.User .AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             //var openIddictClientService = transformContext.HttpContext.RequestServices.GetRequiredService<OpenIddictClientService>();
             //var accessToken = await transformContext.HttpContext.GetTokenAsync(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken)
