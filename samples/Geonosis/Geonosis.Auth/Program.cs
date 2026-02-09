@@ -59,11 +59,11 @@ builder.Services.AddOpenIddict()
         // Mark the "email", "profile" and "roles" scopes as supported scopes.
         options.RegisterScopes(Scopes.Email, Scopes.Profile, Scopes.Roles);
 
-        // Note: this sample only uses the authorization code and refresh token
-        // flows but you can enable the other flows if you need to support
-        // implicit, password or client credentials.
+        // Note: this sample uses the code and refresh token flows but you can enable
+        // the other flows if you need to support implicit or password flows.
         options.AllowAuthorizationCodeFlow()
-               .AllowRefreshTokenFlow();
+               .AllowRefreshTokenFlow()
+               .AllowTokenExchangeFlow();
 
         // Register the signing and encryption credentials.
         // TODO: add custom certificates in production scenarios.

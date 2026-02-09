@@ -16,7 +16,7 @@ builder.Services.AddOpenIddict()
         // Note: the validation handler uses OpenID Connect discovery
         // to retrieve the address of the introspection endpoint.
         options.SetIssuer(issuerUrl);
-        options.AddAudiences("Geonosis.Api");
+        options.AddAudiences("geonosis-api");
 
         // Split the "scope" claim into multiple claims if it contains multiple values separated by spaces.
         options.AddEventHandler<OpenIddictValidationEvents.ValidateTokenContext>(builder =>

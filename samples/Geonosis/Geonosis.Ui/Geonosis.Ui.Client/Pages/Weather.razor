@@ -11,7 +11,10 @@
 
 <h1>Weather</h1>
 
-<p>This component demonstrates showing data.</p>
+<p>This component demonstrates a api call with the token exchange flow. 
+    The api call is made to the Geonosis.Ui.Api project throw the Geonosis.Ui (the server side of the Blazor WebAssembly project) to demonstrate the token exchange flow. 
+    The Geonosis.Ui project will exchange the access token used in the UI for a new access token with the required scopes ("Weather.Read") to call the api on behalf of the user.
+</p>
 
 @if (forecasts == null)
 {

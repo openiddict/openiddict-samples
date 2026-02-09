@@ -22,10 +22,10 @@ builder.AddServiceDefaults();
 builder.Services.AddOpenIddict()
     .AddClient(options =>
     {
-        // Note: this sample uses the authorization code and refresh token
-        // flows, but you can enable the other flows if necessary.
+        // Enable the authorization code flow, the refresh token flow and the token exchange flow.
         options.AllowAuthorizationCodeFlow()
-               .AllowRefreshTokenFlow();
+               .AllowRefreshTokenFlow()
+               .AllowTokenExchangeFlow();
 
         // Register the signing and encryption credentials used to protect
         // sensitive data like the state tokens produced by OpenIddict.
@@ -167,7 +167,7 @@ app.MapForwarder("/weather-forecast", apiUrl, transformBuilder =>
             SubjectToken = accessToken,
             SubjectTokenType = TokenTypeIdentifiers.AccessToken,
             RequestedTokenType = TokenTypeIdentifiers.AccessToken,
-            Scopes = [Scopes.OfflineAccess, Scopes.Profile, "Weather.Read"],
+            Scopes = ["Weather.Read"],
         });
 
         //var accessToken = await transformContext.HttpContext.GetTokenAsync("access_token");

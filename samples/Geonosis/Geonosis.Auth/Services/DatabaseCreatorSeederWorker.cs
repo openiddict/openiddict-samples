@@ -1,4 +1,5 @@
-﻿using Geonosis.Auth.Data;
+﻿using System.Globalization;
+using Geonosis.Auth.Data;
 using Microsoft.AspNetCore.Identity;
 using OpenIddict.Abstractions;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -20,9 +21,10 @@ namespace Geonosis.Auth.Services
             var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             await dbContext.Database.EnsureCreatedAsync(cancellationToken);
 
-            await SeedClientsAsync(scope.ServiceProvider, cancellationToken);
-            await SeedRolesAsync(scope.ServiceProvider, cancellationToken);
-            await SeedSampleUsersAsync(scope.ServiceProvider, cancellationToken);
+            await SeedClientsAsync(_serviceProvider, cancellationToken);
+            await SeedRolesAsync(_serviceProvider, cancellationToken);
+            await SeedSampleUsersAsync(_serviceProvider, cancellationToken);
+            await SeedScopesAsync(_serviceProvider, cancellationToken);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -32,7 +34,9 @@ namespace Geonosis.Auth.Services
 
         private static async Task SeedSampleUsersAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
-            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            using var scope = serviceProvider.CreateScope();
+
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             // Create an admin user if it doesn't exist.
             // NOTE: In a production application, you would likely want to have a more robust seeding strategy and not hard-code credentials.
             var defaultAdminUser = await userManager.FindByNameAsync("admin");
@@ -83,8 +87,10 @@ namespace Geonosis.Auth.Services
 
         private static async Task SeedRolesAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
+            using var scope = serviceProvider.CreateScope();
+
             // Create an admin role if it doesn't exist.
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var adminRoleExists = await roleManager.RoleExistsAsync("Admin");
             if (!adminRoleExists)
             {
@@ -94,7 +100,9 @@ namespace Geonosis.Auth.Services
 
         private static async Task SeedClientsAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
-            var applicationManager = serviceProvider.GetRequiredService<IOpenIddictApplicationManager>();
+            using var scope = serviceProvider.CreateScope();
+
+            var applicationManager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
             // Create the client application representing the UI if it doesn't exist.
             var uiClient = await applicationManager.FindByClientIdAsync("geonosis-ui", cancellationToken);
@@ -141,13 +149,13 @@ namespace Geonosis.Auth.Services
                     Permissions.Scopes.Profile,
                     Permissions.Scopes.Roles,
 
-                    // Custom scope representing the API scope that the UI will request access to.
+                    // Custom scope representing the API scope that the UI will request access to using the token exchange flow.
                     Permissions.Prefixes.Scope + "Weather.Read",
                 },
                 Requirements =
                 {
                     Requirements.Features.ProofKeyForCodeExchange,
-                }
+                },
             };
 
             if (uiClient == null)
@@ -182,16 +190,23 @@ namespace Geonosis.Auth.Services
 
         public static async Task SeedScopesAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
-            var scopeManager = serviceProvider.GetRequiredService<IOpenIddictScopeManager>();
+            using var scope = serviceProvider.CreateScope();
+
+            var scopeManager = scope.ServiceProvider.GetRequiredService<IOpenIddictScopeManager>();
 
             var weatherReadApiScope = await scopeManager.FindByNameAsync("Weather.Read", cancellationToken);
             var weatherReadApiScopeDescriptor = new OpenIddictScopeDescriptor
             {
                 Name = "Weather.Read",
                 DisplayName = "Weather Read API Scope",
+                DisplayNames =
+                {
+                    [CultureInfo.GetCultureInfo("en-US")] = "Weather Read API Scope"
+                },
+                Description = "Scope for reading weather data from the API",
                 Resources =
                 {
-                    "Geonosis.Api"
+                    "geonosis-api"
                 }
             };
 
