@@ -13,7 +13,7 @@
         <div class="top-row px-4">
             <AuthorizeView>
                 <Authorized Context="authContext">
-                    <a class="me-3" href="/authentication/info">@(authContext.User.Identity!.Name)</a>
+                    <a class="me-3" href="/user-claims">@(authContext.User.Identity!.Name)</a>
                     <form action="@Constants.LogoutPath" method="post">
                         <AntiforgeryToken />
                         <input type="hidden" name="ReturnUrl" value="@currentUrl" />
