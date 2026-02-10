@@ -43,10 +43,8 @@ namespace Geonosis.Ui
 
         private static void RegisterLogoutEndpoint(RouteGroupBuilder authGroup)
         {
-            authGroup.MapPost("/logout", async ([FromForm] string? returnUrl, HttpContext ctx, IAntiforgery antiforgery) =>
+            authGroup.MapPost("/logout", ([FromForm] string? returnUrl, HttpContext ctx, IAntiforgery antiforgery) =>
             {
-                await antiforgery.ValidateRequestAsync(ctx);
-
                 return TypedResults.SignOut(
                     BuildRedirectProperties(returnUrl),
                     [
