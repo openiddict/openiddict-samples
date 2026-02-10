@@ -15,7 +15,7 @@ namespace Geonosis.Auth.Services
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            using var scope = _serviceProvider.CreateScope();
+            using var scope = _serviceProvider.CreateAsyncScope();
 
             // Create the database.
             var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -34,7 +34,7 @@ namespace Geonosis.Auth.Services
 
         private static async Task SeedSampleUsersAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
-            using var scope = serviceProvider.CreateScope();
+            using var scope = serviceProvider.CreateAsyncScope();
 
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             // Create an admin user if it doesn't exist.
@@ -87,7 +87,7 @@ namespace Geonosis.Auth.Services
 
         private static async Task SeedRolesAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
-            using var scope = serviceProvider.CreateScope();
+            using var scope = serviceProvider.CreateAsyncScope();
 
             // Create an admin role if it doesn't exist.
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -100,7 +100,7 @@ namespace Geonosis.Auth.Services
 
         private static async Task SeedClientsAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
-            using var scope = serviceProvider.CreateScope();
+            using var scope = serviceProvider.CreateAsyncScope();
 
             var applicationManager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
@@ -190,7 +190,7 @@ namespace Geonosis.Auth.Services
 
         public static async Task SeedScopesAsync(IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
-            using var scope = serviceProvider.CreateScope();
+            using var scope = serviceProvider.CreateAsyncScope();
 
             var scopeManager = scope.ServiceProvider.GetRequiredService<IOpenIddictScopeManager>();
 
