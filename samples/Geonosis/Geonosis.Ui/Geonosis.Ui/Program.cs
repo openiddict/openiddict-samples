@@ -64,19 +64,6 @@ builder.Services.AddOpenIddict()
             RedirectUri = new Uri("authentication/login-callback/local", UriKind.Relative),
             PostLogoutRedirectUri = new Uri("authentication/logout-callback/local", UriKind.Relative)
         });
-    })
-    .AddValidation(options =>
-    {
-        // Note: the validation handler uses OpenID Connect discovery
-        // to retrieve the address of the introspection endpoint.
-        options.SetIssuer(new Uri(issuerUrl, UriKind.Absolute));
-
-        // Register the System.Net.Http integration.
-        options.UseSystemNetHttp()
-               .SetProductInformation(typeof(Program).Assembly);
-
-        // Register the ASP.NET Core host.
-        options.UseAspNetCore();
     });
 
 // Register the authentication and authorization services.
