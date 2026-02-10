@@ -56,9 +56,7 @@ namespace Geonosis.Auth.Services
                     AccessFailedCount = 0,
                 };
 
-                defaultAdminUser.PasswordHash = userManager.PasswordHasher.HashPassword(defaultAdminUser, "Admin@12345");
-
-                await userManager.CreateAsync(defaultAdminUser);
+                await userManager.CreateAsync(defaultAdminUser, "Admin@12345");
                 await userManager.AddToRoleAsync(defaultAdminUser, "Admin");
             }
 
@@ -79,9 +77,7 @@ namespace Geonosis.Auth.Services
                     AccessFailedCount = 0,
                 };
 
-                defaultUser.PasswordHash = userManager.PasswordHasher.HashPassword(defaultUser, "User@12345");
-
-                await userManager.CreateAsync(defaultUser);
+                await userManager.CreateAsync(defaultUser, "User@12345");
             }
         }
 
