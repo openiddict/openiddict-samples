@@ -172,9 +172,6 @@ app.MapForwarder("/weather-forecast", apiUrl, transformBuilder =>
 
         //var accessToken = await transformContext.HttpContext.GetTokenAsync("access_token");
         transformContext.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", exchangeResult.IssuedToken);
-
-        // Remove application cookies
-        transformContext.HttpContext.Request.Headers.Remove("Cookie");
     });
 }).RequireAuthorization();
 

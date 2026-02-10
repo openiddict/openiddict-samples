@@ -49,7 +49,7 @@ namespace Geonosis.Ui
                     BuildRedirectProperties(returnUrl),
                     [
                         CookieAuthenticationDefaults.AuthenticationScheme,
-                    OpenIddictClientAspNetCoreDefaults.AuthenticationScheme
+                        OpenIddictClientAspNetCoreDefaults.AuthenticationScheme
                     ]);
             });
         }
