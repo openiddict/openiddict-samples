@@ -1,5 +1,4 @@
-using System.Security.Claims;
-using OpenIddict.Validation;
+using OpenIddict.Abstractions;
 using OpenIddict.Validation.AspNetCore;
 
 var issuerUrl = "https://localhost:7094";
@@ -18,35 +17,6 @@ builder.Services.AddOpenIddict()
         options.SetIssuer(issuerUrl);
         options.AddAudiences("geonosis-api");
 
-        // Split the "scope" claim into multiple claims if it contains multiple values separated by spaces.
-        options.AddEventHandler<OpenIddictValidationEvents.ValidateTokenContext>(builder =>
-        {
-            builder.UseInlineHandler(context =>
-            {
-                if (context.Principal?.Identity is ClaimsIdentity identity)
-                {
-                    var scopeClaim = identity.FindAll("scope");
-                    foreach (var claim in scopeClaim)
-                    {
-                        if (claim != null && claim.Value.Contains(' '))
-                        {
-                            // Remove the original "scope" claim
-                            identity.RemoveClaim(claim);
-
-                            // Add a "scope" claim for each value
-                            foreach (var scope in claim.Value.Split(' ', StringSplitOptions.RemoveEmptyEntries))
-                            {
-                                identity.AddClaim(new Claim("scope", scope, ClaimValueTypes.String, claim.Issuer, claim.OriginalIssuer));
-                            }
-                        }
-                    }
-
-                }
-
-                return default;
-            });
-        });
-
         // Register the System.Net.Http integration.
         options.UseSystemNetHttp()
                .SetProductInformation(typeof(Program).Assembly);
@@ -62,8 +32,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddAuthorizationBuilder()
   .AddPolicy(weatherReadAuthPolicy, policy => policy
     .RequireAuthenticatedUser()
-    .RequireClaim("scope", "Weather.Read"));
-
+    .RequireAssertion(context => context.User.HasScope("Weather.Read")));
 
 var app = builder.Build();
 
