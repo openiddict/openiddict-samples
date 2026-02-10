@@ -12,8 +12,7 @@ builder.AddServiceDefaults();
 builder.Services.AddOpenIddict()
     .AddValidation(options =>
     {
-        // Note: the validation handler uses OpenID Connect discovery
-        // to retrieve the address of the introspection endpoint.
+        // Set the authority and the audience to validate the tokens.
         options.SetIssuer(issuerUrl);
         options.AddAudiences("geonosis-api");
 
