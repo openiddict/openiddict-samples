@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Client.AspNetCore;
@@ -77,10 +78,8 @@ namespace Geonosis.Ui
             var sanitizedUrl = returnUrl switch
             {
                 null or "" => baseRoute,
-                _ when !Uri.IsWellFormedUriString(returnUrl, UriKind.Relative) =>
-                    new Uri(returnUrl, UriKind.Absolute).PathAndQuery,
-                _ when returnUrl[0] != '/' => $"{baseRoute}{returnUrl}",
-                _ => returnUrl
+                _ when RedirectHttpResult.IsLocalUrl(returnUrl) => returnUrl,
+                _ => new Uri(returnUrl, UriKind.Absolute).PathAndQuery,
             };
 
             return new AuthenticationProperties { RedirectUri = sanitizedUrl };
