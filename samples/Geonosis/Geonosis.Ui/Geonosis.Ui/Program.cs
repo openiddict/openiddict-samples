@@ -142,24 +142,28 @@ app.MapAuthenticationEndpoints();
 // This is used by the client-side weather forecaster to retrieve weather forecasts from the Weather API project without
 // having to worry about authentication and token management.
 app.MapForwarder("/weather-forecast", apiUrl, transformBuilder =>
-{
-    transformBuilder.AddRequestTransform(async transformContext =>
     {
-        var openIddictClientService = transformContext.HttpContext.RequestServices.GetRequiredService<OpenIddictClientService>();
-        var accessToken = await transformContext.HttpContext.GetTokenAsync(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken)
-            ?? throw new InvalidOperationException("The access token cannot be retrieved.");
-
-        var exchangeResult = await openIddictClientService.AuthenticateWithTokenExchangeAsync(new()
+        transformBuilder.AddRequestTransform(async transformContext =>
         {
-            SubjectToken = accessToken,
-            SubjectTokenType = TokenTypeIdentifiers.AccessToken,
-            RequestedTokenType = TokenTypeIdentifiers.AccessToken,
-            Scopes = ["Weather.Read"],
+            var openIddictClientService = transformContext.HttpContext.RequestServices.GetRequiredService<OpenIddictClientService>();
+            var accessToken = await transformContext.HttpContext.GetTokenAsync(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken)
+                ?? throw new InvalidOperationException("The access token cannot be retrieved.");
+
+            var exchangeResult = await openIddictClientService.AuthenticateWithTokenExchangeAsync(new()
+            {
+                SubjectToken = accessToken,
+                SubjectTokenType = TokenTypeIdentifiers.AccessToken,
+                RequestedTokenType = TokenTypeIdentifiers.AccessToken,
+                Scopes = ["Weather.Read"],
+            });
+
+            //var accessToken = await transformContext.HttpContext.GetTokenAsync("access_token");
+            transformContext.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", exchangeResult.IssuedToken);
         });
 
-        //var accessToken = await transformContext.HttpContext.GetTokenAsync("access_token");
-        transformContext.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", exchangeResult.IssuedToken);
-    });
-}).RequireAuthorization();
+        // Remove application cookies
+        transformBuilder.RequestTransforms.Add(new RequestHeaderRemoveTransform("Cookie"));
+    })
+    .RequireAuthorization();
 
 app.Run();
