@@ -15,7 +15,7 @@ namespace Geonosis.Auth.Services
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            using var scope = _serviceProvider.CreateAsyncScope();
+            await using var scope = _serviceProvider.CreateAsyncScope();
 
             // Create the database.
             var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
