@@ -1,7 +1,8 @@
-﻿using Aridka.Server;
-using Aridka.Server.Models;
+﻿using Aridka.Server.Models;
 using Microsoft.EntityFrameworkCore;
+using OpenIddict.Abstractions;
 using Quartz;
+using static OpenIddict.Abstractions.OpenIddictConstants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,10 +72,6 @@ builder.Services.AddOpenIddict()
         options.UseAspNetCore();
     });
 
-// Register the worker responsible for seeding the database.
-// Note: in a real world application, this step should be part of a setup script.
-builder.Services.AddHostedService<Worker>();
-
 var app = builder.Build();
 
 app.UseDeveloperExceptionPage();
@@ -89,4 +86,30 @@ app.MapDefaultControllerRoute();
 
 app.UseWelcomePage("/");
 
-app.Run();
+// Before starting the host, create the database used to store the application data.
+//
+// Note: in a real world application, this step should be part of a setup script.
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await context.Database.EnsureCreatedAsync();
+
+    var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
+
+    if (await manager.FindByClientIdAsync("console") == null)
+    {
+        await manager.CreateAsync(new OpenIddictApplicationDescriptor
+        {
+            ClientId = "console",
+            ClientSecret = "388D45FA-B36B-4988-BA59-B187D329C207",
+            DisplayName = "My client application",
+            Permissions =
+            {
+                Permissions.Endpoints.Token,
+                Permissions.GrantTypes.ClientCredentials
+            }
+        });
+    }
+}
+
+await app.RunAsync();

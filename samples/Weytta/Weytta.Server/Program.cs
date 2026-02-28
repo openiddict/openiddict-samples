@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using OpenIddict.Abstractions;
 using Quartz;
-using Weytta.Server;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -88,10 +88,6 @@ builder.Services.AddOpenIddict()
         options.UseAspNetCore();
     });
 
-// Register the worker responsible for seeding the database.
-// Note: in a real world application, this step should be part of a setup script.
-builder.Services.AddHostedService<Worker>();
-
 var app = builder.Build();
 
 if (builder.Environment.IsDevelopment())
@@ -109,4 +105,42 @@ app.MapDefaultControllerRoute();
 
 app.UseWelcomePage("/");
 
-app.Run();
+// Before starting the host, create the database used to store the application data.
+//
+// Note: in a real world application, this step should be part of a setup script.
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<DbContext>();
+    await context.Database.EnsureCreatedAsync();
+
+    var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
+
+    if (await manager.FindByClientIdAsync("console_app") is null)
+    {
+        await manager.CreateAsync(new OpenIddictApplicationDescriptor
+        {
+            ApplicationType = ApplicationTypes.Native,
+            ClientId = "console_app",
+            ClientType = ClientTypes.Public,
+            ConsentType = ConsentTypes.Implicit,
+            DisplayName = "Console application",
+            RedirectUris =
+            {
+                new Uri("http://localhost/")
+            },
+            Permissions =
+            {
+                Permissions.Endpoints.Authorization,
+                Permissions.Endpoints.Token,
+                Permissions.GrantTypes.AuthorizationCode,
+                Permissions.ResponseTypes.Code
+            },
+            Requirements =
+            {
+                Requirements.Features.ProofKeyForCodeExchange
+            }
+        });
+    }
+}
+
+await app.RunAsync();

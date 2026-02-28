@@ -2,6 +2,7 @@ using Matty.Server;
 using Matty.Server.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using OpenIddict.Abstractions;
 using Quartz;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -93,10 +94,6 @@ builder.Services.AddOpenIddict()
         options.UseAspNetCore();
     });
 
-// Register the worker responsible for creating and seeding the SQL database.
-// Note: in a real world application, this step should be part of a setup script.
-builder.Services.AddHostedService<Worker>();
-
 var app = builder.Build();
 
 
@@ -126,4 +123,36 @@ app.MapControllers();
 app.MapDefaultControllerRoute();
 app.MapRazorPages();
 
-app.Run();
+// Before starting the host, create the database used to store the application data.
+//
+// Note: in a real world application, this step should be part of a setup script.
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await context.Database.EnsureCreatedAsync();
+
+    var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
+
+    if (await manager.FindByClientIdAsync("device") == null)
+    {
+        await manager.CreateAsync(new OpenIddictApplicationDescriptor
+        {
+            ClientId = "device",
+            ClientType = ClientTypes.Public,
+            ConsentType = ConsentTypes.Explicit,
+            DisplayName = "Device client",
+            Permissions =
+            {
+                Permissions.GrantTypes.DeviceCode,
+                Permissions.GrantTypes.RefreshToken,
+                Permissions.Endpoints.DeviceAuthorization,
+                Permissions.Endpoints.Token,
+                Permissions.Scopes.Email,
+                Permissions.Scopes.Profile,
+                Permissions.Scopes.Roles,
+            }
+        });
+    }
+}
+
+await app.RunAsync();

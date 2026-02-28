@@ -76,12 +76,6 @@ var host = new HostBuilder()
                        });
             });
 
-        // Register the worker responsible for creating the database used to store tokens
-        // and adding the registry entries required to register the custom URI scheme.
-        //
-        // Note: in a real world application, this step should be part of a setup script.
-        services.AddHostedService<Worker>();
-
         services.AddWpfBlazorWebView();
     })
     .ConfigureWpf(options =>
@@ -91,5 +85,14 @@ var host = new HostBuilder()
     })
     .UseWpfLifetime()
     .Build();
+
+// Before starting the host, create the database used to store the application data.
+//
+// Note: in a real world application, this step should be part of a setup script.
+await using (var scope = host.Services.CreateAsyncScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<DbContext>();
+    await context.Database.EnsureCreatedAsync();
+}
 
 await host.RunAsync();

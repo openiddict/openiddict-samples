@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
 using Sorgan.WinForms.Client;
 
 ApplicationConfiguration.Initialize();
@@ -72,15 +73,34 @@ var host = new HostBuilder()
                                   .SetRedirectUri("com.openiddict.sorgan.winforms.client://callback/login/github");
                        });
             });
-
-        // Register the worker responsible for creating the database used to store tokens
-        // and adding the registry entries required to register the custom URI scheme.
-        //
-        // Note: in a real world application, this step should be part of a setup script.
-        services.AddHostedService<Worker>();
     })
     .ConfigureWinForms<MainForm>()
     .UseWinFormsLifetime()
     .Build();
+
+// Before starting the host, create the database used to store the application data
+// and add the registry entries required to register the custom URI scheme.
+//
+// Note: in a real world application, this step should be part of a setup script.
+await using (var scope = host.Services.CreateAsyncScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<DbContext>();
+    await context.Database.EnsureCreatedAsync();
+
+    // Create the registry entries necessary to handle URI protocol activations.
+    //
+    // Note: this sample creates the entry under the current user account (as it doesn't
+    // require administrator rights), but the registration can also be added globally
+    // in HKEY_CLASSES_ROOT (in this case, it should be added by a dedicated installer).
+    //
+    // Alternatively, the application can be packaged and use windows.protocol to
+    // register the protocol handler/custom URI scheme with the operation system.
+    using var root = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Classes\\com.openiddict.sorgan.winforms.client");
+    root.SetValue(string.Empty, "URL:com.openiddict.sorgan.winforms.client");
+    root.SetValue("URL Protocol", string.Empty);
+
+    using var command = root.CreateSubKey("shell\\open\\command");
+    command.SetValue(string.Empty, string.Format("\"{0}\" \"%1\"", Environment.ProcessPath));
+}
 
 await host.RunAsync();

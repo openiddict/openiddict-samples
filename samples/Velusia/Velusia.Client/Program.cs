@@ -107,10 +107,6 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddControllersWithViews();
 
-// Register the worker responsible for creating the database used to store tokens.
-// Note: in a real world application, this step should be part of a setup script.
-builder.Services.AddHostedService<Worker>();
-
 var app = builder.Build();
 
 app.UseDeveloperExceptionPage();
@@ -125,4 +121,13 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapDefaultControllerRoute();
 
-app.Run();
+// Before starting the host, create the database used to store the application data.
+//
+// Note: in a real world application, this step should be part of a setup script.
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await context.Database.EnsureCreatedAsync();
+}
+
+await app.RunAsync();

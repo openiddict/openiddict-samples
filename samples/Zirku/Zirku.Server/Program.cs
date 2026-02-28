@@ -103,7 +103,74 @@ var app = builder.Build();
 app.UseCors();
 app.UseHttpsRedirection();
 
-// Create new application registrations matching the values configured in Zirku.Client1 and Zirku.Api1.
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapGet("api", [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
+(ClaimsPrincipal user) => user.Identity!.Name);
+
+app.MapMethods("authorize", [HttpMethods.Get, HttpMethods.Post], async (HttpContext context, IOpenIddictScopeManager manager) =>
+{
+    // Retrieve the OpenIddict server request from the HTTP context.
+    var request = context.GetOpenIddictServerRequest() ??
+            throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
+
+    var identifier = (int?) request["hardcoded_identity_id"];
+    if (identifier is not (1 or 2))
+    {
+        return Results.Challenge(
+            authenticationSchemes: [OpenIddictServerAspNetCoreDefaults.AuthenticationScheme],
+            properties: new AuthenticationProperties(new Dictionary<string, string?>
+            {
+                [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidRequest,
+                [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The specified hardcoded identity is invalid."
+            }));
+    }
+
+    // Create the claims-based identity that will be used by OpenIddict to generate tokens.
+    var identity = new ClaimsIdentity(
+        authenticationType: TokenValidationParameters.DefaultAuthenticationType,
+        nameType: Claims.Name,
+        roleType: Claims.Role);
+
+    // Add the claims that will be persisted in the tokens.
+    identity.AddClaim(new Claim(Claims.Subject, identifier.Value.ToString(CultureInfo.InvariantCulture)));
+    identity.AddClaim(new Claim(Claims.Name, identifier switch
+    {
+        1 => "Alice",
+        2 => "Bob",
+        _ => throw new InvalidOperationException()
+    }));
+    identity.AddClaim(new Claim(Claims.PreferredUsername, identifier switch
+    {
+        1 => "Alice",
+        2 => "Bob",
+        _ => throw new InvalidOperationException()
+    }));
+
+    // Note: in this sample, the client is granted all the requested scopes for the first identity (Alice)
+    // but for the second one (Bob), only the "api1" scope can be granted, which will cause requests sent
+    // to Zirku.Api2 on behalf of Bob to be automatically rejected by the OpenIddict validation handler,
+    // as the access token representing Bob won't contain the "resource_server_2" audience required by Api2.
+    identity.SetScopes(identifier switch
+    {
+        1 => request.GetScopes(),
+        2 => new[] { Scopes.OpenId, "api1" }.Intersect(request.GetScopes()),
+        _ => throw new InvalidOperationException()
+    });
+
+    identity.SetResources(await manager.ListResourcesAsync(identity.GetScopes()).ToListAsync());
+
+    // Allow all claims to be added in the access tokens.
+    identity.SetDestinations(claim => [Destinations.AccessToken]);
+
+    return Results.SignIn(new ClaimsPrincipal(identity), properties: null, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+});
+
+app.UseWelcomePage("/");
+
+// Before starting the host, create the database used to store the application data.
+//
 // Note: in a real world application, this step should be part of a setup script.
 await using (var scope = app.Services.CreateAsyncScope())
 {
@@ -223,70 +290,4 @@ await using (var scope = app.Services.CreateAsyncScope())
     }
 }
 
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapGet("api", [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
-(ClaimsPrincipal user) => user.Identity!.Name);
-
-app.MapMethods("authorize", [HttpMethods.Get, HttpMethods.Post], async (HttpContext context, IOpenIddictScopeManager manager) =>
-{
-    // Retrieve the OpenIddict server request from the HTTP context.
-    var request = context.GetOpenIddictServerRequest() ??
-            throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
-
-    var identifier = (int?) request["hardcoded_identity_id"];
-    if (identifier is not (1 or 2))
-    {
-        return Results.Challenge(
-            authenticationSchemes: [OpenIddictServerAspNetCoreDefaults.AuthenticationScheme],
-            properties: new AuthenticationProperties(new Dictionary<string, string?>
-            {
-                [OpenIddictServerAspNetCoreConstants.Properties.Error] = Errors.InvalidRequest,
-                [OpenIddictServerAspNetCoreConstants.Properties.ErrorDescription] = "The specified hardcoded identity is invalid."
-            }));
-    }
-
-    // Create the claims-based identity that will be used by OpenIddict to generate tokens.
-    var identity = new ClaimsIdentity(
-        authenticationType: TokenValidationParameters.DefaultAuthenticationType,
-        nameType: Claims.Name,
-        roleType: Claims.Role);
-
-    // Add the claims that will be persisted in the tokens.
-    identity.AddClaim(new Claim(Claims.Subject, identifier.Value.ToString(CultureInfo.InvariantCulture)));
-    identity.AddClaim(new Claim(Claims.Name, identifier switch
-    {
-        1 => "Alice",
-        2 => "Bob",
-        _ => throw new InvalidOperationException()
-    }));
-    identity.AddClaim(new Claim(Claims.PreferredUsername, identifier switch
-    {
-        1 => "Alice",
-        2 => "Bob",
-        _ => throw new InvalidOperationException()
-    }));
-
-    // Note: in this sample, the client is granted all the requested scopes for the first identity (Alice)
-    // but for the second one (Bob), only the "api1" scope can be granted, which will cause requests sent
-    // to Zirku.Api2 on behalf of Bob to be automatically rejected by the OpenIddict validation handler,
-    // as the access token representing Bob won't contain the "resource_server_2" audience required by Api2.
-    identity.SetScopes(identifier switch
-    {
-        1 => request.GetScopes(),
-        2 => new[] { Scopes.OpenId, "api1" }.Intersect(request.GetScopes()),
-        _ => throw new InvalidOperationException()
-    });
-
-    identity.SetResources(await manager.ListResourcesAsync(identity.GetScopes()).ToListAsync());
-
-    // Allow all claims to be added in the access tokens.
-    identity.SetDestinations(claim => [Destinations.AccessToken]);
-
-    return Results.SignIn(new ClaimsPrincipal(identity), properties: null, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-});
-
-app.UseWelcomePage("/");
-
-app.Run();
+await app.RunAsync();
