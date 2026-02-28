@@ -1,0 +1,17 @@
+﻿@page "/admin-only"
+
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize(Roles = "Admin")]
+
+
+<h3>AdminOnlyPage</h3>
+
+<p>
+    This page is only accessible to users with the <code>Admin</code> role. If you are seeing this page, it means you have the
+    necessary permissions to access admin-only content.
+</p>
+
+<p>
+    Try to authenticate with the user <strong>user@contoso.com</strong> and it will no longer be accessible.
+</p>

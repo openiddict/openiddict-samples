@@ -65,6 +65,7 @@
     <!--
       Note: the following references are exclusively used in the .NET 10.0 and ASP.NET Core 10.0 samples:
     -->
+    <PackageVersion Include="Aspire.Hosting.AppHost"                                     Version="13.1.0"   />
     <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.AppServices"            Version="1.0.14"   />
     <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.WinForms"               Version="1.0.14"   />
     <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.Wpf"                    Version="1.0.14"   />
@@ -85,6 +86,9 @@
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection"                   Version="10.0.3"   />
     <PackageVersion Include="Microsoft.Extensions.Hosting"                               Version="10.0.3"   />
     <PackageVersion Include="Microsoft.Extensions.Http"                                  Version="10.0.3"   />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience"                       Version="10.3.0"   />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery"                      Version="10.3.0"   />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery.Yarp"                 Version="10.3.0"   />
     <PackageVersion Include="OpenIddict.Abstractions"                                    Version="7.2.0"    />
     <PackageVersion Include="OpenIddict.AspNetCore"                                      Version="7.2.0"    />
     <PackageVersion Include="OpenIddict.Client.SystemIntegration"                        Version="7.2.0"    />
@@ -97,6 +101,11 @@
     <PackageVersion Include="Quartz.Extensions.Hosting"                                  Version="3.15.1"   />
     <PackageVersion Include="Spectre.Console"                                            Version="0.54.0"   />
     <PackageVersion Include="Yarp.ReverseProxy"                                          Version="2.3.0"    />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol"               Version="1.15.0"   />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting"                           Version="1.15.0"   />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore"                   Version="1.15.0"   />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http"                         Version="1.15.0"   />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime"                      Version="1.15.0"   />
   </ItemGroup>
 
 </Project>

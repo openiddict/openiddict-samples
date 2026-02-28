@@ -1,0 +1,21 @@
+﻿<Project Sdk="Aspire.AppHost.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>3e54af70-ba4b-4b04-93b5-794b1c950dd2</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Geonosis.Api\Geonosis.Api.csproj" />
+    <ProjectReference Include="..\Geonosis.Auth\Geonosis.Auth.csproj" />
+    <ProjectReference Include="..\Geonosis.Ui\Geonosis.Ui\Geonosis.Ui.csproj" />
+  </ItemGroup>
+
+</Project>
