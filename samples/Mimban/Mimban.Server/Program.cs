@@ -120,37 +120,6 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
-// Create a new application registration matching the values configured in Mimban.Client.
-// Note: in a real world application, this step should be part of a setup script.
-await using (var scope = app.Services.CreateAsyncScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<DbContext>();
-    await context.Database.EnsureCreatedAsync();
-
-    var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
-
-    if (await manager.FindByClientIdAsync("console_app") == null)
-    {
-        await manager.CreateAsync(new OpenIddictApplicationDescriptor
-        {
-            ApplicationType = ApplicationTypes.Native,
-            ClientId = "console_app",
-            ClientType = ClientTypes.Public,
-            RedirectUris =
-            {
-                new Uri("http://localhost/")
-            },
-            Permissions =
-            {
-                Permissions.Endpoints.Authorization,
-                Permissions.Endpoints.Token,
-                Permissions.GrantTypes.AuthorizationCode,
-                Permissions.ResponseTypes.Code
-            }
-        });
-    }
-}
-
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -213,4 +182,36 @@ app.MapMethods("authorize", [HttpMethods.Get, HttpMethods.Post], async (HttpCont
     return Results.SignIn(new ClaimsPrincipal(identity), properties: null, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 });
 
-app.Run();
+// Before starting the host, create the database used to store the application data.
+//
+// Note: in a real world application, this step should be part of a setup script.
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<DbContext>();
+    await context.Database.EnsureCreatedAsync();
+
+    var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
+
+    if (await manager.FindByClientIdAsync("console_app") == null)
+    {
+        await manager.CreateAsync(new OpenIddictApplicationDescriptor
+        {
+            ApplicationType = ApplicationTypes.Native,
+            ClientId = "console_app",
+            ClientType = ClientTypes.Public,
+            RedirectUris =
+            {
+                new Uri("http://localhost/")
+            },
+            Permissions =
+            {
+                Permissions.Endpoints.Authorization,
+                Permissions.Endpoints.Token,
+                Permissions.GrantTypes.AuthorizationCode,
+                Permissions.ResponseTypes.Code
+            }
+        });
+    }
+}
+
+await app.RunAsync();

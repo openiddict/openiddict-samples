@@ -1,7 +1,9 @@
+using System.Globalization;
 using Dantooine.Server;
 using Dantooine.Server.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using OpenIddict.Abstractions;
 using Quartz;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -97,10 +99,6 @@ builder.Services.AddOpenIddict()
         options.UseAspNetCore();
     });
 
-// Register the worker responsible for seeding the database.
-// Note: in a real world application, this step should be part of a setup script.
-builder.Services.AddHostedService<Worker>();
-
 var app = builder.Build();
 
 if (builder.Environment.IsDevelopment())
@@ -128,4 +126,96 @@ app.MapControllers();
 app.MapDefaultControllerRoute();
 app.MapRazorPages();
 
-app.Run();
+// Before starting the host, create the database used to store the application data.
+//
+// Note: in a real world application, this step should be part of a setup script.
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await context.Database.EnsureCreatedAsync();
+
+    await RegisterApplicationsAsync(scope.ServiceProvider);
+    await RegisterScopesAsync(scope.ServiceProvider);
+
+    static async Task RegisterApplicationsAsync(IServiceProvider provider)
+    {
+        var manager = provider.GetRequiredService<IOpenIddictApplicationManager>();
+
+        // API
+        if (await manager.FindByClientIdAsync("resource_server_1") == null)
+        {
+            var descriptor = new OpenIddictApplicationDescriptor
+            {
+                ClientId = "resource_server_1",
+                ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342",
+                Permissions =
+                {
+                    Permissions.Endpoints.Introspection
+                }
+            };
+
+            await manager.CreateAsync(descriptor);
+        }
+
+        // Blazor Hosted
+        if (await manager.FindByClientIdAsync("blazorcodeflowpkceclient") is null)
+        {
+            await manager.CreateAsync(new OpenIddictApplicationDescriptor
+            {
+                ClientId = "blazorcodeflowpkceclient",
+                ConsentType = ConsentTypes.Explicit,
+                DisplayName = "Blazor code PKCE",
+                PostLogoutRedirectUris =
+                {
+                    new Uri("https://localhost:44348/callback/logout/local")
+                },
+                RedirectUris =
+                {
+                    new Uri("https://localhost:44348/callback/login/local")
+                },
+                ClientSecret = "codeflow_pkce_client_secret",
+                Permissions =
+                {
+                    Permissions.Endpoints.Authorization,
+                    Permissions.Endpoints.EndSession,
+                    Permissions.Endpoints.Token,
+                    Permissions.GrantTypes.AuthorizationCode,
+                    Permissions.GrantTypes.RefreshToken,
+                    Permissions.ResponseTypes.Code,
+                    Permissions.Scopes.Email,
+                    Permissions.Scopes.Profile,
+                    Permissions.Scopes.Roles,
+                    Permissions.Prefixes.Scope + "api1"
+                },
+                Requirements =
+                {
+                    Requirements.Features.ProofKeyForCodeExchange
+                }
+            });
+        }
+    }
+
+    static async Task RegisterScopesAsync(IServiceProvider provider)
+    {
+        var manager = provider.GetRequiredService<IOpenIddictScopeManager>();
+
+        if (await manager.FindByNameAsync("api1") is null)
+        {
+            await manager.CreateAsync(new OpenIddictScopeDescriptor
+            {
+                DisplayName = "Dantooine API access",
+                DisplayNames =
+                {
+                    [CultureInfo.GetCultureInfo("fr-FR")] = "Accès à l'API de démo"
+                },
+                Name = "api1",
+                Resources =
+                {
+                    "resource_server_1"
+                }
+            });
+        }
+    }
+}
+
+await app.RunAsync();

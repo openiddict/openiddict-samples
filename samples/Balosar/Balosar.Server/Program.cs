@@ -3,6 +3,7 @@ using Balosar.Server.Data;
 using Balosar.Server.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using OpenIddict.Abstractions;
 using Quartz;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -129,10 +130,6 @@ builder.Services.AddOpenIddict()
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-// Register the worker responsible for seeding the database.
-// Note: in a real world application, this step should be part of a setup script.
-builder.Services.AddHostedService<Worker>();
-
 var app = builder.Build();
 
 if (builder.Environment.IsDevelopment())
@@ -159,4 +156,50 @@ app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 
-app.Run();
+// Before starting the host, create the database used to store the application data.
+//
+// Note: in a real world application, this step should be part of a setup script.
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await context.Database.EnsureCreatedAsync();
+
+    var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
+
+    if (await manager.FindByClientIdAsync("balosar-blazor-client") is null)
+    {
+        await manager.CreateAsync(new OpenIddictApplicationDescriptor
+        {
+            ClientId = "balosar-blazor-client",
+            ConsentType = ConsentTypes.Explicit,
+            DisplayName = "Blazor client application",
+            ClientType = ClientTypes.Public,
+            PostLogoutRedirectUris =
+            {
+                new Uri("https://localhost:44310/authentication/logout-callback")
+            },
+            RedirectUris =
+            {
+                new Uri("https://localhost:44310/authentication/login-callback")
+            },
+            Permissions =
+            {
+                Permissions.Endpoints.Authorization,
+                Permissions.Endpoints.EndSession,
+                Permissions.Endpoints.Token,
+                Permissions.GrantTypes.AuthorizationCode,
+                Permissions.GrantTypes.RefreshToken,
+                Permissions.ResponseTypes.Code,
+                Permissions.Scopes.Email,
+                Permissions.Scopes.Profile,
+                Permissions.Scopes.Roles
+            },
+            Requirements =
+            {
+                Requirements.Features.ProofKeyForCodeExchange
+            }
+        });
+    }
+}
+
+await app.RunAsync();
