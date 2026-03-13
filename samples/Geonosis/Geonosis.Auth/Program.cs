@@ -1,7 +1,9 @@
 using System.Globalization;
+using System.Security.Cryptography;
 using Geonosis.Auth.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -197,33 +199,40 @@ await using (var scope = app.Services.CreateAsyncScope())
         // Create the client application representing the UI if it doesn't exist.
         if (await manager.FindByClientIdAsync("geonosis-ui") is null)
         {
-            await manager.CreateAsync(new OpenIddictApplicationDescriptor
+            var descriptor = new OpenIddictApplicationDescriptor
             {
                 ClientId = "geonosis-ui",
-                ClientSecret = "super-secret-client-secret",
-                DisplayName = "Monarch UI Application",
-
-                // Web application using the BFF authentication model is considered a confidential client because the server-side BFF
-                // component can securely store the client secret and it handle all the interactions with the authorization server on behalf
-                // of the client application, including token management and refreshing.
                 ClientType = ClientTypes.Confidential,
-
-                // Implicit consent type for public clients, no need to prompt the user for consent in this sample,
-                // but in a production application, you should consider the appropriate consent type based on your application's requirements
-                // and user experience goals.
                 ConsentType = ConsentTypes.Implicit,
-
+                DisplayName = "Monarch UI Application",
+                JsonWebKeySet = new JsonWebKeySet
+                {
+                    Keys =
+                    {
+                        // Note: instead of sending a client secret, this application authenticates by
+                        // generating client assertions that are signed using an ECDSA signing key.
+                        //
+                        // Note: while the client needs access to the private key, the server only needs
+                        // to know the public key to be able to validate the client assertions it receives.
+                        JsonWebKeyConverter.ConvertFromECDsaSecurityKey(GetECDsaSigningKey($"""
+                            -----BEGIN PUBLIC KEY-----
+                            MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEFXmvZRv1zOogKS8JP/qlGxNC+Ghr
+                            UpYIGykTeHPrvrY3HFpHnQ7hvNQzLULWxLkuzsu95cMzJIuITdr7e1i8cg==
+                            -----END PUBLIC KEY-----
+                            """))
+                    }
+                },
                 // RedirectUris must match the URLs used by the Blazor Web application during the authentication process
                 // These URLs are where the authorization server will redirect the user after login/logout back to the client application
                 RedirectUris =
                 {
                     new Uri("http://localhost:5027/authentication/login-callback/local"),
-                    new Uri("https://localhost:7073/authentication/login-callback/local"),
+                    new Uri("https://localhost:7073/authentication/login-callback/local")
                 },
                 PostLogoutRedirectUris =
                 {
                     new Uri("http://localhost:5027/authentication/logout-callback/local"),
-                    new Uri("https://localhost:7073/authentication/logout-callback/local"),
+                    new Uri("https://localhost:7073/authentication/logout-callback/local")
                 },
                 Permissions =
                 {
@@ -233,37 +242,23 @@ await using (var scope = app.Services.CreateAsyncScope())
 
                     Permissions.GrantTypes.AuthorizationCode,
                     Permissions.GrantTypes.RefreshToken,
-                    // The token exchange grant type is required for the UI to exchange the access token it receives
-                    // from the authorization server for a new access token that can be used to call the API.
                     Permissions.GrantTypes.TokenExchange,
 
                     Permissions.ResponseTypes.Code,
 
                     Permissions.Scopes.Email,
                     Permissions.Scopes.Profile,
-                    Permissions.Scopes.Roles,
-
-                    // Custom scope representing the API scope that the UI will request access to using the token exchange flow.
-                    Permissions.Prefixes.Scope + "Weather.Read",
+                    Permissions.Scopes.Roles
                 },
                 Requirements =
                 {
-                    Requirements.Features.ProofKeyForCodeExchange,
+                    Requirements.Features.ProofKeyForCodeExchange
                 }
-            });
-        }
+            };
 
-        // Create the client application representing the API if it doesn't exist.
-        if (await manager.FindByClientIdAsync("geonosis-api") is null)
-        {
-            await manager.CreateAsync(new OpenIddictApplicationDescriptor
-            {
-                ClientId = "geonosis-api",
-                ClientSecret = "super-secret-client-secret-2",
-                DisplayName = "Geonosis API Application",
-                ClientType = ClientTypes.Confidential,
-                ConsentType = ConsentTypes.Implicit,
-            });
+            descriptor.AddScopePermissions("Weather.Read");
+
+            await manager.CreateAsync(descriptor);
         }
     }
 
@@ -292,3 +287,11 @@ await using (var scope = app.Services.CreateAsyncScope())
 }
 
 await app.RunAsync();
+
+static ECDsaSecurityKey GetECDsaSigningKey(ReadOnlySpan<char> key)
+{
+    var algorithm = ECDsa.Create();
+    algorithm.ImportFromPem(key);
+
+    return new ECDsaSecurityKey(algorithm);
+}

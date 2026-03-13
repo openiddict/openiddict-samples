@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Cryptography;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,9 +16,18 @@ builder.Services.AddOpenIddict()
 
         // Configure the validation handler to use introspection and register the client
         // credentials used when communicating with the remote introspection endpoint.
+        //
+        // Note: instead of sending a client secret, this application authenticates by
+        // generating client assertions that are signed using an ECDSA signing key.
         options.UseIntrospection()
                .SetClientId("resource_server_1")
-               .SetClientSecret("846B62D0-DEF9-4215-A99D-86E6B8DAB342");
+               .AddSigningKey(GetECDsaSigningKey($"""
+                    -----BEGIN EC PRIVATE KEY-----
+                    MHcCAQEEIFV0jPBUM8yaqQCmbgJ3IYmebIk5maW7XJCWUSZ8N2lEoAoGCCqGSM49
+                    AwEHoUQDQgAElrZTesJa18s6LuknPtM/Kg5veUCEp6YBF03eLBkapNe+P6u5zFaf
+                    jm3mL5yFV7dGaxlDEe0TtXdjSUkQATtq1g==
+                    -----END EC PRIVATE KEY-----
+                    """));
 
         // Register the System.Net.Http integration.
         options.UseSystemNetHttp();
@@ -38,3 +49,11 @@ app.UseAuthorization();
 app.MapGet("api/DantooineApi", [Authorize] () => new string[] { "data1", "data2" });
 
 app.Run();
+
+static ECDsaSecurityKey GetECDsaSigningKey(ReadOnlySpan<char> key)
+{
+    var algorithm = ECDsa.Create();
+    algorithm.ImportFromPem(key);
+
+    return new ECDsaSecurityKey(algorithm);
+}

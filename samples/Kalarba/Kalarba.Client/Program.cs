@@ -30,7 +30,17 @@ services.AddOpenIddict()
         });
     });
 
-using var provider = services.BuildServiceProvider();
+// Register a named HTTP client that will be used to call the demo resource API.
+services.AddHttpClient("ApiClient")
+    .ConfigureHttpClient(static client => client.BaseAddress = new Uri("http://localhost:58779/"));
+
+services.AddKeyedScoped("ApiClient", static (provider, name) =>
+{
+    var factory = provider.GetRequiredService<IHttpClientFactory>();
+    return factory.CreateClient((string) name!);
+});
+
+await using var provider = services.BuildServiceProvider();
 
 var token = await GetTokenAsync(provider, "alice@wonderland.com", "P@ssw0rd");
 Console.WriteLine("Access token: {0}", token);
@@ -56,9 +66,8 @@ static async Task<string> GetTokenAsync(IServiceProvider provider, string email,
 
 static async Task<string> GetResourceAsync(IServiceProvider provider, string token)
 {
-    var factory = provider.GetRequiredService<IHttpClientFactory>();
-    using var client = factory.CreateClient();
-    using var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:58779/api/message");
+    var client = provider.GetRequiredKeyedService<HttpClient>("ApiClient");
+    using var request = new HttpRequestMessage(HttpMethod.Get, "api/message");
     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
     using var response = await client.SendAsync(request);

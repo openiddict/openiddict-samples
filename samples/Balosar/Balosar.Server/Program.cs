@@ -1,5 +1,4 @@
-﻿using Balosar.Server;
-using Balosar.Server.Data;
+﻿using Balosar.Server.Data;
 using Balosar.Server.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

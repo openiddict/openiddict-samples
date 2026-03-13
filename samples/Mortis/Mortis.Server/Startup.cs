@@ -158,7 +158,7 @@ public class Startup
                 await manager.CreateAsync(new OpenIddictApplicationDescriptor
                 {
                     ClientId = "mvc",
-                    ClientSecret = "901564A5-E7FE-42CB-B10D-61EF6A8F3654",
+                    ClientSecret = "ApsgjdK59hozhsNpt2kqkZ3cBaCPSLxVa1X22FsDzlk=",
                     ConsentType = ConsentTypes.Explicit,
                     DisplayName = "MVC client application",
                     RedirectUris =

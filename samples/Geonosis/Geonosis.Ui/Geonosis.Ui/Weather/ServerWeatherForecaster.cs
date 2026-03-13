@@ -1,8 +1,5 @@
-﻿using System.Net;
-using System.Net.Http.Headers;
-using Geonosis.Ui.Client.Weather;
+﻿using Geonosis.Ui.Client.Weather;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using OpenIddict.Client;
 using OpenIddict.Client.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;

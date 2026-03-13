@@ -1,8 +1,9 @@
 using System.Globalization;
-using Dantooine.Server;
+using System.Security.Cryptography;
 using Dantooine.Server.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using Quartz;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -147,7 +148,23 @@ await using (var scope = app.Services.CreateAsyncScope())
             var descriptor = new OpenIddictApplicationDescriptor
             {
                 ClientId = "resource_server_1",
-                ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342",
+                JsonWebKeySet = new JsonWebKeySet
+                {
+                    Keys =
+                    {
+                        // Note: instead of sending a client secret, this application authenticates by
+                        // generating client assertions that are signed using an ECDSA signing key.
+                        //
+                        // Note: while the client needs access to the private key, the server only needs
+                        // to know the public key to be able to validate the client assertions it receives.
+                        JsonWebKeyConverter.ConvertFromECDsaSecurityKey(GetECDsaSigningKey($"""
+                            -----BEGIN PUBLIC KEY-----
+                            MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAElrZTesJa18s6LuknPtM/Kg5veUCE
+                            p6YBF03eLBkapNe+P6u5zFafjm3mL5yFV7dGaxlDEe0TtXdjSUkQATtq1g==
+                            -----END PUBLIC KEY-----
+                            """))
+                    }
+                },
                 Permissions =
                 {
                     Permissions.Endpoints.Introspection
@@ -165,6 +182,23 @@ await using (var scope = app.Services.CreateAsyncScope())
                 ClientId = "blazorcodeflowpkceclient",
                 ConsentType = ConsentTypes.Explicit,
                 DisplayName = "Blazor code PKCE",
+                JsonWebKeySet = new JsonWebKeySet
+                {
+                    Keys =
+                    {
+                        // Note: instead of sending a client secret, this application authenticates by
+                        // generating client assertions that are signed using an ECDSA signing key.
+                        //
+                        // Note: while the client needs access to the private key, the server only needs
+                        // to know the public key to be able to validate the client assertions it receives.
+                        JsonWebKeyConverter.ConvertFromECDsaSecurityKey(GetECDsaSigningKey($"""
+                            -----BEGIN PUBLIC KEY-----
+                            MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEuXiljSpKKFtkfE+PniYWGCtPczBH
+                            bnLkag0aLFN5IJss/lKz0TIKdX09suFW+/fqdT/RF5/2PI72xZ4Q5Ty+uw==
+                            -----END PUBLIC KEY-----
+                            """))
+                    }
+                },
                 PostLogoutRedirectUris =
                 {
                     new Uri("https://localhost:44348/callback/logout/local")
@@ -173,7 +207,6 @@ await using (var scope = app.Services.CreateAsyncScope())
                 {
                     new Uri("https://localhost:44348/callback/login/local")
                 },
-                ClientSecret = "codeflow_pkce_client_secret",
                 Permissions =
                 {
                     Permissions.Endpoints.Authorization,
@@ -219,3 +252,11 @@ await using (var scope = app.Services.CreateAsyncScope())
 }
 
 await app.RunAsync();
+
+static ECDsaSecurityKey GetECDsaSigningKey(ReadOnlySpan<char> key)
+{
+    var algorithm = ECDsa.Create();
+    algorithm.ImportFromPem(key);
+
+    return new ECDsaSecurityKey(algorithm);
+}

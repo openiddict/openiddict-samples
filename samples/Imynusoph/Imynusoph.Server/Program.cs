@@ -1,5 +1,4 @@
-﻿using Imynusoph.Server;
-using Imynusoph.Server.Models;
+﻿using Imynusoph.Server.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Quartz;

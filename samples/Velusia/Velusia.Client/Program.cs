@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using System.Security.Cryptography;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Client;
 using Quartz;
-using Velusia.Client;
 using Velusia.Client.Models;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -91,8 +92,20 @@ builder.Services.AddOpenIddict()
             Issuer = new Uri("https://localhost:44313/", UriKind.Absolute),
 
             ClientId = "mvc",
-            ClientSecret = "901564A5-E7FE-42CB-B10D-61EF6A8F3654",
             Scopes = { Scopes.Email, Scopes.Profile },
+
+            // Note: instead of sending a client secret, this application authenticates by
+            // generating client assertions that are signed using an ECDSA signing key.
+            SigningCredentials =
+            {
+                new SigningCredentials(GetECDsaSigningKey($"""
+                    -----BEGIN EC PRIVATE KEY-----
+                    MHcCAQEEINEo+oyUvdFzYmEAB/z5x3loRAkMl/r/oyjko+RiVJ8KoAoGCCqGSM49
+                    AwEHoUQDQgAEhlS5driPAQZJ3GnRMeEF+d9BBBzq/3nv8HxzS9zjgO26jPNCNYCT
+                    hpeJ5l6TbyhbxlYligILa6Dt+iz074n/JA==
+                    -----END EC PRIVATE KEY-----
+                    """), SecurityAlgorithms.EcdsaSha256, SecurityAlgorithms.Sha256)
+            },
 
             // Note: to mitigate mix-up attacks, it's recommended to use a unique redirection endpoint
             // URI per provider, unless all the registered providers support returning a special "iss"
@@ -103,7 +116,10 @@ builder.Services.AddOpenIddict()
         });
     });
 
-builder.Services.AddHttpClient();
+// Register a named HTTP client that will be used to call the demo resource API.
+builder.Services.AddHttpClient("ApiClient")
+    .AddAsKeyed()
+    .ConfigureHttpClient(static client => client.BaseAddress = new Uri("https://localhost:44313/"));
 
 builder.Services.AddControllersWithViews();
 
@@ -131,3 +147,11 @@ await using (var scope = app.Services.CreateAsyncScope())
 }
 
 await app.RunAsync();
+
+static ECDsaSecurityKey GetECDsaSigningKey(ReadOnlySpan<char> key)
+{
+    var algorithm = ECDsa.Create();
+    algorithm.ImportFromPem(key);
+
+    return new ECDsaSecurityKey(algorithm);
+}

@@ -1,4 +1,3 @@
-using Matty.Server;
 using Matty.Server.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
