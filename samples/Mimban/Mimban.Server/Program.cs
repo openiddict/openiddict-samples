@@ -80,8 +80,8 @@ builder.Services.AddOpenIddict()
     .AddServer(options =>
     {
         // Enable the authorization and token endpoints.
-        options.SetAuthorizationEndpointUris("authorize")
-               .SetTokenEndpointUris("token");
+        options.SetAuthorizationEndpointUris("connect/authorize")
+               .SetTokenEndpointUris("connect/token");
 
         // Note: this sample only uses the authorization code flow but you can enable
         // the other flows if you need to support implicit, password or client credentials.
@@ -148,7 +148,7 @@ app.MapMethods("callback/login/github", [HttpMethods.Get, HttpMethods.Post], asy
     return Results.SignIn(new ClaimsPrincipal(identity), properties);
 });
 
-app.MapMethods("authorize", [HttpMethods.Get, HttpMethods.Post], async (HttpContext context) =>
+app.MapMethods("connect/authorize", [HttpMethods.Get, HttpMethods.Post], async (HttpContext context) =>
 {
     // Resolve the claims stored in the cookie created after the GitHub authentication dance.
     // If the principal cannot be found, trigger a new challenge to redirect the user to GitHub.

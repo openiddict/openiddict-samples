@@ -1,8 +1,9 @@
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using Quartz;
-using Velusia.Server;
 using Velusia.Server.Data;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -173,9 +174,25 @@ await using (var scope = app.Services.CreateAsyncScope())
         await manager.CreateAsync(new OpenIddictApplicationDescriptor
         {
             ClientId = "mvc",
-            ClientSecret = "901564A5-E7FE-42CB-B10D-61EF6A8F3654",
             ConsentType = ConsentTypes.Explicit,
             DisplayName = "MVC client application",
+            JsonWebKeySet = new JsonWebKeySet
+            {
+                Keys =
+                {
+                    // Note: instead of sending a client secret, this application authenticates by
+                    // generating client assertions that are signed using an ECDSA signing key.
+                    //
+                    // Note: while the client needs access to the private key, the server only needs
+                    // to know the public key to be able to validate the client assertions it receives.
+                    JsonWebKeyConverter.ConvertFromECDsaSecurityKey(GetECDsaSigningKey($"""
+                        -----BEGIN PUBLIC KEY-----
+                        MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhlS5driPAQZJ3GnRMeEF+d9BBBzq
+                        /3nv8HxzS9zjgO26jPNCNYCThpeJ5l6TbyhbxlYligILa6Dt+iz074n/JA==
+                        -----END PUBLIC KEY-----
+                        """))
+                }
+            },
             RedirectUris =
             {
                 new Uri("https://localhost:44338/callback/login/local")
@@ -204,3 +221,11 @@ await using (var scope = app.Services.CreateAsyncScope())
 }
 
 await app.RunAsync();
+
+static ECDsaSecurityKey GetECDsaSigningKey(ReadOnlySpan<char> key)
+{
+    var algorithm = ECDsa.Create();
+    algorithm.ImportFromPem(key);
+
+    return new ECDsaSecurityKey(algorithm);
+}

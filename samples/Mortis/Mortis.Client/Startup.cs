@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Net.Http;
+using System.Web.Mvc;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Autofac.Integration.Mvc;
@@ -66,7 +67,7 @@ public class Startup
                     ProviderDisplayName = "Local OIDC server",
 
                     ClientId = "mvc",
-                    ClientSecret = "901564A5-E7FE-42CB-B10D-61EF6A8F3654",
+                    ClientSecret = "ApsgjdK59hozhsNpt2kqkZ3cBaCPSLxVa1X22FsDzlk=",
                     Scopes = { Scopes.Email, Scopes.Profile },
 
                     // Note: to mitigate mix-up attacks, it's recommended to use a unique redirection endpoint
@@ -80,6 +81,16 @@ public class Startup
 
         // Register the Entity Framework context needed by the OpenIddict stores.
         services.AddScoped(static provider => ApplicationDbContext.Create());
+
+        // Register a named HTTP client that will be used to call the demo resource API.
+        services.AddHttpClient("ApiClient")
+            .ConfigureHttpClient(static client => client.BaseAddress = new Uri("https://localhost:44349/"));
+
+        services.AddKeyedScoped("ApiClient", static (provider, name) =>
+        {
+            var factory = provider.GetRequiredService<IHttpClientFactory>();
+            return factory.CreateClient((string) name!);
+        });
 
         // Create a new Autofac container and import the OpenIddict services.
         var builder = new ContainerBuilder();

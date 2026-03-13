@@ -59,6 +59,11 @@ builder.Services.AddOpenIddict()
         });
     });
 
+// Register a named HTTP client that will be used to call the demo resource API.
+builder.Services.AddHttpClient("ApiClient")
+    .AddAsKeyed()
+    .ConfigureHttpClient(static client => client.BaseAddress = new Uri("https://localhost:44383/"));
+
 // Register the background service responsible for handling the console interactions.
 builder.Services.AddHostedService<InteractiveService>();
 

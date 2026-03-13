@@ -6,13 +6,8 @@ using OpenIddict.Client.AspNetCore;
 
 namespace Velusia.Client.Controllers;
 
-public class HomeController : Controller
+public class HomeController([FromKeyedServices("ApiClient")] HttpClient client) : Controller
 {
-    private readonly IHttpClientFactory _httpClientFactory;
-
-    public HomeController(IHttpClientFactory httpClientFactory)
-        => _httpClientFactory = httpClientFactory;
-
     [HttpGet("~/")]
     public ActionResult Index() => View();
 
@@ -23,9 +18,7 @@ public class HomeController : Controller
         // authentication options shouldn't be used, a specific scheme can be specified here.
         var token = await HttpContext.GetTokenAsync(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken);
 
-        using var client = _httpClientFactory.CreateClient();
-
-        using var request = new HttpRequestMessage(HttpMethod.Get, "https://localhost:44313/api/message");
+        using var request = new HttpRequestMessage(HttpMethod.Get, "api/message");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         using var response = await client.SendAsync(request, cancellationToken);

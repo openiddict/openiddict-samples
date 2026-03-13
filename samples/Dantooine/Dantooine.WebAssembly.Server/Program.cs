@@ -1,13 +1,12 @@
-﻿using System.Configuration;
-using System.Globalization;
-using Dantooine.WebAssembly.Server;
+﻿using System.Globalization;
+using System.Security.Cryptography;
 using Dantooine.WebAssembly.Server.Helpers;
 using Dantooine.WebAssembly.Server.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using OpenIddict.Abstractions;
+using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Client;
 using Quartz;
 using Yarp.ReverseProxy.Forwarder;
@@ -112,8 +111,20 @@ builder.Services.AddOpenIddict()
             Issuer = new Uri("https://localhost:44319/", UriKind.Absolute),
 
             ClientId = "blazorcodeflowpkceclient",
-            ClientSecret = "codeflow_pkce_client_secret",
             Scopes = { Scopes.OfflineAccess, Scopes.Profile, "api1" },
+
+            // Note: instead of sending a client secret, this application authenticates by
+            // generating client assertions that are signed using an ECDSA signing key.
+            SigningCredentials =
+            {
+                new SigningCredentials(GetECDsaSigningKey($"""
+                    -----BEGIN EC PRIVATE KEY-----
+                    MHcCAQEEIGrtraQHuQbfaSlK4j6Ny+i5IntdhUk1yrYUAqK4fYWkoAoGCCqGSM49
+                    AwEHoUQDQgAEuXiljSpKKFtkfE+PniYWGCtPczBHbnLkag0aLFN5IJss/lKz0TIK
+                    dX09suFW+/fqdT/RF5/2PI72xZ4Q5Ty+uw==
+                    -----END EC PRIVATE KEY-----
+                    """), SecurityAlgorithms.EcdsaSha256, SecurityAlgorithms.Sha256)
+            },
 
             // Note: to mitigate mix-up attacks, it's recommended to use a unique redirection endpoint
             // URI per provider, unless all the registered providers support returning a special "iss"
@@ -284,4 +295,12 @@ static void ConfigureProxyPipeline(IReverseProxyApplicationBuilder app)
             await context.ChallengeAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
     });
+}
+
+static ECDsaSecurityKey GetECDsaSigningKey(ReadOnlySpan<char> key)
+{
+    var algorithm = ECDsa.Create();
+    algorithm.ImportFromPem(key);
+
+    return new ECDsaSecurityKey(algorithm);
 }

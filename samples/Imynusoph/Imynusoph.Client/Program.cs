@@ -32,6 +32,11 @@ services.AddOpenIddict()
         });
     });
 
+// Register a named HTTP client that will be used to call the demo resource API.
+services.AddHttpClient("ApiClient")
+    .AddAsKeyed()
+    .ConfigureHttpClient(static client => client.BaseAddress = new Uri("https://localhost:44382/"));
+
 await using var provider = services.BuildServiceProvider();
 
 const string email = "bob@le-magnifique.com", password = "}s>EWG@f4g;_v7nB";
@@ -56,8 +61,8 @@ Console.ReadLine();
 
 static async Task CreateAccountAsync(IServiceProvider provider, string email, string password)
 {
-    using var client = provider.GetRequiredService<HttpClient>();
-    var response = await client.PostAsJsonAsync("https://localhost:44382/Account/Register", new { email, password });
+    var client = provider.GetRequiredKeyedService<HttpClient>("ApiClient");
+    var response = await client.PostAsJsonAsync("Account/Register", new { email, password });
 
     // Ignore 409 responses, as they indicate that the account already exists.
     if (response.StatusCode == HttpStatusCode.Conflict)

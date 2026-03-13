@@ -1,8 +1,13 @@
 ﻿using System.Globalization;
+using System.Net.Security;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
@@ -48,15 +53,15 @@ builder.Services.AddOpenIddict()
     .AddServer(options =>
     {
         // Enable the authorization, introspection and token endpoints.
-        options.SetAuthorizationEndpointUris("authorize")
-               .SetIntrospectionEndpointUris("introspect")
-               .SetTokenEndpointUris("token");
+        options.SetAuthorizationEndpointUris("connect/authorize")
+               .SetIntrospectionEndpointUris("connect/introspect")
+               .SetTokenEndpointUris("connect/token");
 
         // Note: this sample only uses the authorization code and refresh token
         // flows but you can enable the other flows if you need to support implicit,
         // password or client credentials.
         options.AllowAuthorizationCodeFlow()
-            .AllowRefreshTokenFlow();
+               .AllowRefreshTokenFlow();
 
         // Register the encryption credentials. This sample uses a symmetric
         // encryption key that is shared between the server and the Api2 sample
@@ -69,6 +74,33 @@ builder.Services.AddOpenIddict()
 
         // Register the signing credentials.
         options.AddDevelopmentSigningCertificate();
+
+        // Note: setting a static issuer is mandatory when using mTLS aliases to ensure it not
+        // dynamically computed based on the request URI, as this would result in two different
+        // issuers being used (one pointing to the mTLS domain and one pointing to the regular one).
+        options.SetIssuer("https://localhost:44319/");
+
+        // Enable self_signed_tls_client_auth to allow clients to use mTLS-based token binding.
+        options.EnableSelfSignedTlsClientAuthentication();
+
+        // Configure the mTLS endpoint aliases that will be used by client applications opting
+        // for TLS-based client authentication to communicate with the authorization server:
+        // the configured URIs MUST point to a domain for which the HTTPS server is configured
+        // to require the use of client certificates when receiving TLS handshakes from clients.
+        options.SetMtlsIntrospectionEndpointAliasUri("https://mtls.dev.localhost:44319/connect/introspect")
+               .SetMtlsTokenEndpointAliasUri("https://mtls.dev.localhost:44319/connect/token");
+
+        // While public client applications cannot use mTLS for client authentication, they can use
+        // mTLS purely as a token binding mechanism: in this case, the refresh tokens issued to
+        // public clients sending a client certificate are automatically bound to the certificate,
+        // which requires sending the same certificate when using them to get new access tokens.
+        options.UseClientCertificateBoundRefreshTokens();
+
+        // Optionally, the server stack can be configured to issue client certificate-bound access tokens.
+        //
+        // When doing so, the standard "cnf" claim is automatically added to access tokens to inform
+        // resource servers that a proof of possession derived from the certificate must be provided.
+        options.UseClientCertificateBoundAccessTokens();
 
         // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
         //
@@ -91,6 +123,54 @@ builder.Services.AddOpenIddict()
         options.UseAspNetCore();
     });
 
+// Configure Kestrel to listen on the 44319 port and configure it to enforce mTLS.
+//
+// Note: depending on the operating system, the mtls.dev.localhost
+// subdomain MAY have to be manually mapped to 127.0.0.1 or ::1.
+builder.Services.Configure<KestrelServerOptions>(options => options.ListenAnyIP(44319, options =>
+{
+    options.UseHttps(new TlsHandshakeCallbackOptions
+    {
+        OnConnection = static context =>
+        {
+            using var store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            store.Open(OpenFlags.ReadOnly);
+
+            return ValueTask.FromResult(new SslServerAuthenticationOptions
+            {
+                // Require a client certificate for all the requests pointing to the mTLS subdomain.
+                ClientCertificateRequired = string.Equals(context.ClientHelloInfo.ServerName,
+                    "mtls.dev.localhost", StringComparison.OrdinalIgnoreCase),
+
+                // Ignore all the client certificate errors for requests pointing to
+                // the mTLS-specific domain, even if they indicate that the chain is
+                // invalid: this is necessary to allow OpenIddict to validate the PKI
+                // and self-signed certificates using its own per-client chain policies.
+                RemoteCertificateValidationCallback = (sender, certificate, chain, errors) =>
+                {
+                    if (string.Equals(context.ClientHelloInfo.ServerName,
+                        "mtls.dev.localhost", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+
+                    return errors is SslPolicyErrors.None or SslPolicyErrors.RemoteCertificateNotAvailable;
+                },
+
+                // Use the development certificate generated and stored by ASP.NET Core in the user store.
+                ServerCertificate = store.Certificates
+                    .Find(X509FindType.FindByExtension, "1.3.6.1.4.1.311.84.1.1", validOnly: false)
+                    .Cast<X509Certificate2>()
+                    .Where(static certificate => certificate.NotBefore < TimeProvider.System.GetLocalNow())
+                    .Where(static certificate => certificate.NotAfter > TimeProvider.System.GetLocalNow())
+                    .OrderByDescending(static certificate => certificate.NotAfter)
+                    .FirstOrDefault() ??
+                    throw new InvalidOperationException("The ASP.NET Core HTTPS development certificate was not found.")
+            });
+        }
+    });
+}));
+
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
     policy.AllowAnyHeader()
           .AllowAnyMethod()
@@ -106,10 +186,10 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("api", [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
-(ClaimsPrincipal user) => user.Identity!.Name);
+app.MapGet("api",
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)] (ClaimsPrincipal user) => user.Identity!.Name);
 
-app.MapMethods("authorize", [HttpMethods.Get, HttpMethods.Post], async (HttpContext context, IOpenIddictScopeManager manager) =>
+app.MapMethods("connect/authorize", [HttpMethods.Get, HttpMethods.Post], async (HttpContext context, IOpenIddictScopeManager manager) =>
 {
     // Retrieve the OpenIddict server request from the HTTP context.
     var request = context.GetOpenIddictServerRequest() ??
@@ -248,7 +328,23 @@ await using (var scope = app.Services.CreateAsyncScope())
             await manager.CreateAsync(new OpenIddictApplicationDescriptor
             {
                 ClientId = "resource_server_1",
-                ClientSecret = "846B62D0-DEF9-4215-A99D-86E6B8DAB342",
+                JsonWebKeySet = new JsonWebKeySet
+                {
+                    Keys =
+                    {
+                        // Note: instead of sending a client secret, this application authenticates by
+                        // generating client assertions that are signed using an ECDSA signing key.
+                        //
+                        // Note: while the client needs access to the private key, the server only needs
+                        // to know the public key to be able to validate the client assertions it receives.
+                        JsonWebKeyConverter.ConvertFromECDsaSecurityKey(GetECDsaSigningKey($"""
+                            -----BEGIN PUBLIC KEY-----
+                            MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAExEBWSim0vOd/397ejnxjXGhlMG8d
+                            O+JAMsx3054Tuf/ogyvfhUE8COGfMZvKv5lcsyDw9YwwwJThZny5qs4vGw==
+                            -----END PUBLIC KEY-----
+                            """))
+                    }
+                },
                 Permissions =
                 {
                     Permissions.Endpoints.Introspection
@@ -291,3 +387,11 @@ await using (var scope = app.Services.CreateAsyncScope())
 }
 
 await app.RunAsync();
+
+static ECDsaSecurityKey GetECDsaSigningKey(ReadOnlySpan<char> key)
+{
+    var algorithm = ECDsa.Create();
+    algorithm.ImportFromPem(key);
+
+    return new ECDsaSecurityKey(algorithm);
+}

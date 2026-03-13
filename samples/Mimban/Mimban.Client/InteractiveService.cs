@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OpenIddict.Client;
 using static OpenIddict.Abstractions.OpenIddictConstants;
@@ -8,13 +9,16 @@ namespace Mimban.Client;
 
 public class InteractiveService : BackgroundService
 {
+    private readonly HttpClient _client;
     private readonly IHostApplicationLifetime _lifetime;
     private readonly OpenIddictClientService _service;
 
     public InteractiveService(
+        [FromKeyedServices("ApiClient")] HttpClient client,
         IHostApplicationLifetime lifetime,
         OpenIddictClientService service)
     {
+        _client = client;
         _lifetime = lifetime;
         _service = service;
     }
@@ -66,14 +70,12 @@ public class InteractiveService : BackgroundService
             Console.WriteLine("An error occurred while trying to authenticate the user.");
         }
 
-        static async Task<string> GetResourceAsync(string token, CancellationToken cancellationToken)
+        async Task<string> GetResourceAsync(string token, CancellationToken cancellationToken)
         {
-            using var client = new HttpClient();
-
-            using var request = new HttpRequestMessage(HttpMethod.Get, "https://localhost:44383/api");
+            using var request = new HttpRequestMessage(HttpMethod.Get, "api");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            using var response = await client.SendAsync(request, cancellationToken);
+            using var response = await _client.SendAsync(request, cancellationToken);
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsStringAsync(cancellationToken);

@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
 using Geonosis.Ui;
 using Geonosis.Ui.Client;
 using Geonosis.Ui.Client.Weather;
@@ -6,6 +7,7 @@ using Geonosis.Ui.Components;
 using Geonosis.Ui.Weather;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Client;
 using OpenIddict.Client.AspNetCore;
 using Yarp.ReverseProxy.Transforms;
@@ -53,8 +55,20 @@ builder.Services.AddOpenIddict()
             Issuer = new Uri(issuerUrl, UriKind.Absolute),
 
             ClientId = "geonosis-ui",
-            ClientSecret = "super-secret-client-secret",
-            // OfflineAccess is required to get refresh tokens
+
+            // Note: instead of sending a client secret, this application authenticates by
+            // generating client assertions that are signed using an ECDSA signing key.
+            SigningCredentials =
+            {
+                new SigningCredentials(GetECDsaSigningKey($"""
+                    -----BEGIN EC PRIVATE KEY-----
+                    MHcCAQEEIAySayLGEX8781cE7W8HaJsNTqb9Ucym6SApQgIVdFZvoAoGCCqGSM49
+                    AwEHoUQDQgAEFXmvZRv1zOogKS8JP/qlGxNC+GhrUpYIGykTeHPrvrY3HFpHnQ7h
+                    vNQzLULWxLkuzsu95cMzJIuITdr7e1i8cg==
+                    -----END EC PRIVATE KEY-----
+                    """), SecurityAlgorithms.EcdsaSha256, SecurityAlgorithms.Sha256)
+            },
+
             Scopes = { Scopes.OfflineAccess, Scopes.Email, Scopes.Profile, Scopes.Roles },
 
             // Note: to mitigate mix-up attacks, it's recommended to use a unique redirection endpoint
@@ -167,3 +181,11 @@ app.MapForwarder("/weather-forecast", apiUrl, transformBuilder =>
     .RequireAuthorization();
 
 app.Run();
+
+static ECDsaSecurityKey GetECDsaSigningKey(ReadOnlySpan<char> key)
+{
+    var algorithm = ECDsa.Create();
+    algorithm.ImportFromPem(key);
+
+    return new ECDsaSecurityKey(algorithm);
+}

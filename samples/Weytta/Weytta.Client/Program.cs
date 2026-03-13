@@ -33,12 +33,12 @@ builder.Services.AddOpenIddict()
         // Note: this sample uses the authorization code flow,
         // but you can enable the other flows if necessary.
         options.AllowAuthorizationCodeFlow()
-                .AllowRefreshTokenFlow();
+               .AllowRefreshTokenFlow();
 
         // Register the signing and encryption credentials used to protect
         // sensitive data like the state tokens produced by OpenIddict.
         options.AddDevelopmentEncryptionCertificate()
-                .AddDevelopmentSigningCertificate();
+               .AddDevelopmentSigningCertificate();
 
         // Add the operating system integration.
         options.UseSystemIntegration();
@@ -47,7 +47,7 @@ builder.Services.AddOpenIddict()
         // assembly as a more specific user agent, which can be useful when dealing with
         // providers that use the user agent as a way to throttle requests (e.g Reddit).
         options.UseSystemNetHttp()
-                .SetProductInformation(typeof(Program).Assembly);
+               .SetProductInformation(typeof(Program).Assembly);
 
         // Add a client registration matching the client application definition in the server project.
         options.AddRegistration(new OpenIddictClientRegistration

@@ -2,18 +2,14 @@
 using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Owin.Security.Cookies;
 using static OpenIddict.Client.Owin.OpenIddictClientOwinConstants;
 
 namespace Mortis.Client.Controllers;
 
-public class HomeController : Controller
+public class HomeController([FromKeyedServices("ApiClient")] HttpClient client) : Controller
 {
-    private readonly IHttpClientFactory _httpClientFactory;
-
-    public HomeController(IHttpClientFactory httpClientFactory)
-        => _httpClientFactory = httpClientFactory;
-
     [HttpGet, Route("~/")]
     public ActionResult Index() => View();
 
@@ -26,9 +22,7 @@ public class HomeController : Controller
         var result = await context.Authentication.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationType);
         var token = result.Properties.Dictionary[Tokens.BackchannelAccessToken];
 
-        using var client = _httpClientFactory.CreateClient();
-
-        using var request = new HttpRequestMessage(HttpMethod.Get, "https://localhost:44349/api/message");
+        using var request = new HttpRequestMessage(HttpMethod.Get, "api/message");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         using var response = await client.SendAsync(request, cancellationToken);
