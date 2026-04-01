@@ -31,7 +31,6 @@
   <Folder Name="/samples/Balosar/">
     <Project Path="samples/Balosar/Balosar.Client/Balosar.Client.csproj" />
     <Project Path="samples/Balosar/Balosar.Server/Balosar.Server.csproj" />
-    <Project Path="samples/Balosar/Balosar.Shared/Balosar.Shared.csproj" />
   </Folder>
 
   <Folder Name="/samples/Contruum/">
@@ -43,7 +42,6 @@
     <Project Path="samples/Dantooine/Dantooine.Server/Dantooine.Server.csproj" />
     <Project Path="samples/Dantooine/Dantooine.WebAssembly.Client/Dantooine.WebAssembly.Client.csproj" />
     <Project Path="samples/Dantooine/Dantooine.WebAssembly.Server/Dantooine.WebAssembly.Server.csproj" />
-    <Project Path="samples/Dantooine/Dantooine.WebAssembly.Shared/Dantooine.WebAssembly.Shared.csproj" />
   </Folder>
 
   <Folder Name="/samples/Fornax/">

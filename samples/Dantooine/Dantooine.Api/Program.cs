@@ -46,7 +46,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("api/DantooineApi", [Authorize] () => new string[] { "data1", "data2" });
+app.MapGet("api/downstream-api", () => new[] { "data1", "data2" }).RequireAuthorization();
 
 app.Run();
 

@@ -5,6 +5,6 @@ function getAntiForgeryToken() {
         return elements[0].value
     }
 
-    console.warn('no anti forgery token found!');
+    console.warn('No anti forgery token was found in the document.');
     return null;
 }

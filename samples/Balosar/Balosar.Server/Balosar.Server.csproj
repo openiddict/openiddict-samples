@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Balosar.Client\Balosar.Client.csproj" />
-    <ProjectReference Include="..\Balosar.Shared\Balosar.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

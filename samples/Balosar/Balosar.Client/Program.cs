@@ -1,20 +1,14 @@
 using Balosar.Client;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.Options;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 
-builder.Services.AddHttpClient("Balosar.ServerAPI")
+builder.Services.AddHttpClient(Options.DefaultName)
     .ConfigureHttpClient(client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
     .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
-
-// Supply HttpClient instances that include access tokens when making requests to the server project.
-builder.Services.AddScoped(provider =>
-{
-    var factory = provider.GetRequiredService<IHttpClientFactory>();
-    return factory.CreateClient("Balosar.ServerAPI");
-});
 
 builder.Services.AddOidcAuthentication(options =>
 {

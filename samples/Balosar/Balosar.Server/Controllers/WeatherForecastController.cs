@@ -1,4 +1,4 @@
-﻿using Balosar.Shared;
+﻿using Balosar.Server.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Validation.AspNetCore;

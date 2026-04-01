@@ -1,7 +1,9 @@
 ﻿using System.Globalization;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using Dantooine.WebAssembly.Server.Helpers;
 using Dantooine.WebAssembly.Server.Models;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
@@ -255,6 +257,34 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.Use(async (context, next) =>
+{
+    // Note: the antiforgery middleware only validates the antiforgery token for POST, PUT and PATCH requests.
+    // In this sample, the antiforgery token is validated for all requests sent to /api (except the special
+    // /api/current-user-name endpoint) to detect cases where the user logged in under a different identity in
+    // another tab and tries to perform actions in a tab that wasn't refreshed: since the antiforgery token
+    // is always bound to the user's identity contained in the authentication cookie, the validation will fail
+    // and the user agent will be automatically redirected to the login page to refresh the user information.
+
+    if (context.Request.Path.StartsWithSegments("/api") && context.Request.Path != "/api/current-user-name")
+    {
+        var service = context.RequestServices.GetRequiredService<IAntiforgery>();
+
+        try
+        {
+            await service.ValidateRequestAsync(context);
+        }
+
+        catch (AntiforgeryValidationException)
+        {
+            await context.ChallengeAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return;
+        }
+    }
+
+    await next(context);
+});
+
 app.MapRazorPages();
 app.MapControllers();
 
@@ -262,8 +292,17 @@ app.MapControllers();
 // the user agent to the login page configured in the cookie authentication options.
 // In this case, this behavior is not desirable as an HTTP 401 response MUST be
 // returned to the WASM client to automatically redirect the user agent to the
-// login page. As such, this logic is disabled for all proxied requests.
+// login page. As such, this logic is disabled for all local and forwarded requests.
+
 app.MapReverseProxy(ConfigureProxyPipeline).DisableCookieRedirect();
+
+app.MapGet("/api/local-api", () => new[] { "some data", "more data", "loads of data" })
+    .RequireAuthorization()
+    .DisableCookieRedirect();
+
+app.MapGet("/api/current-user-name", (ClaimsPrincipal user) => user.Identity!.Name!)
+    .RequireAuthorization()
+    .DisableCookieRedirect();
 
 app.MapFallbackToPage("/_Host");
 

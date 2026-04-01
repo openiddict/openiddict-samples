@@ -1,0 +1,59 @@
+﻿@page "/local-api"
+@using System.Net
+@inject HttpClient client
+@inject NavigationManager manager
+@inject AuthenticationStateProvider provider
+@inject IJSRuntime runtime
+
+<h1>Data from local API</h1>
+
+@if (data is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var index = 0; index < data.Length; index++)
+            {
+                <tr>
+                    <td>@data[index]</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private string[] data = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await provider.GetAuthenticationStateAsync();
+        if (state is not { User.Identity.IsAuthenticated: true })
+        {
+            manager.NavigateTo($"login?returnUrl=/{Uri.EscapeDataString(manager.ToBaseRelativePath(manager.Uri))}", true);
+            return;
+        }
+
+        client.DefaultRequestHeaders.Add("X-XSRF-TOKEN", await runtime.InvokeAsync<string>("getAntiForgeryToken"));
+
+        try
+        {
+            data = (await client.GetFromJsonAsync<string[]>("api/local-api"))!;
+        }
+
+        catch (HttpRequestException exception) when (exception.StatusCode is HttpStatusCode.Unauthorized)
+        {
+            manager.NavigateTo($"login?returnUrl=/{Uri.EscapeDataString(manager.ToBaseRelativePath(manager.Uri))}", true);
+            return;
+        }
+    }
+
+}

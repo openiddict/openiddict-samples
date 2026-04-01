@@ -177,7 +177,7 @@ await using (var scope = app.Services.CreateAsyncScope())
         // Blazor Hosted
         if (await manager.FindByClientIdAsync("blazorcodeflowpkceclient") is null)
         {
-            await manager.CreateAsync(new OpenIddictApplicationDescriptor
+            var descriptor = new OpenIddictApplicationDescriptor
             {
                 ClientId = "blazorcodeflowpkceclient",
                 ConsentType = ConsentTypes.Explicit,
@@ -217,14 +217,17 @@ await using (var scope = app.Services.CreateAsyncScope())
                     Permissions.ResponseTypes.Code,
                     Permissions.Scopes.Email,
                     Permissions.Scopes.Profile,
-                    Permissions.Scopes.Roles,
-                    Permissions.Prefixes.Scope + "api1"
+                    Permissions.Scopes.Roles
                 },
                 Requirements =
                 {
                     Requirements.Features.ProofKeyForCodeExchange
                 }
-            });
+            };
+
+            descriptor.AddScopePermissions("api1");
+
+            await manager.CreateAsync(descriptor);
         }
     }
 
