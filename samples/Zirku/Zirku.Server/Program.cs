@@ -5,14 +5,12 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
-using OpenIddict.Validation.AspNetCore;
 using Quartz;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -111,16 +109,6 @@ builder.Services.AddOpenIddict()
         //
         options.UseAspNetCore()
                .EnableAuthorizationEndpointPassthrough();
-    })
-
-    // Register the OpenIddict validation components.
-    .AddValidation(options =>
-    {
-        // Import the configuration from the local OpenIddict server instance.
-        options.UseLocalServer();
-
-        // Register the ASP.NET Core host.
-        options.UseAspNetCore();
     });
 
 // Configure Kestrel to listen on the 44319 port and configure it to enforce mTLS.
@@ -176,24 +164,18 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
           .AllowAnyMethod()
           .WithOrigins("http://localhost:5112")));
 
-builder.Services.AddAuthorization();
-
 var app = builder.Build();
 
 app.UseCors();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapGet("api",
-    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)] (ClaimsPrincipal user) => user.Identity!.Name);
 
 app.MapMethods("connect/authorize", [HttpMethods.Get, HttpMethods.Post], async (HttpContext context, IOpenIddictScopeManager manager) =>
 {
     // Retrieve the OpenIddict server request from the HTTP context.
     var request = context.GetOpenIddictServerRequest() ??
-            throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
+        throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
 
     var identifier = (int?) request["hardcoded_identity_id"];
     if (identifier is not (1 or 2))
@@ -266,7 +248,7 @@ await using (var scope = app.Services.CreateAsyncScope())
 
         if (await manager.FindByClientIdAsync("console_app") is null)
         {
-            await manager.CreateAsync(new OpenIddictApplicationDescriptor
+            var descriptor = new OpenIddictApplicationDescriptor
             {
                 ApplicationType = ApplicationTypes.Native,
                 ClientId = "console_app",
@@ -283,16 +265,18 @@ await using (var scope = app.Services.CreateAsyncScope())
                     Permissions.ResponseTypes.Code,
                     Permissions.Scopes.Email,
                     Permissions.Scopes.Profile,
-                    Permissions.Scopes.Roles,
-                    Permissions.Prefixes.Scope + "api1",
-                    Permissions.Prefixes.Scope + "api2"
+                    Permissions.Scopes.Roles
                 }
-            });
+            };
+
+            descriptor.AddScopePermissions("api1", "api2");
+
+            await manager.CreateAsync(descriptor);
         }
 
         if (await manager.FindByClientIdAsync("spa") is null)
         {
-            await manager.CreateAsync(new OpenIddictApplicationDescriptor
+            var descriptor = new OpenIddictApplicationDescriptor
             {
                 ClientId = "spa",
                 ClientType = ClientTypes.Public,
@@ -312,15 +296,17 @@ await using (var scope = app.Services.CreateAsyncScope())
                     Permissions.ResponseTypes.Code,
                     Permissions.Scopes.Email,
                     Permissions.Scopes.Profile,
-                    Permissions.Scopes.Roles,
-                    Permissions.Prefixes.Scope + "api1",
-                    Permissions.Prefixes.Scope + "api2"
+                    Permissions.Scopes.Roles
                 },
                 Requirements =
                 {
-                    Requirements.Features.ProofKeyForCodeExchange,
-                },
-            });
+                    Requirements.Features.ProofKeyForCodeExchange
+                }
+            };
+
+            descriptor.AddScopePermissions("api1", "api2");
+
+            await manager.CreateAsync(descriptor);
         }
 
         if (await manager.FindByClientIdAsync("resource_server_1") is null)

@@ -123,8 +123,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("api", [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
-    (ClaimsPrincipal user) => user.Identity!.Name);
+app.MapGet("api", (ClaimsPrincipal user) => user.Identity!.Name).RequireAuthorization();
 
 app.MapMethods("callback/login/github", [HttpMethods.Get, HttpMethods.Post], async (HttpContext context) =>
 {

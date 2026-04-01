@@ -1,4 +1,4 @@
-﻿namespace Balosar.Shared;
+﻿namespace Balosar.Server.Models;
 
 public class WeatherForecast
 {

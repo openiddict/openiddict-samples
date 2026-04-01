@@ -105,7 +105,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("api", [Authorize] (ClaimsPrincipal user) => $"{user.Identity!.Name} is allowed to access Api1.");
+app.MapGet("api", (ClaimsPrincipal user) => $"{user.Identity!.Name} is allowed to access Api1.").RequireAuthorization();
 
 app.UseWelcomePage("/");
 

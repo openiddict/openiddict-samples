@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Dantooine.WebAssembly.Client\Dantooine.WebAssembly.Client.csproj" />
-    <ProjectReference Include="..\Dantooine.WebAssembly.Shared\Dantooine.WebAssembly.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -200,7 +200,7 @@ public class AccountController : Controller
         if (ModelState.IsValid)
         {
             var user = await UserManager.FindByNameAsync(model.Email);
-            if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+            if (user == null || !await UserManager.IsEmailConfirmedAsync(user.Id))
             {
                 // Ne révélez pas que l'utilisateur n'existe pas ou qu'il n'est pas confirmé
                 return View("ForgotPasswordConfirmation");

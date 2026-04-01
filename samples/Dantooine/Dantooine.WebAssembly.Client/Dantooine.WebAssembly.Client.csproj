@@ -12,8 +12,4 @@
     <PackageReference Include="Microsoft.Extensions.Http" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Dantooine.WebAssembly.Shared\Dantooine.WebAssembly.Shared.csproj" />
-  </ItemGroup>
-
 </Project>
