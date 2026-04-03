@@ -1,12 +1,13 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var geonosisAuth = builder.AddProject<Projects.Geonosis_Auth>("geonosis-auth");
+var server = builder.AddProject<Projects.Geonosis_Auth>("geonosis-auth");
 
-var geonosisApi = builder.AddProject<Projects.Geonosis_Api>("geonosis-api")
-    .WaitFor(geonosisAuth);
+var resource = builder.AddProject<Projects.Geonosis_Api>("geonosis-api")
+    .WaitFor(server);
 
 builder.AddProject<Projects.Geonosis_Ui>("geonosis-ui")
-    .WaitFor(geonosisAuth)
-    .WaitFor(geonosisApi);
+    .WaitFor(server)
+    .WaitFor(resource);
 
-builder.Build().Run();
+var app = builder.Build();
+await app.RunAsync();

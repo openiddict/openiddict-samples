@@ -6,26 +6,26 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Geonosis.Ui.Weather
 {
-    internal sealed class ServerWeatherForecaster(HttpClient httpClient, IHttpContextAccessor httpContextAccessor) : IWeatherForecaster
+    internal sealed class ServerWeatherForecaster(
+        IHttpContextAccessor accessor, HttpClient client, OpenIddictClientService service) : IWeatherForecaster
     {
         public async Task<IEnumerable<WeatherForecast>> GetWeatherForecastAsync()
         {
-            var openIddictClientService = httpContextAccessor.HttpContext!.RequestServices.GetRequiredService<OpenIddictClientService>();
-            var accessToken = await httpContextAccessor.HttpContext!.GetTokenAsync(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken)
+            var token = await accessor.HttpContext!.GetTokenAsync(OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken)
                 ?? throw new InvalidOperationException("The access token cannot be retrieved.");
 
-            var exchangeResult = await openIddictClientService.AuthenticateWithTokenExchangeAsync(new()
+            var result = await service.AuthenticateWithTokenExchangeAsync(new()
             {
-                SubjectToken = accessToken,
+                SubjectToken = token,
                 SubjectTokenType = TokenTypeIdentifiers.AccessToken,
                 RequestedTokenType = TokenTypeIdentifiers.AccessToken,
-                Scopes = ["Weather.Read"],
+                Scopes = ["Weather.Read"]
             });
 
             using var request = new HttpRequestMessage(HttpMethod.Get, "/weather-forecast");
-            request.Headers.Authorization = new("Bearer", exchangeResult.IssuedToken);
+            request.Headers.Authorization = new("Bearer", result.IssuedToken);
 
-            using var response = await httpClient.SendAsync(request);
+            using var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<WeatherForecast[]>() ?? [];

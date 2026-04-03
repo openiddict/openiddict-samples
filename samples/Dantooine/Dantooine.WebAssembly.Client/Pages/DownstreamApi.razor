@@ -1,9 +1,9 @@
 ﻿@page "/downstream-api"
 @using System.Net
-@inject HttpClient client
-@inject NavigationManager manager
-@inject AuthenticationStateProvider provider
-@inject IJSRuntime runtime
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 <h1>Data retrieved from downstream API via YARP</h1>
 
@@ -35,23 +35,23 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var state = await provider.GetAuthenticationStateAsync();
+        var state = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         if (state is not { User.Identity.IsAuthenticated: true })
         {
-            manager.NavigateTo($"login?returnUrl=/{Uri.EscapeDataString(manager.ToBaseRelativePath(manager.Uri))}", true);
+            NavigationManager.NavigateTo($"login?returnUrl={Uri.EscapeDataString("/" + NavigationManager.ToBaseRelativePath(NavigationManager.Uri))}", true);
             return;
         }
 
-        client.DefaultRequestHeaders.Add("X-XSRF-TOKEN", await runtime.InvokeAsync<string>("getAntiForgeryToken"));
+        HttpClient.DefaultRequestHeaders.Add("X-XSRF-TOKEN", await JSRuntime.InvokeAsync<string>("getAntiForgeryToken"));
 
         try
         {
-            data = (await client.GetFromJsonAsync<string[]>("api/downstream-api"))!;
+            data = (await HttpClient.GetFromJsonAsync<string[]>("api/downstream-api"))!;
         }
 
         catch (HttpRequestException exception) when (exception.StatusCode is HttpStatusCode.Unauthorized)
         {
-            manager.NavigateTo($"login?returnUrl=/{Uri.EscapeDataString(manager.ToBaseRelativePath(manager.Uri))}", true);
+            NavigationManager.NavigateTo($"login?returnUrl={Uri.EscapeDataString("/" + NavigationManager.ToBaseRelativePath(NavigationManager.Uri))}", true);
             return;
         }
     }

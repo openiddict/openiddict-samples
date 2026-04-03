@@ -19,7 +19,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     // Configure the context to use sqlite.
-    options.UseSqlite($"Filename={Path.Combine(Path.GetTempPath(), "geonosis-auth.sqlite3")}");
+    options.UseSqlite($"Filename={Path.Combine(Path.GetTempPath(), "openiddict-geonosis-auth.sqlite3")}");
 
     // Register the entity sets needed by OpenIddict.
     // Note: use the generic overload if you need
@@ -222,8 +222,6 @@ await using (var scope = app.Services.CreateAsyncScope())
                             """))
                     }
                 },
-                // RedirectUris must match the URLs used by the Blazor Web application during the authentication process
-                // These URLs are where the authorization server will redirect the user after login/logout back to the client application
                 RedirectUris =
                 {
                     new Uri("http://localhost:5027/authentication/login-callback/local"),
