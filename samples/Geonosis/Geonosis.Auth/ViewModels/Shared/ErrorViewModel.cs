@@ -1,9 +1,8 @@
-﻿namespace Geonosis.Auth.ViewModels.Shared
-{
-    internal class ErrorViewModel
-    {
-        public string? RequestId { get; set; }
+﻿namespace Geonosis.Auth.ViewModels.Shared;
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
-    }
+internal class ErrorViewModel
+{
+    public string? RequestId { get; set; }
+
+    public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 }

@@ -203,18 +203,29 @@ app.MapMethods("/authentication/login-callback/{provider}", [HttpMethods.Get, Ht
     var properties = new AuthenticationProperties(result.Properties.Items)
     {
         RedirectUri = result.Properties.RedirectUri ?? "/",
+
+        // Set the creation and expiration dates of the ticket to null to decorrelate the lifetime
+        // of the resulting authentication cookie from the lifetime of the identity token returned by
+        // the authorization server (if applicable). In this case, the expiration date time will be
+        // automatically computed by the cookie handler using the lifetime configured in the options.
+        //
+        // Applications that prefer binding the lifetime of the ticket stored in the authentication cookie
+        // to the identity token returned by the identity provider can remove or comment these two lines:
         IssuedUtc = null,
         ExpiresUtc = null,
+
+        // Note: this flag controls whether the authentication cookie that will be returned to the
+        // browser will be treated as a session cookie (i.e destroyed when the browser is closed)
+        // or as a persistent cookie. In both cases, the lifetime of the authentication ticket is
+        // always stored as protected data, preventing malicious users from trying to use an
+        // authentication cookie beyond the lifetime of the authentication ticket itself.
         IsPersistent = true
     };
 
     // If needed, the tokens returned by the authorization server can be stored in the authentication cookie.
     // To make cookies less heavy, tokens that are not used are filtered out before creating the cookie.
     properties.StoreTokens(result.Properties.GetTokens().Where(token => token.Name is
-        OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken               or
-        OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessTokenExpirationDate or
-        OpenIddictClientAspNetCoreConstants.Tokens.BackchannelIdentityToken             or
-        OpenIddictClientAspNetCoreConstants.Tokens.RefreshToken));
+        OpenIddictClientAspNetCoreConstants.Tokens.BackchannelAccessToken));
 
     return TypedResults.SignIn(new ClaimsPrincipal(identity), properties);
 }).DisableAntiforgery();
