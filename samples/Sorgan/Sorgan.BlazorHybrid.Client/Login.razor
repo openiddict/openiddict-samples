@@ -4,7 +4,7 @@
 @using System.Windows
 @using static OpenIddict.Abstractions.OpenIddictExceptions
 @using static OpenIddict.Abstractions.OpenIddictConstants
-@inject OpenIddictClientService service;
+@inject OpenIddictClientService ClientService;
 
 <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <button disabled="@IsButtonDisabled" style="font-size: large" @onclick="LoginAsync">Log in using GitHub</button>
@@ -26,13 +26,13 @@
             try
             {
                 // Ask OpenIddict to initiate the authentication flow (typically, by starting the system browser).
-                var result = await service.ChallengeInteractivelyAsync(new()
+                var result = await ClientService.ChallengeInteractivelyAsync(new()
                 {
                     CancellationToken = source.Token
                 });
 
                 // Wait for the user to complete the authorization process.
-                var principal = (await service.AuthenticateInteractivelyAsync(new()
+                var principal = (await ClientService.AuthenticateInteractivelyAsync(new()
                 {
                     CancellationToken = source.Token,
                     Nonce = result.Nonce

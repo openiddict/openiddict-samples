@@ -7,9 +7,9 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddAuthenticationStateDeserialization();
 
-builder.Services.AddHttpClient<IWeatherForecaster, ClientWeatherForecaster>(httpClient =>
+builder.Services.AddHttpClient<IWeatherForecaster, ClientWeatherForecaster>(client =>
 {
-    httpClient.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+    client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
 });
 
 var app = builder.Build();

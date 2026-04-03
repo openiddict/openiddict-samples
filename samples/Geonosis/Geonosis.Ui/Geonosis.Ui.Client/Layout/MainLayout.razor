@@ -1,4 +1,4 @@
-﻿@inject NavigationManager Navigation
+﻿@inject NavigationManager NavigationManager
 
 @inherits LayoutComponentBase
 
@@ -14,7 +14,7 @@
             <AuthorizeView>
                 <Authorized Context="authContext">
                     <a class="me-3" href="/user-claims">@(authContext.User.Identity!.Name)</a>
-                    <form action="@Constants.LogoutPath" method="post">
+                    <form action="/authentication/logout" method="post">
                         <AntiforgeryToken />
                         <input type="hidden" name="ReturnUrl" value="@currentUrl" />
                         <button type="submit" class="nav-link">
@@ -23,7 +23,7 @@
                     </form>
                 </Authorized>
                 <NotAuthorized>
-                    <a class="nav-link" href="@Constants.LoginPath">
+                    <a class="nav-link" href="/authentication/login">
                         <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
                     </a>
                 </NotAuthorized>
@@ -48,18 +48,18 @@
 
     protected override void OnInitialized()
     {
-        currentUrl = "/" + Navigation.ToBaseRelativePath(Navigation.Uri);
-        Navigation.LocationChanged += OnLocationChanged;
+        currentUrl = "/" + NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {
-        currentUrl = "/" + Navigation.ToBaseRelativePath(e.Location);
+        currentUrl = "/" + NavigationManager.ToBaseRelativePath(e.Location);
         StateHasChanged();
     }
 
     public void Dispose()
     {
-        Navigation.LocationChanged -= OnLocationChanged;
+        NavigationManager.LocationChanged -= OnLocationChanged;
     }
 }
