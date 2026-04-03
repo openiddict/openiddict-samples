@@ -1,7 +1,6 @@
-﻿namespace Geonosis.Ui.Client.Weather
+﻿namespace Geonosis.Ui.Client.Weather;
+
+public interface IWeatherForecaster
 {
-    public interface IWeatherForecaster
-    {
-        Task<IEnumerable<WeatherForecast>> GetWeatherForecastAsync();
-    }
+    Task<IEnumerable<WeatherForecast>> GetWeatherForecastAsync();
 }
