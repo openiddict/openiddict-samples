@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
 
