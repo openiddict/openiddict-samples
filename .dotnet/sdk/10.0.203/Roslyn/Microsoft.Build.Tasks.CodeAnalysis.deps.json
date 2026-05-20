@@ -1,0 +1,64 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "Microsoft.Build.Tasks.CodeAnalysis/5.3.0-2.26219.105": {
+        "runtime": {
+          "Microsoft.Build.Tasks.CodeAnalysis.dll": {}
+        },
+        "resources": {
+          "cs/Microsoft.Build.Tasks.CodeAnalysis.resources.dll": {
+            "locale": "cs"
+          },
+          "de/Microsoft.Build.Tasks.CodeAnalysis.resources.dll": {
+            "locale": "de"
+          },
+          "es/Microsoft.Build.Tasks.CodeAnalysis.resources.dll": {
+            "locale": "es"
+          },
+          "fr/Microsoft.Build.Tasks.CodeAnalysis.resources.dll": {
+            "locale": "fr"
+          },
+          "it/Microsoft.Build.Tasks.CodeAnalysis.resources.dll": {
+            "locale": "it"
+          },
+          "ja/Microsoft.Build.Tasks.CodeAnalysis.resources.dll": {
+            "locale": "ja"
+          },
+          "ko/Microsoft.Build.Tasks.CodeAnalysis.resources.dll": {
+            "locale": "ko"
+          },
+          "pl/Microsoft.Build.Tasks.CodeAnalysis.resources.dll": {
+            "locale": "pl"
+          },
+          "pt-BR/Microsoft.Build.Tasks.CodeAnalysis.resources.dll": {
+            "locale": "pt-BR"
+          },
+          "ru/Microsoft.Build.Tasks.CodeAnalysis.resources.dll": {
+            "locale": "ru"
+          },
+          "tr/Microsoft.Build.Tasks.CodeAnalysis.resources.dll": {
+            "locale": "tr"
+          },
+          "zh-Hans/Microsoft.Build.Tasks.CodeAnalysis.resources.dll": {
+            "locale": "zh-Hans"
+          },
+          "zh-Hant/Microsoft.Build.Tasks.CodeAnalysis.resources.dll": {
+            "locale": "zh-Hant"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Microsoft.Build.Tasks.CodeAnalysis/5.3.0-2.26219.105": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

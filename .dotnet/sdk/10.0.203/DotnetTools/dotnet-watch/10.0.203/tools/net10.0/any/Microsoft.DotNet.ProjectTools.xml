@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.DotNet.ProjectTools</name>
+    </assembly>
+    <members>
+        <member name="M:Microsoft.DotNet.ProjectTools.VirtualProjectBuilder.GetDefaultProperties(System.String)">
+            <remarks>
+            Kept in sync with the default <c>dotnet new console</c> project file (enforced by <c>DotnetProjectConvertTests.SameAsTemplate</c>).
+            </remarks>
+        </member>
+        <member name="M:Microsoft.DotNet.ProjectTools.VirtualProjectBuilder.GetTempSubdirectory">
+            <summary>
+            Obtains a temporary subdirectory for file-based app artifacts, e.g., <c>/tmp/dotnet/runfile/</c>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.DotNet.ProjectTools.VirtualProjectBuilder.GetTempSubpath(System.String)">
+            <summary>
+            Obtains a specific temporary path in a subdirectory for file-based app artifacts, e.g., <c>/tmp/dotnet/runfile/{name}</c>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.DotNet.ProjectTools.VirtualProjectBuilder.EvaluateDirectives(Microsoft.Build.Execution.ProjectInstance,System.Collections.Immutable.ImmutableArray{Microsoft.DotNet.FileBasedPrograms.CSharpDirective},Microsoft.DotNet.FileBasedPrograms.SourceFile,Microsoft.DotNet.FileBasedPrograms.ErrorReporter)">
+            <summary>
+            If there are any <c>#:project</c> <paramref name="directives"/>,
+            evaluates their values as MSBuild expressions (i.e. substitutes <c>$()</c> and <c>@()</c> with property and item values, etc.) and
+            resolves the evaluated values to full project file paths (e.g. if the evaluted value is a directory finds a project in that directory).
+            </summary>
+        </member>
+        <member name="P:Microsoft.DotNet.ProjectTools.Resources.RunCommandWarningRunJsonNotUsed">
+            <summary>Warning: Settings from '{0}' are not used because '{1}' has precedence.</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.ProjectTools.Resources.RunCommandExceptionCouldNotLocateALaunchSettingsFile">
+            <summary>Cannot use launch profile '{0}' because the launch settings file could not be located. Locations tried:
+            {1}</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.ProjectTools.Resources.LaunchProfileIsNotAJsonObject">
+            <summary>A profile with the specified name isn't a valid JSON object.</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.ProjectTools.Resources.LaunchProfilesCollectionIsNotAJsonObject">
+            <summary>The 'profiles' property of the launch settings document is not a JSON object.</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.ProjectTools.Resources.DuplicateCaseInsensitiveLaunchProfileNames">
+            <summary>There are several launch profiles with case-sensitive names, which isn't permitted:
+            {0}
+            Make the profile names distinct.</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.ProjectTools.Resources.LaunchProfileDoesNotExist">
+            <summary>A launch profile with the name '{0}' doesn't exist.</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.ProjectTools.Resources.UsableLaunchProfileCannotBeLocated">
+            <summary>A usable launch profile could not be located.</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.ProjectTools.Resources.LaunchProfileHandlerCannotBeLocated">
+            <summary>The launch profile type '{0}' is not supported.</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.ProjectTools.Resources.DeserializationExceptionMessage">
+            <summary>An error was encountered when reading '{0}': {1}</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.ProjectTools.Resources.Path0SpecifiedIn1IsInvalid">
+            <summary>Path '{0}' specified in '{1}' is invalid.</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.ProjectTools.Resources.DefaultLaunchProfileDisplayName">
+            <summary>(Default)</summary>
+        </member>
+        <member name="M:Microsoft.DotNet.Utilities.Sha256Hasher.Hash(System.String)">
+            <summary>
+            The hashed mac address needs to be the same hashed value as produced by the other distinct sources given the same input. (e.g. VsCode)
+            </summary>
+        </member>
+        <member name="T:Microsoft.DotNet.FileBasedPrograms.ExternalHelpers">
+            <summary>
+            When targeting netstandard2.0, the user of the source package must "implement" certain methods by declaring members in this type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.DotNet.FileBasedPrograms.FileLevelDirectiveHelpers.FindDirectives(Microsoft.DotNet.FileBasedPrograms.SourceFile,System.Boolean,Microsoft.DotNet.FileBasedPrograms.ErrorReporter)">
+            <param name="reportAllErrors">
+            If <see langword="true"/>, the whole <paramref name="sourceFile"/> is parsed to find diagnostics about every app directive.
+            Otherwise, only directives up to the first C# token is checked.
+            The former is useful for <c>dotnet project convert</c> where we want to report all errors because it would be difficult to fix them up after the conversion.
+            The latter is useful for <c>dotnet run file.cs</c> where if there are app directives after the first token,
+            compiler reports <see cref="F:Microsoft.CodeAnalysis.CSharp.ErrorCode.ERR_PPIgnoredFollowsToken"/> anyway, so we speed up success scenarios by not parsing the whole file up front in the SDK CLI.
+            </param>
+        </member>
+        <member name="M:Microsoft.DotNet.FileBasedPrograms.FileLevelDirectiveHelpers.FindLeadingDirectives(Microsoft.DotNet.FileBasedPrograms.SourceFile,Microsoft.CodeAnalysis.SyntaxTriviaList,Microsoft.DotNet.FileBasedPrograms.ErrorReporter,System.Collections.Immutable.ImmutableArray{Microsoft.DotNet.FileBasedPrograms.CSharpDirective}.Builder)">
+            <summary>Finds file-level directives in the leading trivia list of a compilation unit and reports diagnostics on them.</summary>
+            <param name="builder">The builder to store the parsed directives in, or null if the parsed directives are not needed.</param>
+        </member>
+        <member name="T:Microsoft.DotNet.FileBasedPrograms.CSharpDirective">
+            <summary>
+            Represents a C# directive starting with <c>#:</c> (a.k.a., "file-level directive").
+            Those are ignored by the language but recognized by us.
+            </summary>
+        </member>
+        <member name="M:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.#ctor(Microsoft.DotNet.FileBasedPrograms.CSharpDirective.ParseInfo@)">
+            <summary>
+            Represents a C# directive starting with <c>#:</c> (a.k.a., "file-level directive").
+            Those are ignored by the language but recognized by us.
+            </summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.ParseInfo.Span">
+            <summary>
+            Span of the full line including the trailing line break.
+            </summary>
+        </member>
+        <member name="T:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Shebang">
+            <summary>
+            <c>#!</c> directive.
+            </summary>
+        </member>
+        <member name="M:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Shebang.#ctor(Microsoft.DotNet.FileBasedPrograms.CSharpDirective.ParseInfo@)">
+            <summary>
+            <c>#!</c> directive.
+            </summary>
+        </member>
+        <member name="T:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Sdk">
+            <summary>
+            <c>#:sdk</c> directive.
+            </summary>
+        </member>
+        <member name="M:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Sdk.#ctor(Microsoft.DotNet.FileBasedPrograms.CSharpDirective.ParseInfo@)">
+            <summary>
+            <c>#:sdk</c> directive.
+            </summary>
+        </member>
+        <member name="T:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Property">
+            <summary>
+            <c>#:property</c> directive.
+            </summary>
+        </member>
+        <member name="M:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Property.#ctor(Microsoft.DotNet.FileBasedPrograms.CSharpDirective.ParseInfo@)">
+            <summary>
+            <c>#:property</c> directive.
+            </summary>
+        </member>
+        <member name="T:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Package">
+            <summary>
+            <c>#:package</c> directive.
+            </summary>
+        </member>
+        <member name="M:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Package.#ctor(Microsoft.DotNet.FileBasedPrograms.CSharpDirective.ParseInfo@)">
+            <summary>
+            <c>#:package</c> directive.
+            </summary>
+        </member>
+        <member name="T:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Project">
+            <summary>
+            <c>#:project</c> directive.
+            </summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Project.OriginalName">
+            <summary>
+            Preserved across <see cref="M:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Project.WithName(System.String,Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Project.NameKind)"/> calls, i.e.,
+            this is the original directive text as entered by the user.
+            </summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Project.ExpandedName">
+            <summary>
+            This is the <see cref="P:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Project.OriginalName"/> with MSBuild <c>$(..)</c> vars expanded.
+            E.g. The expansion might be implemented via ProjectInstance.ExpandString.
+            </summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Project.ProjectFilePath">
+            <summary>
+            This is the <see cref="P:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Project.ExpandedName"/> resolved via <see cref="M:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Project.EnsureProjectFilePath(Microsoft.DotNet.FileBasedPrograms.SourceFile,Microsoft.DotNet.FileBasedPrograms.ErrorReporter)"/>
+            (i.e., this is a file path if the original text pointed to a directory).
+            </summary>
+        </member>
+        <member name="F:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Project.NameKind.Expanded">
+            <summary>
+            Change <see cref="P:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Named.Name"/> and <see cref="P:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Project.ExpandedName"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Project.NameKind.ProjectFilePath">
+            <summary>
+            Change <see cref="P:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Named.Name"/> and <see cref="P:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Project.ProjectFilePath"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Project.NameKind.Final">
+            <summary>
+            Change only <see cref="P:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Named.Name"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.DotNet.FileBasedPrograms.CSharpDirective.Project.EnsureProjectFilePath(Microsoft.DotNet.FileBasedPrograms.SourceFile,Microsoft.DotNet.FileBasedPrograms.ErrorReporter)">
+            <summary>
+            If the directive points to a directory, returns a new directive pointing to the corresponding project file.
+            </summary>
+        </member>
+        <member name="T:Microsoft.DotNet.FileBasedPrograms.NamedDirectiveComparer">
+            <summary>
+            Used for deduplication - compares directives by their type and name (ignoring case).
+            </summary>
+        </member>
+        <member name="T:Microsoft.DotNet.FileBasedPrograms.SimpleDiagnostic.Position">
+            <summary>
+            An adapter of <see cref="T:Microsoft.CodeAnalysis.FileLinePositionSpan"/> that ensures we JSON-serialize only the necessary fields.
+            </summary>
+            <remarks>
+            note: this type is only serialized for run-api scenarios.
+            If/when run-api is removed, we would also want to remove the usage of System.Text.Json attributes.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.DotNet.FileBasedPrograms.MSBuildUtilities">
+            <summary>
+            Internal utilities copied from microsoft/MSBuild repo.
+            </summary>
+        </member>
+        <member name="M:Microsoft.DotNet.FileBasedPrograms.MSBuildUtilities.ConvertStringToBool(System.String,System.Boolean)">
+            <summary>
+            Converts a string to a bool.  We consider "true/false", "on/off", and 
+            "yes/no" to be valid boolean representations in the XML.
+            Modified from its original version to not throw, but return a default value.
+            </summary>
+            <param name="parameterValue">The string to convert.</param>
+            <returns>Boolean true or false, corresponding to the string.</returns>
+        </member>
+        <member name="M:Microsoft.DotNet.FileBasedPrograms.MSBuildUtilities.ValidBooleanTrue(System.String)">
+            <summary>
+            Returns true if the string represents a valid MSBuild boolean true value,
+            such as "on", "!false", "yes"
+            </summary>
+        </member>
+        <member name="M:Microsoft.DotNet.FileBasedPrograms.MSBuildUtilities.ValidBooleanFalse(System.String)">
+            <summary>
+            Returns true if the string represents a valid MSBuild boolean false value,
+            such as "!on" "off" "no" "!true"
+            </summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.FileBasedProgramsResources.CouldNotFindAnyProjectInDirectory">
+            <summary>Could not find any project in `{0}`.</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.FileBasedProgramsResources.CouldNotFindProjectOrDirectory">
+            <summary>Could not find project or directory `{0}`.</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.FileBasedProgramsResources.MoreThanOneProjectInDirectory">
+            <summary>Found more than one project in `{0}`. Specify which one to use.</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.FileBasedProgramsResources.PropertyDirectiveInvalidName">
+            <summary>Invalid property name: {0}</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.FileBasedProgramsResources.PropertyDirectiveMissingParts">
+            <summary>The property directive needs to have two parts separated by '=' like '#:property PropertyName=PropertyValue'.</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.FileBasedProgramsResources.StaticGraphRestoreNotSupported">
+            <summary>Static graph restore is not supported for file-based apps. Remove the '#:property'.</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.FileBasedProgramsResources.DirectiveError">
+            <summary>error</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.FileBasedProgramsResources.InvalidDirectiveName">
+            <summary>The directive should contain a name without special characters and an optional value separated by '{1}' like '#:{0} Name{1}Value'.</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.FileBasedProgramsResources.CannotConvertDirective">
+            <summary>Some directives cannot be converted. Run the file to see all compilation errors. Specify '--force' to convert anyway.</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.FileBasedProgramsResources.DuplicateDirective">
+            <summary>Duplicate directives are not supported: {0}</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.FileBasedProgramsResources.QuoteInDirective">
+            <summary>Directives currently cannot contain double quotes (").</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.FileBasedProgramsResources.InvalidProjectDirective">
+            <summary>The '#:project' directive is invalid: {0}</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.FileBasedProgramsResources.MissingDirectiveName">
+            <summary>Missing name of '{0}'.</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.FileBasedProgramsResources.UnrecognizedDirective">
+            <summary>Unrecognized directive '{0}'.</summary>
+        </member>
+        <member name="P:Microsoft.DotNet.FileBasedPrograms.FileBasedProgramsResources.EmptyTempPath">
+            <summary>Unable to determine a temporary directory path. Consider configuring the TEMP environment variable on Windows or local app data folder on Unix.</summary>
+        </member>
+    </members>
+</doc>
