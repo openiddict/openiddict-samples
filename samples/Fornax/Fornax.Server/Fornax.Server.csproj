@@ -33,6 +33,7 @@
     <PackageReference Include="Microsoft.Web.Infrastructure" PrivateAssets="all" />
     <PackageReference Include="OpenIddict.EntityFramework" />
     <PackageReference Include="OpenIddict.Owin" />
+    <PackageReference Include="System.ValueTuple" />
     <PackageReference Include="WebGrease" />
   </ItemGroup>
 

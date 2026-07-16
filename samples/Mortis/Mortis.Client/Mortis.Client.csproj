@@ -31,6 +31,7 @@
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="OpenIddict.EntityFramework" />
     <PackageReference Include="OpenIddict.Owin" />
+    <PackageReference Include="System.ValueTuple" />
     <PackageReference Include="WebGrease" />
   </ItemGroup>
 
