@@ -69,26 +69,26 @@
     <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.AppServices"            Version="1.0.14"   />
     <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.WinForms"               Version="1.0.14"   />
     <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.Wpf"                    Version="1.0.14"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Negotiate"              Version="10.0.10"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly"                Version="10.0.10"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.10"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Negotiate"              Version="10.0.11"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly"                Version="10.0.11"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.11"  />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Build"          Version="3.2.1"    />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer"      Version="10.0.10"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server"         Version="10.0.10"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebView.Wpf"                Version="10.0.80"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"       Version="10.0.10"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"          Version="10.0.10"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI"                           Version="10.0.10"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"          Version="10.0.10"  />
-    <PackageVersion Include="Microsoft.Build"                                            Version="18.7.1"   />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite"                       Version="10.0.10"  />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools"                        Version="10.0.10"  />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection"                   Version="10.0.10"  />
-    <PackageVersion Include="Microsoft.Extensions.Hosting"                               Version="10.0.10"  />
-    <PackageVersion Include="Microsoft.Extensions.Http"                                  Version="10.0.10"  />
-    <PackageVersion Include="Microsoft.Extensions.Http.Resilience"                       Version="10.8.0"   />
-    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery"                      Version="10.8.0"   />
-    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery.Yarp"                 Version="10.8.0"   />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer"      Version="10.0.11"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server"         Version="10.0.11"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebView.Wpf"                Version="10.0.90"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"       Version="10.0.11"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"          Version="10.0.11"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI"                           Version="10.0.11"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"          Version="10.0.11"  />
+    <PackageVersion Include="Microsoft.Build"                                            Version="18.9.6"   />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite"                       Version="10.0.11"  />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools"                        Version="10.0.11"  />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection"                   Version="10.0.11"  />
+    <PackageVersion Include="Microsoft.Extensions.Hosting"                               Version="10.0.11"  />
+    <PackageVersion Include="Microsoft.Extensions.Http"                                  Version="10.0.11"  />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience"                       Version="10.9.0"   />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery"                      Version="10.9.0"   />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery.Yarp"                 Version="10.9.0"   />
     <PackageVersion Include="OpenIddict.Abstractions"                                    Version="7.6.0"    />
     <PackageVersion Include="OpenIddict.AspNetCore"                                      Version="7.6.0"    />
     <PackageVersion Include="OpenIddict.Client.SystemIntegration"                        Version="7.6.0"    />
@@ -98,14 +98,14 @@
     <PackageVersion Include="OpenIddict.Quartz"                                          Version="7.6.0"    />
     <PackageVersion Include="OpenIddict.Validation.AspNetCore"                           Version="7.6.0"    />
     <PackageVersion Include="OpenIddict.Validation.SystemNetHttp"                        Version="7.6.0"    />
-    <PackageVersion Include="Quartz.Extensions.Hosting"                                  Version="3.18.2"   />
+    <PackageVersion Include="Quartz.Extensions.Hosting"                                  Version="3.19.1"   />
     <PackageVersion Include="Spectre.Console"                                            Version="0.57.2"   />
     <PackageVersion Include="Yarp.ReverseProxy"                                          Version="2.3.0"    />
-    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol"               Version="1.16.0"   />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting"                           Version="1.16.0"   />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore"                   Version="1.16.0"   />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http"                         Version="1.16.0"   />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime"                      Version="1.16.0"   />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol"               Version="1.17.0"   />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting"                           Version="1.17.0"   />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore"                   Version="1.17.0"   />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http"                         Version="1.17.0"   />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime"                      Version="1.17.0"   />
   </ItemGroup>
 
 </Project>
