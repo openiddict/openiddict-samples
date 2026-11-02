@@ -69,22 +69,22 @@
     <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.AppServices"            Version="1.0.14"   />
     <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.WinForms"               Version="1.0.14"   />
     <PackageVersion Include="Dapplo.Microsoft.Extensions.Hosting.Wpf"                    Version="1.0.14"   />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Negotiate"              Version="10.0.13"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly"                Version="10.0.13"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.13"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.Negotiate"              Version="10.0.14"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly"                Version="10.0.14"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.14"  />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Build"          Version="3.2.1"    />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer"      Version="10.0.13"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server"         Version="10.0.13"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer"      Version="10.0.14"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server"         Version="10.0.14"  />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebView.Wpf"                Version="10.0.120" />
-    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"       Version="10.0.13"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"          Version="10.0.13"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI"                           Version="10.0.13"  />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"          Version="10.0.13"  />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite"                       Version="10.0.13"  />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools"                        Version="10.0.13"  />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection"                   Version="10.0.13"  />
-    <PackageVersion Include="Microsoft.Extensions.Hosting"                               Version="10.0.13"  />
-    <PackageVersion Include="Microsoft.Extensions.Http"                                  Version="10.0.13"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"       Version="10.0.14"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"          Version="10.0.14"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.UI"                           Version="10.0.14"  />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"          Version="10.0.14"  />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite"                       Version="10.0.14"  />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools"                        Version="10.0.14"  />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection"                   Version="10.0.14"  />
+    <PackageVersion Include="Microsoft.Extensions.Hosting"                               Version="10.0.14"  />
+    <PackageVersion Include="Microsoft.Extensions.Http"                                  Version="10.0.14"  />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience"                       Version="10.11.0"  />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery"                      Version="10.11.0"  />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery.Yarp"                 Version="10.11.0"  />
