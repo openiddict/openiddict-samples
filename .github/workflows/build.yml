@@ -2,10 +2,10 @@ name: build
 
 on:
   push:
-    branches: [ dev, rel/* ]
+    branches: [ dev ]
     tags: [ '*' ]
   pull_request:
-    branches: [ dev, rel/* ]
+    branches: [ dev ]
   workflow_dispatch:
 
 env:
@@ -26,24 +26,42 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-26, ubuntu-24.04, windows-2022 ]
+        os: [ xcode-27, ubuntu-24.04, windows-2022 ]
         include:
-          - os: macos-26
-            os_name: macos
-          - os: ubuntu-24.04
-            os_name: linux
-          - os: windows-2022
-            os_name: windows
+        - os: xcode-27
+          os_name: macos
+        - os: ubuntu-24.04
+          os_name: linux
+        - os: windows-2022
+          os_name: windows
 
     steps:
     - name: Checkout code
       uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-    - name: Build
-      if: ${{ runner.os == 'Windows' }}
-      run: eng\common\Build.cmd -configuration Release -ci -prepareMachine -restore -build -integrationTest
+    - name: Select Xcode 27.2
+      if: runner.os == 'macOS'
+      shell: bash
+      run: |
+        export DEVELOPER_DIR=/Applications/Xcode_27.2.app/Contents/Developer
+        xcodebuild -version
+        echo "DEVELOPER_DIR=$DEVELOPER_DIR" >> "$GITHUB_ENV"
 
-    - name: Build
-      if: ${{ runner.os != 'Windows' }}
+    - name: Set up .NET SDK
+      uses: actions/setup-dotnet@d4c94342e560b34958eacfc5d055d21461ed1c5d # v5.0.0
+      with:
+        global-json-file: global.json
+
+    - name: Restore dependencies
       shell: pwsh
-      run: ./eng/common/build.sh -configuration Release -ci -prepareMachine -restore -build -integrationTest
+      run: dotnet restore --artifacts-path artifacts -p:Configuration=Release
+
+    - name: Build solution
+      run: dotnet build --configuration Release --no-restore --artifacts-path artifacts -bl:artifacts/log/Release/build.binlog
+
+    - name: Publish logs
+      if: ${{ always() }}
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      with:
+        name: logs-${{ matrix.os_name }}
+        path: ./artifacts/log/Release
