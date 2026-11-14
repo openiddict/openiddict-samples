@@ -1,22 +1,25 @@
 <Project>
 
-  <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
-
-  <PropertyGroup>
-    <LangVersion>13.0</LangVersion>
+  <PropertyGroup Label="Build">
+    <LangVersion>14.0</LangVersion>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>9.0</AnalysisLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>$(NoWarn);CS1591;NU5128</NoWarn>
     <WarningsNotAsErrors>NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
-    <NuGetAuditMode>all</NuGetAuditMode>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <DebugSymbols>true</DebugSymbols>
-    <EnableXlfLocalization>false</EnableXlfLocalization>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+    <WebApplicationsTargetPath>$(MSBuildThisFileDirectory)eng\msbuild\web\WebApplications\Microsoft.WebApplication.targets</WebApplicationsTargetPath>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package management">
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <NuGetAuditMode>all</NuGetAuditMode>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,44 +34,14 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-    <DelaySign>false</DelaySign>
-    <PublicSign>false</PublicSign>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <RepoRelativeProjectDir>$([MSBuild]::MakeRelative($(RepoRoot), $(MSBuildProjectDirectory)))</RepoRelativeProjectDir>
-    <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
-    <WebApplicationsTargetPath>$(MSBuildThisFileDirectory)eng\msbuild\web\WebApplications\Microsoft.WebApplication.targets</WebApplicationsTargetPath>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <NetFrameworkTargetFramework
       Condition=" '$(NetFrameworkTargetFramework)' == '' ">net48</NetFrameworkTargetFramework>
 
     <NetCoreTargetFramework
-      Condition=" '$(NetCoreTargetFramework)' == '' ">net10.0</NetCoreTargetFramework>
+      Condition=" '$(NetCoreTargetFramework)' == '' ">net11.0</NetCoreTargetFramework>
 
     <NetCoreWindowsTargetFramework
-      Condition=" '$(NetCoreWindowsTargetFramework)' == '' ">net10.0-windows</NetCoreWindowsTargetFramework>
-  </PropertyGroup>
-
-  <!--
-    Arcade only allows the revision to contain up to two characters, and GitHub Actions does not roll-over
-    build numbers every day like Azure DevOps does. To balance these two requirements, set the official
-    build ID to be the same format as the built-in default from Arcade, except with the revision number
-    being the number of the quarter hour of the current time of day (24 * 4 = 96, which is less than 100).
-    So a build between 00:00 and 00:14 would have a revision of 1, and a build between 23:45 and 23:59:59
-    would have a revision of 97.
-  -->
-  <PropertyGroup Condition=" '$(GITHUB_ACTIONS)' == 'true' AND '$(GITHUB_REF.StartsWith(`refs/pull/`))' == 'false' ">
-    <_Hours>$([MSBuild]::Multiply($([System.DateTime]::Now.ToString(HH)), 4))</_Hours>
-    <_QuarterHours>$([MSBuild]::Divide($([System.DateTime]::Now.ToString(mm)), 15))</_QuarterHours>
-    <_QuarterHours>$([System.Math]::Floor($(_QuarterHours)))</_QuarterHours>
-    <_GitHubActionsBuildRevision>$([MSBuild]::Add($(_Hours), $(_QuarterHours)))</_GitHubActionsBuildRevision>
-    <_GitHubActionsBuildRevision>$([MSBuild]::Add($(_GitHubActionsBuildRevision), 1))</_GitHubActionsBuildRevision>
-    <OfficialBuild>true</OfficialBuild>
-    <OfficialBuildId>$([System.DateTime]::Now.ToString(yyyyMMdd)).$(_GitHubActionsBuildRevision)</OfficialBuildId>
+      Condition=" '$(NetCoreWindowsTargetFramework)' == '' ">net11.0-windows</NetCoreWindowsTargetFramework>
   </PropertyGroup>
 
   <ItemGroup>

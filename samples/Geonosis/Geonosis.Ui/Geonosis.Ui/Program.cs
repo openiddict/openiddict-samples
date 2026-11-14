@@ -126,7 +126,6 @@ app.MapDefaultEndpoints();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseWebAssemblyDebugging();
 }
 else
 {

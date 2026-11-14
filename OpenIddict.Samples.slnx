@@ -1,20 +1,10 @@
 <Solution>
 
-  <Folder Name="/eng/">
-    <File Path="eng/Build.props" />
-    <File Path="eng/Signing.props" />
-    <File Path="eng/Tools.props" />
-    <File Path="eng/Version.Details.xml" />
-  </Folder>
-
   <Folder Name="/root/">
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
-    <File Path="build.cmd" />
-    <File Path="build.sh" />
     <File Path="Directory.Build.props" />
-    <File Path="Directory.Build.targets" />
     <File Path="Directory.Packages.props" />
     <File Path="global.json" />
     <File Path="LICENSE.md" />
